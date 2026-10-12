@@ -1,0 +1,27 @@
+/* The colors identify an estimate and a candidate across prose and the figure. */
+.sample-space-reading .lk-fit{color:#47674d;font-weight:600}
+.sample-space-reading .lk-candidate{color:#8a5b25;font-weight:600}
+.likelihood-explorer{padding:22px 0 10px;border-block:1px solid #d9ddcf}
+.likelihood-controls{display:grid;grid-template-columns:100px 1fr 1fr;gap:22px;align-items:start}
+.likelihood-controls label{display:grid;gap:8px;font-size:12px}
+.likelihood-controls output{font:12px var(--font-mono)}
+.likelihood-controls .select{width:100%;min-width:0;padding-right:30px}
+.likelihood-controls input{width:100%;min-width:0;accent-color:#47674d}
+.likelihood-controls [data-lk-p]{accent-color:#8a5b25}
+.sample-space-reading .likelihood-explorer svg,.sample-space-reading .likelihood-support{display:block;width:100%;height:auto;margin:20px 0 8px;overflow:visible}
+.likelihood-explorer svg text,.likelihood-support text{font:12px var(--font-body);fill:#59634e}
+.lk-axis{fill:none;stroke:#9da692;stroke-width:1}
+.lk-grid{stroke:#dbe0d3;stroke-width:1;stroke-dasharray:3 5}
+.lk-curve{fill:none;stroke:#47674d;stroke-width:2.5}
+.lk-peak path{stroke:#47674d;stroke-width:1;stroke-dasharray:4 4}
+.lk-peak circle{fill:#47674d}
+.lk-marker circle{fill:#a06b2e;stroke:#fbfaf6;stroke-width:2}
+.lk-marker,.lk-peak{transition:transform 440ms cubic-bezier(.2,.7,.25,1)}
+.likelihood-readout{display:flex;gap:14px 26px;flex-wrap:wrap;font-size:12px}
+.likelihood-readout strong{display:block;font:14px var(--font-mono);margin-top:5px}
+.sample-space-reading .likelihood-note{font-size:13px;min-height:3em;margin:18px 0 0}
+.lk-impossible{stroke:#ba4729;stroke-width:3;fill:none}
+.lk-feasible{stroke:#47674d;stroke-width:3;fill:none}
+.lk-observation{fill:#536871}
+@media(max-width:600px){.likelihood-controls{grid-template-columns:1fr 1fr;gap:16px}.likelihood-controls label:first-child{grid-column:1/-1;display:flex;align-items:center}.likelihood-controls .select{width:100px}.likelihood-explorer svg text,.likelihood-support text{font-size:20px}}
+@media(prefers-reduced-motion:reduce){.lk-marker,.lk-peak{transition:none}}

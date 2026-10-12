@@ -465,3 +465,8 @@ Scoped the ball-count select to a non-shrinking 80px width with explicit padding
 ## 2026-10-12 — Initial public repository baseline
 
 User authorised publication to `moleh1307/quant-atelier` and future verified changes to be committed/pushed. The remote was confirmed public and empty before initialisation. Baseline checks passed: 18 Python tests and 20 frontend suites. The staged-file scan found no credential signatures or private filesystem paths; personal `data/`, installed dependencies, runtime logs and verification JSON workspace exports are ignored. The source, local vendor licenses, course/coding banks, lesson guidance, research and visual evidence are included. Git workflow is recorded in AGENTS.md; public source does not deploy or expose the local Python runner.
+
+
+## 2026-10-12 — first researcher expansion and revision selector
+
+See [likelihood verification](likelihood-20261012.md) for l25, q49–q51, c15, route placement, all 21 frontend suites / 18 Python tests, isolated preview submissions, preserved personal study records and the clipped revision-select fix.

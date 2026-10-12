@@ -456,5 +456,26 @@
     ],
     "solution": "def solve(probabilities, outcomes, bins):\n    groups = [[] for _ in range(bins)]\n    for p, y in zip(probabilities, outcomes):\n        groups[min(int(p * bins), bins - 1)].append((p, y))\n    return {\"brier\": sum((p-y)**2 for p,y in zip(probabilities,outcomes)) / len(probabilities) if probabilities else None,\n            \"bins\": [[len(g), sum(p for p,y in g)/len(g), sum(y for p,y in g)/len(g)] if g else [0,None,None] for g in groups]}",
     "explanation": "Handle \\(p=1\\) as an explicit boundary. Brier is a proper score, while bin summaries are noisy diagnostics whose interpretation depends on counts."
+  },
+  {
+    "id": "c15",
+    "title": "A likelihood that does not underflow",
+    "difficulty": "Medium",
+    "topic": "Likelihood",
+    "path": "researcher",
+    "prompt": "Return the natural log-likelihood of one specified ordered iid Bernoulli record, summarized by successes and trials, at candidate p. Inputs satisfy integer trials >= 1, integer 0 <= successes <= trials and 0 < p < 1. Omit the binomial coefficient: we observed the ordered record, not only its count. Do not form the likelihood product, simulate or round. Counts may be as large as 10^18 and p as small as 10^(-20). Preserve small log(1-p) contributions with math.log1p. All required answers are finite.",
+    "starter": "def solve(successes, trials, p):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          7,
+          10,
+          0.5
+        ],
+        "expected": -6.931471805599453
+      }
+    ],
+    "solution": "import math\ndef solve(successes, trials, p):\n    return successes * math.log(p) + (trials - successes) * math.log1p(-p)",
+    "explanation": "Logarithms turn the independent product into a sum. math.log1p(-p) computes log(1-p) without first rounding 1-p to 1 for tiny p. Zero successes and all-success records need no special case because both logarithms are finite on the specified open parameter domain. O(1) time and space. A log-likelihood is not a posterior probability."
   }
 ]

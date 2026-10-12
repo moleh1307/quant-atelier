@@ -51,4 +51,10 @@ for(const path of ['researcher','trader'])for(const l of bank.lessons.filter(l=>
   assert.equal(run('moduleContext().path'),path);
  }
 }
-console.log('Lesson→problem→code continuity, reload bookmarks, branch boundaries, shared exercises, honest evidence and all activity destinations passed.');
+const estimationLast=run("moduleActivities(content.lessons.find(l=>l.id==='l09'),'researcher')").at(-1);
+run('route='+JSON.stringify(estimationLast.href.slice(1).split('/')));
+assert.equal(run('followingActivity(moduleContext()).href'),'#courses/l25/journey/researcher/l25');
+run("route=['coding','c15','journey','researcher','l25'];");
+assert.equal(run('followingActivity(moduleContext()).href'),'#courses/l10/journey/researcher/l10');
+assert.equal(run("moduleNumber(content.lessons.find(l=>l.id==='l25'))"),'10');
+console.log('Lesson→problem→code continuity, new likelihood placement, reload bookmarks, branch boundaries, shared exercises, honest evidence and all activity destinations passed.');
