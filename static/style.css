@@ -554,3 +554,6 @@ input::placeholder,textarea::placeholder { color:#65715a;opacity:1; }
 
 /* Preserve intentional paragraph boundaries in authored practice prose. */
 .prompt,.hint,.solution,.follow p{white-space:pre-line}
+
+/* Long worked mathematics must scroll inside its panel, not enlarge grid tracks. */
+.detail-layout > * { min-width: 0; }

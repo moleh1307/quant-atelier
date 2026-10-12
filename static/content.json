@@ -499,9 +499,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Use collective PSD or residual Cauchy–Schwarz, rather than pairwise bounds alone.",
+        "Derive the lower bound 0.28 and distinguish feasible singularity from invalidity.",
+        "Give the explicit variance-one construction attaining the bound."
       ]
     },
     {
@@ -725,9 +725,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Use common-target unbiasedness and independence in the variance expression.",
+        "Derive weight \\(\\frac{4}{5}\\) and the resulting variance \\(\\frac{4}{5}\\).",
+        "For dependent estimates, include covariance and check the difference-variance denominator and permitted weights."
       ]
     },
     {
@@ -2321,6 +2321,136 @@
         "Explain why single-normal nonzero spread and finite optimiser output do not prove existence here.",
         "For the follow-up, justify mean clipping, a variance upper cap, continuity and compactness; separate existence from uniqueness."
       ]
+    },
+    {
+      "id": "q_l10_e1",
+      "title": "The cross term has units and a sign",
+      "topic": "Linear algebra",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 5,
+      "prompt": "Random variables X and Y have finite second moments with \\(\\operatorname{Var}(X)=4\\), \\(\\operatorname{Var}(Y)=9\\) and \\(\\operatorname{Cov}(X,Y)=-3\\). Coefficients are fixed real numbers. Compute \\(\\operatorname{Var}(X+2Y)\\). Do not assume independence.",
+      "answer": 28,
+      "hints": [
+        "Expand the square of the centered linear combination.",
+        "The covariance term appears twice, and both coefficients multiply it."
+      ],
+      "solution": "Centering removes the means. Expanding \\([(X-E[X])+2(Y-E[Y])]^2\\) gives \\(4+4\\cdot9+4(-3)=28\\). The cross term is \\(2ab\\operatorname{Cov}(X,Y)\\), not a second independent variance. The negative covariance reduces this combination’s variation. It is feasible: its correlation is \\(-3/(2\\cdot3)=-1/2\\), within the two-variable bound.",
+      "followup": "Replace Y by Y′=10Y, a change of reported units. Which coefficients describe the SAME random combination, and what happens to the covariance and correlation?",
+      "followSolution": "The same combination is \\(X+0.2Y^{\\prime}\\). Now \\(\\operatorname{Var}(Y^{\\prime})=900\\) and \\(\\operatorname{Cov}(X,Y^{\\prime})=-30\\); its variance remains \\(4+0.04(900)+0.4(-30)=28\\). Correlation remains −\\(\\frac{1}{2}\\) because the positive unit conversion also multiplies the standard deviation by ten. Keeping coefficient 2 would change the random quantity, rather than merely its units. A negative conversion would flip the correlation sign.",
+      "lesson": "l10",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Include both fixed coefficients in the covariance cross term.",
+        "Obtain variance 28 without replacing covariance by independence.",
+        "Transform coefficients and covariance consistently when units change."
+      ]
+    },
+    {
+      "id": "q_l10_e2",
+      "title": "Zero variation does not mean zero level",
+      "topic": "Linear algebra",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 5,
+      "prompt": "X and Y have finite second moments, means 2 and 7, variances 9 each, and correlation one. What is \\(\\operatorname{Var}(X-Y)\\)? Does the resulting conclusion imply X=Y almost surely?",
+      "answer": 0,
+      "hints": [
+        "Correlation one and standard deviations three give covariance nine.",
+        "A zero-variance random variable equals its own mean almost surely."
+      ],
+      "solution": "Covariance is 9, so \\(\\operatorname{Var}(X-Y)=9+9-18=0\\). Therefore \\(X-Y=E[X-Y]=-5\\) almost surely. The CENTERED variables coincide, but the raw levels differ by five. The covariance matrix is valid PSD and singular, not invertible. Its zero-variance direction describes an exact relationship rather than the absence of all randomness.",
+      "followup": "If the same means and variances hold but correlation is −1, what exact relationship replaces the difference? Is this independence?",
+      "followSolution": "Now covariance is −9, so \\(\\operatorname{Var}(X+Y)=0\\) and \\(X+Y=9\\) almost surely. Neither perfect positive nor perfect negative correlation is independence here: independence with finite second moments would force covariance zero, whereas both variables have positive variance and nonzero covariance. No normal-distribution assumption was needed for these exact relationships.",
+      "lesson": "l10",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Compute the zero variance from covariance nine.",
+        "Identify X−Y=−5 rather than X=Y from the unequal means.",
+        "Distinguish singular PSD structure and deterministic dependence from independence."
+      ]
+    },
+    {
+      "id": "q_l10_m1",
+      "title": "Every pair passed, but the table failed",
+      "topic": "Linear algebra",
+      "difficulty": "Medium",
+      "path": "researcher",
+      "minutes": 15,
+      "prompt": "A six-row dataset has columns (X,Y,Z). Missing entries are written None:\n\n(-1,-1,None), (1,1,None), (None,-1,-1), (None,1,1), (-1,None,1), (1,None,-1).\n\nA pipeline computes each Pearson correlation using only rows where THAT pair is observed, and sets all diagonal entries to one. Derive its reported matrix. Show by an explicit weighted variance that it cannot be a correlation matrix of one joint distribution. Explain how individually correct pair calculations produced this outcome.",
+      "answer": null,
+      "hints": [
+        "Each pair has exactly two matching or opposite observations.",
+        "Try coefficients (1,−1,1). A joint variance cannot be negative.",
+        "The pairs used different observation subsets, not one centered sample matrix."
+      ],
+      "solution": "The reported correlations are XY=1, YZ=1 and XZ=−1, so\n\n\\[R=\\begin{pmatrix}1&1&-1\\\\1&1&1\\\\-1&1&1\\end{pmatrix}.\\]\n\nFor \\(w=(1,-1,1)^T\\), its quadratic form is \\(3-2-2-2=-3\\). Hence R is not PSD and no joint finite-second-moment model has this correlation table. Each pair’s calculation is correct for its own two rows, but those different subsets do not produce the Gram matrix of one common centered record. There are no complete three-column rows here, so blindly switching to complete cases would leave no data. Report the missingness/sample convention and consider an explicitly justified joint model; per-cell plausibility is not collective feasibility.",
+      "followup": "An engineer blends the table toward the identity: \\(R_\\alpha=(1-\\alpha)R+\\alpha I\\), with 0≤α≤1. Find the smallest α making it PSD, distinguish strict positive definiteness, and explain what this repair does NOT prove.",
+      "followSolution": "The vector w above is an eigenvector with eigenvalue −1; its perpendicular plane has eigenvalue 2. Thus the blended eigenvalues are \\(-1+2\\alpha\\) and \\(2-\\alpha\\) twice. PSD requires α≥\\(\\frac{1}{2}\\), and strict positive definiteness requires α>\\(\\frac{1}{2}\\) on the stated interval. At α=\\(\\frac{1}{2}\\) it is valid but singular. The repair gives a feasible approximation with the same diagonal, not evidence that the original pairwise table came from one jointly observed sample or that the missingness model is correct.",
+      "lesson": "l10",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive all three pairwise correlations from the specified rows.",
+        "Exhibit a negative quadratic form and explain the differing sample subsets.",
+        "Derive the shrinkage threshold from all eigenvalue directions and separate repair from evidence."
+      ]
+    },
+    {
+      "id": "q_l10_h1",
+      "title": "A new variable cannot contradict a null direction",
+      "topic": "Linear algebra",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 25,
+      "prompt": "Centered predictors form a d-dimensional random vector U with KNOWN covariance B, a real symmetric PSD matrix that may be singular. A proposed additional centered variable T has variance v≥0 and covariance vector \\(c=\\operatorname{Cov}(U,T)\\). Let \\(B e_i=\\lambda_i e_i\\) in an orthonormal eigenbasis, with λᵢ≥0, and write \\(c_i=e_i^Tc\\).\n\nDerive necessary AND sufficient conditions on c and v for the block table \\(\\begin{pmatrix}B&c\\\\c^T&v\\end{pmatrix}\\) to be a covariance matrix. Prove necessity from weighted variances and sufficiency by constructing a joint model. Handle zero eigenvalues explicitly rather than substituting an ordinary inverse. Apply the result to B=[[1,1],[1,1]], c=(1,2): can an arbitrarily large finite v make it feasible?",
+      "answer": null,
+      "hints": [
+        "A null predictor combination has zero variance and cannot covary with anything.",
+        "For each positive eigenvalue, complete the square in its weighted direction.",
+        "Independent centered variance-one variables can construct all positive eigen-directions and any remaining target noise."
+      ],
+      "solution": "In eigen-coordinates, a predictor weight u and target coefficient t give\n\n\\[Q(u,t)=\\sum_i\\lambda_i u_i^2+2t\\sum_i c_i u_i+vt^2.\\]\n\nIf λᵢ=0 but cᵢ≠0, choose t=1 and send uᵢ in the opposite sign direction: Q becomes negative without bound. Therefore every zero-eigenvalue coordinate must have cᵢ=0, equivalently c is orthogonal to the null space and lies in the range of B. Completing squares in the remaining directions then gives\n\n\\[Q=\\sum_{\\lambda_i>0}\\lambda_i\\left(u_i+\\frac{tc_i}{\\lambda_i}\\right)^2+t^2\\left(v-\\sum_{\\lambda_i>0}\\frac{c_i^2}{\\lambda_i}\\right).\\]\n\nThus feasibility is exactly the range condition plus \\(v\\geq s=\\sum_{\\lambda_i>0}c_i^2/\\lambda_i\\). Empty sums are zero: B=0 forces c=0 and allows any v≥0. Necessity follows by choosing the square-minimising u; the same display shows PSD sufficiency.\n\nFor an actual joint construction, take independent zero-mean variance-one variables Zᵢ for positive eigenvalues and a further independent Z₀. Set \\(U=\\sum_{\\lambda_i>0}\\sqrt{\\lambda_i}\\,e_i Z_i\\) and \\(T=\\sum_{\\lambda_i>0}c_i Z_i/\\sqrt{\\lambda_i}+\\sqrt{v-s}\\,Z_0\\). Independent symmetric ±1 variables suffice; normality is unnecessary. Their covariances are exactly B,c,v, including the equality case. In the specified example, the null vector (1,−1) has nonzero inner product −1 with c. No finite v repairs that contradiction.",
+      "followup": "What is the minimum v for the SAME B and c=(2,2)? For the inconsistent c=(1,2), explain quantitatively why replacing B by B+εI may hide the issue at fixed ε>0 but cannot recover a finite target variance as ε tends to zero.",
+      "followSolution": "For c=(2,2), the positive eigenvalue is 2 and its coordinate is 2√2, so s=4. Let U=(Y,Y) and T=2Y+√(v−4)Z with independent centered variance-one Y,Z; v≥4 works. For c=(1,2), its squared projection on the positive eigenvector is \\(\\frac{9}{2}\\) and on the null eigenvector is \\(\\frac{1}{2}\\). The regularised threshold becomes \\(s_\\varepsilon=\\frac{9/2}{2+\\varepsilon}+\\frac{1/2}{\\varepsilon}\\), which diverges. At fixed ε, sufficiently large v is feasible for the CHANGED predictor covariance B+εI, not for B. The null-direction incompatibility cannot be cured by pretending an arbitrarily small ridge left the original model unchanged.",
+      "lesson": "l10",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive the zero-eigenvalue range condition from a rejecting quadratic direction.",
+        "Complete squares to obtain the exact residual-variance lower bound, with equality and B=0 handled.",
+        "Construct variables proving sufficiency and reject c=(1,2) for every finite target variance.",
+        "Compute the consistent threshold four and the divergent regularised null contribution."
+      ]
+    },
+    {
+      "id": "q_l10_h2",
+      "title": "Singularity can remove risk or merely duplicate it",
+      "topic": "Linear algebra",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 30,
+      "prompt": "d≥1 estimates Xᵢ have the SAME unknown mean µ and a KNOWN symmetric PSD error covariance \\(\\Sigma\\). Choose fixed real weights w with \\(\\mathbf1^Tw=1\\); negative weights are allowed. The combined estimate is unbiased and has variance \\(w^T\\Sigma w\\).\n\nCharacterise the minimum variance and all minimising weights, allowing singular \\(\\Sigma\\). Separate the case where some null vector z has \\(\\mathbf1^Tz\\ne0\\) from the case where every null vector has zero sum. Define any generalised inverse you use in an eigenbasis and prove the global lower bound, rather than only writing stationary equations. Explain why “replace inverse by pseudoinverse” alone can miss a zero-risk fit.",
+      "answer": null,
+      "hints": [
+        "A zero-variance direction can be made unbiased only if its weight sum is nonzero.",
+        "Otherwise the all-ones vector lies in the range of \\(\\Sigma\\); use Cauchy–Schwarz on its positive eigen-directions.",
+        "Adding a null vector to an optimum leaves its variance unchanged, but check the weight sum."
+      ],
+      "solution": "PSD makes zero variance equivalent to membership in the null space. If a null vector z has nonzero sum, \\(w=z/(\\mathbf1^Tz)\\) is feasible with variance zero, the global lower bound. All minimisers are exactly null vectors whose sums equal one.\n\nOtherwise \\(\\mathbf1\\) is orthogonal to the null space, hence in the range of the symmetric matrix. Define \\(\\Sigma^+=\\sum_{\\lambda_i>0}\\lambda_i^{-1}e_i e_i^T\\). Let \\(s=\\mathbf1^T\\Sigma^+\\mathbf1>0\\). For positive eigen-directions define \\(a_i=(e_i^T\\mathbf1)/\\sqrt{\\lambda_i}\\) and \\(b_i=\\sqrt{\\lambda_i}(e_i^Tw)\\). Every sum below runs only over λᵢ>0. Any feasible w satisfies\n\n\\[\\begin{aligned}1&=\\left(\\sum_i a_i b_i\\right)^2\\\\&\\leq\\left(\\sum_i a_i^2\\right)\\left(\\sum_i b_i^2\\right)\\\\&=s\\,w^T\\Sigma w.\\end{aligned}\\]\n\nThe minimum is 1/s. Equality holds precisely for positive-range weights \\(w_0=\\Sigma^+\\mathbf1/s\\); all minimisers are \\(w_0+z\\) with z in the null space. Such z has zero sum in this branch, so all these weights remain feasible. Positive definiteness makes the null space trivial and the optimiser unique. A singular matrix can still have positive minimum variance; an inverse fails, but the statistical problem need not fail.\n\nBlindly normalising \\(\\Sigma\\)⁺1 without checking the first branch can miss feasible zero-risk weights, because the ones vector then has an informative null component. These claims use known covariance and fixed weights, not a promise that estimated covariance or fitted cancellation holds out of sample.",
+      "followup": "Compare \\(\\Sigma\\)=[[1,2],[2,4]] with a d×d all-ones covariance matrix. For the first matrix, how does additionally requiring nonnegative weights change the answer?",
+      "followSolution": "The first matrix is aaᵀ with a=(1,2). Its null weight vector (2,−1) sums to one, so it gives zero variance. Nonnegative weights instead give exposure \\(w_1+2w_2=2-w_1\\) with 0≤w₁≤1; the smallest squared exposure is one, attained at (1,0). Allowing negative weights was consequential. In the all-ones matrix, every sum-one combination has variance \\((\\sum_iw_i)^2=1\\). Null vectors have zero sum and cannot remove the common noise; the pseudoinverse branch gives s=1. Singularity in these two examples has different consequences.",
+      "lesson": "l10",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Separate the null-space nonzero-sum zero-risk branch from the range branch.",
+        "Define the pseudoinverse and prove the positive-variance global bound with equality conditions.",
+        "Describe every minimiser and explain when uniqueness holds.",
+        "Distinguish unrestricted cancellation, nonnegative constraints and perfectly duplicated common noise."
+      ]
     }
   ],
   "lessons": [
@@ -3123,16 +3253,25 @@
       "explanation": "An eigenvector with negative eigenvalue would have negative portfolio variance.",
       "questions": [
         "q20",
-        "q29"
+        "q29",
+        "q_l10_e1",
+        "q_l10_e2",
+        "q_l10_m1",
+        "q_l10_h1",
+        "q_l10_h2"
       ],
-      "coding": [],
+      "coding": [
+        "c_l10_easy",
+        "c_l10_medium",
+        "c_l10_hard"
+      ],
       "objectives": [
         "Interpret covariance matrices and quadratic forms.",
         "Use positive semidefiniteness to constrain correlations.",
         "Explain singularity and stable numerical solutions."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "Yes, if correlations are small",
         "Yes, if variances are positive",

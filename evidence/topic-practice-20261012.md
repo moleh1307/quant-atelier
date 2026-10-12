@@ -1,8 +1,8 @@
 # Topic practice — verification
 
 2026-10-12. Latest verified scope: grouped list/journey navigation across the site,
-and expanded banks for l01–l09 and likelihood l25. The full 25-topic expansion remains active;
-15 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
+and expanded banks for l01–l10 and likelihood l25. The full 25-topic expansion remains active;
+14 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
 
 The first batch below documents l01–l03 at its own verification baseline
 (63 questions / 22 codes). Later batches are recorded below.
@@ -478,3 +478,106 @@ copy was applied and no data was reset. The server was restarted after bank chan
 
 Next: researcher l10–l18, then trader l19–l24. The goal remains active until all
 topic banks and the final preservation/navigation audit are complete.
+
+
+## Seventh batch: covariance l10
+
+2026-10-12. Read the actual covariance chapter, objectives and q20/q29 before
+selecting practice. The list has two Easy, two Medium and three Hard interviews,
+with exactly one code per difficulty. The original three-correlation-bound
+question remains alongside deeper singular-system transfer problems. Current
+inventory: 25 lessons / 97 interviews / 41 codes; researcher route 19 checks /
+88 distinct questions / 41 codes. Eleven topics satisfy the contract, fourteen
+remain. The chapter and its check are unchanged.
+
+New interviews derive cross terms with consistent units, distinguish zero
+variation from equality of raw levels, exhibit an incompatible table produced by
+pairwise deletion, and derive its exact identity-shrinkage threshold. Hard tasks
+prove the null-space/range compatibility condition for a singular covariance
+extension, its residual-variance bound and an explicit joint construction; a
+ridge follow-up quantifies the divergent null contribution. A second proof
+characterises all sum-one minimum-variance weights, separating attainable zero
+risk from singular systems with unavoidable common noise, and proves the global
+bound and equality cases. Specific rubrics name these obligations. Among the 92
+preceding interview records, only q20/q29 rubrics changed; every other field and
+all 38 preceding public coding records are unchanged.
+
+`topic_practice/covariance.py` adds exact two-variable PSD feasibility (Easy), a
+minimum-variance nonnegative blend with integer cancellation guards (Medium),
+and exact shared-factor pooling with singular covariance (Hard). The Hard task
+uses a known second-moment factor model, not an estimated covariance or a promise
+of out-of-sample cancellation. It derives an always-consistent equality-constrained
+system, proves that its unique multiplier identifies the global minimum despite
+nonunique weights, and implements rank-aware integer elimination with whole-row
+gcd normalisation. It never adds a ridge or treats singularity as zero variance.
+Exact reduced rational output is a pair of decimal strings, preserving values
+beyond JavaScript's safe numeric range. Dimensions, signs, equality constraints,
+input preservation, canonical zero output and integer bit-cost caveats are stated.
+
+Nine independent tests in `tests/test_covariance_practice.py` cover:
+
+- Exact finite-factor enumeration for cross terms, unit changes and centered
+  deterministic relationships; pair-specific correlation calculations, a negative
+  joint variance and all eigen-directions of the shrinkage repair.
+- Rational orthonormal geometry, completed-square identities, explicit Rademacher
+  constructions for singular block extensions, rejecting null-coupling directions
+  even with huge target variance, and the exact regularisation threshold.
+- Two-variable feasibility through an independent trace/determinant criterion,
+  and constrained blend risks compared at exact rational candidate weights.
+- A range/null-space optimisation oracle that solves a different system from the
+  production multiplier reference. In 220 seeded models it supplies witness
+  weights, checks stationarity and verifies the exact nonnegative objective change
+  for feasible perturbations. Duplicate common-noise and zero-noise models include
+  every supported estimate dimension.
+- A second oracle reconstructs determinant/cofactor polynomials and takes their
+  zero-ridge ratio limit in 65 models. The limit is valid because a fixed original
+  minimiser bounds the ridge optimum from above and the unregularised optimum
+  bounds it below. It agrees with the first oracle and integer reference. A huge
+  almost-parallel factor pair has Gram determinant one and exact risk one half.
+- Eighty seeded permutation, sign, unit-scaling, duplication, zero-factor and
+  input-preservation checks, plus maximum 12×12 large-entry cases. All official
+  expectations were calculated independently. A diagonal case has a 144-digit
+  numerator and 134-digit denominator and remains exact.
+- All three references pass the actual judge; strict-PD, independence and
+  always-zero shortcuts fail. Every official case fits the debugging-copy size
+  limit. The Hard suite has two examples plus sixteen hidden cases.
+
+All 93 Python tests and 23 frontend suites pass after the final layout change;
+all 26 expanded coding references pass the actual judge. Strict mathematical
+parsing and current/legacy journey tests are included. The singular block
+condition was cross-checked against
+[Stanford's generalised Schur-complement statement](https://see.stanford.edu/materials/lsocoee364a/hw5extra.pdf).
+[R's covariance documentation](https://www.stat.math.ethz.ch/R-manual/R-devel/library/stats/html/cor.html)
+confirms that pairwise-complete calculations may yield a non-PSD matrix. The
+original examples, derivations and exercise implementations here do not claim to
+reproduce particular employers' interview questions.
+
+The in-app browser connection was unavailable. Chrome verified the actual
+lesson → interview list → coding list handoffs and all difficulty groups. After
+explicit Test preview entry, the Hard solver passed 18/18 server cases. Copying
+its final large-rational case into the debugger retained every digit and the
+included three-case debug run passed without awarding completion.
+
+The first 390px proof inspection exposed a real grid minimum-size defect: a long
+equation widened the entire question panel. Grid children now have minimum width
+zero so mathematical overflow stays inside its panel. The Cauchy–Schwarz proof
+also defines its two coordinate vectors and breaks its displayed inequality into
+three meaningful lines. After reload and explicit preview re-entry, the proof
+and follow-up have zero math errors, panel width 356px and document width equal
+to scroll width (390px). The equation and prose were visually inspected; these
+are layout and calculation checks, not evidence of learner mastery.
+
+Viewport settings were reset and the review tab returned to the personal
+covariance coding list, showing 0/3. All five personal question, coding, lesson,
+draft and trainer groups match this batch's fresh baseline. No recovery was
+applied, data reset or written self-assessment awarded. The server was restarted
+after bank changes. Future authoring guidance now requires checking lossless
+formats for exact outputs beyond browser-safe integers.
+
+- [Covariance interview list, personal workspace](covariance-question-list-20261012.png).
+- [Covariance coding list, personal workspace](covariance-coding-list-20261012.png).
+- [Narrow worked proof after the layout repair](covariance-proof-narrow-20261012.png).
+
+Next: researcher l11–l18 and trader l19–l24. The goal remains active until all
+25 topic banks, future-topic validation and final preservation/navigation audit
+are complete.

@@ -7,9 +7,9 @@ an unregistered new lesson fails the build instead of inheriting generic tasks.
 from collections import Counter
 
 DIFFICULTIES = ('Easy', 'Medium', 'Hard')
-COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05', 'l06', 'l07', 'l08', 'l09', 'l25')
+COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05', 'l06', 'l07', 'l08', 'l09', 'l25', 'l10')
 PENDING_TOPICS = (
-    'l10', 'l11',
+    'l11',
     'l12', 'l13', 'l14', 'l15', 'l16', 'l17', 'l18', 'l19', 'l20',
     'l21', 'l22', 'l23', 'l24',
 )
@@ -25,6 +25,7 @@ CODING_LINKS = {
     'l08': ['c_l08_easy', 'c06', 'c_l08_hard'],
     'l09': ['c_l09_easy', 'c04', 'c_l09_hard'],
     'l25': ['c_l25_easy', 'c15', 'c_l25_hard'],
+    'l10': ['c_l10_easy', 'c_l10_medium', 'c_l10_hard'],
 }
 # These permanent activities remain bookmarkable, but are outside current slots.
 LEGACY_CODING_LINKS = {'l08': ['c05']}
@@ -47,6 +48,8 @@ def add_questions(add, questions):
     estimation_questions(add, questions)
     from .likelihood import add_questions as likelihood_questions
     likelihood_questions(add, questions)
+    from .covariance import add_questions as covariance_questions
+    covariance_questions(add, questions)
 
 
 def add_coding(add, tasks):
@@ -66,6 +69,8 @@ def add_coding(add, tasks):
     estimation_coding(add, tasks)
     from .likelihood import add_coding as likelihood_coding
     likelihood_coding(add, tasks)
+    from .covariance import add_coding as covariance_coding
+    covariance_coding(add, tasks)
 
 
 def attach_and_validate(lessons, questions, tasks):
