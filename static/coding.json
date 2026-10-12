@@ -1662,5 +1662,129 @@
     ],
     "solution": "from math import gcd\ndef solve(factors):\n    d, k = len(factors), len(factors[0])\n    rows = [[sum(factors[i][j] * factors[h][j] for j in range(k)) for h in range(d)] + [1, 0] for i in range(d)]\n    rows.append([1] * d + [0, 1])\n    rank = 0\n    multiplier_row = None\n    for column in range(d + 1):\n        pivot = next((i for i in range(rank, d + 1) if rows[i][column] != 0), None)\n        if pivot is None:\n            continue\n        rows[rank], rows[pivot] = rows[pivot], rows[rank]\n        divisor = 0\n        for value in rows[rank]:\n            divisor = gcd(divisor, abs(value))\n        if divisor:\n            rows[rank] = [value // divisor for value in rows[rank]]\n        for i in range(d + 1):\n            if i == rank or rows[i][column] == 0:\n                continue\n            a, b = rows[rank][column], rows[i][column]\n            rows[i] = [a * value - b * lead for value, lead in zip(rows[i], rows[rank])]\n            divisor = 0\n            for value in rows[i]:\n                divisor = gcd(divisor, abs(value))\n            if divisor:\n                rows[i] = [value // divisor for value in rows[i]]\n        if column == d:\n            multiplier_row = rank\n        rank += 1\n    numerator = -rows[multiplier_row][-1]\n    denominator = rows[multiplier_row][d]\n    if denominator < 0:\n        numerator, denominator = -numerator, -denominator\n    divisor = gcd(abs(numerator), denominator)\n    return [str(numerator // divisor), str(denominator // divisor)]",
     "explanation": "The objective is \\(\\|A^Tw\\|^2=w^T\\Sigma w\\); the sum-one constraint preserves the common target. An optimum exists: \\(A^T\\) maps the feasible affine set onto a finite-dimensional affine set, and its squared distance to zero is attained. At an optimum the covariance gradient is constant across coordinates, because every zero-sum perturbation has zero first derivative. Write this as \\(\\Sigma w+\\nu\\mathbf1=0\\), together with \\(\\mathbf1^Tw=1\\), giving\n\n\\[\\begin{pmatrix}\\Sigma&\\mathbf1\\\\\\mathbf1^T&0\\end{pmatrix}\\begin{pmatrix}w\\\\\\nu\\end{pmatrix}=\\begin{pmatrix}0\\\\1\\end{pmatrix}.\\]\n\nConversely any solution is globally optimal: for a feasible perturbation h, \\(h^T\\mathbf1=0\\), and the objective change is \\(2h^T\\Sigma w+h^T\\Sigma h=h^T\\Sigma h\\geq0\\). Multiplying the first equation by w\u1d40 gives minimum variance \u2212\u03bd. The multiplier is unique even if weights are not: the difference of two solutions obeys \\(\\Sigma\\Delta w+\\Delta\\nu\\mathbf1=0\\), \\(\\mathbf1^T\\Delta w=0\\); its quadratic form is zero, so PSD implies \\(\\Sigma\\)\u0394w=0 and \u0394\u03bd=0. Thus every solution has the same requested scalar.\n\nConstruct the integer Gram matrix, append this system and perform rank-aware elimination. For a pivot a and row coefficient b, replace a row by a\u00b7row\u2212b\u00b7pivot_row; divide the entire resulting row, including its right side, by its integer gcd to control growth. These exact nonzero row operations preserve the solution set. Eliminate ABOVE and below pivots; skip absent pivots rather than dividing by zero. The multiplier column always has a pivot: if it were free, a consistent system would allow different \u03bd, contradicting uniqueness. After elimination its pivot row contains only that variable and its right side, so their ratio gives \u03bd. Reduce \u2212\u03bd to a positive-denominator rational pair and encode its integers as decimal strings; both the judge and copied debugging cases retain every digit. No choices of free weight variables are needed. Gcd normalization is not floating tolerance and a singular Gram matrix is not automatically zero-risk: duplicated factor rows can share unavoidable common noise. Building the Gram matrix costs O(d\u00b2k); elimination costs O(d\u00b3) scalar arithmetic with O(d\u00b2) state, plus integer/gcd bit costs."
+  },
+  {
+    "id": "c_l11_easy",
+    "title": "Check a proposed least-squares fit",
+    "difficulty": "Easy",
+    "topic": "Regression",
+    "path": "researcher",
+    "prompt": "x and y are equally sized INTEGER lists of length 0\u2264n\u2264100000. Entries and the INTEGER parameters intercept,slope have absolute value at most 10^6. Return True exactly when the proposed line intercept+slope*x[i] globally minimizes the sum of squared residuals among ALL real intercepts and slopes. Nonunique coefficients are allowed: a constant predictor still has optimal fitted values. With no observations every proposed line is optimal.\n\nUse exact integer arithmetic, \\(O(n)\\) time and O(1) auxiliary state. Do not mutate either input, use a floating tolerance, or require an invertible design. This task verifies a proposed minimizer; it does not request unique coefficients as the separate OLS exercise does.",
+    "starter": "def solve(x, y, intercept, slope):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            1,
+            3,
+            5
+          ],
+          1,
+          2
+        ],
+        "expected": true
+      },
+      {
+        "args": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            1,
+            3,
+            5
+          ],
+          3,
+          0
+        ],
+        "expected": false
+      }
+    ],
+    "solution": "def solve(x, y, intercept, slope):\n    residual_sum = 0\n    cross_sum = 0\n    for a, b in zip(x, y):\n        residual = b - intercept - slope * a\n        residual_sum += residual\n        cross_sum += a * residual\n    return residual_sum == 0 and cross_sum == 0",
+    "explanation": "For a free intercept and slope, stationarity requires \\(\\sum_i r_i=0\\) and \\(\\sum_i x_i r_i=0\\). These conditions are also sufficient, even if the design is rank deficient. For any parameter perturbation \u03b4a,\u03b4b, expand its SSE change as \\(-2\\delta a\\sum_i r_i-2\\delta b\\sum_i x_i r_i+\\sum_i(\\delta a+\\delta b x_i)^2\\). When both sums vanish it is nonnegative. Conversely a nonzero gradient admits a decreasing small perturbation. Check both sums in one pass. Mean residual zero alone misses a wrong slope. A constant predictor can have many minimizing parameter pairs, and empty data makes both sums zero. Exact integer accumulation avoids rounding a small nonzero stationarity error away."
+  },
+  {
+    "id": "c_l11_hard",
+    "title": "Compute every ridge deletion error in one fit",
+    "difficulty": "Hard",
+    "topic": "Regression",
+    "path": "researcher",
+    "prompt": "features is a rectangular n\u00d7d INTEGER matrix, where 0\u2264n\u226410000 and 0\u2264d\u22646; targets is an integer list of length n. All entries have absolute value at most 10^6. ridge is an integer \u03bb with 1\u2264\u03bb\u226410^9. For each row i, fit the OTHER rows by minimizing\n\n\\[\\sum_{j\\ne i}(y_j-a-b^Tf_j)^2+\\lambda\\sum_{k=1}^d b_k^2.\\]\n\nThe intercept a is UNPENALIZED. \u03bb and the raw feature coordinates stay fixed across all deletions: do not divide \u03bb by training size or learn a full-data scaler. Return the held-out residual y\u1d62\u2212a\u2212b\u1d40f\u1d62 for every original row, in original order. Encode each exact result as a reduced pair [numerator_text,denominator_text] of canonical base-ten STRINGS: signed numerator, positive denominator, gcd=1, no leading zeroes or plus sign. Zero is [\"0\",\"1\"]. Large rational components exceed exact browser numeric range, so do not return floats or numeric pairs.\n\nFor n=0 return []; for n=1 return [None], since deleting the only observation leaves an unidentified unpenalized intercept. For \\(n\\geq2\\) every deleted prediction is unique, even with constant or redundant features. Empty feature rows mean an intercept-only fit. Do not mutate inputs.\n\nUse one full-data fit and its diagonal leverages: O(n(d+1)\u00b2+(d+1)\u00b3) scalar arithmetic and O((d+1)\u00b2) working storage beyond the returned list. Integer bit and gcd costs are additional. Refitting once per observation is too slow. Python integer arithmetic and math.gcd suffice; no external matrix library is needed. The editorial explains an exact fraction-free computation, avoiding cancellation when leverage is almost one.",
+    "starter": "def solve(features, targets, ridge):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              0
+            ],
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          [
+            1,
+            1,
+            4
+          ],
+          1
+        ],
+        "expected": [
+          [
+            "0",
+            "1"
+          ],
+          [
+            "-3",
+            "2"
+          ],
+          [
+            "3",
+            "1"
+          ]
+        ]
+      },
+      {
+        "args": [
+          [
+            [],
+            [],
+            []
+          ],
+          [
+            0,
+            3,
+            6
+          ],
+          5
+        ],
+        "expected": [
+          [
+            "-9",
+            "2"
+          ],
+          [
+            "0",
+            "1"
+          ],
+          [
+            "9",
+            "2"
+          ]
+        ]
+      }
+    ],
+    "solution": "from math import gcd\ndef solve(features, targets, ridge):\n    n = len(targets)\n    if n == 0:\n        return []\n    if n == 1:\n        return [None]\n    width = len(features[0]) + 1\n    matrix = [[0] * width for _ in range(width)]\n    rhs = [0] * width\n    for features_i, target in zip(features, targets):\n        row = [1] + features_i\n        for j in range(width):\n            rhs[j] += row[j] * target\n            for k in range(width):\n                matrix[j][k] += row[j] * row[k]\n    for j in range(1, width):\n        matrix[j][j] += ridge\n    rows = [matrix[j] + [int(j == k) for k in range(width)] for j in range(width)]\n    previous = 1\n    for column in range(width):\n        pivot = rows[column][column]\n        for i in range(width):\n            if i == column:\n                continue\n            factor = rows[i][column]\n            for j in range(2 * width):\n                if j != column:\n                    rows[i][j] = (pivot * rows[i][j] - factor * rows[column][j]) // previous\n            rows[i][column] = 0\n        previous = pivot\n    determinant = rows[0][0]\n    adjugate = [row[width:] for row in rows]\n    coefficients = [sum(a * b for a, b in zip(row, rhs)) for row in adjugate]\n    result = []\n    for features_i, target in zip(features, targets):\n        row = [1] + features_i\n        fitted = sum(a * b for a, b in zip(row, coefficients))\n        leverage = sum(row[j] * adjugate[j][k] * row[k] for j in range(width) for k in range(width))\n        numerator = determinant * target - fitted\n        denominator = determinant - leverage\n        divisor = gcd(abs(numerator), denominator)\n        result.append([str(numerator // divisor), str(denominator // divisor)])\n    return result",
+    "explanation": "Augment each feature row to x\u1d62=(1,f\u1d62\u1d40)\u1d40. Let P=diag(0,\u03bb,\u2026,\u03bb), M=\\(\\Sigma\\)x\u1d62x\u1d62\u1d40+P and g=\\(\\Sigma\\)x\u1d62y\u1d62. M is positive definite on nonempty data: nonzero slopes pay a positive penalty, and a pure nonzero intercept has positive data loss. For \\(n\\geq2\\) this remains true after any deletion, including duplicate features.\n\nThe deleted equations subtract x\u1d62x\u1d62\u1d40 and x\u1d62y\u1d62. If \u03b2=M\u207b\u00b9g and h\u1d62=x\u1d62\u1d40M\u207b\u00b9x\u1d62, substituting \\(\\beta^{(-i)}=\\beta-M^{-1}x_i r_i/(1-h_i)\\) gives the exact deleted fit. Its error is r\u1d62/(1\u2212h\u1d62). The positive deleted determinant implies 1\u2212h\u1d62>0; subtracting floating numbers near one can nevertheless destroy its value.\n\nWork with integer determinant D and adjugate A, so M\u207b\u00b9=A/D. The requested residual is\n\n\\[\\frac{D y_i-x_i^T A g}{D-x_i^T A x_i}.\\]\n\nCompute D and A once by fraction-free Gauss\u2013Jordan elimination on [M|I]. At pivot c, with p=current pivot and q=previous pivot (initially one), update each nonpivot row entry j\u2260c by (p\u00b7entry\u2212row[c]\u00b7pivot_row[j])/q, then zero its pivot column. Leave the pivot row untouched during that step. Determinant identities make every division exact; positive leading principal minors ensure nonzero pivots for this M. At termination the left block is D\u00b7I and the right block is A. This is exact integer elimination, not a tolerance-based inverse. Multiply A by g once, compute each quadratic leverage numerator in O((d+1)\u00b2), and reduce its positive-denominator rational by gcd.\n\nFor intercept-only data the formula reduces to (n y\u1d62\u2212\\(\\Sigma\\)y)/(\\(n-1\\)), a useful independent check. With one remaining row the fitted slopes are zero and its intercept is that row\u2019s target, even if full-data leverage was extremely close to one. n=1 instead leaves no remaining intercept information and returns None. Fixing \u03bb and feature coordinates is part of the contract; the algebra removes the row\u2019s fit contribution, but does not undo preprocessing or tuning that used it. Reading all rows for sufficient statistics and again for errors uses O(n(d+1)\u00b2+(d+1)\u00b3) scalar work and O((d+1)\u00b2) auxiliary state; exact integer and gcd bit costs are separate."
   }
 ]
