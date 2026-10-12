@@ -49,33 +49,34 @@ Students choose questions within the lists; no forced Q1 → Q2 → code chain.
 | l14 validation | 6 interviews; 3 coding | Verified | Automated + live grading/debug copy/legacy bookmark/narrow proof |
 | l15 search/multiple testing | 6 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
 | l16 research defence | 6 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
-| l17–l18 researcher | Pending | Pending | Pending |
+| l17 Monte Carlo | 6 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
+| l18 researcher algorithms | Pending | Pending | Pending |
 | l19–l24 trader | Pending | Pending | Pending |
 
 Sources: `topic_practice/foundation_questions.py`, `foundation_coding.py`,
-`distributions.py`, `stopping.py`, `arithmetic.py`, `variance.py`, `data_time.py`, `estimation.py`, `likelihood.py`, `covariance.py`, `regression.py`, `inference.py`, `time_series.py`, `validation.py`, `search.py`, `research_defence.py`, the existing banks, and
+`distributions.py`, `stopping.py`, `arithmetic.py`, `variance.py`, `data_time.py`, `estimation.py`, `likelihood.py`, `covariance.py`, `regression.py`, `inference.py`, `time_series.py`, `validation.py`, `search.py`, `research_defence.py`, `monte_carlo.py`, the existing banks, and
 `tests/test_topic_practice.py`, `test_distribution_stopping_practice.py`, and
 `test_arithmetic_variance_practice.py`, `test_data_time_practice.py`, and
-`test_estimation_practice.py`, and `test_likelihood_practice.py`, and `test_covariance_practice.py`, and `test_regression_practice.py`, and `test_inference_practice.py`, and `test_time_series_practice.py`, and `test_validation_practice.py`, and `test_search_practice.py`, and `test_research_defence_practice.py`. Generated assets are
+`test_estimation_practice.py`, and `test_likelihood_practice.py`, and `test_covariance_practice.py`, and `test_regression_practice.py`, and `test_inference_practice.py`, and `test_time_series_practice.py`, and `test_validation_practice.py`, and `test_search_practice.py`, and `test_research_defence_practice.py`, and `test_monte_carlo_practice.py`. Generated assets are
 `static/content.json` and `static/coding.json`; rebuild their Python sources.
 
 The two list destinations and nonsequential journey handoffs are implemented
 across the site. Existing pending topics expose their current linked practice;
 their banks do not yet satisfy the approved difficulty contract. The eight foundation
-topics and researcher estimation l09, likelihood l25, covariance l10, regression l11, inference l12, time series l13, validation l14, search l15 and research defence l16 do. Current inventory: 25 lessons, 124 interview questions, 55 coding
-exercises. Researcher route: 19 checks, 115 distinct questions, 54 current codes.
+topics and researcher estimation l09, likelihood l25, covariance l10, regression l11, inference l12, time series l13, validation l14, search l15, research defence l16 and Monte Carlo l17 do. Current inventory: 25 lessons, 128 interview questions, 57 coding
+exercises. Researcher route: 19 checks, 119 distinct questions, 56 current codes.
 
-Next: author researcher l17–l18; finish the trader topics.
+Next: author researcher l18; finish the trader topics.
 Finish live checks of the remaining topic lists and representative exercises.
 Inspect each lesson’s
 actual learning goals and authored explanation before selecting its problems.
 The full goal remains active until all 25 topics, future-topic validation,
 navigation, preservation checks and commit/push evidence are complete.
 
-As of 2026-10-12, all 23 frontend suites and 163 Python tests pass. Independent
+As of 2026-10-12, all 23 frontend suites and 175 Python tests pass. Independent
 enumeration, exact moments and rational state equations check the completed topics' delicate
-mathematical answers and coding references; all forty expanded reference solutions
-also pass the actual judge. Existing grading meaning and IDs are preserved; q44, q24, q49–q51, q20/q29 and q19/q21/q30 and q22/q26/q47 and q18/q31 and q27/q28 and q04/q25/q32 and q33/q34 now have topic-specific
-written assessment criteria in place of their generic rubrics. q27 also clarifies overlap wording without changing its assessment meaning. q25 now states its intended exact rejection probability; q32 distinguishes identical copies from a genuine search. Personal
+mathematical answers and coding references; all forty-two expanded reference solutions
+also pass the actual judge. Existing grading meaning and IDs are preserved; q44, q24, q49–q51, q20/q29 and q19/q21/q30 and q22/q26/q47 and q18/q31 and q27/q28 and q04/q25/q32 and q33/q34 and q43/q48 now have topic-specific
+written assessment criteria in place of their generic rubrics. q27 also clarifies overlap wording without changing its assessment meaning. q25 now states its intended exact rejection probability; q32 distinguishes identical copies from a genuine search. q48 explicitly includes finite second moments and handles a constant target without undefined correlation, preserving its assessment meaning. Personal
 assessments, drafts and trainer history match the baseline captured for this work.
 See [verification](evidence/topic-practice-20261012.md) for scope and limitations.

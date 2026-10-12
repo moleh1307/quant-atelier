@@ -1124,3 +1124,80 @@ navigation, not employer difficulty, learner mastery, live execution or physical
 touch/screen-reader interaction. Next: **l17–l18 and l19–l24**, then the required
 final broad navigation/preservation audit and removal of the pending-topic exception.
 The full goal remains active.
+
+
+## Fourteenth expansion batch: Monte Carlo, l17
+
+Read the actual authored simulation lesson before selecting this practice. Added
+four interviews and two coding exercises, completing **2 Easy / 2 Medium / 2 Hard**
+and **one code per difficulty**. Retained c12 Medium exactly, including its fixed
+coefficient, empty/singleton rules and original tests. All **55 prior public code
+records** and **122 of 124 prior interview records** remain exact. q43 changes
+rubric only. q48 adds its necessary finite-second-moment assumption and expresses
+the optimum residual variance without undefined correlation for a constant target;
+ID and assessment meaning remain unchanged. Current inventory: **25 lessons /
+128 interviews / 57 codes**; researcher route **19 checks / 119 distinct interviews /
+56 current codes**. **18 topics complete; seven pending**.
+
+Interviews distinguish pair averages from dependent component outputs and compare
+variance at the same number/cost of evaluations. The zero-hit question proves a
+complete, conservative one-sided confidence procedure, includes endpoints and
+minimum fixed sample count, and gives an almost-sure miscoverage counterexample
+under repeated block selection. The fitted-control question enumerates all nine
+same-sample outcomes, then conditions on an independent pilot: unchanged target
+mean, noisy-coefficient variance and zero variance of its conditional mean are
+separate facts. Hard retained questions derive antithetic moments and optimum
+control coefficients with specific assessment obligations.
+
+Easy coding uses exact integer pair totals before final float conversion to retain
+small variation around large offsets. Hard coding minimizes stratified simulation
+variance under explicit independent with-replacement draws, equal costs, known
+population variances and mandatory positive counts. A decreasing marginal-gain
+proof establishes a global integer optimum; exact comparison and original-index
+ties yield the lexicographically largest optimal allocation. Returned variance
+uses reduced decimal string fractions. No continuous-allocation rounding, guessed
+pilot precision or financial-profit claim substitutes for this contract.
+
+**175 Python tests and all 23 frontend suites passed.** Twelve new tests use exact
+polynomial integrals, a specified finite joint law, rational-grid coverage checks,
+all nine same-sample and 81 independent-pilot worlds, 250 centered-rational pair
+checks and 200 independent retained-control checks. Allocation is verified against
+ALL positive integer compositions for 180 seeded instances with up to five strata
+and budgets through 12, plus a grid of two-stratum weights/variances and every
+small official fixture. Scaling, monotonicity, zero gains, mandatory zero-weight
+strata and the full 20,000-stratum/200,000-draw limits are checked. A Pell identity
+separates two large marginal priorities by exactly one, where floating arithmetic
+ties them. All **42 expanded references** pass their actual complete judge.
+
+The maximum allocation fixture exposed a genuine debugging-copy boundary:
+spaced JSON was **200,057** characters across arguments and expected output, above
+the existing 200,000-character per-case limit. `case_copy` now emits compact JSON
+without changing any value or that limit. All official cases round-trip through
+the actual parser, including the unchanged full maximum fixture. Python debugging
+regressions and the frontend debugging suite pass; no fixture scope was reduced.
+
+Chrome explicitly entered the launcher and visibly verified **Test preview** for
+all grades/reveals. Easy **3/8** was accepted. Hard code passed **9/9**, observed
+**726.2 ms** once. The large exact variance
+**["1771308307978070401","3441313796169221282"]** survived actual UI debugging copy;
+the rerun passed **4/4**, with completion unchanged. The authored lesson continues
+to the interview list; a freely chosen detail continues to the coding list. At
+**390px**, the coefficient matrix and pilot-variance displays had widths/scroll
+widths **304/304px** and **270/270px**, with document width **390px** and zero KaTeX
+errors. The saved narrow proof was visually inspected. No console errors observed.
+Viewport reset; explicit navigation confirmed the personal question list **0/6**
+and coding stage **0/3**, with no preview notice. Questions, coding, lessons, drafts
+and trainers match the fresh pre-edit baseline; no personal credit/reset occurred.
+Server restarted to load the expanded judge and compact-copy change.
+
+- [Interview list, personal workspace](monte-carlo-personal-question-list-20261012.png).
+- [Coding list, isolated preview](monte-carlo-coding-list-20261012.png).
+- [Narrow independent-pilot derivation, isolated preview](monte-carlo-proof-narrow-20261012.png).
+
+Primary context consulted: [Wright, exact integer stratified allocation, Census
+Bureau](https://www.census.gov/library/working-papers/2014/adrm/rrs2014-07.html).
+Our toy uses an explicitly with-replacement simulation contract; its wording,
+proof, fixtures and code are original. These checks establish stated mathematics
+and observed navigation, not employer calibration or learner mastery. Next:
+**l18 and l19–l24**, then the final broad navigation/preservation audit and removal
+of the pending-topic exception. The full goal remains active.

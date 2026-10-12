@@ -22,9 +22,10 @@ def validate(code):
 def case_copy(case, index):
     # JSON text preserves large integers, nested values and null without a
     # JavaScript parse/stringify round trip or the old truncated Python repr.
-    copy = {'argumentsJSON': json.dumps(case['args'], allow_nan=False), 'caseNumber': index + 1}
+    # Compact separators keep large official cases within the debug text limit.
+    copy = {'argumentsJSON': json.dumps(case['args'], allow_nan=False, separators=(',', ':')), 'caseNumber': index + 1}
     if 'expected' in case:
-        copy['expectedJSON'] = json.dumps(case['expected'], allow_nan=False)
+        copy['expectedJSON'] = json.dumps(case['expected'], allow_nan=False, separators=(',', ':'))
     return copy
 
 def submission_cases(task_id):
