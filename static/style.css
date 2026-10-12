@@ -526,3 +526,28 @@ input::placeholder,textarea::placeholder { color:#65715a;opacity:1; }
 .result-row pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:240px;overflow:auto}
 @media(max-width:600px){.debug-panel{padding:15px}.debug-fields{grid-template-columns:minmax(0,1fr)}.debug-heading .small{flex-basis:100%;order:3}.editor-actions .btn{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.debug-case-tab{transition:none}}
+/* Topic practice: the list is the destination, each problem is a choice. */
+.topic-list-summary{display:flex;align-items:center;flex-wrap:wrap;gap:8px 20px;padding:4px 0 22px;font-size:13px;border-bottom:1px solid #e0ddd3}
+.topic-list-summary>a{margin-left:auto;color:#5f6b54}
+.topic-practice-list{max-width:1050px;margin-top:30px}
+.topic-level{margin-bottom:34px}
+.topic-level-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:0 4px 10px}
+.topic-level-heading h2{margin:0;font-family:var(--font-heading);font-weight:400;font-size:30px;color:#30372f}
+.topic-level-rows{border-top:1px solid #d7dacd}
+.topic-practice-row{display:grid;grid-template-columns:minmax(0,1fr) auto 18px;align-items:center;gap:12px 22px;padding:19px 8px;border-bottom:1px solid #e0ddd3;border-radius:3px;text-decoration:none;transition:background-color 180ms ease}
+.topic-practice-row:hover{background:#eeeee5}
+.topic-practice-row .row-title{font-size:17px;line-height:1.45}
+.topic-practice-row .row-meta{display:block;margin-top:5px;font-size:12px}
+.topic-practice-row .status{white-space:normal;text-align:right;max-width:180px}
+.topic-practice-row .row-arrow{font-size:17px;color:#7d8f69}
+.topic-practice-row:focus-visible{outline:2px solid #7d8f69;outline-offset:3px}
+.topic-list-empty{margin:0;padding:18px 8px}
+@media(max-width:600px){
+  .topic-list-summary>a{margin-left:0}
+  .topic-practice-row{grid-template-columns:minmax(0,1fr) 18px;gap:8px 12px;padding:16px 6px}
+  .topic-practice-row>div{grid-column:1;grid-row:1}
+  .topic-practice-row .status{grid-column:1;grid-row:2;text-align:left;max-width:none}
+  .topic-practice-row .row-arrow{grid-column:2;grid-row:1}
+  .topic-practice-row .row-title{font-size:16px}
+}
+@media(prefers-reduced-motion:reduce){.topic-practice-row{transition:none}}

@@ -263,7 +263,11 @@ A settled screenshot demonstrates layout and state, not smooth frame pacing. Des
 
 The user specifically disliked losing the roadmap after opening a course. Keep the current module title, branch, Understand/Apply/Implement stages, Steps/Sections controls and next-step handoffs. Reading the lesson should lead naturally into applying and implementing it without requiring repeated trips back to the roadmap.
 
-Maintain originating-module URLs, reload/Back behavior, exact roadmap return, linked activities, and the lesson-end continuation. Standalone library entry should still work. If a lesson has no relevant coding exercise, do not fabricate one merely to fill a stage.
+Maintain originating-module URLs, reload/Back behavior, exact roadmap return, linked activities, and the lesson-end continuation. Standalone library entry should still work.
+
+**Updated practice contract, approved 2026-10-12:** each topic follows lesson → topic interview list → topic coding list. The interview list has Easy/Medium/Hard sections, each with at least two questions. The coding list has those same three sections, with exactly one exercise per difficulty. Students choose freely within a list; returning from a problem or exercise leads back to its originating list, rather than imposing a Q1 → Q2 → coding sequence. This applies to every existing and future topic. See [TOPIC_PRACTICE_STATUS.md](TOPIC_PRACTICE_STATUS.md) for the exact expansion scope and checks.
+
+Author meaningful coding transfer from the topic itself: do not fill a difficulty slot with an unrelated algorithm. State any new prerequisite explicitly, especially in a hard transfer task. This practice requirement does not require code inside the illustrated lesson body. Inline code, figures and interaction still need to justify their contribution to the explanation.
 
 Keep stable lesson/question/code IDs and the current grading semantics. A page visit, a slider drag, an expanded explanation, an animation or an ungraded prediction earns no completion. Lesson checks, numeric solves, written self-assessments, coding passes and trainer rounds remain distinct.
 

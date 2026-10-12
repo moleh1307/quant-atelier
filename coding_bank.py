@@ -103,6 +103,9 @@ task('c15','A likelihood that does not underflow','Medium','Likelihood',
      'import math\ndef solve(successes, trials, p):\n    return successes * math.log(p) + (trials - successes) * math.log1p(-p)',
      'Logarithms turn the independent product into a sum. math.log1p(-p) computes log(1-p) without first rounding 1-p to 1 for tiny p. Zero successes and all-success records need no special case because both logarithms are finite on the specified open parameter domain. O(1) time and space. A log-likelihood is not a posterior probability.')
 
+from topic_practice import add_coding
+add_coding(task, TASKS)
+
 if __name__ == '__main__':
     import json
     from pathlib import Path

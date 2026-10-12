@@ -1,5 +1,5 @@
 'use strict';
-// Module context is bookmarkable, branch-specific and independent of score writes.
+// Lesson -> question list -> coding list is bookmarkable; exercises are choices.
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const bank=JSON.parse(fs.readFileSync('static/content.json','utf8')),codeBank=JSON.parse(fs.readFileSync('static/coding.json','utf8'));
 const context={URLSearchParams,location:{search:'?qa=1',hash:''},console,Math,Date,setTimeout,clearTimeout,document:{querySelector:()=>null},bank,codeBank};
@@ -7,54 +7,56 @@ vm.createContext(require('./workspace-fixture.cjs')(context));vm.runInContext(fs
 const run=s=>vm.runInContext(s,context);
 run("content=bank;coding=codeBank;state=fresh();route=['paths','trader'];");
 assert.match(run('roadmapPractice(content.lessons[0])'),/#courses\/l01\/journey\/trader\/l01/);
+assert.match(run('roadmapPractice(content.lessons[0])'),/#question-list\/l01\/journey\/trader\/l01/);
+assert.match(run('roadmapPractice(content.lessons[0])'),/#coding-list\/l01\/journey\/trader\/l01/);
 const before=run('JSON.stringify(state)');
-for(const [kind,id,next] of [['courses','l01','q01'],['questions','q01','q05'],['questions','q05','c01'],['coding','c01','l02']]){
+for(const [kind,id,nextKind,nextId] of [
+ ['courses','l01','question-list','l01'],
+ ['question-list','l01','coding-list','l01'],
+ ['questions','q01','question-list','l01'],
+ ['questions','q_l01_h2','question-list','l01'],
+ ['coding','c01','coding-list','l01'],
+ ['coding','c_l01_hard','coding-list','l01'],
+ ['coding-list','l01','courses','l02']]){
  run(`route=['${kind}','${id}','journey','trader','l01']`);
  assert.equal(run('moduleContext().lesson.id'),'l01');assert.equal(run('moduleContext().path'),'trader');
- assert.ok(run('followingActivity(moduleContext()).href').includes('/'+next+'/journey/trader/'));
+ assert.equal(run('followingActivity(moduleContext()).href'),`#${nextKind}/${nextId}/journey/trader/${nextId==='l02'?'l02':'l01'}`);
  assert.match(run('moduleTrail(moduleContext())'),/aria-current="step"/);
  assert.match(run('moduleTrail(moduleContext())'),/#paths\/trader\/step-l01/);
- assert.equal(run('JSON.stringify(state)'),before,'Navigation and module indicators earn no study credit');
+ assert.equal(run('JSON.stringify(state)'),before,'Navigation earns no study credit');
 }
-// A lesson's existing practice links also retain the originating branch.
-run("route=['courses','l01','journey','trader','l01']");
-assert.match(run('moduleLinks(lessonDetail(content.lessons[0]),moduleContext())'),/#questions\/q05\/journey\/trader\/l01/);
-assert.match(run('lessonNavigation(content.lessons[0])'),/Open problem/);
+run("route=['courses','l01','journey','trader','l01'];");
+assert.match(run('moduleLinks(lessonDetail(content.lessons[0]),moduleContext())'),/#question-list\/l01\/journey\/trader\/l01/);
+assert.match(run('lessonNavigation(content.lessons[0])'),/Choose an interview question/);
 run("state.questions.q01={reviewed:true};");
-assert.equal(run('followingActivity(moduleContext()).id'),'q01','Reviewed work does not become solved');
-run("state.questions.q01={solved:true};");
-assert.equal(run('followingActivity(moduleContext()).id'),'q05','Resume the first outstanding exercise after a lesson');
-run("state.questions.q05={selfSolved:true};state.coding.c01={accepted:true};");
-assert.ok(run('followingActivity(moduleContext()).href').includes('/l02/journey/trader/l02'));
-// The shared-to-specialist boundary follows the bookmarked branch, not preferences.
-const sharedLast=bank.lessons.find(l=>l.id==='l08'),lastCode=sharedLast.coding.at(-1);
+assert.equal(run('followingActivity(moduleContext()).kind'),'question-list','Reviewed work does not skip the list');
+run("content.lessons[0].questions.forEach(id=>state.questions[id]={solved:true});content.lessons[0].coding.forEach(id=>state.coding[id]={accepted:true});");
+assert.equal(run('followingActivity(moduleContext()).kind'),'question-list','The lesson handoff remains an explicit list even after completion');
+// Return from a detail to its originating list, then advance explicitly.
 for(const [path,next] of [['researcher','l09'],['trader','l19']]){
- run(`route=['coding','${lastCode}','journey','${path}','l08']`);
- assert.ok(run('followingActivity(moduleContext()).href').includes('/'+next+'/journey/'+path+'/'+next));
+ run(`route=['coding-list','l08','journey','${path}','l08']`);
+ assert.equal(run('followingActivity(moduleContext()).href'),`#courses/${next}/journey/${path}/${next}`);
 }
-// A shared exercise retains its exact origin rather than guessing a parent lesson.
 run("route=['questions','q44','journey','researcher','l18']");assert.equal(run('moduleContext().lesson.id'),'l18');
+assert.match(run("practiceBreadcrumb('questions','Research coding')"),/#question-list\/l18\/journey\/researcher\/l18/);
 run("route=['questions','q44','journey','researcher','l08']");assert.equal(run('moduleContext().lesson.id'),'l08');
-for(const route of ["['questions','q01']","['questions','q01','journey','trader','l24']","['questions','q01','journey','trader','missing']","['questions','q01','journey','other','l01']","['coding','c01','journey','researcher','l24']"]){
- run('route='+route);assert.equal(run('moduleContext()'),null,'Invalid or unrelated context falls back to standalone practice');
+for(const route of ["['questions','q01']","['questions','q01','journey','trader','l24']","['questions','q01','journey','trader','missing']","['questions','q01','journey','other','l01']","['coding','c01','journey','researcher','l24']","['question-list','l25','journey','trader','l25']"]){
+ run('route='+route);assert.equal(run('moduleContext()'),null,'Invalid or unrelated context cannot claim another module');
 }
 run("route=['courses','l21'];");assert.equal(run('moduleContext().path'),'trader');
-run("route=['trainers','math','journey','researcher','l06'];");assert.equal(run('followingActivity(moduleContext()).id'),'fractions');
-const last=bank.lessons.find(l=>l.id==='l24');
-run(`route=['coding','${last.coding.at(-1)}','journey','trader','l24']`);
+run("route=['trainers','math','journey','researcher','l06'];");assert.equal(run('followingActivity(moduleContext()).id'),'fractions','Optional fluency drills retain their continuity');
+run("route=['coding-list','l24','journey','trader','l24'];");
 assert.equal(run('followingActivity(moduleContext())'),null);assert.match(run('moduleContinuation(moduleContext())'),/End of this route/);
-// Every activity has a valid independent bookmark and resolves to its own module.
+// Every old activity bookmark and every new list resolves to its own module.
 for(const path of ['researcher','trader'])for(const l of bank.lessons.filter(l=>l.path==='shared'||l.path===path)){
- for(const a of run(`moduleActivities(content.lessons.find(l=>l.id==='${l.id}'),'${path}')`)){
+ for(const a of run(`[...moduleActivities(content.lessons.find(l=>l.id==='${l.id}'),'${path}'),...moduleSteps(content.lessons.find(l=>l.id==='${l.id}'),'${path}')]`)){
   run('route='+JSON.stringify(a.href.slice(1).split('/')));
-  assert.equal(run('moduleContext().lesson.id'),l.id);
-  assert.equal(run('moduleContext().path'),path);
+  assert.equal(run('moduleContext().lesson.id'),l.id);assert.equal(run('moduleContext().path'),path);
  }
 }
-const estimationLast=run("moduleActivities(content.lessons.find(l=>l.id==='l09'),'researcher')").at(-1);
-run('route='+JSON.stringify(estimationLast.href.slice(1).split('/')));
+run("route=['coding-list','l09','journey','researcher','l09'];");
 assert.equal(run('followingActivity(moduleContext()).href'),'#courses/l25/journey/researcher/l25');
-run("route=['coding','c15','journey','researcher','l25'];");
+run("route=['coding-list','l25','journey','researcher','l25'];");
 assert.equal(run('followingActivity(moduleContext()).href'),'#courses/l10/journey/researcher/l10');
 assert.equal(run("moduleNumber(content.lessons.find(l=>l.id==='l25'))"),'10');
-console.log('Lesson→problem→code continuity, new likelihood placement, reload bookmarks, branch boundaries, shared exercises, honest evidence and all activity destinations passed.');
+console.log('Lesson -> grouped question list -> coding list, free exercise choice, return links, both branches, all old/new bookmarks and no navigation credit passed.');

@@ -143,6 +143,11 @@ lesson(**LESSON)
 new_lesson=L.pop()
 L.insert(next(i for i,item in enumerate(L) if item["id"] == "l09")+1,new_lesson)
 
+from topic_practice import add_questions as add_topic_questions, attach_and_validate
+from coding_bank import TASKS
+add_topic_questions(q, Q)
+attach_and_validate(L, Q, TASKS)
+
 from math_markup import annotate
 Path(__file__).parent.joinpath('static/content.json').write_text(json.dumps(annotate(dict(questions=Q,lessons=L)),ensure_ascii=False,indent=2))
 print(f'{len(Q)} questions, {len(L)} lessons')
