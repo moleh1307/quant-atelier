@@ -1,8 +1,8 @@
 # Topic practice — verification
 
 2026-10-12. Latest verified scope: grouped list/journey navigation across the site,
-and expanded banks for l01–l07. The full 25-topic expansion remains active;
-18 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
+and expanded banks for l01–l08. The full 25-topic expansion remains active;
+17 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
 
 The first batch below documents l01–l03 at its own verification baseline
 (63 questions / 22 codes). Later batches are recorded below.
@@ -220,3 +220,94 @@ Next: l08 data timing, including preservation of its second original Medium
 coding bookmark when the new list contains exactly one Medium slot. Continue
 with researcher and trader topics; do not describe seven completed banks as the
 completed 25-topic goal.
+
+
+## Fourth batch: data timing and publication histories
+
+All eight foundation topics now satisfy the interview/coding difficulty contract.
+l08 adds five interviews and two coding exercises, retains q44 and c06, and
+preserves c05 as additional practice. Totals: **25 lessons / 84 questions / 34
+codes**. Researcher route: **19 checks / 75 distinct questions / 34 codes**.
+Seventeen researcher/trader banks remain. q44 now has specific availability-join
+assessment criteria; every other q44 field, all other 78 preceding public question
+records and all 32 preceding coding records are unchanged after JSON parsing.
+
+Easy questions distinguish elapsed time from record count and inclusive release
+eligibility from a strict-before rule. Medium practice pairs the existing
+availability audit with a future-dependent row-selection counterexample: a causal
+feature cannot repair a population selected on its future success. The historical
+vintage problem constructs compatible histories, derives sharp identified profit
+sets under component and aggregate revision bounds, and treats the unattained
+shared-budget boundary at four explicitly. The other Hard question proves a
+necessary/sufficient prefix condition across different stream lengths, using one
+finite-time batch evaluator; lagged observations with future-fitted normalization
+provide a concrete failure. Written rubrics identify the actual proof obligations.
+
+The Easy code counts distinct records in a half-open elapsed-time interval,
+excluding the whole current-time tie group. The Medium code is the original c06
+availability scan. Hard coding replays per-key publication histories with original
+measurement revisions, retractions, restorations, tie precedence, elapsed-time
+expiration and decisions in arbitrary input order. Its reference uses a sorted
+sweep, version map and per-key heap, and captures scalar results at the historical
+decision before later versions change. It does not use the last publication as a
+substitute for the greatest active event timestamp.
+
+Verification on 2026-10-12:
+
+- **62 Python tests** and **23 frontend suites** pass. All nineteen expanded
+  coding references pass the actual judge and preserve their supplied inputs.
+- The elapsed-window code agrees with direct record-membership enumeration
+  across every sorted timestamp sequence of length 0–6 over five timestamp
+  values and five horizons. A longer arithmetic progression checks boundary
+  counts without generating its expectations through the reference.
+- c06 agrees with separate eligible-row scans on 250 seeded histories.
+  The new Hard reference agrees with rebuilding each decision's publication
+  history on 750 seeded multi-key histories, including ties, missing keys,
+  negative/zero values, deletion, restoration, expiration and arbitrary orders.
+  Reversing input release order leaves sequence-based precedence unchanged.
+- Future revisions and unrelated-key releases cannot change earlier outputs.
+  Original public examples and hidden expectations are separately checked
+  against these oracles. The judge rejects current-time inclusion and
+  last-publication shortcuts; sorting/heap invariants, not a passing timer,
+  establish the stated asymptotic algorithm.
+- Four binary outcomes check the future-selection probability and retention
+  rate. Rational grids check the historical-profit constructions, component
+  bounds and exact shared-budget boundaries. The proof in the solution supplies
+  the all-real identified sets and unattained infimum; finite grids do not prove
+  universal real-valued claims. The prefix theorem is reviewed as a proof;
+  finite altered-suffix examples demonstrate its counterexample rather than
+  purporting to prove the universal condition.
+- The build requires explicit retention of removed coding bookmarks and rejects
+  duplicate/invalid additional links or overlap with current slots. Both branch
+  navigation tests resolve c05 in l08, preserve its draft, exclude its pass from
+  l08's current 0/3 evidence and keep its separate current l18 context intact.
+- Strict local KaTeX parsing checks the authored/generated mathematical bank
+  after the final wording corrections. The browser review caught an inappropriate literal
+  field-name subscript and replaced it with the defined interval [t-h,t]. Long
+  setups and derivations use intentional paragraph boundaries, preserved by
+  practice-prose styling rather than a single wall of text.
+
+Chrome was used after the IAB connection was unavailable. The personal question
+list displayed two choices per difficulty; the coding list displayed exactly one
+per difficulty and linked to researcher l09. The permanent c05/l08 journey opened
+with its Additional practice label and returned to this same coding list.
+Explicit launcher entry and the Test preview notice preceded submission of the
+Hard snapshot reference (**11/11**). Reload returned to personal mode, and later
+solution inspection re-entered preview explicitly. The final Hard historical
+proof and its rubric rendered at 390px with zero math errors and document/scroll
+width 390px. No written self-assessment was awarded during inspection.
+
+Temporary viewport settings were reset; the review tab was left at the personal
+l08 coding list, which showed 0/3 rather than the preview's development pass.
+Question, code, lesson, draft and trainer records matched the fresh disk baseline.
+The transient preview saved-tab recovery notice disappeared on navigation; no
+personal recovery was applied. This is desktop/breakpoint evidence, not physical
+mobile-device or screen-reader certification.
+
+- [Data-timing coding list, personal workspace](data-time-coding-list-20261012.png).
+
+Next: researcher l09 estimators, then likelihood l25 and the remaining researcher
+and trader banks. Preserve the new additional-practice mechanism when later
+lessons have multiple original coding links at the same difficulty. The full goal
+remains active until all 25 topics and the final preservation/navigation audit
+are complete.

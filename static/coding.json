@@ -1203,5 +1203,185 @@
     "solution": "import math\ndef solve(n, pattern, heads, total):\n    k = len(pattern)\n    windows = n-k+1\n    if windows <= 0:\n        return [0,0]\n    prefix = [0]*k\n    for i in range(1,k):\n        j = prefix[i-1]\n        while j and pattern[i] != pattern[j]:\n            j = prefix[j-1]\n        if pattern[i] == pattern[j]:\n            j += 1\n        prefix[i] = j\n    suffix_probabilities = [1.0]\n    numerator = denominator = 1\n    for symbol in reversed(pattern):\n        numerator *= heads if symbol == 'H' else total-heads\n        denominator *= total\n        suffix_probabilities.append(numerator/denominator)\n    probability = suffix_probabilities[k]\n    max_lag = min(k-1,windows-1)\n    pair_count = max_lag*windows - max_lag*(max_lag+1)//2\n    terms = [windows*probability*(1-probability),\n             -2*pair_count*probability**2]\n    border = prefix[-1]\n    while border:\n        lag = k-border\n        if lag <= max_lag:\n            joint = probability*suffix_probabilities[lag]\n            terms.append(2*(windows-lag)*joint)\n        border = prefix[border-1]\n    return [windows*probability,math.fsum(terms)]",
     "explanation": "Let m=n-k+1 and q be the full-pattern probability. Every indicator has mean q and variance q(1-q). Starts separated by at least k use disjoint flips and have zero covariance. At a shorter distance d, two patterns can occur together exactly when pattern[d:] equals pattern[:-d]; this is a border of length k-d. If compatible, their union requires the first pattern followed by its last d symbols, so the joint probability is q times that suffix probability. If incompatible it is zero. With D=min(k-1,m-1), there are m-d unordered pairs at distance d. Hence \\[\\operatorname{Var}(C)=mq(1-q)+2\\sum_{d=1}^D(m-d)(P(I_0=I_d=1)-q^2).\\] Sum the negative q\u00b2 contribution for all these pairs using \\(\\sum_{d=1}^D(m-d)=Dm-D(D+1)/2\\), then add joint mass only at compatible lags. The prefix function stores the longest proper border of each prefix; following its links visits every compatible overlap. Backward exact-integer products give the suffix probabilities before float conversion. This takes \\(O(k)\\) character operations and \\(O(k)\\) storage without depending on the number of flips; integer operands have O(k log total) bits. For k=1 there are no overlapping pairs and the binomial variance is valid. For HTH, distance one contributes negative covariance and distance two positive covariance. math.fsum combines the signed contributions, so a loss of precision in raw cancellation is reduced.",
     "lesson": "l07"
+  },
+  {
+    "id": "c_l08_easy",
+    "title": "Count records strictly before the current timestamp",
+    "difficulty": "Easy",
+    "topic": "Time-aware data",
+    "path": "shared",
+    "prompt": "times is a nondecreasing list of nonnegative integer availability timestamps. Each entry is a distinct observation, including repeated timestamps. For each input row at timestamp t, return the number of records with timestamps in \\([t-h,t)\\), where h is horizon. The decision happens before every record at time t arrives, so all records with that same timestamp are excluded, even if they occur earlier in the input list. horizon is a positive integer. There are at most 200000 timestamps, each at most 10^12; horizon<=10^12. Return a list of integer counts of the same length, without mutating times. Aim for \\(O(n)\\) time and O(1) auxiliary storage excluding output.",
+    "starter": "def solve(times, horizon):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            0,
+            1,
+            1,
+            4,
+            6
+          ],
+          3
+        ],
+        "expected": [
+          0,
+          1,
+          1,
+          2,
+          1
+        ]
+      },
+      {
+        "args": [
+          [
+            2,
+            2,
+            2
+          ],
+          1
+        ],
+        "expected": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "solution": "def solve(times, horizon):\n    first = before = 0\n    result = []\n    for timestamp in times:\n        while before < len(times) and times[before] < timestamp:\n            before += 1\n        while first < before and times[first] < timestamp-horizon:\n            first += 1\n        result.append(before-first)\n    return result",
+    "explanation": "The eligible records form a contiguous sorted slice. before is the first index whose timestamp is at least t, so it excludes the whole current-time group. first is the first unexpired record in that prefix, with timestamp at least t-horizon. The answer is before-first. Each pointer advances at most n times, including across repeated timestamps, giving \\(O(n)\\) time and O(1) auxiliary space. Merely using the current row index as the upper boundary would admit earlier rows at time t that the contract declares unavailable. The implementation reads the sorted timestamp array to locate boundaries but never uses future observation values; an online equivalent keeps counts of prior timestamp groups and removes expired groups. The missing feature mean in the interview question is not the same as this integer count: an empty interval has count zero.",
+    "lesson": "l08"
+  },
+  {
+    "id": "c_l08_hard",
+    "title": "Replay revisions, retractions and expiration by key",
+    "difficulty": "Hard",
+    "topic": "Time-aware data",
+    "path": "shared",
+    "prompt": "updates is an unsorted list of [available_at,sequence,key,event_at,value] records. sequence is a unique integer from 0 through 10^12 across all updates, key is a string of at most 32 characters, and value is an integer or None.\n\nTimes are integers with 0<=event_at<=available_at<=10^12. A record revises the measurement identified by (key,event_at); None retracts that measurement, while a later numeric revision can restore it. decisions is an unsorted list of [decision_at,key] pairs, with integer decision_at in [0,10^12]. At each decision, all releases with available_at<=decision_at are known, including all exact-time releases.\n\nProcess releases in increasing (available_at,sequence) order. For each measurement, its last eligible release determines its current value. Select the greatest event_at among that key\u2019s currently nonretracted measurements in \\([t-h,t]\\), where t is decision_at and h is horizon, or None if no such measurement exists. Thus an old measurement revised later does not automatically outrank a newer event, and retracting the newest can reveal an older active measurement.\n\nRestore results to original decision order, preserve both inputs, and return one value or None per decision. horizon is an integer from 1 through 10^12; update/decision counts are at most 100000 each and numeric |value|<=10^9. Aim for \\(O((U+D)\\log(U+D+2))\\) time and \\(O(U+D)\\) storage, where U and D are the update and decision counts, without scanning the entire publication history per decision.",
+    "starter": "def solve(updates, decisions, horizon):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              3,
+              2,
+              "A",
+              2,
+              20
+            ],
+            [
+              4,
+              3,
+              "A",
+              0,
+              9
+            ],
+            [
+              1,
+              1,
+              "A",
+              0,
+              5
+            ],
+            [
+              5,
+              4,
+              "A",
+              2,
+              null
+            ],
+            [
+              6,
+              5,
+              "A",
+              2,
+              25
+            ]
+          ],
+          [
+            [
+              4,
+              "A"
+            ],
+            [
+              2,
+              "A"
+            ],
+            [
+              5,
+              "A"
+            ],
+            [
+              6,
+              "A"
+            ],
+            [
+              8,
+              "A"
+            ]
+          ],
+          5
+        ],
+        "expected": [
+          20,
+          5,
+          9,
+          25,
+          null
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              2,
+              2,
+              "A",
+              1,
+              8
+            ],
+            [
+              2,
+              1,
+              "A",
+              1,
+              7
+            ],
+            [
+              2,
+              3,
+              "B",
+              1,
+              50
+            ]
+          ],
+          [
+            [
+              2,
+              "A"
+            ],
+            [
+              2,
+              "B"
+            ],
+            [
+              1,
+              "A"
+            ]
+          ],
+          1
+        ],
+        "expected": [
+          8,
+          50,
+          null
+        ]
+      }
+    ],
+    "solution": "import heapq\ndef solve(updates, decisions, horizon):\n    releases = sorted(updates, key=lambda row: (row[0],row[1]))\n    ordered = sorted(enumerate(decisions), key=lambda item: item[1][0])\n    latest = {}\n    heaps = {}\n    result = [None]*len(decisions)\n    cursor = 0\n    for index, (timestamp,key) in ordered:\n        while cursor < len(releases) and releases[cursor][0] <= timestamp:\n            available,sequence,stream,event,value = releases[cursor]\n            latest[(stream,event)] = (sequence,value)\n            if value is not None:\n                heapq.heappush(heaps.setdefault(stream,[]),(-event,sequence,value))\n            cursor += 1\n        heap = heaps.get(key,[])\n        while heap:\n            negative_event,sequence,value = heap[0]\n            event = -negative_event\n            if event < timestamp-horizon or latest[(key,event)] != (sequence,value):\n                heapq.heappop(heap)\n            else:\n                result[index] = value\n                break\n    return result",
+    "explanation": "Sort publication records by their information order, and sort indexed decisions by time. Before answering each decision, consume every eligible release. latest[(key,event)] stores the version that actually existed at this decision; this is separate from ranking events by economic time. Per-key heaps prioritize the greatest event_at. Numeric releases push candidates; retractions update the version map without pushing. Lazily discard a candidate if its version has been replaced/retracted, or if its event is below the inclusive expiration boundary. A newer publication of an older event cannot jump ahead of a newer active event. A retraction invalidates its old candidate and lets the heap reveal the next eligible event. A later numeric revision restores a measurement, provided its event remains in the window. Zero is a real value, not a missing flag. Since event_at<=available_at<=decision_at for consumed releases, no upper-window check is missing. Every candidate is pushed and popped at most once; sorting and heap work are O((U+D) log(U+D+2)), with O(U+D) stored records including output. Restore output using the original decision indices. After processing one decision, later releases change the mutable version map for later decisions only: earlier scalar results are already captured.\n\nThe independent reference should instead filter eligible releases, rebuild versions and scan active events separately for each decision; that slower model is useful for small cases. A final-vintage table or one last value per key loses information required by this contract.",
+    "lesson": "l08"
   }
 ]
