@@ -49,7 +49,7 @@ def parse_debug_cases(task, copies):
             if not isinstance(copy, dict): raise ValueError('Expected a case object.')
             args_text, expected_text = copy.get('argumentsJSON'), copy.get('expectedJSON', '')
             if not isinstance(args_text, str) or not isinstance(expected_text, str): raise ValueError('Arguments and expected output must be JSON text.')
-            if len(args_text) + len(expected_text) > 200_000: raise ValueError('Keep each case below 200,000 characters.')
+            if len(args_text) + len(expected_text) > 500_000: raise ValueError('Use at most 500,000 characters per case.')
             args = json.loads(args_text)
             if not isinstance(args, list): raise ValueError('Arguments must be a JSON array, with one entry per function parameter.')
             if len(args) != arity: raise ValueError(f'solve expects {arity} arguments; this case has {len(args)}.')

@@ -1201,3 +1201,97 @@ proof, fixtures and code are original. These checks establish stated mathematics
 and observed navigation, not employer calibration or learner mastery. Next:
 **l18 and l19–l24**, then the final broad navigation/preservation audit and removal
 of the pending-topic exception. The full goal remains active.
+
+
+## Fifteenth expansion batch: researcher algorithms, l18
+
+Read all of the actual authored algorithm lesson and its goals: centred streaming
+moments, dominance/expiry, amortised costs and information availability. Added
+five interviews and one coding exercise to complete **2 Easy / 2 Medium / 2 Hard**
+and **one code per difficulty**. All **128 prior interview records** and **57 prior
+public coding records** remain exactly unchanged. q44 remains shared with l08,
+including its existing specific timing rubric. Retained c05 Medium and c13 Hard
+with every original prompt, assessment, reference and full fixture. The old c14
+calibration bookmark is registered as l18 additional practice; its draft/results
+remain and its current l24 trader link is preserved. Current l18 lists, resume and
+evidence use only the three current slots. Inventory: **25 lessons /133 interviews /
+58 codes**; researcher route **19 checks /124 distinct interviews /56 current codes**.
+**19 topics complete; six trader topics pending**. Every shared/researcher topic
+now meets the coverage contract; the full goal and final audit remain open.
+
+Easy questions distinguish old/new means and earliest-versus-newest maximum
+indices. Medium asks for a mergeable centred summary with count-weighted and
+between-batch terms, empty/singleton rules, disjointness and exact-versus-floating
+associativity. Hard practice derives remove-then-add moments, proves insufficient
+state using indistinguishable ordered windows, and gives a binary-state information
+lower bound with its precise bit/word distinction. Its numerical discussion does
+not turn an exact identity or a clamped negative into an accuracy guarantee. The
+other Hard question proves that a lazily cleaned heap can answer correctly yet
+retain Θ(n) entries at fixed k, then proves earliest-tie deque dominance, amortised
+costs, a costly individual update and the failure under backward re-expansion.
+These are reasoning contracts rather than performance slogans.
+
+New Easy coding keeps the earliest argmax for each prefix, including negative
+values and equal records. It retains the entire prefix rather than silently
+substituting a rolling window. Medium excludes the current observation; Hard
+includes it. Keeping their original meanings protects existing study work.
+
+**188 Python tests and all 23 frontend suites passed.** Twelve new topic tests
+check 200 exact-rational Welford prefix sequences, 200 independently centred batch
+partitions with both merge associations, exhaustive small tie-index windows,
+remove/add windows through width five, and distinct binary continuation signatures
+through width eight. They separate correct lazy-heap roots from retained size and
+count logarithmic push swaps on increasing input. Deque traces check index/value
+ordering, eligibility, single-removal obligations, aggregate costs and a full-window
+pop burst. Prefix code is compared with exhaustive prefix scans through length
+seven and checked at 100,000 observations. Retained rolling tasks have 300 seeded
+slow-window comparisons, no-mutation checks, current-observation perturbations and
+the original 30,000-observation maximum fixture. All **43 expanded references**
+pass the actual full judge. Every official current l18 case round-trips through
+the debugging parser.
+
+That last check exposed an existing limitation: c13’s full large official case has
+**168,899 argument characters +90,007 expected characters =258,906** in compact
+JSON, above the former 200,000-character limit. Both frontend and backend now
+allow **500,000 characters per debugging case** and retain their upper-bound
+checks. No official fixture, correctness assertion, execution time limit or
+request-size bound was reduced or removed. A new backend regression accepts the
+exact 500,000 boundary and rejects 500,001; frontend regressions accept a large
+copied case and reject oversize text. API request size remains bounded at 2 MB.
+App asset version was advanced so existing tabs load the matching frontend rule
+when reopened. No new dependency or AI assistance was added.
+
+Chrome visibly verified **Test preview** after every explicit launcher entry.
+Numeric **20** was accepted. New Easy passed **8/8** (1.6ms observed), retained Hard
+passed **6/6** (8.4ms observed). Its full large case copied without loss/truncation:
+argument and expected lengths/endpoints matched the official case, and the sample
+plus copied case passed **2/2** as debugging only, with no additional completion.
+The saved c14 l18 URL opens labelled Additional practice with the same topic
+return. A frontend fixture additionally proves an old c14 pass does not fill an
+l18 slot while still counting as current l24 evidence, and retains its draft.
+The actual lesson continues to the interview list, and a freely chosen detail
+continues to the coding list.
+
+At **390px**, removal/insertion displays had matching width/scroll width **304px**;
+the binary reconstruction display **270px**. Document width/scroll width **390px**,
+zero KaTeX errors. Both saved proof crops were visually inspected. On reopening,
+the worked-solution reveal was already retained: a Show selector had no match;
+inspection confirmed Hide worked solution, then only the follow-up was opened.
+This was restored attempt state, not a website failure. No console errors observed.
+Viewport reset; explicit navigation confirmed personal mode. Both personal lists
+are **0/6 interviews and 0/3 codes**; questions, coding, lessons, drafts and trainers
+match the fresh pre-edit baseline. No personal credit/reset occurred. Tab left at
+the personal interview list; server restarted for the expanded bank/debug rule.
+
+- [Interview list, personal workspace](algorithms-personal-question-list-20261012.png).
+- [Coding list, personal workspace](algorithms-personal-coding-list-20261012.png).
+- [Narrow rolling-moment derivation, isolated preview](algorithms-proof-narrow-20261012.png).
+- [Narrow bit-state lower bound, isolated preview](algorithms-state-bound-narrow-20261012.png).
+
+Primary context consulted: [Python deque operation costs](https://docs.python.org/3/library/collections.html#collections.deque)
+and [Chan, Golub and LeVeque, variance analysis abstract](https://www.tandfonline.com/doi/abs/10.1080/00031305.1983.10483115).
+Toy examples, proofs, wording and code are original. Verification establishes
+these declared calculations/contracts and observed navigation, not employer
+calibration, learner mastery or physical touch/screen-reader interaction. Next:
+**l19–l24**, then the required full navigation/preservation audit and removal of
+the pending-topic exception. The full goal remains active.

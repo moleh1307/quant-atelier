@@ -24,6 +24,12 @@ const result={mode:'debug',passed:0,total:1,elapsedMs:1,results:[{passed:null,ac
  h.run('const none=debugCases(coding[0]);none.cases.forEach(t=>t.enabled=false);saveDebugCases(coding[0],none)');assert.throws(()=>h.run('debugRunCases(coding[0])'),/at least one/);
  h.run('view.c01.result={results:[copy]};view.c01.mode="submit"');await h.events['#pageclick']({target:{closest:()=>({dataset:{action:'debug-result-case',index:'0'},focus(){}})}});assert.equal(h.run('debugCases(coding[0]).cases.at(-1).argumentsJSON'),h.ctx.copy.argumentsJSON);
  await h.events['#pageclick']({target:{closest:()=>({dataset:{action:'remove-debug-case'},focus(){}})}});assert.equal(h.run('debugCases(coding[0]).cases.length'),2);
+ const limits=harness();limits.ctx.big=JSON.stringify(['x'.repeat(300000),0]);
+ limits.run('addDebugCase(coding[0],{argumentsJSON:big,expectedJSON:"null"},"Large copied case");const lr=debugCases(coding[0]);lr.cases[0].enabled=false;saveDebugCases(coding[0],lr)');
+ assert.equal(limits.run('debugRunCases(coding[0])[0].argumentsJSON'),limits.ctx.big);
+ limits.ctx.oversize=' '.repeat(500001);
+ limits.run('const over=debugCases(coding[0]);over.cases[1].argumentsJSON=oversize;saveDebugCases(coding[0],over)');
+ assert.throws(()=>limits.run('debugRunCases(coding[0])'),/500,000/);
  const merging=harness();merging.run('state.drafts["c01-tests"]="local cases";browserBase=cloneRecord(state);const remote=cloneRecord(state);remote.drafts["c01-tests"]="other tab cases";receiveExternal(remote)');assert.equal(merging.run('state.drafts["c01-tests"]'),'local cases');assert.equal(merging.run('syncConflict.conflicts[0].id'),'c01-tests');
  const keys=harness();keys.ctx.calls=[];keys.run('startCodeCheck=(c,mode)=>calls.push(mode)');
  for(const [key,mode] of [["'",'debug'],['Enter','submit']]){const e=event(key);keys.ctx.e=e;assert.equal(keys.run('handleCodingShortcut(e,coding[0])'),true);assert.equal(e.prevented,true);assert.equal(e.stopped,true);assert.equal(keys.ctx.calls.at(-1),mode);}

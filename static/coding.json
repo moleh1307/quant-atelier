@@ -3012,5 +3012,52 @@
     ],
     "solution": "from math import gcd\ndef solve(weights, variances, budget):\n    k = len(weights)\n    gains = [w*w*v for w,v in zip(weights,variances)]\n    counts = [1]*k\n    denominators = [2]*k\n    heap = list(range(k))\n    def better(i,j):\n        left = gains[i]*denominators[j]\n        right = gains[j]*denominators[i]\n        return left > right or (left == right and i < j)\n    def sift(position):\n        item = heap[position]\n        while 2*position+1 < k:\n            child = 2*position+1\n            if child+1 < k and better(heap[child+1],heap[child]):\n                child += 1\n            if not better(heap[child],item):\n                break\n            heap[position] = heap[child]\n            position = child\n        heap[position] = item\n    for position in range(k//2-1,-1,-1):\n        sift(position)\n    for _ in range(budget-k):\n        chosen = heap[0]\n        counts[chosen] += 1\n        denominators[chosen] = counts[chosen]*(counts[chosen]+1)\n        sift(0)\n    numerator,denominator = 0,1\n    for a,n in zip(gains,counts):\n        common = gcd(denominator,n)\n        numerator = numerator*(n//common)+a*(denominator//common)\n        denominator *= n//common\n        reduce = gcd(numerator,denominator)\n        numerator //= reduce\n        denominator //= reduce\n    denominator *= sum(weights)**2\n    reduce = gcd(numerator,denominator)\n    return {\"allocation\":counts,\n            \"variance\":[str(numerator//reduce),str(denominator//reduce)]}",
     "explanation": "Let a_h=weights_h\u00b2\u00b7variances_h. The common W\u00b2 cancels from comparisons. Start with one sample per stratum. Each stratum offers a decreasing stream of gains a_h/[n(n+1)] for successive extra samples. Maximizing total variance reduction chooses the largest budget\u2212k gains across these streams. Such a selection is prefix-feasible: every gain\u2019s preceding gain in its stratum is at least as large. A priority heap of the next available gain therefore yields a GLOBAL optimum, not just a locally good step.\n\nAt a positive threshold each nonzero stream is strictly decreasing, so it can have at most one tied threshold gain. Award those tied draws to smaller original indices to obtain the lexicographically largest optimum. If all a_h are zero, every allocation is optimal and all extras go to index zero. Zero-benefit strata otherwise keep their required single draw. The reference compares gains by exact cross multiplication and stores only stratum indices and current counts. Updating the root decreases its priority, so one downward heap repair is enough; no unsupported custom comparator class is needed in the restricted runner. Building the heap bottom-up is \\(O(k)\\).\n\nFinally sum exact rationals a_h/n_h, divide by W\u00b2 and reduce. Use gcd while accumulating so denominators do not grow by unnecessary repeated factors. The reference performs \\(O(k)\\) rational updates; their bit cost depends on the resulting denominators. The continuous solution\u2019s proportionality to p_h\u00b7sigma_h is useful intuition, but its rounding need not select the best integer allocation or honor mandatory counts and exact ties. Known population variances and fixed counts support the stated estimator variance; the arithmetic does not certify a pilot estimate of those variances."
+  },
+  {
+    "id": "c_l18_easy",
+    "title": "Prefix argmax with an earliest tie",
+    "difficulty": "Easy",
+    "topic": "Research coding",
+    "path": "researcher",
+    "prompt": "values is a list of at most 100000 integers, each in [\u221210^9,10^9], arriving in input order. After EACH observation at index i, return the earliest index j in [0,i] that maximises values[j]. The output is a list of integer indices in prefix order; [] for no observations. Preserve values. Use \\(O(n)\\) time and O(1) auxiliary state apart from the n returned indices. Do not sort, rescan each prefix or initialise the best VALUE to zero: every observation may be negative. A later equal value leaves the earlier winner in place. This contract retains the entire prefix, unlike the fixed-width maximum exercise.",
+    "starter": "def solve(values):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            4,
+            4,
+            1,
+            5,
+            5
+          ]
+        ],
+        "expected": [
+          0,
+          0,
+          0,
+          3,
+          3
+        ]
+      },
+      {
+        "args": [
+          [
+            -8,
+            -4,
+            -4,
+            -6
+          ]
+        ],
+        "expected": [
+          0,
+          1,
+          1,
+          1
+        ]
+      }
+    ],
+    "solution": "def solve(values):\n    best = None\n    result = []\n    for i,value in enumerate(values):\n        if best is None or value > values[best]:\n            best = i\n        result.append(best)\n    return result",
+    "explanation": "After prefix i, best names its earliest maximum. The first observation establishes a real candidate even if its value is negative. A strictly larger new value becomes the unique newest record; a smaller or equal value cannot improve the declared winner, so best stays. Appending that index emits one answer per arrival. The invariant holds by induction; one comparison per later observation gives \\(O(n)\\) time and O(1) auxiliary state, excluding output. Using \u2265 changes the tie to newest; starting best-value at zero invents a candidate absent from an all-negative input. The prefix winner never expires under this contract; a rolling window needs additional state because its winner can leave."
   }
 ]
