@@ -42,33 +42,34 @@ Students choose questions within the lists; no forced Q1 → Q2 → code chain.
 | l08 data timing | 6 interviews; 3 coding | Verified | Automated + live grading/legacy bookmark/narrow proof |
 | l09 estimation | 6 interviews; 3 coding | Verified | Automated + live grading/narrow minimax proof |
 | l25 likelihood | 8 interviews; 3 coding | Verified | Automated + live grading/narrow mixture proof |
-| l10–l18 researcher | Pending | Pending | Pending |
+| l10 covariance | 7 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
+| l11–l18 researcher | Pending | Pending | Pending |
 | l19–l24 trader | Pending | Pending | Pending |
 
 Sources: `topic_practice/foundation_questions.py`, `foundation_coding.py`,
-`distributions.py`, `stopping.py`, `arithmetic.py`, `variance.py`, `data_time.py`, `estimation.py`, `likelihood.py`, the existing banks, and
+`distributions.py`, `stopping.py`, `arithmetic.py`, `variance.py`, `data_time.py`, `estimation.py`, `likelihood.py`, `covariance.py`, the existing banks, and
 `tests/test_topic_practice.py`, `test_distribution_stopping_practice.py`, and
 `test_arithmetic_variance_practice.py`, `test_data_time_practice.py`, and
-`test_estimation_practice.py`, and `test_likelihood_practice.py`. Generated assets are
+`test_estimation_practice.py`, and `test_likelihood_practice.py`, and `test_covariance_practice.py`. Generated assets are
 `static/content.json` and `static/coding.json`; rebuild their Python sources.
 
 The two list destinations and nonsequential journey handoffs are implemented
 across the site. Existing pending topics expose their current linked practice;
 their banks do not yet satisfy the approved difficulty contract. The eight foundation
-topics and researcher estimation l09 and likelihood l25 do. Current inventory: 25 lessons, 92 interview questions, 38 coding
-exercises. Researcher route: 19 checks, 83 distinct questions, 38 codes.
+topics and researcher estimation l09, likelihood l25 and covariance l10 do. Current inventory: 25 lessons, 97 interview questions, 41 coding
+exercises. Researcher route: 19 checks, 88 distinct questions, 41 codes.
 
-Next: author researcher l10–l18; finish the trader topics.
+Next: author researcher l11–l18; finish the trader topics.
 Finish live checks of the remaining topic lists and representative exercises.
 Inspect each lesson’s
 actual learning goals and authored explanation before selecting its problems.
 The full goal remains active until all 25 topics, future-topic validation,
 navigation, preservation checks and commit/push evidence are complete.
 
-As of 2026-10-12, all 23 frontend suites and 84 Python tests pass. Independent
+As of 2026-10-12, all 23 frontend suites and 93 Python tests pass. Independent
 enumeration, exact moments and rational state equations check the completed topics' delicate
-mathematical answers and coding references; all twenty-three new reference solutions
-also pass the actual judge. Existing grading meaning and IDs are preserved; q44, q24 and q49–q51 now have topic-specific
+mathematical answers and coding references; all twenty-six new reference solutions
+also pass the actual judge. Existing grading meaning and IDs are preserved; q44, q24, q49–q51 and q20/q29 now have topic-specific
 written assessment criteria in place of their generic rubrics. Personal
 assessments, drafts and trainer history match the baseline captured for this work.
 See [verification](evidence/topic-practice-20261012.md) for scope and limitations.

@@ -1551,5 +1551,116 @@
     ],
     "solution": "from math import expm1\ndef solve(waits, cutoff):\n    n = len(waits)\n    if n == 0:\n        return None\n    total = sum(waits)\n    exposure = n * cutoff\n    gap = exposure - 2 * total\n    if gap <= 0:\n        return None\n    mean = total / exposure\n    delta = gap / (2 * exposure)\n    low, high = 0.0, exposure / total\n    for _ in range(120):\n        z = (low + high) / 2\n        if z < 0.01:\n            squared = z * z\n            departure = z * (1/12 + squared * (-1/720 + squared * (1/30240 - squared/1209600)))\n            increase = departure < delta\n        else:\n            conditional_mean = 1/z - (1/expm1(z) if z < 50 else 0.0)\n            increase = conditional_mean > mean\n        if increase:\n            low = z\n        else:\n            high = z\n    z = (low + high) / 2\n    return [z, z / cutoff]",
     "explanation": "Retention has probability \\(1-e^{-\\lambda c}\\). The correct conditional density on (0,c) is \\(\\lambda e^{-\\lambda x}/(1-e^{-\\lambda c})\\); its normaliser depends on \u03bb. Let \\(r=\\sum_i x_i/(nc)\\) and \\(z=\\lambda c\\). The score vanishes precisely when\n\n\\[g(z)=\\frac1z-\\frac1{e^z-1}=r.\\]\n\nThe conditional mean g strictly decreases from \\(\\frac{1}{2}\\) to zero; its derivative is minus the variance of the normalised duration under the exponentially tilted bounded distribution. Thus r<\\(\\frac{1}{2}\\) gives exactly one finite positive root. If r\u2265\\(\\frac{1}{2}\\), the likelihood decreases throughout the open rate domain and only approaches a uniform limit at zero, so return None. Empty data give a flat likelihood and no unique estimate. Check \\(nc-2\\sum_i x_i\\) as an INTEGER before division, preserving the existence decision near equality.\n\nFor a positive root, \\(0<z<1/r\\), because g(z)<1/z. Bracket and bisect this monotone equation. Using expm1 preserves e^z\u22121, but subtracting its reciprocal from 1/z still loses precision for tiny z. Near zero instead compare \\(h(z)=1/2-g(z)\\) with \\(\\delta=(nc-2\\sum_i x_i)/(2nc)\\), computed from the exact integer gap. Expanding the exponential and dividing its series gives\n\n\\[h(z)=\\frac z{12}-\\frac{z^3}{720}+\\frac{z^5}{30240}-\\frac{z^7}{1209600}+O(z^9).\\]\n\nBelow z=0.01 the omitted leading term is about 2.1\u00d710^(-26), safely smaller than the required numerical tolerance. Away from zero compare g directly with r; for z\u226550, its exponential correction is less than 2\u00d710^(-22), so omit it to avoid overflow. Keep the lower bracket when the modeled mean is too large, otherwise the upper. Since r\u22651/c\u226510^(-12), the initial bracket is at most 10^12 wide. After 120 halvings its exact width is below 10^(-24); floating-point arithmetic eventually limits further improvement. Return z and z/c to separate the scaled fitting problem from rate units. The solver uses one count/sum pass and constant root iterations, \\(O(n)\\) time/O(1) auxiliary state. This is the selected-sample model; a known number of rejected subjects would contribute censored exposure and yield a different fit."
+  },
+  {
+    "id": "c_l10_easy",
+    "title": "Check a two-variable covariance proposal",
+    "difficulty": "Easy",
+    "topic": "Linear algebra",
+    "path": "researcher",
+    "prompt": "Inputs v1, v2 and covariance are integers of absolute value at most 10^18. They propose the symmetric covariance matrix [[v1,covariance],[covariance,v2]]. Return True exactly when SOME real-valued joint model with finite second moments has this covariance matrix; return False otherwise. Include singular and zero-variance cases. Do not require positive definiteness, apply a numerical tolerance or silently change an entry. Use O(1) integer arithmetic; no simulation or matrix library is needed.",
+    "starter": "def solve(v1, v2, covariance):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          1,
+          4,
+          2
+        ],
+        "expected": true
+      },
+      {
+        "args": [
+          1,
+          4,
+          3
+        ],
+        "expected": false
+      }
+    ],
+    "solution": "def solve(v1, v2, covariance):\n    return v1 >= 0 and v2 >= 0 and covariance * covariance <= v1 * v2",
+    "explanation": "A covariance matrix must be PSD: both proposed variances must be nonnegative and its determinant \\(v_1v_2-c^2\\) must be nonnegative. These are sufficient for a symmetric 2\u00d72 matrix. For v\u2081>0, construct X=\u221av\u2081 Z and \\(Y=(c/\\sqrt{v_1})Z+\\sqrt{v_2-c^2/v_1}\\,U\\), with independent centered variance-one Z,U. For v\u2081=0, the determinant condition forces c=0, and a constant X with variance-v\u2082 Y works. Singular boundaries are permitted. Exact integer products avoid falsely accepting a tiny negative determinant after large-number float rounding. O(1) bounded-size arithmetic and auxiliary state."
+  },
+  {
+    "id": "c_l10_medium",
+    "title": "Blend two estimates without forbidden weights",
+    "difficulty": "Medium",
+    "topic": "Linear algebra",
+    "path": "researcher",
+    "prompt": "Inputs v1, v2 and covariance are integers of absolute value at most 10^12. The matrix [[v1,covariance],[covariance,v2]] is GUARANTEED PSD. X and Y are unbiased estimates of the same target with these known error variances/covariance. Choose a fixed blend \\(wX+(1-w)Y\\) with 0\u2264w\u22641. Return [w, minimum_variance] as numerical values, without manual rounding. If all weights tie, choose the smallest w. Zero variances, identical errors and perfect negative dependence are valid. Do not use an independent-estimates formula or allow negative weights. Aim for O(1) arithmetic and space; preserve integer products until the final divisions to avoid cancellation.",
+    "starter": "def solve(v1, v2, covariance):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          1,
+          4,
+          0
+        ],
+        "expected": [
+          0.8,
+          0.8
+        ]
+      },
+      {
+        "args": [
+          9,
+          1,
+          2
+        ],
+        "expected": [
+          0,
+          1
+        ]
+      }
+    ],
+    "solution": "def solve(v1, v2, covariance):\n    difference = v1 + v2 - 2 * covariance\n    numerator = v2 - covariance\n    if difference == 0 or numerator <= 0:\n        return [0, v2]\n    if numerator >= difference:\n        return [1, v1]\n    return [numerator / difference, (v1 * v2 - covariance * covariance) / difference]",
+    "explanation": "The variance is \\(V(w)=v_2+2w(c-v_2)+w^2D\\), where \\(D=v_1+v_2-2c=\\operatorname{Var}(X-Y)\\geq0\\). For D>0 the unconstrained minimiser is (v\u2082\u2212c)/D; clip it to [0,1]. At clipped zero or one return v\u2082 or v\u2081. At an interior optimum the variance simplifies to \\((v_1v_2-c^2)/D\\); calculate that numerator as an integer before division rather than subtracting large float terms. If D=0, PSD implies v\u2081=v\u2082=c, so every blend ties and w=0 is the specified choice. A zero determinant can give a zero-risk nonnegative blend for negative covariance, while positive dependence can push the best allowed blend to a boundary. Known covariance and common-target unbiasedness are assumptions, not properties inferred by this function."
+  },
+  {
+    "id": "c_l10_hard",
+    "title": "Pool shared-factor estimates through singularity",
+    "difficulty": "Hard",
+    "topic": "Linear algebra",
+    "path": "researcher",
+    "prompt": "d estimates have the same unknown mean \u00b5 and the error model \\(X_i-\\mu=\\sum_{j=1}^k A_{ij}Z_j\\), where centered factor vector Z has covariance I. factors supplies the d\u00d7k INTEGER matrix A, with 1\u2264d,k\u226412 and entries of absolute value at most 10^6. No distributional or independence assumption beyond these second moments is needed. Its covariance \\(\\Sigma=AA^T\\) is guaranteed PSD and may be singular or zero.\n\nAmong all FIXED real weights summing to one, including negative weights, compute the exact minimum variance of the unbiased pooled estimate. Return a reduced rational pair [numerator_text,denominator_text] as canonical base-ten STRINGS, with a nonnegative numerator, positive denominator and gcd=1; zero must be [\"0\",\"1\"]. Use str(integer), with no sign on positive values or leading zeroes. Large answers exceed the browser\u2019s exact numeric range, so strings preserve the exact rational through display and copying. Do not return weights, add a ridge, clamp eigenvalues or approximate an exact zero. Input is nonempty and rectangular; do not mutate it.\n\nUse O(d\u00b2k+d\u00b3) scalar arithmetic and O(d\u00b2) auxiliary storage, with Python integer arithmetic for exact rank decisions. Integer bit costs and gcd costs are additional; dimensions are small. No external numerical package is needed. The editorial derives a consistent equality-constrained system whose multiplier identifies the variance even when weights are nonunique.",
+    "starter": "def solve(factors):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              2
+            ]
+          ]
+        ],
+        "expected": [
+          "4",
+          "5"
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              1
+            ],
+            [
+              2
+            ]
+          ]
+        ],
+        "expected": [
+          "0",
+          "1"
+        ]
+      }
+    ],
+    "solution": "from math import gcd\ndef solve(factors):\n    d, k = len(factors), len(factors[0])\n    rows = [[sum(factors[i][j] * factors[h][j] for j in range(k)) for h in range(d)] + [1, 0] for i in range(d)]\n    rows.append([1] * d + [0, 1])\n    rank = 0\n    multiplier_row = None\n    for column in range(d + 1):\n        pivot = next((i for i in range(rank, d + 1) if rows[i][column] != 0), None)\n        if pivot is None:\n            continue\n        rows[rank], rows[pivot] = rows[pivot], rows[rank]\n        divisor = 0\n        for value in rows[rank]:\n            divisor = gcd(divisor, abs(value))\n        if divisor:\n            rows[rank] = [value // divisor for value in rows[rank]]\n        for i in range(d + 1):\n            if i == rank or rows[i][column] == 0:\n                continue\n            a, b = rows[rank][column], rows[i][column]\n            rows[i] = [a * value - b * lead for value, lead in zip(rows[i], rows[rank])]\n            divisor = 0\n            for value in rows[i]:\n                divisor = gcd(divisor, abs(value))\n            if divisor:\n                rows[i] = [value // divisor for value in rows[i]]\n        if column == d:\n            multiplier_row = rank\n        rank += 1\n    numerator = -rows[multiplier_row][-1]\n    denominator = rows[multiplier_row][d]\n    if denominator < 0:\n        numerator, denominator = -numerator, -denominator\n    divisor = gcd(abs(numerator), denominator)\n    return [str(numerator // divisor), str(denominator // divisor)]",
+    "explanation": "The objective is \\(\\|A^Tw\\|^2=w^T\\Sigma w\\); the sum-one constraint preserves the common target. An optimum exists: \\(A^T\\) maps the feasible affine set onto a finite-dimensional affine set, and its squared distance to zero is attained. At an optimum the covariance gradient is constant across coordinates, because every zero-sum perturbation has zero first derivative. Write this as \\(\\Sigma w+\\nu\\mathbf1=0\\), together with \\(\\mathbf1^Tw=1\\), giving\n\n\\[\\begin{pmatrix}\\Sigma&\\mathbf1\\\\\\mathbf1^T&0\\end{pmatrix}\\begin{pmatrix}w\\\\\\nu\\end{pmatrix}=\\begin{pmatrix}0\\\\1\\end{pmatrix}.\\]\n\nConversely any solution is globally optimal: for a feasible perturbation h, \\(h^T\\mathbf1=0\\), and the objective change is \\(2h^T\\Sigma w+h^T\\Sigma h=h^T\\Sigma h\\geq0\\). Multiplying the first equation by w\u1d40 gives minimum variance \u2212\u03bd. The multiplier is unique even if weights are not: the difference of two solutions obeys \\(\\Sigma\\Delta w+\\Delta\\nu\\mathbf1=0\\), \\(\\mathbf1^T\\Delta w=0\\); its quadratic form is zero, so PSD implies \\(\\Sigma\\)\u0394w=0 and \u0394\u03bd=0. Thus every solution has the same requested scalar.\n\nConstruct the integer Gram matrix, append this system and perform rank-aware elimination. For a pivot a and row coefficient b, replace a row by a\u00b7row\u2212b\u00b7pivot_row; divide the entire resulting row, including its right side, by its integer gcd to control growth. These exact nonzero row operations preserve the solution set. Eliminate ABOVE and below pivots; skip absent pivots rather than dividing by zero. The multiplier column always has a pivot: if it were free, a consistent system would allow different \u03bd, contradicting uniqueness. After elimination its pivot row contains only that variable and its right side, so their ratio gives \u03bd. Reduce \u2212\u03bd to a positive-denominator rational pair and encode its integers as decimal strings; both the judge and copied debugging cases retain every digit. No choices of free weight variables are needed. Gcd normalization is not floating tolerance and a singular Gram matrix is not automatically zero-risk: duplicated factor rows can share unavoidable common noise. Building the Gram matrix costs O(d\u00b2k); elimination costs O(d\u00b3) scalar arithmetic with O(d\u00b2) state, plus integer/gcd bit costs."
   }
 ]
