@@ -3,7 +3,7 @@ import argparse, hashlib, json, os, threading, time, uuid
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import urlsplit
-from judge import run
+from judge import run, submission_cases
 ROOT=Path(__file__).resolve().parent
 LOCK=threading.Lock()
 DATA=ROOT/'data'/'progress.json'
@@ -72,7 +72,10 @@ class Handler(SimpleHTTPRequestHandler):
             return self.send_json({'url':'/api/download/'+key})
         if path=='/api/judge':
             if not isinstance(obj.get('code'),str): return self.send_json({'error':'Missing code.'},400)
-            return self.send_json(run(obj.get('id'),obj['code'],obj.get('mode','submit')))
+            return self.send_json(run(obj.get('id'),obj['code'],obj.get('mode','submit'),obj.get('cases')))
+        if path=='/api/coding-cases':
+            result=submission_cases(obj.get('id'))
+            return self.send_json(result,404 if 'error' in result else 200)
         if path=='/api/progress':
             envelope='state' in obj and 'revision' in obj
             expected=obj.get('revision') if envelope else None

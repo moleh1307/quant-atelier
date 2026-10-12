@@ -37,7 +37,7 @@ export function exitKeys(onExit) {
   };
 }
 
-export function mount({parent, id, value, onChange, status, onExit}) {
+export function mount({parent, id, value, onChange, status, onExit, onShortcut}) {
   // Preserve selection and undo history across app renders, independently per exercise.
   const cached = sessions.get(id);
   const nonce = document.querySelector('meta[name="editor-style-nonce"]')?.content || '';
@@ -46,6 +46,7 @@ export function mount({parent, id, value, onChange, status, onExit}) {
     indentUnit.of('    '), EditorState.tabSize.of(4), indentOnInput(), bracketMatching(),
     closeBrackets(), foldGutter(), highlightActiveLine(), highlightActiveLineGutter(),
     syntaxHighlighting(colours), EditorView.cspNonce.of(nonce),
+    EditorView.domEventHandlers({keydown: event => onShortcut?.(event) === true}),
     EditorView.domEventHandlers(exitKeys(onExit)),
     EditorView.contentAttributes.of({
       'aria-label': 'Python solution', 'aria-describedby': 'editor-help',
