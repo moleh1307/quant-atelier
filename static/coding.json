@@ -999,5 +999,209 @@
     "solution": "import math\ndef solve(pattern, heads, total):\n    k = len(pattern)\n    prefix = [0] * k\n    for i in range(1, k):\n        j = prefix[i - 1]\n        while j and pattern[i] != pattern[j]:\n            j = prefix[j - 1]\n        if pattern[i] == pattern[j]:\n            j += 1\n        prefix[i] = j\n    borders = set()\n    length = k\n    while length:\n        borders.add(length)\n        length = prefix[length - 1]\n    numerator = denominator = 1\n    contributions = []\n    for length, symbol in enumerate(pattern, 1):\n        numerator *= total\n        denominator *= heads if symbol == 'H' else total - heads\n        if length in borders:\n            contributions.append(numerator / denominator)\n    return math.fsum(contributions)",
     "explanation": "The sufficient state is the longest suffix that is a prefix of the target. Its first-step equations have zero remaining wait at the completed target. An equivalent identity is \\[E[T]=\\sum_{b\\text{ a nonempty border}}\\frac1{P(\\text{first b symbols})}.\\] This includes the full pattern; proper borders account for surviving overlaps. Here is a justification, not a guess from examples. Before each flip, a new bettor starts with one unit and predicts successive symbols of the target, reinvesting all wealth. A correct next-symbol prediction multiplies wealth by the reciprocal of its probability; a wrong prediction loses it. Each bet is fair, so expected total wealth after n flips, stopped at completion if earlier, equals the expected number of entrants. At the first completed target, precisely the border-length bettors survive, with wealth 1/P(prefix). Their total wealth is the displayed sum. Finiteness follows by checking disjoint k-flip blocks: a block equals the target with positive probability, bounding T by k times a geometric duration. Until completion there are at most k active bettors and their wealth is bounded by a fixed sum of reciprocal prefix probabilities. These bounds justify taking the stopped limit, yielding the identity. HTH has borders of lengths 1 and 3 and fair-coin mean 2+8=10; HHT has only length 3 and mean 8. The prefix-function links find all borders with \\(O(k)\\) character comparisons and \\(O(k)\\) storage. Prefix probability numerators and denominators are accumulated as exact integers before division, avoiding repeated floating products. Integer arithmetic is not constant-cost: the intermediates have O(k log total) bits. math.fsum combines the positive float contributions accurately; the probability and length bounds keep the answer finite.",
     "lesson": "l05"
+  },
+  {
+    "id": "c_l06_easy",
+    "title": "Does this fraction have a finite decimal?",
+    "difficulty": "Easy",
+    "topic": "Exact arithmetic",
+    "path": "shared",
+    "prompt": "numerator is an integer with absolute value <=10^12 and denominator is a positive integer <=10^12. Return the smallest number of digits after the decimal point needed to represent numerator/denominator exactly as a terminating decimal, or None if its decimal repeats forever. Return 0 for an integer, including zero. Reduce the fraction first; the written denominator alone does not determine termination. Do not use floating-point approximations or emit the decimal string.",
+    "starter": "def solve(numerator, denominator):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          15,
+          24
+        ],
+        "expected": 3
+      },
+      {
+        "args": [
+          1,
+          6
+        ],
+        "expected": null
+      }
+    ],
+    "solution": "from math import gcd\ndef solve(numerator, denominator):\n    denominator //= gcd(abs(numerator), denominator)\n    twos = fives = 0\n    while denominator % 2 == 0:\n        denominator //= 2\n        twos += 1\n    while denominator % 5 == 0:\n        denominator //= 5\n        fives += 1\n    if denominator != 1:\n        return None\n    return max(twos, fives)",
+    "explanation": "A reduced fraction terminates at d places exactly when its denominator divides \\(10^d=2^d5^d\\). It must therefore contain no prime factors other than two and five. If the reduced denominator is \\(2^u5^v\\), the least d is max(u,v). Cancellation can remove other factors: \\(\\frac{6}{15}\\) reduces to \\(\\frac{2}{5}\\). A zero numerator reduces the denominator to one and needs no fractional digits. Integer gcd and divisions retain exactness. O(log denominator) integer operations and O(1) additional storage under the stated integer bounds.",
+    "lesson": "l06"
+  },
+  {
+    "id": "c_l06_medium",
+    "title": "Compound percentage changes exactly",
+    "difficulty": "Medium",
+    "topic": "Exact arithmetic",
+    "path": "shared",
+    "prompt": "changes is a list of at most 100 integer price changes in basis points, each from -10000 to 10000. One basis point is \\(\\frac{1}{100}\\) of one percent, so 100 basis points is 1%. Starting from a positive value, apply each change to the current value. Return the exact NET proportional change as [numerator, denominator] in lowest terms, with denominator positive. For example +20% followed by -20% has net change -\\(\\frac{1}{25}\\). Return [0,1] for no changes. A -100% change makes the value zero; subsequent finite proportional changes keep it zero. Do not use floats, round intermediates, add the percentage changes or mutate changes. Exact integers and gcd are available.",
+    "starter": "def solve(changes):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            2000,
+            -2000
+          ]
+        ],
+        "expected": [
+          -1,
+          25
+        ]
+      },
+      {
+        "args": [
+          [
+            1000,
+            1000
+          ]
+        ],
+        "expected": [
+          21,
+          100
+        ]
+      }
+    ],
+    "solution": "from math import gcd\ndef solve(changes):\n    numerator = denominator = 1\n    for basis_points in changes:\n        numerator *= 10000 + basis_points\n        denominator *= 10000\n        common = gcd(numerator, denominator)\n        numerator //= common\n        denominator //= common\n    numerator -= denominator\n    common = gcd(abs(numerator), denominator)\n    return [numerator // common, denominator // common]",
+    "explanation": "Each step multiplies value by \\((10000+b)/10000\\). Multiply these rational factors while reducing numerator and denominator by their gcd. This models the changing percentage base exactly. Subtract one only at the end to turn the final value multiplier into the net change, then reduce again. A zero multiplier remains zero and gives net change -1. The empty product is one, giving zero net change. There are \\(O(k)\\) gcd/multiplication steps, but growing integers are not constant-cost: before reduction their bit lengths are O(k log 10000). Storage is proportional to those integer lengths. The large case rejects a float representation of an exact rational, not just an inaccurate decimal rounding.",
+    "lesson": "l06"
+  },
+  {
+    "id": "c_l06_hard",
+    "title": "The simplest fraction a rounded report permits",
+    "difficulty": "Hard",
+    "topic": "Exact arithmetic",
+    "path": "shared",
+    "prompt": "report is a string of the form 0.digits with 1 to 100 decimal digits and a displayed value strictly between zero and one. It was produced by nearest decimal rounding, with exact half ties upward, of an unknown positive rational x in (0,1). Return [a,b] for a reduced fraction in the rounding interval with the smallest positive denominator b; if several have that denominator, choose the smallest numerator a. The lower rounding boundary is included and the upper excluded. Do not assume the displayed fraction is the original x, use floats, or scan denominators one by one: permitted denominators can have 100 digits. Use exact integer interval comparisons and a continued-fraction or Stern\u2013Brocot search with quotient jumps. In Stern\u2013Brocot search, neighbours L=a/b and R=c/d have \\(cb-ad=1\\); their mediant is \\((a+c)/(b+d)\\). The editorial explains why that helps minimize the denominator.",
+    "starter": "def solve(report):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          "0.29"
+        ],
+        "expected": [
+          2,
+          7
+        ]
+      },
+      {
+        "args": [
+          "0.12"
+        ],
+        "expected": [
+          2,
+          17
+        ]
+      }
+    ],
+    "solution": "def solve(report):\n    digits = report.split('.')[1]\n    value = int(digits)\n    denominator = 2 * 10**len(digits)\n    low, high = 2*value-1, 2*value+1\n    left_n, left_d = 0, 1\n    right_n, right_d = 1, 0\n    while True:\n        n = left_n + right_n\n        d = left_d + right_d\n        if n*denominator < low*d:\n            jumps = (low*left_d - denominator*left_n - 1) // (\n                denominator*right_n - low*right_d)\n            left_n += jumps*right_n\n            left_d += jumps*right_d\n        elif n*denominator >= high*d:\n            jumps = (denominator*right_n - high*right_d) // (\n                high*left_d - denominator*left_n)\n            right_n += jumps*left_n\n            right_d += jumps*left_d\n        else:\n            return [n,d]",
+    "explanation": "If the displayed integer digits are m at d decimal places, the exact interval is \\([(2m-1)/(2\\cdot10^d),(2m+1)/(2\\cdot10^d))\\). Start with neighbours \\(\\frac{0}{1}\\) and \\(\\frac{1}{0}\\) (the latter is an infinite right bound). Every fraction strictly between neighbours with determinant one has a numerator/denominator vector that is a positive-integer combination of their vectors. Consequently its denominator is at least the sum of their denominators. If the mediant is in the allowed interval, it achieves that lower bound and is the reduced minimum-denominator choice. Otherwise the entire interval lies on one side. Update the wrong-side neighbour by a multiple of the other, preserving the determinant-one invariant. For a left jump require \\((L_n+jR_n)/(L_d+jR_d)<\\text{low}\\); cross multiplication gives the strict integer bound used in the reference. For a right jump require the analogous fraction >=high, retaining equality because high is excluded. The -1 in the strict bound is essential. Each jump skips a whole run of mediants, so a report near zero does not require visiting 10^100 denominators. Termination follows from the nested Stern\u2013Brocot search reaching an allowed rational; quotient jumps are the Euclidean/continued-fraction acceleration. The number of jumps is O(log b) in the returned denominator, with exact large-integer arithmetic costs in addition. No general denominator bound needs to be guessed. For 0.12, \\(\\frac{1}{8}\\) is at the excluded upper boundary; \\(\\frac{2}{17}\\) is the simplest allowed fraction. This is the simplest compatible value, not proof that it was the unknown original value: uniqueness needs additional information, as in the interview question.",
+    "lesson": "l06"
+  },
+  {
+    "id": "c_l07_easy",
+    "title": "Variance from the actual joint records",
+    "difficulty": "Easy",
+    "topic": "Variance and dependence",
+    "path": "shared",
+    "prompt": "joint is a nonempty list of [x,y,probability] records for a joint distribution. Probabilities are nonnegative and sum to one; duplicate records and zero-mass records are allowed. a and b are fixed numeric weights. Return \\([E[Z],\\operatorname{Var}(Z)]\\) for Z=aX+bY under this joint distribution. Do not assume independence from the margins. There are at most 10000 records; |x|, |y|<=1000 and |a|, |b|<=100. All inputs are finite. Compute population variance about the distribution mean, without a sample n-1 denominator. Do not simulate, round or mutate joint.",
+    "starter": "def solve(joint, a, b):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              0,
+              1,
+              0.5
+            ],
+            [
+              1,
+              0,
+              0.5
+            ]
+          ],
+          1,
+          1
+        ],
+        "expected": [
+          1,
+          0
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              0,
+              0,
+              0.25
+            ],
+            [
+              0,
+              1,
+              0.25
+            ],
+            [
+              1,
+              0,
+              0.25
+            ],
+            [
+              1,
+              1,
+              0.25
+            ]
+          ],
+          1,
+          1
+        ],
+        "expected": [
+          1,
+          0.5
+        ]
+      }
+    ],
+    "solution": "import math\ndef solve(joint, a, b):\n    mean = math.fsum((a*x+b*y)*p for x,y,p in joint)\n    variance = math.fsum((a*x+b*y-mean)**2*p for x,y,p in joint)\n    return [mean, variance]",
+    "explanation": "Each joint record determines one realised weighted sum. Compute its probability-weighted mean, then the mean squared deviation about that mean. This uses the actual coupling and automatically includes covariance. Two identical margins can produce a constant sum, an independent sum or perfectly reinforced movement; their joint records distinguish them. The centered second pass avoids subtracting two nearly equal raw moments. Duplicate records simply contribute their masses separately. This is a distribution variance, so no sample correction is used. Two linear scans give O(r) time and O(1) working space for r records.",
+    "lesson": "l07"
+  },
+  {
+    "id": "c_l07_hard",
+    "title": "Variance of a pattern count without generating the flips",
+    "difficulty": "Hard",
+    "topic": "Variance and dependence",
+    "path": "shared",
+    "prompt": "An iid coin is flipped n times. pattern is a nonempty H/T string of length k<=100. Heads has exact rational probability heads/total, with integer 2<=total<=100 and \\(\\frac{1}{10}\\)<=heads/total<=\\(\\frac{9}{10}\\). Return \\([E[C],\\operatorname{Var}(C)]\\), where C counts every occurrence of pattern in consecutive k-flip windows, including overlaps. n is an integer from 0 to 10^12; return [0,0] when n<k. Do not simulate, enumerate flip sequences, iterate through n windows, or treat their indicators as independent. Use overlap compatibility and the number of pairs at each distance. Aim for \\(O(k)\\) character comparisons using border/failure links and \\(O(k)\\) working storage; account separately for exact-integer arithmetic. Return floats without rounding.",
+    "starter": "def solve(n, pattern, heads, total):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          20,
+          "HTH",
+          1,
+          2
+        ],
+        "expected": [
+          2.25,
+          1.9375
+        ]
+      },
+      {
+        "args": [
+          20,
+          "HHT",
+          1,
+          2
+        ],
+        "expected": [
+          2.25,
+          0.9375
+        ]
+      }
+    ],
+    "solution": "import math\ndef solve(n, pattern, heads, total):\n    k = len(pattern)\n    windows = n-k+1\n    if windows <= 0:\n        return [0,0]\n    prefix = [0]*k\n    for i in range(1,k):\n        j = prefix[i-1]\n        while j and pattern[i] != pattern[j]:\n            j = prefix[j-1]\n        if pattern[i] == pattern[j]:\n            j += 1\n        prefix[i] = j\n    suffix_probabilities = [1.0]\n    numerator = denominator = 1\n    for symbol in reversed(pattern):\n        numerator *= heads if symbol == 'H' else total-heads\n        denominator *= total\n        suffix_probabilities.append(numerator/denominator)\n    probability = suffix_probabilities[k]\n    max_lag = min(k-1,windows-1)\n    pair_count = max_lag*windows - max_lag*(max_lag+1)//2\n    terms = [windows*probability*(1-probability),\n             -2*pair_count*probability**2]\n    border = prefix[-1]\n    while border:\n        lag = k-border\n        if lag <= max_lag:\n            joint = probability*suffix_probabilities[lag]\n            terms.append(2*(windows-lag)*joint)\n        border = prefix[border-1]\n    return [windows*probability,math.fsum(terms)]",
+    "explanation": "Let m=n-k+1 and q be the full-pattern probability. Every indicator has mean q and variance q(1-q). Starts separated by at least k use disjoint flips and have zero covariance. At a shorter distance d, two patterns can occur together exactly when pattern[d:] equals pattern[:-d]; this is a border of length k-d. If compatible, their union requires the first pattern followed by its last d symbols, so the joint probability is q times that suffix probability. If incompatible it is zero. With D=min(k-1,m-1), there are m-d unordered pairs at distance d. Hence \\[\\operatorname{Var}(C)=mq(1-q)+2\\sum_{d=1}^D(m-d)(P(I_0=I_d=1)-q^2).\\] Sum the negative q\u00b2 contribution for all these pairs using \\(\\sum_{d=1}^D(m-d)=Dm-D(D+1)/2\\), then add joint mass only at compatible lags. The prefix function stores the longest proper border of each prefix; following its links visits every compatible overlap. Backward exact-integer products give the suffix probabilities before float conversion. This takes \\(O(k)\\) character operations and \\(O(k)\\) storage without depending on the number of flips; integer operands have O(k log total) bits. For k=1 there are no overlapping pairs and the binomial variance is valid. For HTH, distance one contributes negative covariance and distance two positive covariance. math.fsum combines the signed contributions, so a loss of precision in raw cancellation is reduced.",
+    "lesson": "l07"
   }
 ]

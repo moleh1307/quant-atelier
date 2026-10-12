@@ -7,9 +7,9 @@ an unregistered new lesson fails the build instead of inheriting generic tasks.
 from collections import Counter
 
 DIFFICULTIES = ('Easy', 'Medium', 'Hard')
-COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05')
+COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05', 'l06', 'l07')
 PENDING_TOPICS = (
-    'l06', 'l07', 'l08', 'l09', 'l25', 'l10', 'l11',
+    'l08', 'l09', 'l25', 'l10', 'l11',
     'l12', 'l13', 'l14', 'l15', 'l16', 'l17', 'l18', 'l19', 'l20',
     'l21', 'l22', 'l23', 'l24',
 )
@@ -20,6 +20,8 @@ CODING_LINKS = {
     'l03': ['c_l03_easy', 'c02', 'c_l03_hard'],
     'l04': ['c_l04_easy', 'c_l04_medium', 'c_l04_hard'],
     'l05': ['c_l05_easy', 'c03', 'c_l05_hard'],
+    'l06': ['c_l06_easy', 'c_l06_medium', 'c_l06_hard'],
+    'l07': ['c_l07_easy', 'c04', 'c_l07_hard'],
 }
 
 
@@ -30,6 +32,10 @@ def add_questions(add, questions):
     from .stopping import add_questions as stopping_questions
     distributions_questions(add, questions)
     stopping_questions(add, questions)
+    from .arithmetic import add_questions as arithmetic_questions
+    from .variance import add_questions as variance_questions
+    arithmetic_questions(add, questions)
+    variance_questions(add, questions)
 
 
 def add_coding(add, tasks):
@@ -39,6 +45,10 @@ def add_coding(add, tasks):
     from .stopping import add_coding as stopping_coding
     distributions_coding(add, tasks)
     stopping_coding(add, tasks)
+    from .arithmetic import add_coding as arithmetic_coding
+    from .variance import add_coding as variance_coding
+    arithmetic_coding(add, tasks)
+    variance_coding(add, tasks)
 
 
 def attach_and_validate(lessons, questions, tasks):
