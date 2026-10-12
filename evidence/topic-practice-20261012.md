@@ -1,8 +1,8 @@
 # Topic practice — verification
 
 2026-10-12. Latest verified scope: grouped list/journey navigation across the site,
-and expanded banks for l01–l15 and likelihood l25. The full 25-topic expansion remains active;
-9 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
+and expanded banks for l01–l16 and likelihood l25. The full 25-topic expansion remains active;
+8 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
 
 The first batch below documents l01–l03 at its own verification baseline
 (63 questions / 22 codes). Later batches are recorded below.
@@ -1044,4 +1044,83 @@ to the learner runner. These checks establish stated mathematical examples and
 observed UI behavior, not employer difficulty, learner mastery or independent
 pedagogical certification. Next: **l16–l18 and l19–l24**, then the final broad
 navigation/preservation audit and removal of the temporary pending exception.
+The full goal remains active.
+
+## Thirteenth batch: research defence
+
+Read the actual `static/lesson-research-defence.js` body and l16 learning metadata
+before designing its practice. Added four interviews and two coding exercises.
+l16 now has **two interviews per difficulty and exactly one code per difficulty**.
+Existing q33/q34 stay in place; only their generic rubrics become specific evidence
+obligations. All **118 other preceding questions and all 53 preceding public
+coding records remain exact** after JSON parsing. The Medium c11 keeps its original
+lagged exposures, two-unit reversal turnover and no-terminal-charge conventions.
+Current inventory: **25 lessons / 124 interviews / 55 codes**; researcher route
+**19 checks / 115 distinct interviews / 54 current codes**. **17 topics complete;
+eight pending.**
+
+The interviews require explicit economic payoffs before turning a hit rate into
+profit, distinguish conditional fills from all posted opportunities, and quantify
+how unchanged conditional accuracy can reverse a model-versus-baseline result
+when the market-state mix changes. The hard question defines a fixed-policy
+inverse-propensity evaluation model completely, then derives its mean, variance,
+selective-observation contrast and sharp missing-support bounds. It makes action
+randomization, overlap, net liquidation accounting, independence and excluded
+interference explicit. It does not infer those assumptions from a historical log;
+weight clipping and post-selection are distinct procedures.
+
+The new Easy coding task counts paired correctness disagreements rather than
+manufacturing profit from accuracy. Hard coding minimizes fixed state payoffs over
+a declared total-variation ball, including zero-count states, ties and unused
+budgets. The derivation gives both a feasible transfer witness and a lower bound
+over ALL continuous probability vectors. Returned mean and least used distance
+are canonical decimal string fractions. The task changes only regime composition;
+it explicitly excludes uncertain state payoffs, execution validation and unknown
+states. Its optimum is a sensitivity calculation for a fixed rule, not hindsight
+trade selection or a live profitability claim.
+
+**163 Python tests and all 23 frontend suites passed.** Twelve new tests enumerate
+all paired binary forecast triples through length four and check the 100,000-row
+limit; 200 seeded lagged-accounting checks use a separate exact rational holding
+path. Finite randomized-action worlds check inverse-propensity first/second moments
+and the example value **1**, traded-only mean **0** and score variance **53/3**.
+An unrecorded-action-selection counterexample preserves known marginal propensity
+while breaking identification. Missing-support endpoints and clipping bias are
+checked separately. The robust coding reference is compared with an independent
+exact rational LP: enumerate vertices of a total-variation EPIGRAPH, then minimize
+payoff and distance lexicographically, without using donor sorting. These cases
+have at most three states. A second oracle enumerates admissible mass vectors for
+150 seeded cases with up to four states. Checks cover insufficient donor mass,
+multiple minima, all-equal payoffs, zero-count minimum states, permutation and
+unreduced budget invariance, 20,000 states and boundary integers. Every official
+small hard fixture is also checked against the continuous LP. All **40 expanded
+coding references** pass their actual complete judge; both new references and
+retained c11 preserve inputs and exact official debugging-copy round trips.
+
+Chrome explicitly entered the launcher and visibly verified **Test preview**
+before every grade/reveal. A freely chosen Easy accepted **−1/2**. The Hard reference
+passed **11/11** through the UI (**1.3 ms** observed once). Submission 11 copied
+exactly into the debugger with worst-mean strings
+**["68999994274000048447","1999999795000004473"]**, both beyond JavaScript’s safe
+integer range, and used distance **["1","999999929"]**. The debugging rerun passed
+**4/4** without extra completion. The actual lesson’s Next step returned to the
+question list, and the list continued to the coding list. Hard proof and support-bound
+follow-up at **390px**: document width **375px**, main solution/display **289px**,
+follow-up display **255px**, matching scroll widths, zero KaTeX errors. The proof
+crop was visually inspected. No console errors observed. Viewport reset; the tab
+was verified at the personal question list **0/6**, coding stage **0/3**, after an
+explicit navigation wait confirmed the personal URL. All five personal record
+groups match the fresh pre-edit baseline; no personal credit/reset occurred.
+Server restarted to load the new judge bank.
+
+- [Interview list, personal workspace](defence-personal-question-list-20261012.png).
+- [Coding list, isolated preview](defence-coding-list-20261012.png).
+- [Narrow policy-identification proof, isolated preview](defence-proof-narrow-20261012.png).
+
+Primary context consulted: [Dudík, Langford and Li, policy evaluation, section 2.1](https://icml.cc/2011/papers/554_icmlpaper.pdf).
+The toy experiments, calculations, wording and code are original. No package is
+added to the student runner. These checks verify stated mathematics and observed
+navigation, not employer difficulty, learner mastery, live execution or physical
+touch/screen-reader interaction. Next: **l17–l18 and l19–l24**, then the required
+final broad navigation/preservation audit and removal of the pending-topic exception.
 The full goal remains active.
