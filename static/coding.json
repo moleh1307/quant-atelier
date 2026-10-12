@@ -3377,5 +3377,276 @@
     ],
     "solution": "from itertools import product\nfrom math import gcd\n\ndef rational(numerator, denominator):\n    factor = gcd(abs(numerator), denominator)\n    return [str(numerator // factor), str(denominator // factor)]\n\ndef solve(payoffs, likelihoods, lower, upper, mass, bid, ask, buy_cost, sell_cost):\n    n = len(payoffs)\n    minimum = maximum = None\n    for free in range(n):\n        others = [i for i in range(n) if i != free]\n        for choices in product((0, 1), repeat=n-1):\n            used = numerator = denominator = 0\n            for i, choice in zip(others, choices):\n                weight = upper[i] if choice else lower[i]\n                used += weight\n                joint = weight * likelihoods[i]\n                numerator += joint * payoffs[i]\n                denominator += joint\n            weight = mass - used\n            if not lower[free] <= weight <= upper[free]:\n                continue\n            joint = weight * likelihoods[free]\n            numerator += joint * payoffs[free]\n            denominator += joint\n            if minimum is None or numerator * minimum[1] < minimum[0] * denominator:\n                minimum = (numerator, denominator)\n            if maximum is None or numerator * maximum[1] > maximum[0] * denominator:\n                maximum = (numerator, denominator)\n    lo, ld = minimum\n    hi, hd = maximum\n    buy = lo - (ask + buy_cost) * ld\n    sell = (bid - sell_cost) * hd - hi\n    return {'minimum': rational(lo, ld), 'maximum': rational(hi, hd),\n            'buy_floor': rational(buy, ld), 'sell_floor': rational(sell, hd),\n            'action': 'buy' if buy > 0 else 'sell' if sell > 0 else 'wait'}",
     "explanation": "If two weights are strictly inside their bounds, perturb one by +\u03b5 and the other by \u2212\u03b5 while keeping their sum. Small positive and negative \u03b5 stay feasible, so that point is not a vertex. Thus every vertex has at most one non-bound coordinate. Enumerate its possible free index, choose lower/upper for the other \\(n-1\\) weights, and set the remaining weight from the sum constraint. All-bound vertices may appear repeatedly; degenerate/fixed bounds and n=1 need no special division. Feasibility ensures at least one vertex and positive likelihoods/mass ensure positive denominators.\n\nFor a feasible convex combination \\(w=\\sum_j\\alpha_j u_j\\) of vertices, write \\(D_j=\\sum_i u_{ji} L_i>0\\). Its ratio satisfies\n\n\\[m(w)=\\sum_j\\frac{\\alpha_j D_j}{\\sum_r\\alpha_r D_r}\\,m(u_j).\\]\n\nThese are nonnegative weights summing to one, so m(w) lies between vertex ratios; a minimum and maximum occur at vertices. This is NOT an equal average of their posterior means. Vertex weights happen to be integers here because all bound weights and mass are integers; the proof still covers the requested REAL prior set. Compare ratios by integer cross-products, then reduce only the winning fractions. The buy worst case uses the minimum mean; the sell worst case uses the maximum. In the first sample, putting all five free weight units on payoff ten gives \\(\\frac{10}{101}\\), while putting them on payoff five gives \\(\\frac{5}{2}\\): strongest raw payoff need not give strongest conditional mean. Enumeration is \\(O(n^2 2^{n-1})\\) arithmetic operations and \\(O(n)\\) working entries, suitable for the stated n\u226412, not a polynomial algorithm for an unbounded number of states. A robust positive expected edge is still a conditional model-set statement, not a guaranteed realised profit."
+  },
+  {
+    "id": "c_l20_easy",
+    "title": "Reconcile a filled sale with its opportunity",
+    "difficulty": "Easy",
+    "topic": "Market making",
+    "path": "trader",
+    "prompt": "A terminal contract pays low or high, integers with \u221210^9\u2264low\u2264high\u226410^9. weights=[w_low,w_high] has nonnegative integers at most 10^9 and positive sum W. fill_counts=[l_low,l_high] has integers in [0,D], where integer 1\u2264D\u226410^9. Prior state probabilities are weights/W; the probability of a CUSTOMER BUY from the dealer in each state is fill_counts/D. One filled sale receives integer ask in [\u221210^9,10^9], costs integer fee in [0,10^9] and creates a one-contract settlement liability. No fill costs/pays nothing. Interest is zero; inventory starts at zero. Return keys fill_probability, conditional_value, per_fill, per_opportunity. All defined quantities are EXACT reduced rational [numerator_string,denominator_string], with positive denominator, canonical decimal strings, integers using denominator \"1\", zero=[\"0\",\"1\"]. If fill probability is zero, conditional_value and per_fill are None, while fill_probability and per_opportunity are [\"0\",\"1\"]. Preserve both input lists. Use O(1) arithmetic state/work; do not simulate or use floats. This is a dealer SALE, so per-fill profit subtracts the selected liability and fee from the ask.",
+    "starter": "def solve(low, high, weights, fill_counts, D, ask, fee):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          0,
+          100,
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          2,
+          55,
+          0
+        ],
+        "expected": {
+          "fill_probability": [
+            "3",
+            "4"
+          ],
+          "conditional_value": [
+            "200",
+            "3"
+          ],
+          "per_fill": [
+            "-35",
+            "3"
+          ],
+          "per_opportunity": [
+            "-35",
+            "4"
+          ]
+        }
+      },
+      {
+        "args": [
+          -3,
+          7,
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          1,
+          5,
+          1
+        ],
+        "expected": {
+          "fill_probability": [
+            "0",
+            "1"
+          ],
+          "conditional_value": null,
+          "per_fill": null,
+          "per_opportunity": [
+            "0",
+            "1"
+          ]
+        }
+      }
+    ],
+    "solution": "from math import gcd\n\ndef rational(numerator, denominator):\n    factor = gcd(abs(numerator), denominator)\n    return [str(numerator // factor), str(denominator // factor)]\n\ndef solve(low, high, weights, fill_counts, D, ask, fee):\n    a = weights[0] * fill_counts[0]\n    b = weights[1] * fill_counts[1]\n    selected = a + b\n    total = sum(weights) * D\n    if selected == 0:\n        return {'fill_probability': ['0','1'], 'conditional_value': None,\n                'per_fill': None, 'per_opportunity': ['0','1']}\n    liability = a * low + b * high\n    profit = (ask - fee) * selected - liability\n    return {'fill_probability': rational(selected,total),\n            'conditional_value': rational(liability,selected),\n            'per_fill': rational(profit,selected),\n            'per_opportunity': rational(profit,total)}",
+    "explanation": "Form the joint state-and-fill weights a=w_low l_low and b=w_high l_high. Fill probability is (a+b)/(WD); conditional payment is (a low+b high)/(a+b), provided that the fill event has positive mass. The net profit numerator is (ask\u2212fee)(a+b)\u2212a low\u2212b high. Divide by a+b for profit per fill, or by WD for profit per opportunity. Zero fill has no defined conditional payment, not a fabricated value zero. Both ways agree with weighting complete branch cash flows. Integer gcd reduction and decimal strings preserve exact signs/digits beyond binary64; arithmetic-operation count is constant but integer bit costs depend on magnitude."
+  },
+  {
+    "id": "c_l20_medium",
+    "title": "Choose using quote-specific demand",
+    "difficulty": "Medium",
+    "topic": "Market making",
+    "path": "trader",
+    "prompt": "low, high, weights=[w_low,w_high], integer D and fee have these bounds: \u221210^9\u2264low\u2264high\u226410^9; 0\u2264weights[i]\u226410^9 with positive total W; 1\u2264D\u226410^9; 0\u2264fee\u226410^9. quotes is a list of at most 100000 rows [ask,l_low,l_high], with integer ask in [\u221210^9,10^9] and counts in [0,D]. Each row stipulates its OWN probabilities of a customer buying one from the dealer: l_state/D. These need not be monotone in ask; do not transfer a posterior between rows. Only ONE quote may be chosen for one opportunity. Filled dealer sale cash is ask\u2212fee and liability is the state payment; no fill contributes zero. No interest or starting inventory. Refraining gives zero. Return {\"index\":i,\"profit\":[num_string,den_string]} for the highest expected net profit PER OPPORTUNITY. Choose index \u22121 for zero/no positive profit (including empty quotes); among strictly positive tied quotes choose the LOWEST original index. Profit is an exact reduced rational with positive denominator, canonical decimal strings and zero=[\"0\",\"1\"]. Preserve all lists; use O(m) arithmetic operations and O(1) auxiliary integer state for m rows. Do not simulate, sort, round or optimise only per-fill edge.",
+    "starter": "def solve(low, high, weights, quotes, D, fee):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          0,
+          100,
+          [
+            1,
+            1
+          ],
+          [
+            [
+              55,
+              1,
+              2
+            ],
+            [
+              60,
+              1,
+              2
+            ],
+            [
+              70,
+              0,
+              1
+            ],
+            [
+              100,
+              0,
+              0
+            ]
+          ],
+          2,
+          1
+        ],
+        "expected": {
+          "index": -1,
+          "profit": [
+            "0",
+            "1"
+          ]
+        }
+      },
+      {
+        "args": [
+          0,
+          0,
+          [
+            1,
+            1
+          ],
+          [
+            [
+              10,
+              1,
+              1
+            ],
+            [
+              3,
+              10,
+              10
+            ]
+          ],
+          10,
+          0
+        ],
+        "expected": {
+          "index": 1,
+          "profit": [
+            "3",
+            "1"
+          ]
+        }
+      }
+    ],
+    "solution": "from math import gcd\n\ndef rational(numerator, denominator):\n    factor = gcd(abs(numerator), denominator)\n    return [str(numerator // factor), str(denominator // factor)]\n\ndef solve(low, high, weights, quotes, D, fee):\n    best = 0\n    index = -1\n    for i, (ask, l_low, l_high) in enumerate(quotes):\n        profit = weights[0] * l_low * (ask - fee - low)\n        profit += weights[1] * l_high * (ask - fee - high)\n        if profit > best:\n            best = profit\n            index = i\n    return {'index': index, 'profit': rational(best,sum(weights)*D)}",
+    "explanation": "Use the joint state-and-order branch probabilities specific to EACH quote. Its profit numerator is w_low l_low(ask\u2212fee\u2212low)+w_high l_high(ask\u2212fee\u2212high), over the common positive WD. Compare numerators directly; begin with the zero no-quote alternative and replace only on a strictly greater value. This preserves earliest positive ties and prefers refraining at zero. A rare favourable fill can lose to a more frequent modest edge when compared per opportunity. A quote with no reachable fills has zero profit, with no need to divide by its fill mass. One scan is O(m) arithmetic/O(1) auxiliary integer state; it does not derive demand curves from price or assert real-world optimality."
+  },
+  {
+    "id": "c_l20_hard",
+    "title": "Learn from orders while respecting inventory limits",
+    "difficulty": "Hard",
+    "topic": "Market making",
+    "path": "trader",
+    "prompt": "low<high are integer terminal payments in [\u221210^9,10^9]. ONE hidden V is fixed for the whole game. weights=[w_low,w_high] are nonnegative integers \u226410^9, positive total W, describing its prior. quotes contains at most three [bid,ask,rows] entries, with \u221210^9\u2264bid\u2264ask\u226410^9 and rows=[[customer_buy,customer_sell,no_order] in low, same in high]. All counts are integers in [0,100]. Every row of EVERY quote sums to the SAME integer D in [1,100], so its entry divided by D is the event probability conditional on V and that quote. Customers\u2019 events are conditionally independent given V and selected quotes; menus/counts stay fixed.\n\nAt each of 0\u2264horizon\u22645 opportunities choose one whole quote or SKIP. Skip gives no cash, inventory change or observation, and uses that opportunity. After quoting you observe buy, sell OR no order. Customer buy: dealer cash ask\u2212fee, q changes by \u22121. Customer sell: dealer cash \u2212bid\u2212fee, q changes by +1. No order: cash zero, q unchanged, but Bayes still updates. Initial inventory is integer q in [\u2212limit,limit], 0\u2264limit\u22645. Exclude a quote if ANY positive-probability event under CURRENT beliefs would breach the limit; no retroactive rejection of an executed branch. fee and penalty are integers in [0,10^9]. Financing is zero. Final objective is accumulated cash plus qV MINUS penalty\u00d7q\u00b2, in one currency unit. There is no interim penalty or wealth/capital constraint.\n\nReturn {\"gain\":[numerator_string,denominator_string],\"action\":index}. Gain is the EXACT best expected final objective minus the expectation from skipping EVERY opportunity with the original inventory. Reduce to canonical decimal strings, positive denominator, zero=[\"0\",\"1\"]. action is the optimal FIRST quote index, or \u22121 for skip; ties prefer skip, then the lowest quote index. At horizon zero return zero gain/action \u22121. Choose subsequent actions using only observed history, not V. Preserve every input. Use a finite-horizon belief/inventory recursion; memoisation may identify scaled equivalent beliefs. A conservative tree bound is \\(O(m(1+3m)^h)\\) arithmetic operations and \\(O((1+3m)^h)\\) memo states for m quotes/h opportunities (handle m=0 separately). These explicit small limits support exact computation; no polynomial/unbounded-horizon claim. Do not use float posteriors, a greedy immediate edge or simulation.",
+    "starter": "def solve(low, high, weights, quotes, horizon, inventory, limit, penalty, fee):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          0,
+          12,
+          [
+            1,
+            1
+          ],
+          [
+            [
+              0,
+              12,
+              [
+                [
+                  0,
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  0,
+                  0
+                ]
+              ]
+            ],
+            [
+              2,
+              2,
+              [
+                [
+                  0,
+                  2,
+                  0
+                ],
+                [
+                  0,
+                  2,
+                  0
+                ]
+              ]
+            ]
+          ],
+          2,
+          0,
+          1,
+          0,
+          0
+        ],
+        "expected": {
+          "gain": [
+            "5",
+            "1"
+          ],
+          "action": 0
+        }
+      },
+      {
+        "args": [
+          0,
+          1000000000,
+          [
+            1000000000,
+            999999999
+          ],
+          [
+            [
+              0,
+              0,
+              [
+                [
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0
+                ]
+              ]
+            ]
+          ],
+          1,
+          0,
+          1,
+          0,
+          0
+        ],
+        "expected": {
+          "gain": [
+            "999999999000000000",
+            "1999999999"
+          ],
+          "action": 0
+        }
+      }
+    ],
+    "solution": "from math import gcd\n\ndef rational(numerator, denominator):\n    factor = gcd(abs(numerator), denominator)\n    return [str(numerator // factor), str(denominator // factor)]\nfrom functools import lru_cache\n\ndef solve(low, high, weights, quotes, horizon, inventory, limit, penalty, fee):\n    D = sum(quotes[0][2][0]) if quotes else 1\n    powers = [D**t for t in range(horizon+1)]\n\n    def terminal(a, b, q):\n        return q*(a*low + b*high) - penalty*q*q*(a+b)\n\n    def scaled(a, b, q, t):\n        factor = gcd(a, b)\n        value, action = best(a//factor, b//factor, q, t)\n        return factor*value\n\n    @lru_cache(None)\n    def best(a, b, q, t):\n        if t == 0:\n            return terminal(a,b,q), -1\n        winning = D*scaled(a,b,q,t-1)\n        chosen = -1\n        for index,(bid,ask,rows) in enumerate(quotes):\n            candidate = 0\n            feasible = True\n            for event,delta in enumerate((-1,1,0)):\n                x = a*rows[0][event]\n                y = b*rows[1][event]\n                if x+y == 0:\n                    continue\n                next_q = q+delta\n                if not -limit <= next_q <= limit:\n                    feasible = False\n                    break\n                cash = ask-fee if event==0 else -bid-fee if event==1 else 0\n                candidate += cash*(x+y)*powers[t-1] + scaled(x,y,next_q,t-1)\n            if feasible and candidate > winning:\n                winning = candidate\n                chosen = index\n        return winning,chosen\n\n    factor = gcd(weights[0],weights[1])\n    a,b = weights[0]//factor,weights[1]//factor\n    value,action = best(a,b,inventory,horizon)\n    gain = value - terminal(a,b,inventory)*powers[horizon]\n    return {'gain': rational(gain,(a+b)*powers[horizon]), 'action': action}",
+    "explanation": "Write \\(v_0=\\mathrm{low}\\), \\(v_1=\\mathrm{high}\\) and \\(\\lambda=\\mathrm{penalty}\\). For each quote, \\(L_{0e}\\) and \\(L_{1e}\\) are its low/high ROW COUNTS for event e, with common row total D; the event probabilities are these counts divided by D. Conditional beliefs can be stored as two nonnegative integer weights \\(u=(a,b)\\), with positive sum \\(U=a+b\\). At t remaining opportunities define an INTEGER value numerator \\(N_t\\) so expected future cash plus terminal marked inventory/penalty is \\(N_t/(UD^t)\\). The terminal numerator is\n\n\\[N_0(u,q)=q(av_0+bv_1)-\\lambda q^2 U.\\]\n\nSkip has candidate D times the t\u22121 numerator. For a quoted event e, let \\(c_e\\) be dealer cash received and \\(\\delta_e\\) the inventory increment; set \\(u_e=(aL_{0e},bL_{1e})\\) and \\(z_e=aL_{0e}+bL_{1e}\\). Its contribution to the common numerator is\n\n\\[c_e z_e D^{t-1}+N_{t-1}(u_e,q+\\delta_e).\\]\n\nSum the reachable event contributions and maximise over feasible quotes and skip. This cancels posterior normalising denominators exactly. A zero-mass event supplies no constraint or continuation; a reachable limit breach invalidates the entire quote. No-order branches have zero cash but can move the posterior and change future choices. Scaling \\(u\\) by \\(g\\) scales \\(N_t\\) by \\(g\\) without changing its chosen action, so cache gcd-normalised beliefs and multiply the cached numerator back by g when using it in the parent. Omitting that factor corrupts branch weights. Compare exact integer candidates, replacing only on a strict improvement to preserve skip/earliest ties. At the root subtract the original hold-to-settlement objective, including its original penalty, using the same denominator. Past cash need not be cached because it is additive and does not change feasible future actions here. Sample one gives gain five after A, versus four after greedy B; no order is precisely the observation identifying the zero state. The exponential tree bound, memo storage and integer bit costs are separate from the small declared horizon; this is not a realistic fitted market or a universal market-making policy."
   }
 ]

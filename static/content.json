@@ -902,9 +902,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Compute buy mass \\(\\frac{3}{4}\\) and buy-plus-high mass \\(\\frac{1}{2}\\) under the stated independent types.",
+        "Normalise to posterior high probability \\(\\frac{2}{3}\\) and conditional value \\(\\frac{200}{3}\\).",
+        "Separate prior value 50 from value among fills; keep the fixed-behaviour qualification on the break-even ask."
       ]
     },
     {
@@ -1052,9 +1052,10 @@
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Explain how lowering both prices changes the quote centre and, under price-responsive demand, inventory-reducing versus inventory-increasing flow.",
+        "Contrast symmetric widening, which changes width and can suppress both sides including inventory-reducing sales.",
+        "Identify information, flow response, horizon, correlated exposure and constraints needed to choose; do not claim an unspecified optimum.",
+        "Explain why standalone positive expectation does not make a trade feasible under capital or risk limits."
       ]
     },
     {
@@ -3529,6 +3530,138 @@
         "Update hierarchical model weights to \\(\\frac{3}{8}\\) and \\(\\frac{5}{8}\\) and compute mixture value nine.",
         "Explain why equal posterior averaging gives 8.4 and why a model mixture differs from a prior set."
       ]
+    },
+    {
+      "id": "q_l20_e1",
+      "title": "A fill rate is part of the profit calculation",
+      "topic": "Market making",
+      "difficulty": "Easy",
+      "path": "trader",
+      "minutes": 8,
+      "prompt": "A dealer starts with no inventory and offers one contract at ask 75. The probability of a sale during this single opportunity is \\(\\frac{1}{5}\\). CONDITIONAL ON that sale, the contract’s expected terminal cash payment is 80. A filled sale incurs one unit of fees; no sale incurs no fee and creates no position. Interest is zero. What is expected net profit PER OPPORTUNITY? Also identify expected profit per fill and why using a prior value of 70 would answer the wrong question.",
+      "answer": -1.2,
+      "hints": [
+        "The dealer receives the ask and owes the payment after a sale.",
+        "Multiply the conditional net edge by the probability of a sale; no sale contributes zero."
+      ],
+      "solution": "Expected net profit per filled sale is 75−80−1=−6. Since an opportunity fills with probability \\(\\frac{1}{5}\\) and otherwise contributes zero, expected net profit per opportunity is −\\(\\frac{6}{5}\\)=−1.2. The prior value 70 describes the unselected population, while the liability on sold contracts has conditional mean 80. The quoted positive prior edge 75−70 is not the expected edge among executions. There is no additional spread to subtract when the entry ask and settlement payment are already specified.",
+      "followup": "An alternative quote earns a conditional net profit of two per sale but fills only with probability \\(\\frac{1}{100}\\). What is its profit per opportunity? Can comparing only per-fill edge decide between quotes, or justify scaling quantity on one common settlement?",
+      "followSolution": "The alternative gives \\(\\frac{2}{100}\\)=\\(\\frac{1}{50}\\) per opportunity, positive under its declared model. Per-fill edge alone omits how often the action occurs: a rarer, larger edge can earn less per opportunity than a smaller frequent one. Multiplying contracts on the SAME settlement scales that common exposure; it does not create independent trials. Quote choice and permitted quantity also require costs, information, inventory and constraints to be specified.",
+      "lesson": "l20",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Use sale cash-flow signs and one fee to obtain −6 per fill.",
+        "Include no-fill mass to obtain −\\(\\frac{6}{5}\\) per opportunity.",
+        "Reject the prior-mean substitution and separate frequency from conditional edge and shared risk."
+      ]
+    },
+    {
+      "id": "q_l20_e2",
+      "title": "Whose buy changes whose inventory?",
+      "topic": "Market making",
+      "difficulty": "Easy",
+      "path": "trader",
+      "minutes": 8,
+      "prompt": "A dealer’s signed inventory q=2 means it owns two contracts; negative inventory means a settlement liability. A CUSTOMER buys one contract from the dealer, with no other transaction. What is the dealer’s new q? Separately, its stated terminal inventory penalty is three times q squared. Compute the change in that penalty and contrast a customer SALE to the dealer. This is an accounting exercise, not an optimal-quote claim.",
+      "answer": 1,
+      "hints": [
+        "The customer takes a unit OUT of the dealer’s position.",
+        "Compare the penalty at the resulting inventory with the penalty at two."
+      ],
+      "solution": "A customer buy is a dealer sale, so q changes from two to one. The penalty changes from 3×2²=12 to 3×1²=3, a reduction of nine. A customer sale is a dealer purchase: q becomes three and the penalty becomes 27, an increase of fifteen. Cash direction and inventory direction must be stated from the same party’s perspective. A quoted bid is the dealer’s buying price; an ask is its selling price.",
+      "followup": "If a filled dealer sale has zero expected cash trading edge under the CURRENT conditional payoff distribution, how does that nine-unit penalty reduction affect the change in the specified objective? Does this establish that lowering the ask is always optimal?",
+      "followSolution": "For expected cash trading profit MINUS the declared inventory penalty, zero trading edge plus a nine-unit penalty reduction gives an objective improvement of nine, when comparing the position change under the same current conditional information. This is an explicit preference/model, not free cash earned. It does not establish a quote optimum: changing ask can change fill probability, conditional payoff, feasible actions and information about existing inventory. Compare full action-dependent outcomes and limits before recommending a skew.",
+      "lesson": "l20",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Translate customer buy into dealer sale and new inventory one.",
+        "Compute penalty changes −9 on a sale and +15 on a purchase.",
+        "Separate an objective improvement from cash profit and from an unspecified optimal quote."
+      ]
+    },
+    {
+      "id": "q_l20_m1",
+      "title": "The missing order is an observation too",
+      "topic": "Market making",
+      "difficulty": "Medium",
+      "path": "trader",
+      "minutes": 23,
+      "prompt": "A SINGLE terminal contract value V is zero or 100, with prior probabilities one half each. During each opportunity a customer buys with probability \\(\\frac{3}{4}\\) if V=100 and \\(\\frac{1}{4}\\) if V=0; otherwise no order occurs. Opportunities are conditionally independent GIVEN this same V. You observe Buy, No order, Buy in that order. Derive the posterior value, including the no-order likelihood. Then you post an executable ask 80 for the NEXT opportunity under the same rule, with no fees or financing. Compute the dealer’s expected profit per NEXT fill and per NEXT opportunity. Do not treat posting as execution or reset the prior for each order.",
+      "answer": null,
+      "hints": [
+        "Multiply the three history likelihoods within each fixed state.",
+        "The next fill selects AGAIN from the posterior reached after the history.",
+        "Next-fill conditional value and current posterior value are different quantities."
+      ],
+      "solution": "The history likelihood is (\\(\\frac{3}{4}\\))(\\(\\frac{1}{4}\\))(\\(\\frac{3}{4}\\))=\\(\\frac{9}{64}\\) in high and (\\(\\frac{1}{4}\\))(\\(\\frac{3}{4}\\))(\\(\\frac{1}{4}\\))=\\(\\frac{3}{64}\\) in low. Equal prior weights give posterior high probability \\(\\frac{3}{4}\\) and current mean 75. Ignoring the no-order event would instead use two buys and get high probability \\(\\frac{9}{10}\\).\n\nFor the NEXT buy, joint high-and-buy mass is (\\(\\frac{3}{4}\\))(\\(\\frac{3}{4}\\))=\\(\\frac{9}{16}\\); low-and-buy mass is (\\(\\frac{1}{4}\\))(\\(\\frac{1}{4}\\))=\\(\\frac{1}{16}\\). Hence next fill probability is \\(\\frac{5}{8}\\) and next-fill mean is 90. Selling at ask 80 gives −10 per fill and −\\(\\frac{25}{4}\\) per opportunity. Comparing the ask only with current mean 75 misses the next execution’s selection. These results hold because the stated likelihoods remain unchanged at ask 80.",
+      "followup": "Derive posterior odds after b buys and n no-order events under these assumptions. What breaks if repeated orders come from a single counterparty whose hidden type persists? Can an unfilled order be ignored simply because it produces no trade cash flow?",
+      "followSolution": "With prior odds one, each buy multiplies odds by three and each no-order observation divides them by three. Posterior odds are \\(3^{b-n}\\); normalise odds o to high probability o/(1+o). No-order cash flow is zero but its state likelihood is informative. A persistent counterparty type can make observations dependent even conditional on V; the product likelihood then needs the joint process or a state that also tracks that type. The finite experiment’s conditional-independence assumption is essential, not a conclusion from observing a sequence.",
+      "lesson": "l20",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Use all three state-specific history likelihoods and obtain current mean 75.",
+        "Recondition on the next fill to obtain mean 90 and fill rate \\(\\frac{5}{8}\\).",
+        "Separate next-fill profit −10 from next-opportunity profit −\\(\\frac{25}{4}\\).",
+        "Derive the odds update and identify conditional independence/persistent-type limits."
+      ]
+    },
+    {
+      "id": "q_l20_m2",
+      "title": "Raising the ask changes who accepts it",
+      "topic": "Market making",
+      "difficulty": "Medium",
+      "path": "trader",
+      "minutes": 25,
+      "prompt": "V is zero or 100 with equal priors. A customer is independently informed with probability \\(\\frac{1}{2}\\); an informed customer buys only when V STRICTLY exceeds the ask. An uninformed customer buys only at asks ≤60. The dealer may post ONE ask from {55,60,70,100} for one opportunity, or refrain from quoting. Each filled sale costs a fee of one; no trade costs zero. Interest is zero and inventory initially zero. For each quote, compute fill probability, conditional payment when defined, and expected net profit per opportunity. Choose an action using these quantities. Explain why keeping the posterior calculated at ask 55 while evaluating ask 70 is incorrect.",
+      "answer": null,
+      "hints": [
+        "At 55 and 60 both uninformed branches and the informed high branch buy.",
+        "At 70 only informed high buys; at 100 informed high is indifferent and DOES NOT buy under the stipulated strict rule.",
+        "An empty fill event has no conditional mean but still gives zero per-opportunity profit."
+      ],
+      "solution": "At 55 or 60 the fill probability is \\(\\frac{3}{4}\\) and conditional value \\(\\frac{200}{3}\\). Net profits per opportunity are (\\(\\frac{3}{4}\\))(55−1−\\(\\frac{200}{3}\\))=−\\(\\frac{19}{2}\\) and (\\(\\frac{3}{4}\\))(60−1−\\(\\frac{200}{3}\\))=−\\(\\frac{23}{4}\\). At 70 only the informed high branch fills, so fill probability \\(\\frac{1}{4}\\), conditional value 100, and profit (\\(\\frac{1}{4}\\))(70−1−100)=−\\(\\frac{31}{4}\\). At 100 nobody buys: fill probability zero, conditional value undefined, opportunity profit zero. Refrain from quoting; an unfilled ask 100 ties at zero. Among quotes that can fill, 60 loses least, but it still loses. The likelihood changed at the uninformed participation threshold, so an old posterior cannot be transferred to a new quote.",
+      "followup": "Keep these behavioural rules but replace the informed fraction by α in [0,1]. At ask 60 with the same fee, derive net expected profit and the largest α for nonnegative profit. What does this say about claiming that no dealer can profit in general?",
+      "followSolution": "At ask 60, the high branch buys with total probability \\(\\frac{1}{2}\\), and low buys with probability (1−α)/2. The fee-adjusted cash received per fill is 59. Expected profit is\n\n\\[59(1-\\alpha/2)-50=9-\\frac{59}{2}\\alpha.\\]\n\nIt is nonnegative exactly when \\(\\alpha\\leq18/59\\). For α=\\(\\frac{1}{2}\\) this agrees with −\\(\\frac{23}{4}\\). The original no-positive-profit menu result belongs to its stated informed fraction, participation threshold and cost convention. It is not a universal impossibility theorem for real market making or a fitted demand model.",
+      "lesson": "l20",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Recompute each quote’s eligible branches and distinguish zero fill from a defined conditional mean.",
+        "Obtain per-opportunity profits −\\(\\frac{19}{2}\\), −\\(\\frac{23}{4}\\), −\\(\\frac{31}{4}\\) and zero.",
+        "Choose refraining and reject a price-invariant posterior.",
+        "Derive 9−59α/2 and threshold \\(\\frac{18}{59}\\) without generalising the toy demand model."
+      ]
+    },
+    {
+      "id": "q_l20_h1",
+      "title": "The best immediate edge can be the wrong first action",
+      "topic": "Market making",
+      "difficulty": "Hard",
+      "path": "trader",
+      "minutes": 32,
+      "prompt": "A fixed terminal V is zero or 12 with equal priors. A dealer starts at q=0 with zero cash and must always keep signed inventory in \\([-1,1]\\). There are TWO customer opportunities, followed by settlement of all remaining inventory at V. No fees, interest or risk penalty apply. At each opportunity the dealer can skip (no observation), post quote A, or post quote B. Under A the customer buys ONE from the dealer at ask 12 if V=12 and sends NO ORDER if V=0. Under B the customer SELLS ONE to the dealer at bid two in either state. These behaviours, including accepting at V=ask, are STIPULATED and remain available in the second opportunity. You observe the actual order or no-order event before choosing again. A whole quote is infeasible if any positive-probability resulting inventory would breach the limit; you cannot reject a filled branch retroactively. Derive the optimal first action and conditional second actions, with expected final cash-plus-inventory value. Compare an immediate-edge strategy that chooses B first. Explain which observations and state variables the optimal policy needs.",
+      "answer": null,
+      "hints": [
+        "A has zero immediate expected trading edge, but its buy/no-order observations identify V.",
+        "After B first the dealer is long one; another B is infeasible.",
+        "Settle terminal inventory along each complete path before averaging."
+      ],
+      "solution": "With one opportunity left at prior beliefs/q=0, B has expected edge six minus two = four; A has zero edge. With TWO opportunities, A first is better. If its customer buys, V=12 is known, dealer cash is +12 and q=−1. Choose B next, paying two and returning q to zero; final value is ten. If A produces no order, V=0 is known, q=0/cash=0; skip because B would lose two and A again produces no order. The expected final value is (\\(\\frac{1}{2}\\))10+(\\(\\frac{1}{2}\\))0=5.\n\nB first pays two and sets q=1 without changing the prior. A second is feasible: high sells the unit for twelve, ending at q=0/cash=10; low produces no order, leaving q=1 worth zero and cash −2. Average final value is four. Skipping after B gives the same four. A second cannot improve B’s expectation because its high-state sale is at the exact value. Another B is prohibited. Skipping FIRST leaves only one opportunity and value four. Thus A first attains five and beats immediate-edge B and skipping. Enumerating these available first actions and optimal continuations proves optimality in this finite game.",
+      "followup": "Write the form of a Bellman state and terminal value for a general finite quote menu with state-dependent customer buy/sell/no-order probabilities, a quadratic terminal penalty \\(\\lambda q^2\\), and h opportunities remaining. Why may past cash be left out of the state? Why must no-order branches and quote feasibility be included BEFORE optimisation?",
+      "followSolution": "Let \\(v_0<v_1\\) be the two possible terminal payments, \\(p\\) the current high-state posterior, \\(q\\) the signed inventory and \\(h\\) the remaining horizon. Here \\(\\lambda\\) is the nonnegative terminal-penalty coefficient. Terminal expected marked value minus penalty is\n\n\\[F_0(p,q)=q[(1-p)v_0+pv_1]-\\lambda q^2.\\]\n\nFor each reachable event e, let \\(p_e\\) be its updated high-state posterior and \\(\\delta_e\\) its signed inventory change. For each feasible quote, average immediate dealer cash \\(c_e\\) plus continuation \\(F_{h-1}(p_e,q+\\delta_e)\\) over its reachable events e; compare with skip, which supplies no observation. Bayes updates \\(p_e\\) with that quote’s event likelihood, including no order. A customer buy has delta −1/cash ask−fee; a customer sale has delta +1/cash −bid−fee; no order has delta zero/cash zero. Past cash is additive and does not affect later choices under this expected-cash objective and these inventory-only constraints; wealth-dependent utility/capital rules could invalidate that reduction. A quote that might breach limits is excluded in full before selecting it. Deleting its bad branch afterwards would describe a different execution model and invent profit.",
+      "lesson": "l20",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Compute A’s complete high/low paths with final values ten/zero and expectation five.",
+        "Show B-first value four, its forbidden second purchase and feasible A continuation.",
+        "Compare skip-first and prove optimality across the actual finite first-action set.",
+        "Specify posterior, signed inventory and remaining horizon, with terminal marked value/penalty.",
+        "Explain additive cash, informative no-order events and ex-ante quote feasibility; avoid clairvoyant or retroactively rejected branches."
+      ]
     }
   ],
   "lessons": [
@@ -5084,16 +5217,25 @@
       "explanation": "Condition on the fill, not only on the prior.",
       "questions": [
         "q36",
-        "q42"
+        "q42",
+        "q_l20_e1",
+        "q_l20_e2",
+        "q_l20_m1",
+        "q_l20_m2",
+        "q_l20_h1"
       ],
-      "coding": [],
+      "coding": [
+        "c_l20_easy",
+        "c_l20_medium",
+        "c_l20_hard"
+      ],
       "objectives": [
         "Calculate conditional fair value after an informed-or-uninformed buy.",
         "Distinguish adverse selection from inventory exposure.",
         "Explain a quote skew without claiming an unspecified optimum."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "Arithmetic cannot be trusted",
         "The buyer’s decision may reveal information",
