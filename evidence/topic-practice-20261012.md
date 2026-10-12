@@ -1,8 +1,8 @@
 # Topic practice — verification
 
 2026-10-12. Latest verified scope: grouped list/journey navigation across the site,
-and expanded banks for l01–l14 and likelihood l25. The full 25-topic expansion remains active;
-10 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
+and expanded banks for l01–l15 and likelihood l25. The full 25-topic expansion remains active;
+9 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
 
 The first batch below documents l01–l03 at its own verification baseline
 (63 questions / 22 codes). Later batches are recorded below.
@@ -973,3 +973,75 @@ These checks establish the specified cases and observed navigation, not
 employer-certified difficulty, learner mastery, touch or screen-reader use.
 Next: researcher l15–l18 and trader l19–l24, then final site-wide navigation
 and preservation audit. The full goal remains active.
+
+## Twelfth batch: search and multiple testing
+
+Read the actual `static/lesson-search.js` body before selecting tasks. l15 now
+has **two Easy, two Medium and two Hard interviews**, plus exactly one coding
+exercise per difficulty. Added three interviews and three codes. Existing q04,
+q25 and q32 remain linked under their permanent IDs and retain grading meaning.
+All **50 prior coding records** remain exact after JSON parsing. Of 117 prior
+questions, 114 are exact; q04 changes only its rubric; q25 replaces ambiguous
+nominal-level wording with the intended EXACT true-null rejection probability
+and adds its rubric; q32 adds specific assessment obligations and the identical-copy
+exception to its correlated-search follow-up. Their answers/prompts otherwise
+remain intact. Current inventory: **25 lessons / 120 interviews / 53 codes**;
+researcher route **19 checks / 111 distinct interviews / 52 current codes**.
+**16 topics complete; nine pending.**
+
+The interviews distinguish mean false-discovery fractions from pooled counts,
+FWER from expected false reports, copied decisions from independent candidates,
+and selected-score optimism from the selected candidate’s own true value.
+The hard Gaussian derivation handles correlation ±1 and unequal means; shared
+confirmation noise exposes why a separate file alone is not independent evidence.
+Coding progresses from repetition summaries to exact rational Holm adjustment
+and exhaustive balanced-assignment calibration of a jointly searched maximum.
+The latter explicitly supplies the exchangeable GLOBAL null, includes ties and
+the observed assignment, and claims only global-null family calibration. It
+neither permits arbitrary chronological shuffles nor asserts strong partial-null
+control without additional assumptions. Rational outputs use canonical decimal
+string pairs, not rounded p-values.
+
+**151 Python tests and all 23 frontend suites passed.** Twelve new tests compare
+Holm against exhaustive closed Bonferroni intersection testing (including ties,
+unreduced fractions and exact rejection boundaries), check finite independent
+and copied valid true-null families with a false-null candidate, and verify
+20,000-hypothesis boundaries. Discovery summaries use exact Fraction oracles.
+Randomization is independently computed by balanced binary vectors and direct
+rational group means, with 100 seeded matrices at n=2,4,6,8. Finite global-null
+ranks are checked for super-uniformity, ties and equivalence of any adjusted
+rejection to global rejection. Checks include row/column permutation, complement
+assignments, copied/sign-reversed columns, and dominance over individual tails.
+For n=18,m=8, two extreme assignments out of 48,620 give exactly **1/24,310**.
+Independent quadrature checks the Gaussian truncated-normal first moment;
+algebra checks the endpoint variance decomposition. All **38 expanded coding
+references** pass their actual complete judge, including all three new references.
+Input preservation and every official debugging-copy round trip are checked.
+
+Chrome opened the explicit launcher and visibly verified **Test preview** before
+all grading and solution inspection. A freely selected Easy accepted **271/1000**
+and returned through the list/stage flow. The Hard reference passed **8/8** through
+the UI in **235 ms** (observed once, not a runtime guarantee). Copying Submission 5
+into the debugger retained **18 rows, eight columns, nine group-one assignments**
+and the string pair **["1","24310"]**; its debugging run passed **3/3** and did not
+award extra completion. The hard solution and unequal-mean follow-up were checked
+at **390px** viewport: document width **375px**, primary solution/display **289px**,
+follow-up display **255px**, equal scroll widths and zero KaTeX errors. No console
+errors were observed. The narrow proof crop was visually inspected. Viewport reset;
+tab left at the personal question list **0/6**, coding stage **0/3**. All five personal
+record groups match the fresh pre-edit baseline; no personal assessments/drafts
+were reset or credited. The local server was restarted to load the new judge bank.
+
+- [Interview list, personal workspace](search-personal-question-list-20261012.png).
+- [Interview list, isolated preview](search-question-list-20261012.png).
+- [Coding list, isolated preview](search-coding-list-20261012.png).
+- [Narrow Gaussian derivation, isolated preview](search-proof-narrow-20261012.png).
+
+Primary method references consulted: [statsmodels Holm implementation](https://www.statsmodels.org/stable/_modules/statsmodels/stats/multitest.html)
+and [SciPy exact permutation-test documentation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.permutation_test.html).
+The content, proofs and integer implementation are original; no package is added
+to the learner runner. These checks establish stated mathematical examples and
+observed UI behavior, not employer difficulty, learner mastery or independent
+pedagogical certification. Next: **l16–l18 and l19–l24**, then the final broad
+navigation/preservation audit and removal of the temporary pending exception.
+The full goal remains active.

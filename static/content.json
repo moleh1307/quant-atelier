@@ -95,9 +95,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Condition on the declared useful/useless population and construct both passing masses.",
+        "Normalize 0.018 by 0.116 to obtain \\(\\frac{9}{58}\\), distinguishing sensitivity from posterior usefulness.",
+        "For repeated screens state conditional independence given usefulness; copied evidence cannot be squared."
       ]
     },
     {
@@ -611,7 +611,7 @@
       "difficulty": "Medium",
       "path": "researcher",
       "minutes": 8,
-      "prompt": "You run 20 independent tests of true null hypotheses, each at level 5%. What is the probability of at least one rejection?",
+      "prompt": "You run 20 independent tests of true null hypotheses. Each has an EXACT true-null rejection probability of 5%. What is the probability that at least one rejects?",
       "answer": 0.6415140775914581,
       "hints": [
         "Work with the complement.",
@@ -624,9 +624,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Use independence of rejection decisions and complement the event of no rejections.",
+        "Obtain 1−0.95^20; a nominal level alone supplies an upper bound, not necessarily equality.",
+        "Justify Bonferroni by the union bound without requiring independence."
       ]
     },
     {
@@ -795,14 +795,14 @@
       ],
       "solution": "Selection favours models with positive validation noise. The winning score is optimistically biased even if every candidate was fitted only on training data. Use nested time-aware validation for selection and an untouched final test for estimation; record all trials and uncertainty. Retesting repeatedly on the final test turns it into another validation set.",
       "followup": "What if the 1,000 models are strongly correlated?",
-      "followSolution": "The effective search is smaller than 1,000 independent trials, but selection bias remains. The independence formula cannot be imported without checking dependence.",
+      "followSolution": "The effective search is smaller than 1,000 independent trials, but selection bias remains. The independence formula cannot be imported without checking dependence. Perfectly identical copies of one unbiased score add no selection gain: their maximum is that same score. Partial correlation can reduce optimism, but the joint distribution and selection rule, not a universal scalar effective count, determine it.",
       "lesson": "l15",
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Identify selecting and reporting the best noisy in-sample score as a changed evaluation procedure.",
+        "Specify a frozen independent confirmation or outer evaluation that repeats the complete inner search.",
+        "Record the actual search and handle correlated candidates without inventing a universal effective test count."
       ]
     },
     {
@@ -2974,6 +2974,83 @@
         "Derive the finite second-moment bound and \\(\\sqrt{5/n}\\) 95-percent band for fixed n.",
         "Distinguish adaptive procedure risk from final-model/future-regime claims and calculate selected loss \\(\\frac{1}{4}\\) versus future risk \\(\\frac{1}{2}\\)."
       ]
+    },
+    {
+      "id": "q_l15_e1",
+      "title": "A discovery fraction has a random denominator",
+      "topic": "Search",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 7,
+      "prompt": "A repeated procedure has exactly two equally likely outcomes: (V,R)=(1,1) or (0,9), where V counts false rejections and R counts all rejections. Define false discovery rate as \\(E[V/\\max(R,1)]\\), assigning zero when R=0. What is its value? These are stipulated count outcomes, not a claim about calibrated individual p-values.",
+      "answer": 0.5,
+      "hints": [
+        "Calculate the false fraction inside each repetition before averaging.",
+        "A ratio of average counts is a different quantity."
+      ],
+      "solution": "The within-run fractions are one and zero, so FDR is one half. In contrast, \\(E[V]=1/2\\) and \\(E[R]=5\\); their ratio is one tenth. Pooling discoveries weights a run with nine discoveries nine times as much as a run with one. FDR weights repetitions according to their probabilities. Here family-wise error \\(P(V>0)\\) happens also to equal one half; that equality is not a general identity.",
+      "followup": "Change the two outcomes to (0,0) and (1,2), still equally likely. Calculate FDR, family-wise error and the ratio of expected counts. Why must the zero-rejection convention be explicit?",
+      "followSolution": "The fractions are zero and one half, giving FDR one quarter. Family-wise error is one half, and the pooled population ratio is (\\(\\frac{1}{2}\\))/1=one half. A run without any rejection contributes zero to the false-discovery proportion; it must neither cause division by zero nor be silently removed from the repetition average. Dropping it changes the target to a conditional average given at least one rejection.",
+      "lesson": "l15",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Average the two within-run fractions to obtain \\(\\frac{1}{2}\\).",
+        "Distinguish FDR from a ratio of expected counts and from family-wise error.",
+        "Apply the zero-rejection convention and obtain follow-up values \\(\\frac{1}{4}\\),\\(\\frac{1}{2}\\),\\(\\frac{1}{2}\\)."
+      ]
+    },
+    {
+      "id": "q_l15_e2",
+      "title": "Copies repeat a rejection event",
+      "topic": "Search",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 8,
+      "prompt": "Twelve true-null tests are arranged in three blocks of four. Inside a block the four rejection decisions are IDENTICAL copies of one decision. Each block decision has exact false-rejection probability 0.1, and the three block decisions are independent. What is the probability of at least one false rejection among the twelve reported tests?",
+      "answer": 0.271,
+      "hints": [
+        "There are three distinct random decisions, not twelve independent ones.",
+        "Complement the event that all three blocks accept."
+      ],
+      "solution": "No rejection occurs precisely when all three block decisions accept. Thus \\(P(V>0)=1-0.9^3=271/1000\\). The independent twelve-test formula counts copied evidence as new randomness. Nevertheless \\(E[V]=12(0.1)=1.2\\): linearity of expectation does not require independence, and four false reports are counted whenever a block falsely rejects. Expected counts and the chance of any error answer different questions.",
+      "followup": "If the blocks contain two, four and seven identical copies, does the family-wise error change? What are the expected false count and FDR when all hypotheses are true?",
+      "followSolution": "The three underlying decisions still determine the same event, so family-wise error remains \\(\\frac{271}{1000}\\). Expected false count is (2+4+7)·0.1=1.3. Under the global null V=R, so V/max(R,1) equals the indicator of any rejection; FDR equals family-wise error. This last identity depends on ALL hypotheses being true, not on independence.",
+      "lesson": "l15",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Identify three independent block decisions and calculate \\(\\frac{271}{1000}\\).",
+        "Use linearity for expected false reports without asserting independent copies.",
+        "Explain the global-null identity between FDR and family-wise error."
+      ]
+    },
+    {
+      "id": "q_l15_h1",
+      "title": "Correlated winners and shared confirmation noise",
+      "topic": "Search",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 38,
+      "prompt": "Two candidates have the SAME true value \\(\\theta\\), and observed scores \\(X_i=\\theta+\\varepsilon_i\\). The errors are jointly Gaussian, mean zero, with variance \\(\\sigma^2>0\\) each and correlation \\(\\rho\\in[-1,1]\\). Select \\(J=\\arg\\max_i X_i\\), breaking ties toward candidate one. Derive the mean and variance of the selected score, including both singular endpoints of rho. Then let confirmation errors be \\(\\eta_i=a\\varepsilon_i+\\sqrt{1-a^2}\\,\\zeta_i\\), where \\(a\\in[-1,1]\\), the zeta errors are iid \\(N(0,\\sigma^2)\\), and are independent of the original pair. Derive the mean of the selected candidate’s confirmation score \\(\\theta+\\eta_J\\). Does calling a file a holdout make that mean unbiased?",
+      "answer": null,
+      "hints": [
+        "Use \\(S=(\\varepsilon_1+\\varepsilon_2)/2\\) and \\(D=(\\varepsilon_1-\\varepsilon_2)/2\\). Their Gaussian covariance is zero.",
+        "The winning error is S+|D|. A centered Gaussian with standard deviation t has mean absolute value \\(t\\sqrt{2/\\pi}\\).",
+        "Condition on the original errors before averaging the independently indexed confirmation noise."
+      ],
+      "solution": "The Gaussian variables S and D are independent, including the degenerate cases. Their variances are \\(\\sigma^2(1+\\rho)/2\\) and \\(\\sigma^2(1-\\rho)/2\\). Let \\(b=\\sigma\\sqrt{(1-\\rho)/\\pi}\\). The winning error is S+|D|, so\n\n\\[\\begin{aligned}E[X_J]&=\\theta+b,\\\\\\operatorname{Var}(X_J)&=\\sigma^2\\left(1-\\frac{1-\\rho}{\\pi}\\right).\\end{aligned}\\]\n\nThe variance uses \\(\\operatorname{Var}|D|=E[D^2]-(E|D|)^2\\), plus the independent S variance. At rho=1 both scores are identical: b=0 and variance sigma squared. At rho=−1 they are opposite errors: the winner is theta plus a folded normal, with bias \\(\\sigma\\sqrt{2/\\pi}\\) and variance \\(\\sigma^2(1-2/\\pi)\\). At rho=0 the bias is sigma divided by square root pi.\n\nConditional on the original pair, J is fixed and the chosen zeta has mean zero. Therefore \\(E[\\theta+\\eta_J]=\\theta+ab\\). Separate storage says nothing about a. Independent confirmation has a=0; reused noise has a=1 and keeps the full optimism; negative a can make confirmation pessimistic. The expected original-minus-confirmation gap is (1−a)b. This model makes the dependence mechanism explicit rather than equating a held-out filename with independent evidence.",
+      "followup": "Now let true candidate values differ, with delta=theta1−theta2. For \\(s=\\sigma\\sqrt{2(1-\\rho)}>0\\), express the expected TRUE value of the selected candidate and its expected score optimism in terms of the standard normal density phi and distribution function Phi. Give the confirmation mean and handle s=0. Is score optimism measured relative to the better candidate’s true value?",
+      "followSolution": "Write W=epsilon1−epsilon2, so W is N(0,s squared), and J=1 when W≥−delta. Hence \\(E[\\theta_J]=\\theta_2+\\delta\\Phi(\\delta/s)\\). The selected error equals \\(\\varepsilon_2+W\\mathbf1\\{W\\geq-\\delta\\}\\), whose mean is\n\n\\[E[\\varepsilon_J]=\\int_{-\\delta}^{\\infty} w\\frac{\\phi(w/s)}s\\,dw=s\\phi(\\delta/s).\\]\n\nThe selected observed mean is the selected TRUE mean plus this optimism, and confirmation mean is \\(E[\\theta_J]+a s\\phi(\\delta/s)\\). No independence between epsilon2 and W was used: only its unconditional zero mean. When s=0 the error is common to both candidates; select the higher true value deterministically (tie to one), with zero added bias. For delta=0 the formula recovers b; large absolute delta/s makes selection optimism vanish. Relative to the BEST true value, the difference also includes the loss from sometimes choosing the worse candidate. Confusing that benchmark with the selected candidate’s own truth hides a different source of error.",
+      "lesson": "l15",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive independent Gaussian sum/difference variables and the folded-normal mean and variance.",
+        "Check rho=1,0,−1 rather than applying a nonsingular density at the endpoints.",
+        "Condition correctly on selection to derive theta+ab; identify the needed confirmation independence.",
+        "For unequal means derive selected truth and s phi(delta/s), distinguish its benchmark and handle s=0."
+      ]
     }
   ],
   "lessons": [
@@ -4157,16 +4234,23 @@
       "questions": [
         "q04",
         "q25",
-        "q32"
+        "q32",
+        "q_l15_e1",
+        "q_l15_e2",
+        "q_l15_h1"
       ],
-      "coding": [],
+      "coding": [
+        "c_l15_easy",
+        "c_l15_medium",
+        "c_l15_hard"
+      ],
       "objectives": [
         "Combine base rates with test sensitivity and false-positive rates.",
         "Compute a family-wise false-rejection probability under independence.",
         "Separate discovery, selection and confirmation of a research idea."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "Make it unbiased",
         "Bias the selected score upward",
