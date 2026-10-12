@@ -977,9 +977,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Include the one-half coefficient and obtain retained change one.",
+        "Explain that initial delta neutrality removes a local first-order response, not all risk.",
+        "Handle the negative move and name the omitted time, volatility, rehedging and higher-order terms."
       ]
     },
     {
@@ -1002,9 +1002,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Match long-call/short-put terminal payments state by state for identical European contracts.",
+        "Replicate with underlying and strike financing under the stated no-dividend/frictionless assumptions.",
+        "Obtain price difference zero without claiming each option is worthless; correct for known dividend present value."
       ]
     },
     {
@@ -3925,6 +3925,137 @@
         "Use both one-sided derivatives to prove h=1/2/variance \\(\\frac{9}{4}\\) is globally optimal.",
         "Derive the d-dependent minimum, its boundary d=4 and d=12 counterexample."
       ]
+    },
+    {
+      "id": "q_l23_e1",
+      "title": "Contract quantities change the synthetic payoff",
+      "topic": "Mathematical finance",
+      "difficulty": "Easy",
+      "path": "trader",
+      "minutes": 8,
+      "prompt": "European calls and puts have the same strike 100, underlying and maturity; each pays per one underlying unit. Hold TWO long calls and ONE short put. At terminal underlying price 120, what is the combined cash payoff? This asks terminal payment, not profit after an initial premium. Does the usual one-call-minus-one-put identity turn this whole position into one unit of a forward?",
+      "answer": 40,
+      "hints": [
+        "Apply the signed contract quantities to max(S−100,0) and max(100−S,0).",
+        "One copy of call-minus-put leaves another long call."
+      ],
+      "solution": "Each call pays twenty and the short put pays zero, so the combined payment is forty. The unit identity applies to ONE call and ONE short put. Write H(S) for this combined payoff at terminal price S. Its exact decomposition is\n\n\\[\\begin{aligned}H(S)&=2(S-100)^+\\\\&\\quad-(100-S)^+\\\\&=(S-100)+(S-100)^+.\\end{aligned}\\]\n\nThe extra call changes the upside slope; multiplying a remembered parity expression by an unrelated net contract count would lose that payment.",
+      "followup": "What is the payment at terminal price ninety? Derive the whole piecewise payoff and explain why a fixed stock-and-cash position alone cannot replicate it for every nonnegative terminal price. Give an exact decomposition using one call as well as stock/cash, assuming no dividends and zero interest.",
+      "followSolution": "At ninety the two calls pay zero and the short put pays minus ten. Below one hundred the payoff is S−100; above it the payoff is 2(S−100), with continuity and zero payment at the strike. A fixed stock/cash payoff aS+b has one constant slope, so it cannot match both slopes one and two. Exactly one long call plus one underlying unit and a terminal cash liability of one hundred does replicate it. Under zero interest/no dividends the liability can be financed by borrowing one hundred initially. This is state-by-state matching, not an expectation or a claim that the initial portfolio cost is zero.",
+      "lesson": "l23",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Use both long calls and the negative put quantity to obtain forty.",
+        "Distinguish terminal payment from net profit or an initial price.",
+        "Derive both slopes, the payment minus ten at ninety, and the stock/cash/extra-call decomposition."
+      ]
+    },
+    {
+      "id": "q_l23_e2",
+      "title": "Finance the strike and the dividend separately",
+      "topic": "Mathematical finance",
+      "difficulty": "Easy",
+      "path": "trader",
+      "minutes": 9,
+      "prompt": "A European call and put share strike 100, maturity and underlying. Spot is 108. A risk-free claim paying the strike at maturity costs 95 today. A known cash dividend before maturity has present value three. The call costs fourteen. Assume frictionless matched borrowing/lending, available shorting and no other dividends. What put price is forced by exact replication? The present value of the dividend is not a change to the contractual strike.",
+      "answer": 4,
+      "hints": [
+        "The stock position delivers both the terminal stock and the earlier dividend.",
+        "Subtract the dividend present value and the present value of the strike from spot to match call-minus-put."
+      ],
+      "solution": "Put-call replication gives \\(C-P\\)=108−3−95=10. Therefore P=14−10=4. Ignoring the dividend would produce one, and subtracting the undiscounted strike in place of its present value would produce nine. The financing prices and dividend timing are part of the matching argument; neither volatility nor a physical expected stock return is required.",
+      "followup": "Describe the stock and financing cash flows that replicate call-minus-put at both dates. Why is borrowing only 95 insufficient to match all intervening cash flows? Would identical terminal payoff reasoning alone justify the same equality for American exercise rights?",
+      "followSolution": "Hold one underlying unit. Borrow 95 through maturity, repaying one hundred there. Also borrow an amount with current value three and repayment equal to the known dividend at its payment date. The stock dividend cancels that second repayment; terminal net payment is S_T−100. Initial cost is ten. Borrowing only the strike present value leaves an unmatched dividend receipt and therefore costs thirteen rather than ten. With American rights, an early exercise action can change payment timing; a terminal-only equality does not match every available exercise policy. Exact European matching needs the stated contract/financing assumptions.",
+      "lesson": "l23",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Use the two distinct present-value cash-flow corrections and obtain put price four.",
+        "Match the dividend liability at its date and the strike liability at maturity.",
+        "Explain the extra stock dividend and why terminal matching alone does not establish American parity."
+      ]
+    },
+    {
+      "id": "q_l23_m1",
+      "title": "A midpoint discrepancy is not an executable parity trade",
+      "topic": "Mathematical finance",
+      "difficulty": "Medium",
+      "path": "trader",
+      "minutes": 23,
+      "prompt": "One-period, no-dividend European call and put share strike one hundred. Interest is zero; stock, call and put can each be bought/shorted in unit quantities, with no costs beyond these executable bid/ask pairs: stock [97,101], call [5,8], put [5,8]. Buying uses the ask and selling the bid. Midpoints give \\(C-P\\)=0 while spot-minus-strike is −1. Can EITHER of the two standard matched parity round trips lock positive initial cash with zero terminal cash flow? Enumerate both directions and all four initial cash flows. Do not infer overall absence of every possible arbitrage merely from checking these two trades.",
+      "answer": null,
+      "hints": [
+        "Compare a sold synthetic forward with a bought stock-minus-strike position.",
+        "For the opposite direction buy the synthetic forward and sell the stock-minus-strike position.",
+        "Borrowing one hundred receives cash now; depositing one hundred spends cash now."
+      ],
+      "solution": "Direction A: short the call at five, buy the put at eight, buy stock at 101, and borrow one hundred. Initial cash is 5−8−101+100=−4. Its terminal payment is −call+put+S−100=0 in every state. Direction B: buy the call at eight, short the put at five, short stock at 97 and deposit one hundred. Initial cash is −8+5+97−100=−6; terminal payment call−put−S+100 is again zero. Both require a positive initial payment and give no terminal receipt, so neither yields the proposed locked gain. The midpoint discrepancy cannot pay the bid/ask crossings. These calculations concern the two named matched trades and the declared execution/financing terms.",
+      "followup": "Change the put bid/ask to [12,13], keeping all other terms and shorting availability. Which direction now locks cash, how much, and why are the terminal payments still matched? Identify one realistic omitted constraint that would have to be checked before interpreting actual market quotes this way.",
+      "followSolution": "Direction B now receives −8+12+97−100=one initially and still has zero terminal net cash for every underlying price. The put CONTRACT did not change, only its executable quote. Direction A has initial cash 5−13−101+100=−9. Actual execution would also need matching quantity availability, financing, short borrow/collateral, fees and consistent contract/dividend terms; the specified exercise assumes those trades feasible. A real discrepancy in midpoints alone does not establish this executable four-leg outcome.",
+      "lesson": "l23",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Write both opposite four-leg trades using the correct bid/ask and funding signs.",
+        "Obtain initial cash minus four/minus six and prove terminal cancellation.",
+        "Derive the changed-quote receipt one and separate the declared feasible toy trade from additional execution conditions."
+      ]
+    },
+    {
+      "id": "q_l23_h1",
+      "title": "Three terminal states need not determine one option price",
+      "topic": "Mathematical finance",
+      "difficulty": "Hard",
+      "path": "trader",
+      "minutes": 32,
+      "prompt": "At time zero a no-dividend stock costs one hundred, and cash has zero interest. The ONLY terminal stock states are 0,100,200, each with strictly positive PHYSICAL probability. One-period stock/cash holdings can be any real signed quantities, with frictionless shorting and borrowing. Add a European strike-one-hundred call with unknown price C. There are no intervening dates or other securities. Show whether stock/cash can exactly replicate the call. Derive the FULL arbitrage-free interval of C, including whether endpoints are included, and prove sufficiency. You may construct positive pricing weights q₀,q₁,q₂ for states 0,100,200 respectively, summing to one and pricing stock at its current value; these are not assumed physical probabilities. Arbitrage means a zero-cost financed terminal payoff nonnegative in every possible state and positive in at least one.",
+      "answer": null,
+      "hints": [
+        "A stock/cash payoff is affine in the terminal stock price; the call payments are 0,0,100.",
+        "The stock-pricing constraint gives q₀=q₂ and q₁=1−2q₂.",
+        "Use strictly positive pricing weights for sufficiency and explicit endpoint payoff trades for necessity."
+      ],
+      "solution": "If aS+b matches the call, state zero forces b=0 and state one hundred then forces a=0, contradicting the required payment one hundred at state two hundred. The claim is not redundant with stock and cash.\n\nThe positive pricing constraints are\n\n\\[\\begin{aligned}q_0+q_1+q_2&=1,\\\\q_1+2q_2&=1.\\end{aligned}\\]\n\nThus \\(q_0=q_2=z\\), \\(q_1=1-2z\\) and \\(0<z<1/2\\). The call price is \\(C=100z\\), giving the OPEN interval \\(0<C<50\\). For any such C these positive weights correctly price cash, stock and call. Every zero-cost terminal payoff formed from those assets has zero weighted mean; if it is everywhere nonnegative and somewhere positive, the strictly positive weights make that mean positive, a contradiction. This proves sufficiency without choosing physical probabilities.\n\nAt C=0, a free long call pays a strictly positive amount in the high state. At C=50, half a stock minus one call costs zero and pays (0,50,0). Both are arbitrages because the relevant physical states have positive probability. For C<0 or C>50, the same respective portfolios have a positive initial receipt; put it in cash to obtain a zero-cost financed arbitrage. Mere nonnegative pricing weights at the boundaries would miss these trades. No-arbitrage leaves a range here rather than an automatic unique expected payoff price.",
+      "followup": "Add a cash digital paying one ONLY when terminal stock equals one hundred, with price d. Determine the feasible interval for d, the forced call price and an exact stock/digital replication. Does knowing the physical state probabilities by itself impose that same unique price?",
+      "followSolution": "The digital prices q₁=d, so q₀=q₂=(1−d)/2. Strict positivity requires 0<d<1, and call price is C=50(1−d). The exact payoff identity is call=half a stock minus fifty middle-state digitals: its payments are (0,0,100). At d=0 the digital itself is a free positive payoff; at d=1 cash minus the digital is free and positive in the outer states. Adding the traded digital supplies the missing state-price information and makes this replication possible. Physical probabilities alone describe real-world expectations, not the pricing weights; no equality between those measures was stipulated.",
+      "lesson": "l23",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Prove nonreplicability from all three state payments.",
+        "Derive and prove the strict interval 0<C<50, including positive-weight sufficiency.",
+        "Construct arbitrages at both endpoints and outside the interval.",
+        "Derive digital interval 0<d<1 and the stock/digital identity forcing C=50(1−d)."
+      ]
+    },
+    {
+      "id": "q_l23_h2",
+      "title": "Rebalancing cash belongs in the gamma calculation",
+      "topic": "Mathematical finance",
+      "difficulty": "Hard",
+      "path": "trader",
+      "minutes": 35,
+      "prompt": "Use a CONSTRUCTED smooth mark function V(S,t)=aS²−bt, with a,b>0 and nonnegative observed stock prices at dates t₀<...<t_n, n≥1. Interest, dividends and fees are initially zero. Hold one long marked contract and short Δ_i=2aS_i stock units over interval [t_i,t_{i+1}); rebalance at interior dates and liquidate at the final date. Fund the initial purchase/short through a cash account so initial TOTAL net wealth is zero; all later trades must be self-financing. Derive the terminal cash wealth, including the cash-account changes at rehedges. Compare paths (100,110,100) and (100,100,100) at dates (0,\\(\\frac{1}{2}\\),1), with a=0.02,b=3. Compare with a frozen initial-delta hedge. The mark function is a mathematical illustration, not a claimed arbitrage-free market price or a general option repricing law.",
+      "answer": null,
+      "hints": [
+        "Over one interval, exact contract change minus the HELD initial delta times stock change simplifies to a squared-move term and time decay.",
+        "Changing the short from Δ_{i−1} to Δ_i receives (Δ_i−Δ_{i−1})S_i into cash.",
+        "Sum actual interval gains; do not replace the sum of squared moves by the square of the total move."
+      ],
+      "solution": "Write \\(V_0=V(S_0,t_0)\\). Start with \\(B_0=\\Delta_0S_0-V_0\\), so \\(V_0-\\Delta_0S_0+B_0=0\\). At each interior rebalance,\n\n\\[B_i=B_{i-1}+(\\Delta_i-\\Delta_{i-1})S_i.\\]\n\nThe stock trade changes cash and stock holdings by opposite amounts; it does not create an external gain. Write \\(V_i=V(S_i,t_i)\\), \\(x_i=S_{i+1}-S_i\\) and \\(u_i=t_{i+1}-t_i\\). Exact marked interval gain is\n\n\\[G_i=V_{i+1}-V_i-\\Delta_i x_i,\\]\n\nwhich simplifies to \\(G_i=ax_i^2-bu_i\\). Therefore final liquidated wealth is\n\n\\[\\begin{aligned}W_n&=a\\sum_{i=0}^{n-1}x_i^2\\\\&\\quad-b(t_n-t_0).\\end{aligned}\\]\n\nFor the first path the two squared moves total two hundred, so W=4−3=one. Direct ledger: V₀=200, Δ₀=4, B₀=200; at 110 delta becomes 4.4 and cash receives 44, giving B₁=244. At maturity V=197 and the stock close costs 440; terminal cash is 244+197−440=one. The flat path has zero price contribution and wealth minus three. A frozen initial-delta hedge in either same-endpoint path gives V_n−V₀−Δ₀(S_n−S₀)=−3. This quadratic function has constant gamma 2a and theta −b, so its interval expression is EXACT; a general smooth instrument would have approximation error and varying sensitivities.",
+      "followup": "Charge proportional stock trading cost c=0.001 on the absolute trade quantity times execution price, INCLUDING the initial short and final stock close; contract fees stay zero. Keep initial EXTERNAL outlay zero; fund the initial fee through the cash account instead of adding outside money. Derive the cost-adjusted terminal wealth for both paths. Can inserting more hedge dates only increase the sum of squared moves?",
+      "followSolution": "Let the held short quantities be Δ₀ through Δ_{\\(n-1\\)}. Deduct\n\n\\[\\begin{aligned}c\\big(&|\\Delta_0|S_0\\\\&+\\sum_{i=1}^{n-1}|\\Delta_i-\\Delta_{i-1}|S_i\\\\&+|\\Delta_{n-1}|S_n\\big).\\end{aligned}\\]\n\nInitial financing includes the first cost, so initial post-trade marked wealth is minus that fee; it is not reset by an outside cash injection. Interior cash updates subtract their execution cost; the final close subtracts the last cost. First-path cost base is 400+44+440=884, so cost is 0.884 and net wealth 0.116. Flat-path cost base is 400+0+400=800; net wealth is −3.8. Positive gamma alone did not secure positive net wealth.\n\nRefinement is not monotone: splitting an interval with increments x,y replaces (x+y)² by x²+y², a difference −2xy. A reversal can increase the sum; a same-direction split decreases it. Flat endpoints 100→100 give zero before adding an intermediate 110, but two hundred after. Conversely 100→120 gives four hundred before splitting at 110, but two hundred after. More dates also change turnover and omitted real-world risks; the constructed identity does not certify a general strategy.",
+      "lesson": "l23",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Set initial cash to make wealth zero and include every self-financing rebalance.",
+        "Derive the exact sum of interval squared moves minus time decay.",
+        "Verify dynamic wealth one/minus three and distinguish the frozen hedge.",
+        "Include initial/interior/final costs to obtain 0.116 and minus 3.8.",
+        "Show both refinement directions and separate the constructed quadratic identity from a general local approximation."
+      ]
     }
   ],
   "lessons": [
@@ -5704,16 +5835,25 @@
       "explanation": "Gamma is the second derivative with respect to the underlying.",
       "questions": [
         "q39",
-        "q40"
+        "q40",
+        "q_l23_e1",
+        "q_l23_e2",
+        "q_l23_m1",
+        "q_l23_h1",
+        "q_l23_h2"
       ],
-      "coding": [],
+      "coding": [
+        "c_l23_easy",
+        "c_l23_medium",
+        "c_l23_hard"
+      ],
       "objectives": [
         "Derive European put-call parity from terminal payoffs.",
         "Interpret delta, gamma and theta with correct variables and units.",
         "Explain why local neutrality does not remove all risk."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "Delta",
         "Gamma",
