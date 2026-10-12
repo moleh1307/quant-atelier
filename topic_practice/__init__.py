@@ -7,9 +7,9 @@ an unregistered new lesson fails the build instead of inheriting generic tasks.
 from collections import Counter
 
 DIFFICULTIES = ('Easy', 'Medium', 'Hard')
-COMPLETE_TOPICS = ('l01', 'l02', 'l03')
+COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05')
 PENDING_TOPICS = (
-    'l04', 'l05', 'l06', 'l07', 'l08', 'l09', 'l25', 'l10', 'l11',
+    'l06', 'l07', 'l08', 'l09', 'l25', 'l10', 'l11',
     'l12', 'l13', 'l14', 'l15', 'l16', 'l17', 'l18', 'l19', 'l20',
     'l21', 'l22', 'l23', 'l24',
 )
@@ -18,17 +18,27 @@ CODING_LINKS = {
     'l01': ['c01', 'c_l01_medium', 'c_l01_hard'],
     'l02': ['c_l02_easy', 'c_l02_medium', 'c_l02_hard'],
     'l03': ['c_l03_easy', 'c02', 'c_l03_hard'],
+    'l04': ['c_l04_easy', 'c_l04_medium', 'c_l04_hard'],
+    'l05': ['c_l05_easy', 'c03', 'c_l05_hard'],
 }
 
 
 def add_questions(add, questions):
     from .foundation_questions import add_foundation_questions
     add_foundation_questions(add, questions)
+    from .distributions import add_questions as distributions_questions
+    from .stopping import add_questions as stopping_questions
+    distributions_questions(add, questions)
+    stopping_questions(add, questions)
 
 
 def add_coding(add, tasks):
     from .foundation_coding import add_foundation_coding
     add_foundation_coding(add, tasks)
+    from .distributions import add_coding as distributions_coding
+    from .stopping import add_coding as stopping_coding
+    distributions_coding(add, tasks)
+    stopping_coding(add, tasks)
 
 
 def attach_and_validate(lessons, questions, tasks):
