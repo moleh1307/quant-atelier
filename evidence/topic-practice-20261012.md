@@ -1295,3 +1295,99 @@ these declared calculations/contracts and observed navigation, not employer
 calibration, learner mastery or physical touch/screen-reader interaction. Next:
 **l19–l24**, then the required full navigation/preservation audit and removal of
 the pending-topic exception. The full goal remains active.
+
+## Sixteenth batch: fair value, l19
+
+Read the authored `static/lesson-fair-value.js` and its learning goals before
+selecting practice. The completed bank has **two Easy, two Medium and two Hard
+interviews**, and **one code at each difficulty**. Five interviews and three codes
+are new. The existing q35 prompt, answer, tolerance, hints, solution and follow-up
+are preserved; only its generic rubric becomes specific to die means, executable
+sides and a revealed die. All **133 prior interview records** retain their grading
+meaning; q35’s rubric is the only prior record difference. All **58 prior public
+coding records** are exact. No old links, assessments or drafts were removed.
+
+The progression is specific to the lesson: cash profit at settlement versus an
+executable early exit; joint-record Bayesian updates when components are dependent;
+physical expected payment versus a two-state replicating portfolio; optimised
+information value with fixed actions versus a dealer that updates the quote;
+and a set of ambiguous priors versus a hierarchical mixture whose model weights
+must also be conditioned. Worked answers show the normalising probability,
+conditional means, cash-flow signs and costs. Written tasks have explicit proof
+and counterexample obligations; numeric acceptance does not certify those proofs.
+The robust interview uses one common adverse model to rule out randomisation,
+rather than incorrectly mixing different worst-case models for each action.
+
+Easy code computes exact weighted payoff and executable edges. Medium conditions
+every signal in a finite joint model, returning an explicit unreachable result
+for zero-probability signals; its marginal probabilities and conditional means
+satisfy mass/tower conservation. Hard optimises a conditional ratio over bounded
+REAL prior weights with one total-mass constraint. Its proof uses vertices with
+at most one non-bound coordinate and denominator-weighted convex combinations.
+A supplied counterexample defeats sorting only by raw payoff. The declared small
+state bound supports exponential vertex enumeration; the explanation separates
+arithmetic-operation cost from unbounded-integer bit cost. Inputs are preserved.
+Every exact rational uses canonical decimal strings, including integers and zero;
+no rounded numerical output stands in for an exact pricing boundary.
+
+**199 Python tests and all 23 frontend suites pass.** Eleven new topic tests check
+cash flows, exact dependent-signal posteriors/tower identities, replication in
+both states, actual noisy-signal loss outcomes, 300 rational convexity checks,
+model-weight updating and the ambiguity interval. Code is checked using independent
+Fraction probability models: 350 seeded weighted distributions, 180 joint signal
+models with marginal/tower/scaling checks, and 180 bounded-prior models against
+ALL small integer compositions, not the reference’s vertex shortcut. Permutations,
+weight/likelihood scaling and real convex mixtures are also checked. Fixed bounds,
+zero state weights, impossible signals, negative payments, zero edges, total mass
+at both bound-sum extremes and n=1 are covered. Maximum lengths/magnitudes and
+lossless copied results are verified. All **46 expanded reference solutions** pass
+the actual complete judge. All official l19 case copies round-trip through the
+backend parser and their rational strings are reduced/canonical. The largest
+copy has 400,014 argument characters and remains within the existing 500,000
+combined-character cap. No fixture or execution/request bound was weakened.
+
+The initial debugging-test call supplied already-parsed objects to `run`, which
+expects original JSON-text copies; it was corrected to test the actual API input.
+The first frontend run preceded rebuilding `static/coding.json` and detected its
+missing new IDs. Both public banks were rebuilt before rerunning all suites.
+Final strict rendering checks parse **2,693 authored/generated math spans**.
+No dependency or AI assistance was added.
+
+The in-app browser connection was unavailable; the existing Chrome session was
+used. Each grading/solution session entered the explicit launcher and visibly
+verified **Test preview**. Numeric **3/4** was accepted. Easy passed **7/7** (3.8ms
+observed), Medium **6/6** (9.2ms), Hard **9/9** (35.2ms). The full 100,000-state
+Easy case copied with all 400,014 argument characters and ran with both samples,
+**3/3**, debugging-only. The Hard fraction numerator **999999999000000000** and
+its denominator **1000000001** survived the actual expected-output textbox and
+copied-case run, **3/3**, with no extra completion. An observation selector matched
+two result headings; inspecting the result selected the specific passed-tests
+heading without repeating grading. Reloads returned to personal mode and preview
+was explicitly re-entered. A previously revealed worked solution restored as
+Hide worked solution; its separate follow-up was opened for inspection.
+
+The actual lesson hands off to the interview list. A freely chosen question
+continues to the coding list; Hard code is selectable before Easy or Medium and
+returns to that same list. At **390px**, the information-value displays have
+matching width/scroll width **304px**, the ambiguity display **304px**, and the
+Hard code’s payoff-ratio/vertex displays **302px/256px**. Document width and scroll
+width are both **390px**, with no KaTeX errors. Saved proof crops and both personal
+lists were visually inspected. No browser console errors observed. Temporary
+viewport was reset; browser left at the personal interview list with **0/6
+interviews and 0/3 code passes**. Personal questions, coding, lessons, drafts and
+trainers equal the fresh pre-edit baseline. No personal credit or reset occurred.
+
+- [Fair-value interviews, personal workspace](fair-value-personal-question-list-20261012.png).
+- [Fair-value coding list, personal workspace](fair-value-personal-coding-list-20261012.png).
+- [Fixed-action information-value proof, isolated narrow preview](fair-value-information-proof-narrow-20261012.png).
+- [Conditional-ratio vertex proof, isolated narrow preview](fair-value-vertex-proof-narrow-20261012.png).
+
+Primary context consulted: [Jane Street’s stated probability/expected-value/market
+preparation topics](https://www.janestreet.com/probability-markets/) and
+[MIT’s arbitrage-free pricing lecture, replication and law of one price](https://www.ocw.mit.edu/courses/15-450-analytics-of-finance-fall-2010/219406be97b96bc540e0be6aa778c0b7_MIT15_450F10_lec01.pdf).
+Examples, proofs and code are original; no employer-specific question or difficulty
+claim is inferred. These checks establish declared calculations/contracts and
+observed navigation, not learner mastery or physical touch/screen-reader coverage.
+Inventory is **25 lessons /138 interviews /61 codes**. **20 topics complete;
+l20–l24 remain**, followed by the full navigation/preservation audit and removal
+of the pending-topic exception. The full goal remains active.

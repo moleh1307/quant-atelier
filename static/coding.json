@@ -3059,5 +3059,323 @@
     ],
     "solution": "def solve(values):\n    best = None\n    result = []\n    for i,value in enumerate(values):\n        if best is None or value > values[best]:\n            best = i\n        result.append(best)\n    return result",
     "explanation": "After prefix i, best names its earliest maximum. The first observation establishes a real candidate even if its value is negative. A strictly larger new value becomes the unique newest record; a smaller or equal value cannot improve the declared winner, so best stays. Appending that index emits one answer per arrival. The invariant holds by induction; one comparison per later observation gives \\(O(n)\\) time and O(1) auxiliary state, excluding output. Using \u2265 changes the tie to newest; starting best-value at zero invents a candidate absent from an all-negative input. The prefix winner never expires under this contract; a rolling window needs additional state because its winner can leave."
+  },
+  {
+    "id": "c_l19_easy",
+    "title": "Exact payoff weights and executable edges",
+    "difficulty": "Easy",
+    "topic": "Expected value",
+    "path": "trader",
+    "prompt": "payoffs and weights are equally long lists of n integers, 1\u2264n\u2264100000. Payoffs are in [\u221210^9,10^9]; weights are in [0,10^9] and have positive sum W. Each state\u2019s physical probability is weights[i]/W; zero-weight states are impossible. bid and ask are integer executable sale/purchase prices in [\u221210^9,10^9], with bid\u2264ask. buy_cost and sell_cost are nonnegative integer per-trade fees at most 10^9. All payments are in the same unit, financing is zero and settlement adds no fee/information. Return a dictionary with value, buy_edge, sell_edge and action. Each of the first three is an EXACT reduced rational [numerator_string,denominator_string], with positive denominator, no leading zeros or plus sign, and zero written [\"0\",\"1\"]. Integers must also use denominator \"1\". action is \"buy\" if value\u2212ask\u2212buy_cost>0, \"sell\" if bid\u2212value\u2212sell_cost>0, otherwise \"wait\". At zero edge choose wait. The noncrossed quote and nonnegative fees ensure both directions cannot be positive. Preserve both lists. Use \\(O(n)\\) arithmetic operations and O(1) auxiliary integer state; integer bit costs depend on magnitude. Do not simulate, round or convert the exact arithmetic to float.",
+    "starter": "def solve(payoffs, weights, bid, ask, buy_cost, sell_cost):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            0,
+            10,
+            20
+          ],
+          [
+            1,
+            2,
+            1
+          ],
+          9,
+          11,
+          1,
+          0
+        ],
+        "expected": {
+          "value": [
+            "10",
+            "1"
+          ],
+          "buy_edge": [
+            "-2",
+            "1"
+          ],
+          "sell_edge": [
+            "-1",
+            "1"
+          ],
+          "action": "wait"
+        }
+      },
+      {
+        "args": [
+          [
+            -3,
+            7
+          ],
+          [
+            2,
+            1
+          ],
+          0,
+          0,
+          0,
+          0
+        ],
+        "expected": {
+          "value": [
+            "1",
+            "3"
+          ],
+          "buy_edge": [
+            "1",
+            "3"
+          ],
+          "sell_edge": [
+            "-1",
+            "3"
+          ],
+          "action": "buy"
+        }
+      }
+    ],
+    "solution": "from math import gcd\n\ndef rational(numerator, denominator):\n    factor = gcd(abs(numerator), denominator)\n    return [str(numerator // factor), str(denominator // factor)]\n\ndef result(numerator, denominator, bid, ask, buy_cost, sell_cost):\n    buy = numerator - (ask + buy_cost) * denominator\n    sell = (bid - sell_cost) * denominator - numerator\n    action = 'buy' if buy > 0 else 'sell' if sell > 0 else 'wait'\n    return {'value': rational(numerator, denominator),\n            'buy_edge': rational(buy, denominator),\n            'sell_edge': rational(sell, denominator), 'action': action}\n\ndef solve(payoffs, weights, bid, ask, buy_cost, sell_cost):\n    numerator = denominator = 0\n    for payoff, weight in zip(payoffs, weights):\n        numerator += payoff * weight\n        denominator += weight\n    return result(numerator, denominator, bid, ask, buy_cost, sell_cost)",
+    "explanation": "Compute the weighted sum N=\\(\\Sigma\\)w_i v_i and mass W=\\(\\Sigma\\)w_i using Python integers. The mean is N/W; edge numerators are N\u2212(ask+buy_cost)W and (bid\u2212sell_cost)W\u2212N, all over W. Their signs decide the action without a floating threshold. Reduce each rational by its gcd and return decimal strings so the browser cannot lose large integers. Zero reduces canonically to \\(\\frac{0}{1}\\). One pass uses \\(O(n)\\) arithmetic operations and O(1) auxiliary integers; gcd and multiplications are not constant bit-cost operations for unbounded integers. The midpoint never enters the calculation."
+  },
+  {
+    "id": "c_l19_medium",
+    "title": "Value every possible noisy signal",
+    "difficulty": "Medium",
+    "topic": "Expected value",
+    "path": "trader",
+    "prompt": "payoffs and weights are equally long integer lists for n states, 1\u2264n\u22642000. Payoffs are in [\u221210^9,10^9]; weights are in [0,10^9] and total W is positive. State i has prior probability weights[i]/W. likelihoods is an n\u00d7k matrix of NONNEGATIVE integer counts, 1\u2264k\u2264100 and n\u00d7k\u2264100000. Every row has the SAME positive total D\u226410^9; P(signal=j | state=i)=likelihoods[i][j]/D. Entries are at most 10^9. These are conditional likelihoods, not state probabilities; payoff states may encode dependent components. bid and ask are integer executable sale/purchase prices in [\u221210^9,10^9], with bid\u2264ask. buy_cost and sell_cost are additional nonnegative integer trade fees at most 10^9. All amounts share a currency unit; financing and settlement costs are zero. Quotes remain executable after each signal with no extra information. Return k dictionaries in signal-column order. For each reachable signal use keys probability, value, buy_edge, sell_edge, action: probability is its exact marginal P(signal=j); value and edges are its exact conditional quantities; action is \"buy\" when value\u2212ask\u2212buy_cost>0, \"sell\" when bid\u2212value\u2212sell_cost>0, otherwise \"wait\" (zero edge waits). Both edges cannot be positive under these quote/fee assumptions. All rational values use reduced [numerator_string,denominator_string], including integers/zero. If a signal has ZERO marginal probability, return probability=[\"0\",\"1\"], value=None, buy_edge=None, sell_edge=None, action=\"unreachable\"; do not invent a conditional mean or normalise zero. Preserve all inputs. Use O(nk) arithmetic operations and \\(O(k)\\) auxiliary integers, excluding output. No simulation or floats. Input contracts are guaranteed, not validation tasks.",
+    "starter": "def solve(payoffs, weights, likelihoods, bid, ask, buy_cost, sell_cost):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            0,
+            10
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            [
+              4,
+              1
+            ],
+            [
+              1,
+              4
+            ]
+          ],
+          4,
+          6,
+          0,
+          0
+        ],
+        "expected": [
+          {
+            "probability": [
+              "1",
+              "2"
+            ],
+            "value": [
+              "2",
+              "1"
+            ],
+            "buy_edge": [
+              "-4",
+              "1"
+            ],
+            "sell_edge": [
+              "2",
+              "1"
+            ],
+            "action": "sell"
+          },
+          {
+            "probability": [
+              "1",
+              "2"
+            ],
+            "value": [
+              "8",
+              "1"
+            ],
+            "buy_edge": [
+              "2",
+              "1"
+            ],
+            "sell_edge": [
+              "-4",
+              "1"
+            ],
+            "action": "buy"
+          }
+        ]
+      },
+      {
+        "args": [
+          [
+            7,
+            100
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          6,
+          8,
+          0,
+          0
+        ],
+        "expected": [
+          {
+            "probability": [
+              "0",
+              "1"
+            ],
+            "value": null,
+            "buy_edge": null,
+            "sell_edge": null,
+            "action": "unreachable"
+          },
+          {
+            "probability": [
+              "1",
+              "1"
+            ],
+            "value": [
+              "7",
+              "1"
+            ],
+            "buy_edge": [
+              "-1",
+              "1"
+            ],
+            "sell_edge": [
+              "-1",
+              "1"
+            ],
+            "action": "wait"
+          }
+        ]
+      }
+    ],
+    "solution": "from math import gcd\n\ndef rational(numerator, denominator):\n    factor = gcd(abs(numerator), denominator)\n    return [str(numerator // factor), str(denominator // factor)]\n\ndef result(numerator, denominator, bid, ask, buy_cost, sell_cost):\n    buy = numerator - (ask + buy_cost) * denominator\n    sell = (bid - sell_cost) * denominator - numerator\n    action = 'buy' if buy > 0 else 'sell' if sell > 0 else 'wait'\n    return {'value': rational(numerator, denominator),\n            'buy_edge': rational(buy, denominator),\n            'sell_edge': rational(sell, denominator), 'action': action}\n\ndef solve(payoffs, weights, likelihoods, bid, ask, buy_cost, sell_cost):\n    k = len(likelihoods[0])\n    mass = [0] * k\n    numerator = [0] * k\n    total = sum(weights) * sum(likelihoods[0])\n    for payoff, weight, row in zip(payoffs, weights, likelihoods):\n        for j, count in enumerate(row):\n            joint = weight * count\n            mass[j] += joint\n            numerator[j] += joint * payoff\n    output = []\n    for j, denominator in enumerate(mass):\n        if denominator == 0:\n            item = {'value': None, 'buy_edge': None, 'sell_edge': None,\n                    'action': 'unreachable'}\n        else:\n            item = result(numerator[j], denominator, bid, ask, buy_cost, sell_cost)\n        item['probability'] = rational(denominator, total)\n        output.append(item)\n    return output",
+    "explanation": "For signal j, retain Z_j=\\(\\Sigma\\)w_i L_ij and N_j=\\(\\Sigma\\)w_i L_ij v_i. The common denominator of the joint model is WD, hence marginal probability Z_j/(WD). If Z_j>0, its conditional mean is N_j/Z_j: W and D cancel. If Z_j=0 there is no conditional expectation under this model; mark unreachable explicitly. Do not divide by the state count, use signal counts alone or keep the prior mean unchanged. Integer accumulation and reduction preserve exact quantities beyond binary64. As a conservation check, \\(\\Sigma\\)P(j)=1 and \\(\\Sigma\\)P(j)E[V|j]=E[V] over reachable signals. This does not mean that the optimised actions average to the prior action. The nested pass uses O(nk) arithmetic operations and two length-k working arrays."
+  },
+  {
+    "id": "c_l19_hard",
+    "title": "Robust conditional value over bounded prior weights",
+    "difficulty": "Hard",
+    "topic": "Expected value",
+    "path": "trader",
+    "prompt": "There are \\(1\\leq n\\leq12\\) states with integer payoffs in [\u221210^9,10^9]. For an OBSERVED signal H, likelihoods[i] is an integer in [1,10^9], interpreted as P(H|state i)=likelihoods[i]/10^9; the complement is the other signal. Write \\(v_i=\\mathrm{payoffs}[i]\\) and \\(L_i=\\mathrm{likelihoods}[i]\\). Unknown REAL prior weights \\(w_i\\) obey \\(\\mathrm{lower}[i]\\leq w_i\\leq\\mathrm{upper}[i]\\) and \\(\\sum_i w_i=\\mathrm{mass}\\). Bounds and mass are integers in [0,10^9], mass>0, lower\u2264upper, and sum(lower)\u2264mass\u2264sum(upper), so the set is nonempty. The prior probability of state i is \\(w_i/\\mathrm{mass}\\). A set of priors has NO assigned model probabilities. Strictly positive likelihoods ensure every allowed prior gives H positive probability.\n\nFind EXACT minimum and maximum over this bounded set of\n\n\\[m(w)=\\frac{\\sum_i w_i L_i v_i}{\\sum_i w_i L_i}.\\]\n\n Return {\"minimum\":[num,den],\"maximum\":[num,den],\"buy_floor\":[num,den],\"sell_floor\":[num,den],\"action\":...}, with ALL num/den entries canonical reduced decimal STRINGS (positive denominator; zero=[\"0\",\"1\"]). bid and ask are integer executable sale/purchase prices in [\u221210^9,10^9], with bid\u2264ask; buy_cost and sell_cost are additional nonnegative integer trade fees at most 10^9. All amounts share a currency unit and settlement adds no cost. buy_floor is the worst conditional expected profit of buying ONE contract at ask plus buy_cost; sell_floor is that of selling one at bid minus sell_cost. Select the deterministic action with strictly positive worst-case profit, otherwise \"wait\"; zero edge waits. The quote is fixed/executable with no additional selection information, financing zero. No quantities, randomisation or hedging are requested.\n\nPreserve all lists. Aim for \\(O(n^2 2^{n-1})\\) arithmetic operations with \\(O(n)\\) working entries, excluding output; account separately for integer bit costs. Hint for the algorithmic target: the box with one sum equality has vertices with at most ONE weight strictly between its bounds. Justify why optimising a ratio with a positive denominator can use these vertices; simply filling largest/smallest PAYOFFS first can fail because changing a weight also changes the conditioning denominator. Do not round, enumerate every integer composition of mass, or silently average model endpoints.",
+    "starter": "def solve(payoffs, likelihoods, lower, upper, mass, bid, ask, buy_cost, sell_cost):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            0,
+            5,
+            10
+          ],
+          [
+            100,
+            100,
+            1
+          ],
+          [
+            5,
+            0,
+            0
+          ],
+          [
+            5,
+            5,
+            5
+          ],
+          10,
+          2,
+          3,
+          0,
+          0
+        ],
+        "expected": {
+          "minimum": [
+            "10",
+            "101"
+          ],
+          "maximum": [
+            "5",
+            "2"
+          ],
+          "buy_floor": [
+            "-293",
+            "101"
+          ],
+          "sell_floor": [
+            "-1",
+            "2"
+          ],
+          "action": "wait"
+        }
+      },
+      {
+        "args": [
+          [
+            0,
+            12
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            3
+          ],
+          4,
+          0,
+          5,
+          0,
+          0
+        ],
+        "expected": {
+          "minimum": [
+            "6",
+            "1"
+          ],
+          "maximum": [
+            "54",
+            "5"
+          ],
+          "buy_floor": [
+            "1",
+            "1"
+          ],
+          "sell_floor": [
+            "-54",
+            "5"
+          ],
+          "action": "buy"
+        }
+      }
+    ],
+    "solution": "from itertools import product\nfrom math import gcd\n\ndef rational(numerator, denominator):\n    factor = gcd(abs(numerator), denominator)\n    return [str(numerator // factor), str(denominator // factor)]\n\ndef solve(payoffs, likelihoods, lower, upper, mass, bid, ask, buy_cost, sell_cost):\n    n = len(payoffs)\n    minimum = maximum = None\n    for free in range(n):\n        others = [i for i in range(n) if i != free]\n        for choices in product((0, 1), repeat=n-1):\n            used = numerator = denominator = 0\n            for i, choice in zip(others, choices):\n                weight = upper[i] if choice else lower[i]\n                used += weight\n                joint = weight * likelihoods[i]\n                numerator += joint * payoffs[i]\n                denominator += joint\n            weight = mass - used\n            if not lower[free] <= weight <= upper[free]:\n                continue\n            joint = weight * likelihoods[free]\n            numerator += joint * payoffs[free]\n            denominator += joint\n            if minimum is None or numerator * minimum[1] < minimum[0] * denominator:\n                minimum = (numerator, denominator)\n            if maximum is None or numerator * maximum[1] > maximum[0] * denominator:\n                maximum = (numerator, denominator)\n    lo, ld = minimum\n    hi, hd = maximum\n    buy = lo - (ask + buy_cost) * ld\n    sell = (bid - sell_cost) * hd - hi\n    return {'minimum': rational(lo, ld), 'maximum': rational(hi, hd),\n            'buy_floor': rational(buy, ld), 'sell_floor': rational(sell, hd),\n            'action': 'buy' if buy > 0 else 'sell' if sell > 0 else 'wait'}",
+    "explanation": "If two weights are strictly inside their bounds, perturb one by +\u03b5 and the other by \u2212\u03b5 while keeping their sum. Small positive and negative \u03b5 stay feasible, so that point is not a vertex. Thus every vertex has at most one non-bound coordinate. Enumerate its possible free index, choose lower/upper for the other \\(n-1\\) weights, and set the remaining weight from the sum constraint. All-bound vertices may appear repeatedly; degenerate/fixed bounds and n=1 need no special division. Feasibility ensures at least one vertex and positive likelihoods/mass ensure positive denominators.\n\nFor a feasible convex combination \\(w=\\sum_j\\alpha_j u_j\\) of vertices, write \\(D_j=\\sum_i u_{ji} L_i>0\\). Its ratio satisfies\n\n\\[m(w)=\\sum_j\\frac{\\alpha_j D_j}{\\sum_r\\alpha_r D_r}\\,m(u_j).\\]\n\nThese are nonnegative weights summing to one, so m(w) lies between vertex ratios; a minimum and maximum occur at vertices. This is NOT an equal average of their posterior means. Vertex weights happen to be integers here because all bound weights and mass are integers; the proof still covers the requested REAL prior set. Compare ratios by integer cross-products, then reduce only the winning fractions. The buy worst case uses the minimum mean; the sell worst case uses the maximum. In the first sample, putting all five free weight units on payoff ten gives \\(\\frac{10}{101}\\), while putting them on payoff five gives \\(\\frac{5}{2}\\): strongest raw payoff need not give strongest conditional mean. Enumeration is \\(O(n^2 2^{n-1})\\) arithmetic operations and \\(O(n)\\) working entries, suitable for the stated n\u226412, not a polynomial algorithm for an unbounded number of states. A robust positive expected edge is still a conditional model-set statement, not a guaranteed realised profit."
   }
 ]
