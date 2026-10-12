@@ -668,16 +668,16 @@
         "A training label may include outcomes inside a test interval.",
         "Separate model selection from the final performance estimate."
       ],
-      "solution": "Random splitting can put overlapping label outcomes in both sets; it can train on regimes after the tested date; and full-sample preprocessing or tuning can leak test information. Use chronological walk-forward splits, purge training labels whose intervals touch test labels, fit transforms only within each training fold, and keep a final untouched holdout. An embargo can add a gap for further dependence, chosen from the information horizon.",
+      "solution": "Random splitting can put overlapping label outcomes in both sets; it can train on regimes after the tested date; and full-sample preprocessing or tuning can leak test information. Use chronological walk-forward splits, purge training labels whose intervals overlap test-label information, fit transforms only within each training fold, and keep a final untouched holdout. An embargo can add a gap for further dependence, chosen from the information horizon.",
       "followup": "Why is merely shuffling less aggressively insufficient?",
       "followSolution": "It does not explicitly remove label overlap or enforce a deployment-time information set. Validation must correspond to what was knowable at prediction time.",
       "lesson": "l14",
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Diagnose shared target outcomes, future-to-past training and fitted-transform/selection leakage separately.",
+        "Specify decision-time availability, target-interval endpoint conventions, chronological refits and fold-local transformations.",
+        "Separate inner selection from outer evaluation and final reserved evidence; justify any extra embargo rather than asserting independence."
       ]
     },
     {
@@ -700,9 +700,9 @@
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Identify the full-series fitted parameters as future information, without asserting every model benefits from every affine leak.",
+        "Fit preprocessing inside each eligible training fold and freeze it for the corresponding evaluation decisions.",
+        "Check receipt times, shifts and fitted state when claiming a rolling transformation is causal."
       ]
     },
     {
@@ -2870,6 +2870,110 @@
         "Use the Gaussian sampling law to justify nonconsistency, rather than a variance-only assertion.",
         "Derive both changed initialization and fixed-innovation limits with their variance scales."
       ]
+    },
+    {
+      "id": "q_l14_e1",
+      "title": "A historical row can still be unavailable",
+      "topic": "Validation",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 6,
+      "prompt": "Each row below is [original decision time, feature receipt time, label receipt time]: [[0,0,3],[2,3,5],[4,4,9],[7,7,10],[8,8,12],[9,11,10]]. At fit time \\(T=1\\)0 all receipts stamped at most 10 have arrived. A training row must have a decision strictly before T, a feature received no later than its ORIGINAL decision, and a label received no later than T. Each label uses future outcomes after its decision; its receipt includes any publication delay. How many rows qualify? Having a feature now does not mean it was usable at the original decision.",
+      "answer": 3,
+      "hints": [
+        "Apply the feature boundary at the original decision, not the later fit time.",
+        "A label received exactly at ten is allowed under this explicit inclusive rule."
+      ],
+      "solution": "Original rows 0,2,3 qualify: their decisions are 0,4,7, their features were received on time, and their labels arrived at 3,9,10. Thus the count is three. Row 1 uses a feature received at three for a decision at two; row 4 has an unfinished label; row 5 has a late feature even though its label is available. Sorting decision timestamps or checking only the fit-time receipt boundary misses different violations.",
+      "followup": "If fitting happens immediately BEFORE receipts stamped 10, how does the count change? If the late features were replaced by explicit missing values through a pre-specified causal pipeline, would discarding those rows still be compulsory?",
+      "followSolution": "The label criterion becomes strictly less than ten, excluding row 3 and leaving two. The declared original feature was unavailable, so it cannot be retroactively substituted. A different pre-specified model that can act on genuine missing inputs may keep such decisions with those missing values; its performance evaluates that different pipeline. This problem counts rows usable with the declared received feature, not every conceivable missing-value policy.",
+      "lesson": "l14",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Check feature receipt against original decision and label receipt against fit cutoff.",
+        "Identify rows 0,2,3 and obtain count three.",
+        "Apply the strict-cutoff change and distinguish exclusion from a different missing-input procedure."
+      ]
+    },
+    {
+      "id": "q_l14_e2",
+      "title": "Averaging folds changes the population",
+      "topic": "Validation",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 6,
+      "prompt": "Two nonoverlapping evaluation blocks contain two and eight decisions. Their average squared prediction losses are respectively 1 and 4. Predictions were recorded before outcomes, and the deployment estimand is average loss per decision over these TEN decisions, each weighted equally. What is the pooled average loss? Distinguish this from an unweighted average of the two block scores. No iid assumption is supplied.",
+      "answer": 3.4,
+      "hints": [
+        "Recover the total loss in each block before pooling.",
+        "The denominator is ten decisions, not two blocks."
+      ],
+      "solution": "Total loss is 2·1+8·4=34, giving \\(\\frac{34}{10}\\)=\\(\\frac{17}{5}\\)=3.4. The unweighted block average is (1+4)/2=2.5. It assigns each decision in the short block four times the weight of each decision in the long block. This is an estimand choice, not an arithmetic approximation. Serial dependence does not alter this identity, but does affect the uncertainty assigned to the estimate.",
+      "followup": "Could 2.5 be the intended estimate under a different deployment target? Do two block scores justify estimating uncertainty as though there were ten independent losses?",
+      "followSolution": "Yes: choose a block with equal probability, then a decision uniformly inside that block. That population weights the blocks equally and has average loss 2.5. It differs from selecting one of the ten decisions uniformly. Two block means and counts do not identify within-block variance or cross-block dependence, so they cannot justify an iid ten-loss standard error. State both the target weighting and the dependence assumptions.",
+      "lesson": "l14",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Recover block totals 2 and 32 and pool over ten decisions.",
+        "Explain the different decision weights behind the value 2.5.",
+        "Separate a loss identity from unsupported independence and uncertainty claims."
+      ]
+    },
+    {
+      "id": "q_l14_m1",
+      "title": "Disjoint labels can still be future training",
+      "topic": "Validation",
+      "difficulty": "Medium",
+      "path": "researcher",
+      "minutes": 16,
+      "prompt": "At fit cutoff 10, all receipts with timestamp ≤10 are available. Five candidate rows have [label start,label end,label receipt] [[2,6,6],[6,10,10],[9,12,12],[14,17,17],[8,10,13]]. Labels use half-open intervals [start,end), and all features were available at their original starts. Protect the validation information interval [10,14). First identify original indices retained by OVERLAP PURGING ALONE. Then identify indices usable for a strict past-to-future fit at ten, requiring start<10 and label receipt≤10 as well as non-overlap. Explain why an arbitrary row-count gap is insufficient.",
+      "answer": null,
+      "hints": [
+        "Touching half-open endpoints do not intersect.",
+        "Purging alone knows neither the fit cutoff nor publication delay.",
+        "Compare row 3, which is disjoint but future, with row 4, which ends on time but is released late."
+      ],
+      "solution": "Purging alone retains indices [0,1,3,4]. Row 2 intersects [10,14); row 1 ends exactly at ten and row 3 starts exactly at fourteen, so neither touches the protected interior. The deployment fit retains only [0,1]. Row 3 is future training; row 4 has an unavailable label despite an end timestamp of ten. The correct maturity criterion is receipt, not end alone. An index gap counts rows rather than elapsed information time and cannot generally represent variable horizons, irregular timestamps or delayed publication.",
+      "followup": "For a strictly historical fit at T, suppose every selected label ends no later than its receipt, and every receipt is ≤T. If protected evaluation begins at T, can any selected half-open label overlap it? Does this imply independence or make embargo irrelevant in all resampling designs?",
+      "followSolution": "No selected label can overlap a protected interval beginning at T: its end is ≤T, so it lies on the non-overlap side of that boundary. Here the actual maturity rule already removes target spillover; a redundant purge is not an additional source of independence. Shared features, common factors and temporal dependence can remain. In resampling that reuses later rows or protects an earlier block, overlap and additional exclusion mechanisms may still matter. An embargo needs a stated information/dependence reason and does not universally turn data iid.",
+      "lesson": "l14",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Apply half-open overlap exactly and retain [0,1,3,4] under purging alone.",
+        "Apply history and receipt constraints separately to obtain [0,1].",
+        "Prove the forward-boundary implication without claiming independence.",
+        "Explain why irregular timing and publication delays defeat a fixed row gap."
+      ]
+    },
+    {
+      "id": "q_l14_h1",
+      "title": "An adaptive evaluation can be honest",
+      "topic": "Validation",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 30,
+      "prompt": "At each of n≥1 pre-specified decisions, a binary prediction \\(a_t\\) is fixed before binary outcome \\(Y_t\\) arrives. Let \\(\\mathcal F_{t-1}\\) denote EVERYTHING legitimately known when \\(a_t\\) is fixed, including earlier mature outcomes, past model choices and any already drawn prediction randomization. Define loss \\(L_t=\\mathbf1\\{a_t\\ne Y_t\\}\\) and conditional risk \\(r_t=E[L_t\\mid\\mathcal F_{t-1}]\\). All prior losses and risks are measurable at later decision information sets. Outcomes need NOT be iid. Prove that the mean realized loss minus the mean of these possibly RANDOM conditional risks has expectation zero, derive its second moment, and give a distribution-free 95-percent error band using only Chebyshev. What procedure does that band evaluate? Contrast refitting from mature past evaluation outcomes with retrospectively choosing a model using all the evaluation scores.",
+      "answer": null,
+      "hints": [
+        "The centered increment \\(D_t=L_t-r_t\\) has conditional mean zero.",
+        "For s<t, \\(D_s\\) is known in \\(\\mathcal F_{t-1}\\), so compute the cross expectation by conditioning.",
+        "A binary loss has conditional variance \\(r_t(1-r_t)\\leq1/4\\). The target here is the average conditional risk along the recorded procedure."
+      ],
+      "solution": "Write \\(\\bar L_n=n^{-1}\\sum_{t=1}^n L_t\\), \\(\\bar r_n=n^{-1}\\sum_{t=1}^n r_t\\), and \\(D_t=L_t-r_t\\). By definition \\(E[D_t\\mid\\mathcal F_{t-1}]=0\\). For s<t, tower conditioning gives \\(E[D_sD_t]=E[D_s E[D_t\\mid\\mathcal F_{t-1}]]=0\\). This does not assert independent losses or constant risks. Since the binary loss has conditional probability \\(r_t\\) of being one, \\(E[D_t^2\\mid\\mathcal F_{t-1}]=r_t(1-r_t)\\). Consequently\n\n\\[\\begin{aligned}E[\\bar L_n-\\bar r_n]&=0,\\\\E[(\\bar L_n-\\bar r_n)^2]&=\\frac1{n^2}\\sum_{t=1}^n E[r_t(1-r_t)]\\\\&\\leq\\frac1{4n}.\\end{aligned}\\]\n\nChebyshev gives probability at least 0.95 that the recorded average conditional risk lies within \\(\\sqrt{5/n}\\) of the average realized loss; intersect this band with [0,1]. It can be very wide. The radius uses a PRE-SPECIFIED n: selecting when to report after inspecting errors is a different stopping problem. It evaluates the recorded adaptive forecasting procedure and the risk along its realized information history. It is not automatically a confidence interval for one frozen final model, a future regime, or an iid population parameter. Refitting on earlier mature outcomes may imitate deployment, provided the originally recorded predictions are not rewritten. A retrospectively selected candidate was not generally predictable at the times whose losses are reported; that selection changes the evaluation question.",
+      "followup": "For two iid fair outcomes, evaluate the two constant classifiers zero and one on BOTH outcomes, then report the smaller average loss, breaking ties arbitrarily. Calculate its expected reported loss and its expected loss on an independent future fair outcome. If instead the classifier may adapt only to earlier outcomes before each prediction, what is its expected reported loss?",
+      "followSolution": "Of the four equally likely pairs 00,01,10,11, the smaller average loss is zero on 00 and 11 and one half on the mixed pairs. Its expectation is one quarter. Whichever constant is selected has error probability one half on an independent future fair bit. Under any genuinely predictable adaptive rule, each next fair bit is independent of its already fixed prediction, so \\(E[L_t\\mid\\mathcal F_{t-1}]=1/2\\) and average expected loss is one half. Updating from past scores and using future scores to choose which past prediction to report are different procedures. The cheap selected score is not unbiased evidence for the chosen model.",
+      "lesson": "l14",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Define predictable predictions, nested information and the random conditional-risk target.",
+        "Prove zero conditional increments and zero cross moments without claiming iid losses.",
+        "Derive the finite second-moment bound and \\(\\sqrt{5/n}\\) 95-percent band for fixed n.",
+        "Distinguish adaptive procedure risk from final-model/future-regime claims and calculate selected loss \\(\\frac{1}{4}\\) versus future risk \\(\\frac{1}{2}\\)."
+      ]
     }
   ],
   "lessons": [
@@ -3975,11 +4079,16 @@
       "explanation": "Its fitted parameters are part of the model and cannot use the test fold.",
       "questions": [
         "q27",
-        "q28"
+        "q28",
+        "q_l14_e1",
+        "q_l14_e2",
+        "q_l14_m1",
+        "q_l14_h1"
       ],
       "coding": [
+        "c_l14_easy",
         "c09",
-        "c10"
+        "c_l14_hard"
       ],
       "objectives": [
         "Design chronological training and validation splits.",
@@ -3987,7 +4096,10 @@
         "Keep transformation fitting, model selection and final evaluation separate."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "legacyCoding": [
+        "c10"
+      ],
+      "practiceExpanded": true,
       "optionLabels": [
         "On all rows once",
         "Inside each training fold",
