@@ -1,8 +1,8 @@
 # Topic practice — verification
 
 2026-10-12. Latest verified scope: grouped list/journey navigation across the site,
-and expanded banks for l01–l09. The full 25-topic expansion remains active;
-16 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
+and expanded banks for l01–l09 and likelihood l25. The full 25-topic expansion remains active;
+15 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
 
 The first batch below documents l01–l03 at its own verification baseline
 (63 questions / 22 codes). Later batches are recorded below.
@@ -401,3 +401,80 @@ active until every topic bank, future-topic coverage guard and final
 preservation/navigation audit are complete. Passing checks validate the stated
 calculations and behaviour; they do not certify learning outcomes or universal
 interview readiness.
+
+
+## Sixth batch: likelihood l25
+
+2026-10-12. Read the actual likelihood chapter and existing q49–q51/c15 before
+selecting practice. The expanded list contains two Easy, two Medium and four Hard
+interviews; coding has exactly one Easy, Medium and Hard. The existing Hard
+questions remain, supplemented by deeper transfer beyond the chapter examples.
+Current total: 25 lessons / 92 interviews / 38 codes; researcher route 19 checks /
+83 distinct questions / 38 codes. Ten topic banks meet the contract; fifteen remain.
+
+New questions distinguish count representation from conditioning away an
+informative count, closed-domain maxima from open-domain suprema, interval-bin
+probabilities from exact-duration densities, conditional selected data from full
+screening/censored exposure, and Gaussian-mixture collapse from a finite optimum.
+The selected-sample proof differentiates bounded-support integrals, establishes
+strict monotonicity through variance, supplies limiting means and treats the
+half-cutoff equality case. The mixture proof bounds every factor of the whole
+record and its follow-up uses mean clipping, a variance cap and compactness to
+prove existence with a known positive variance floor. Each written rubric names
+its particular proof obligations. Only q49–q51's rubrics changed among the 87
+preceding public interviews; all other fields and all 36 preceding public coding
+records are unchanged. One chapter closing sentence now refers to linked practice
+without an obsolete count; its check and lesson interactions are unchanged.
+
+`topic_practice/likelihood.py` adds constrained Bernoulli fitting (Easy) and
+selected-exponential fitting (Hard), retaining c15 as Medium. The Hard solver
+uses exact integer existence decisions, scales rate by the cutoff, brackets a
+unique root, switches to a small-root series to avoid cancellation and omits a
+negligible large-root exponential correction to prevent overflow. The editorial
+derives each step and distinguishes the fitted rate's units from the scaled root.
+Integer durations are explicitly treated as exact values, not rounded bins.
+
+Eleven independent tests in `tests/test_likelihood_practice.py` verify:
+
+- Exact Bernoulli record/count/conditioning ratios and closed interval MLEs,
+  including impossible endpoint models, empty records and huge counts.
+- Integrated exponential-bin probabilities, score signs and all-zero-bin limits.
+- Numerical bounded-support quadrature and derivative/variance identities,
+  conditional existence boundaries and the full-screening counterexample.
+- Whole-record mixture-collapse lower bounds and 500 seeded checks supporting
+  the compactification inequalities. The universal existence argument is the
+  written proof; finite checks alone do not establish it.
+- Exact rational series division through order ten and the small-root remainder.
+- A separate 85-digit Decimal root oracle based on an exponentially weighted
+  score numerator, rather than the reference's reciprocal/series formula.
+  It checks 150 seeded cases and all official expectations, including tiny
+  positive roots and scaled rates up to 10^12. Unit scaling, permutation,
+  100000-duration inputs and input preservation are checked separately.
+- Actual judge acceptance of both new references, rejection of unselected and
+  prior-smoothed shortcuts, and the existing debugging-copy size limit for all
+  official cases. Hard coding has two examples plus fourteen hidden cases.
+
+All 84 Python tests and 23 frontend suites passed. All 23 expanded coding
+references pass the actual judge. The full frontend run includes strict parsing
+of authored/generated mathematics and current/legacy journey coverage. The
+[Langevin/truncated-exponential paper abstract](https://arxiv.org/abs/1501.02535)
+confirms the connection between truncated exponential MLE and inversion of this
+mean function; the solution and numerical checks here were derived independently.
+No commercial question bank was copied and these questions are not attributed to
+specific employers.
+
+The in-app browser connection was unavailable. Chrome verified the actual
+lesson → interview list → coding list handoffs, all difficulty groups, and the
+Hard reference's 16/16 server submission after explicitly entering Test preview.
+The new mixture proof and variance-floor follow-up rendered at 390px with zero
+math errors and document width equal to scroll width. No written self-assessment
+was awarded. The temporary viewport was reset and the review tab returned to the
+personal likelihood coding list, showing 0/3. All five personal question, coding,
+lesson, draft and trainer groups matched this batch's fresh baseline. No recovery
+copy was applied and no data was reset. The server was restarted after bank changes.
+
+- [Likelihood interview list, personal workspace](likelihood-question-list-20261012.png).
+- [Likelihood coding list, personal workspace](likelihood-coding-list-20261012.png).
+
+Next: researcher l10–l18, then trader l19–l24. The goal remains active until all
+topic banks and the final preservation/navigation audit are complete.

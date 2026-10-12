@@ -1226,9 +1226,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Multiply independent event densities to obtain λ⁴ exp(−10λ).",
+        "Verify a unique global maximum at 0.4 and give inverse-second units.",
+        "Include censored exposure in the follow-up and distinguish an excluded zero-rate limit from a positive-rate MLE."
       ]
     },
     {
@@ -1251,9 +1251,9 @@
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Include the support indicator \\(\\theta\\)≥M before optimising; use the specified closed-support density.",
+        "Show decreasing likelihood on the feasible interval and derive E[M]=\\(\\frac{n\\theta}{n+1}\\).",
+        "Distinguish the strict-support unattained supremum from an unchanged continuous probability law."
       ]
     },
     {
@@ -1276,9 +1276,9 @@
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Identify one random observation and deterministic copies, giving likelihood p rather than p¹⁰⁰.",
+        "Compare the same endpoint MLE with likelihood ratios \\(\\frac{1}{2}\\) versus 2⁻¹⁰⁰.",
+        "Explain why agreement of estimates does not validate precision and why distinct equal-valued events need a sampling argument."
       ]
     },
     {
@@ -2192,6 +2192,135 @@
         "Derive posterior-mean optimality via the conditional squared-error decomposition.",
         "Give the prior-average lower bound for every competing rule, including randomisation; constant risk alone is insufficient."
       ]
+    },
+    {
+      "id": "q_l25_e1",
+      "title": "A larger success probability can fit worse",
+      "topic": "Likelihood",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 5,
+      "prompt": "Five iid Bernoulli trials share an unknown success probability p. The specified ordered record is H,T,H,H,T, with H meaning success. Compute the likelihood ratio \\(L(3/4)/L(1/2)\\) for this SAME record. No prior is assigned. Does a larger ratio mean a posterior probability?",
+      "answer": 0.84375,
+      "hints": [
+        "Count both successes and failures.",
+        "Use three factors of p and two of 1−p; compare the joint record probabilities."
+      ],
+      "solution": "There are three successes and two failures, so \\(L(p)=p^3(1-p)^2\\). At \\(\\frac{3}{4}\\) the likelihood is \\(\\frac{27}{1024}\\); at \\(\\frac{1}{2}\\) it is \\(\\frac{1}{32}\\). Their ratio is \\(27/32=0.84375\\), below one. Raising p rewards successes but penalises failures; “more likely to succeed” is not the same as “better fit to this whole record.” A likelihood ratio compares candidates for fixed data; it is not a normalised probability over p.",
+      "followup": "Compare two changes: observing only the success count K=3, and analysing the ordered record CONDITIONAL ON K=3. Which change preserves the ratio, and which discards its information about p?",
+      "followSolution": "Observing only the count gives \\(P_p(K=3)=\\binom53p^3(1-p)^2\\), so the parameter-free factor 10 cancels and the ratio remains \\(\\frac{27}{32}\\). Conditional on K=3, each of the ten compatible records has probability \\(\\frac{1}{10}\\) for every \\(0<p<1\\); the conditional likelihood ratio is one. Changing the representation to a count retains the information used here, whereas conditioning away that count discards it. Both candidates in the question lie in the open interval, so this conditioning is well-defined.",
+      "lesson": "l25",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Use the whole ordered record, including its two failures.",
+        "Obtain \\(\\frac{27}{32}\\) and interpret it as a likelihood comparison, not a posterior.",
+        "Distinguish a parameter-free count factor from conditioning away the informative count."
+      ]
+    },
+    {
+      "id": "q_l25_e2",
+      "title": "The allowed domain changes the best fit",
+      "topic": "Likelihood",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 5,
+      "prompt": "Eight iid Bernoulli trials are all successes. The model restricts their common probability to \\(0\\leq p\\leq0.9\\). What is its maximum likelihood estimate of p? Evaluate the stated domain; do not add a prior or an unbiasedness correction.",
+      "answer": 0.9,
+      "hints": [
+        "Write the likelihood of the all-success record.",
+        "Which feasible candidate makes every observed success most likely?"
+      ],
+      "solution": "The likelihood is \\(p^8\\), strictly increasing for positive p. The largest permitted value, 0.9, is therefore the unique maximiser. An unconstrained empirical success fraction of one lies outside this model. A boundary maximum does not require an interior derivative to vanish.",
+      "followup": "If instead the domain is \\(0<p<1\\), does a maximum exist? What happens on \\([0,1]\\), and does either fitting result establish that a failure is impossible?",
+      "followSolution": "On the open interval, the likelihood approaches one as p approaches one but never attains it, so there is no MLE there. On the closed interval the MLE is one. Neither observation of eight successes nor the fitting criterion establishes certainty about the real probability: every positive p assigns some probability to that record. A statement about uncertainty needs further assumptions and a separate procedure.",
+      "lesson": "l25",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Respect the closed upper bound 0.9 and maximise the likelihood there.",
+        "Distinguish an attained boundary maximum from an open-domain supremum.",
+        "Keep a fitted parameter separate from certainty about future outcomes."
+      ]
+    },
+    {
+      "id": "q_l25_m1",
+      "title": "Rounded waits are interval observations",
+      "topic": "Likelihood",
+      "difficulty": "Medium",
+      "path": "researcher",
+      "minutes": 12,
+      "prompt": "Four independent waits have an Exponential distribution with common rate \\(\\lambda>0\\), in events per second. You observe only the integer bin \\(K_i=\\lfloor X_i\\rfloor\\): K=k records \\(k\\leq X<k+1\\) seconds, not an exact duration of k. The bins are [0,1,2,1]. Derive the likelihood of what was observed, verify its maximum, and report the MLE of λ. Give a numerical answer in inverse seconds.",
+      "answer": 0.6931471805599453,
+      "hints": [
+        "A bin contributes \\(P(k\\leq X<k+1)\\), not the density evaluated at k.",
+        "Integrate the exponential density across the bin to get \\(e^{-\\lambda k}(1-e^{-\\lambda})\\)."
+      ],
+      "solution": "Bin k contributes \\(e^{-\\lambda k}-e^{-\\lambda(k+1)}\\). With four bins summing to four,\n\n\\[L(\\lambda)=(1-e^{-\\lambda})^4e^{-4\\lambda},\\qquad\\ell^{\\prime}(\\lambda)=\\frac4{e^\\lambda-1}-4.\\]\n\nThe score vanishes at \\(e^\\lambda=2\\), giving \\(\\hat\\lambda=\\log2\\approx0.693147\\) per second. The score strictly decreases, is positive near zero and negative at large rates; the likelihood tends to zero at both limits. This is the unique global maximum. Treating bins as exact waits would incorrectly give \\(\\frac{4}{4}\\)=1. The observation mechanism changes the likelihood, not merely the precision of a reported estimate.",
+      "followup": "For n bins of width Δ>0 seconds, with K=k recording \\(k\\Delta\\leq X<(k+1)\\Delta\\), derive the general fit. What if every bin is zero?",
+      "followSolution": "Let \\(S=\\sum_iK_i\\). Then \\(L(\\lambda)=(1-e^{-\\lambda\\Delta})^n e^{-\\lambda\\Delta S}\\). For S>0 the maximiser is \\(\\hat\\lambda=\\Delta^{-1}\\log(1+n/S)\\). For S=0 the likelihood increases to one as λ grows without bound; no finite positive-rate MLE exists. A recorded zero bin means a wait shorter than Δ, not a zero-duration event. A different rounding rule, such as nearest integer, needs different intervals.",
+      "lesson": "l25",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Integrate over the observed intervals rather than substitute integer bins into a density.",
+        "Derive the score and verify the unique global maximum at log(2), with correct units.",
+        "Handle the all-zero-bin boundary without inventing a finite maximiser."
+      ]
+    },
+    {
+      "id": "q_l25_h1",
+      "title": "Discarded waits change more than the sample size",
+      "topic": "Likelihood",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 25,
+      "prompt": "Underlying waits are iid Exponential(λ), with \\(\\lambda>0\\). A data export keeps only completed waits shorter than a known cutoff c>0. You receive n≥1 retained exact durations \\(0<x_i<c\\), but no rejected waits and no count of screened subjects. Analyse their conditional iid distribution given retention, with n held fixed.\n\nDerive the conditional likelihood and prove exactly when it has a finite positive-rate maximiser. Show uniqueness when it exists, and describe the other case as a maximum or a supremum on the stated open domain. Explain why taking the reciprocal of the retained sample mean is wrong. You may use integration or the fact that the derivative of a mean under a density proportional to \\(e^{-\\lambda x}\\) is minus its variance, but justify that fact for this bounded support.",
+      "answer": null,
+      "hints": [
+        "Retention has probability \\(1-e^{-\\lambda c}\\), which depends on λ and cannot be dropped.",
+        "The conditional mean is \\(g(\\lambda)=1/\\lambda-c/(e^{\\lambda c}-1)\\). Compare it with the observed mean.",
+        "The conditional law approaches a uniform law on (0,c) as λ tends to zero."
+      ],
+      "solution": "For one retained duration, the density is \\(\\lambda e^{-\\lambda x}/(1-e^{-\\lambda c})\\) on (0,c). Thus\n\n\\[\\ell(\\lambda)=n\\log\\lambda-\\lambda\\sum_i x_i-n\\log(1-e^{-\\lambda c}),\\qquad\\ell^{\\prime}(\\lambda)=n[g(\\lambda)-\\bar x].\\]\n\nTo justify strict monotonicity, write the conditional density as \\(e^{-\\lambda x}/Z(\\lambda)\\), with \\(Z(\\lambda)=\\int_0^c e^{-\\lambda u}\\,du\\). Differentiation under this bounded-support integral gives \\(g=-Z^{\\prime}/Z\\) and \\(g^{\\prime}=-[E_\\lambda[X^2]-E_\\lambda[X]^2]<0\\). Its variance is positive because the density has positive mass across the interval. Integration gives the displayed g. Its limit is c/2 at λ approaching zero, from the limiting uniform density, and zero as λ grows without bound.\n\nConsequently a unique score root, and global maximiser, exists exactly when \\(0<\\bar x<c/2\\). The score is positive before that root and negative afterwards. If \\(\\bar x\\geq c/2\\), the score is strictly negative for every positive λ, including the equality case. The likelihood has its supremum at the excluded limit λ→0, not an attained MLE. The limit density is uniform, with joint density \\(c^{-n}\\). The unselected exponential rule \\(1/\\bar x\\) ignores the parameter-dependent retention normaliser and solves the wrong model.",
+      "followup": "Now the original fixed screening count N≥n and each retention status become available. Every rejected wait is known only to exceed c. Derive the FULL likelihood and its fit when n>0. How can a retained mean above c/2 now permit a positive-rate MLE?",
+      "followSolution": "Under fixed N and this deterministic cutoff, multiply n event densities and N−n survival probabilities. The parameter-dependent likelihood is \\(\\lambda^n\\exp[-\\lambda(\\sum_i x_i+(N-n)c)]\\). Any count-ordering coefficient is parameter-free. Its unique positive maximiser is \\(n/[\\sum_i x_i+(N-n)c]\\). The screening statuses restore information discarded by conditioning on retention. For c=1, one retained duration \\(\\frac{3}{4}\\) and N=2, this full fit is \\(\\frac{4}{7}\\); the retained-only conditional fit has no positive maximiser. If n=0 and N>0, the full likelihood is decreasing on \\(\\lambda>0\\) and again has only a zero-rate supremum. Changing the censoring/selection mechanism or making N data-dependent requires stating the new experiment.",
+      "lesson": "l25",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Include the λ-dependent retention normaliser and derive the conditional score.",
+        "Prove the mean is strictly decreasing using its variance, with limits c/2 and zero.",
+        "Give the exact existence condition and distinguish the equality-case supremum from an attained maximum.",
+        "Explain the different full-screening likelihood and why retained mean alone cannot recover its exposure."
+      ]
+    },
+    {
+      "id": "q_l25_h2",
+      "title": "A mixture can collapse around one observation",
+      "topic": "Likelihood",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 25,
+      "prompt": "A fixed dataset \\(x_1,\\ldots,x_n\\), with \\(n\\geq2\\) and at least two distinct real values, is fitted as iid from a TWO-component normal mixture. Its density is \\(f(x)=\\tfrac12\\phi(x;\\mu_1,v_1)+\\tfrac12\\phi(x;\\mu_2,v_2)\\), where \\(\\phi(x;\\mu,v)=(2\\pi v)^{-1/2}\\exp[-(x-\\mu)^2/(2v)]\\), both means are unrestricted and both variances are positive. The weights are fixed at one half; the component labels are unobserved.\n\nA colleague argues that the sample has nonzero spread, so a finite joint MLE must exist as in the single-normal model. Prove or disprove this by a concrete parameter sequence and a bound on the likelihood of the WHOLE record, not only one density factor. Does a finite answer returned by an optimiser prove that a global MLE exists?",
+      "answer": null,
+      "hints": [
+        "Collapse one component around one observed value while leaving the other component fixed.",
+        "Each other observation still has a strictly positive density from the fixed component.",
+        "An unbounded likelihood has no finite maximiser even if numerical iterations stop."
+      ],
+      "solution": "Set \\(\\mu_1=x_1\\), \\(v_1=\\varepsilon^2\\), and keep \\(\\mu_2=0,v_2=1\\). At x₁, the first component contributes \\(1/(2\\sqrt{2\\pi}\\varepsilon)\\). For every other observation, the mixture is at least \\(\\phi(x_i;0,1)/2>0\\). Therefore\n\n\\[L\\ \\geq\\ \\frac1{2\\sqrt{2\\pi}\\varepsilon}\\prod_{i=2}^n\\frac{\\phi(x_i;0,1)}2\\ \\longrightarrow\\ \\infty.\\]\n\nThe fixed product is strictly positive for this finite dataset. Thus the likelihood is unbounded and no finite positive-variance global MLE exists, despite nonzero overall sample spread. The second component supports the remaining observations while the first concentrates around one; a single normal cannot perform that separation. At every allowed finite parameter tuple the density is finite, so setting variance to zero is not an admissible maximiser. Numerical convergence can identify a local fit or an imposed floor, not rescue the unrestricted global problem.",
+      "followup": "Impose a KNOWN variance floor \\(v_j\\geq v_0>0\\), keeping the half weights fixed. Prove that a finite global maximiser now exists even though the means and variances initially have no upper bounds. Does this guarantee uniqueness or that an optimiser finds it?",
+      "followSolution": "Let \\(a=\\min_i x_i\\), \\(b=\\max_i x_i\\), and \\(D=b-a>0\\). Clipping either mean into [a,b] decreases its distance to every observed value, hence cannot decrease any component density or the mixture likelihood. With clipped means, all squared residuals are at most D². The derivative of a component log-density with respect to its variance is \\([(x-\\mu)^2-v]/(2v^2)\\). For variance above \\(V=\\max(v_0,D^2)\\), reducing it to V cannot decrease any component density. Thus every feasible tuple has an equally good or better representative in the compact box \\([a,b]^2\\times[v_0,V]^2\\). The likelihood is continuous there, so it attains a finite maximum, also global over the original constrained domain. This is an existence proof, not uniqueness: swapping components preserves the fit, and other equal maxima or local maxima may remain. A numerical method still needs a global-optimality argument. The variance floor changes the statistical model and must be reported.",
+      "lesson": "l25",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Use an admissible shrinking-variance sequence and bound every remaining record factor away from zero.",
+        "Conclude unbounded likelihood, excluding variance zero from the allowed model.",
+        "Explain why single-normal nonzero spread and finite optimiser output do not prove existence here.",
+        "For the follow-up, justify mean clipping, a variance upper cap, continuity and compactness; separate existence from uniqueness."
+      ]
     }
   ],
   "lessons": [
@@ -2919,10 +3048,17 @@
       "questions": [
         "q49",
         "q50",
-        "q51"
+        "q51",
+        "q_l25_e1",
+        "q_l25_e2",
+        "q_l25_m1",
+        "q_l25_h1",
+        "q_l25_h2"
       ],
       "coding": [
-        "c15"
+        "c_l25_easy",
+        "c15",
+        "c_l25_hard"
       ],
       "objectives": [
         "Distinguish probability, density, likelihood and posterior.",
@@ -2930,7 +3066,7 @@
         "Write a likelihood that matches dependence and censoring rather than blindly multiplying rows."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "The MLE is 0.7, but this does not give a posterior probability for p.",
         "The probability that p equals 0.7 is 70%.",

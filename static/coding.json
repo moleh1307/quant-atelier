@@ -1483,5 +1483,73 @@
     ],
     "solution": "from math import fsum\ndef solve(alpha, beta, successes, failures, m, thresholds):\n    if not thresholds:\n        return []\n    a, b = alpha + successes, beta + failures\n    mode = 0 if a + b == 2 else min(m, (m + 1) * (a - 1) // (a + b - 2))\n    weights = [0.0] * (m + 1)\n    weights[mode] = 1.0\n    for k in range(mode, m):\n        weights[k + 1] = weights[k] * ((m - k) * (k + a)) / ((k + 1) * (m - k - 1 + b))\n    for k in range(mode, 0, -1):\n        weights[k - 1] = weights[k] * (k * (m - k + b)) / ((m - k + 1) * (k - 1 + a))\n    normalizer = fsum(weights)\n    tail = [0.0] * (m + 2)\n    for k in range(m, -1, -1):\n        tail[k] = tail[k + 1] + weights[k] / normalizer\n    tail[0] = 1.0\n    return [tail[r] for r in thresholds]",
     "explanation": "First update to A=alpha+successes, B=beta+failures. Integrate the conditional count mass \\(\\binom mk p^k(1-p)^{m-k}\\) against the Beta(A,B) posterior. This gives \\(w_k=P(H=k)=\\binom mk\\,\\mathrm B(A+k,B+m-k)/\\mathrm B(A,B)\\), where \\(\\mathrm B\\) is the beta integral, not the posterior parameter B. Future trials are independent conditional on p, but share parameter uncertainty after integrating it out. For example a uniform posterior makes H uniform on 0,\u2026,m, rather than Binomial(m,\\(\\frac{1}{2}\\)).\n\nCancel neighbouring factorial/beta factors to obtain \\(w_{k+1}/w_k=(m-k)(k+A)/[(k+1)(m-k-1+B)]\\). Because A,B\u22651, the condition that this ratio is at least one reduces to \\((A+B-2)k\\leq m(A-1)+1-B\\). One mode is \\(k_* = \\min(m,\\lfloor(m+1)(A-1)/(A+B-2)\\rfloor)\\) when A+B>2. If A=B=1, every mass is equal, so choose zero. Exact integer arithmetic locates the mode, including ties and one-sided modes. Set its RELATIVE mass to one, propagate right using the ratio, and left using the reciprocal ratio. Moving away from a mode never increases exact relative masses above one. This avoids starting from a tiny endpoint mass that has already rounded to zero; tails may still harmlessly underflow below the stated absolute tolerance.\n\nNormalise the relative masses using math.fsum, then build suffix probabilities from k=m down to zero. Read each requested suffix directly; computing 1\u2212a CDF can lose a small upper tail through cancellation. The empty-query shortcut and m=0 are covered. With prior \\(\\operatorname{Beta}(2,2)\\) and 3 successes/1 failure, the posterior is \\(\\operatorname{Beta}(5,3)\\); P(H=2) for m=2 is E[p\u00b2]=5\u00d76/(8\u00d79)=\\(\\frac{5}{12}\\), not (\\(\\frac{5}{8}\\))\u00b2. Each recurrence step and query costs O(1) with the bounded integer sizes, giving O(m+q) time and O(m) working space, excluding output. This calculation relies on one common p; a changing probability or extra conditional dependence requires a different model."
+  },
+  {
+    "id": "c_l25_easy",
+    "title": "Fit a probability within its permitted interval",
+    "difficulty": "Easy",
+    "topic": "Likelihood",
+    "path": "researcher",
+    "prompt": "Inputs successes and trials give the success count and total trial count of an ordered iid Bernoulli record. Both counts are integers with \\(0\\leq\\text{successes}\\leq\\text{trials}\\leq10^{18}\\). low and high are numeric bounds satisfying 0\u2264low\u2264high\u22641, including endpoints. Return the maximum-likelihood probability in that CLOSED interval. If several values maximise, return the smallest. An empty record has likelihood one for every p. Return None if EVERY allowed p gives the record zero likelihood, so no allowed model can explain it. Otherwise return a numerical probability without manual rounding. Do not add a prior or an \\(n-1\\) correction; O(1) time/space. The all-zero-likelihood rule is an explicit diagnostic, rather than calling a zero-probability fit explanatory.",
+    "starter": "def solve(successes, trials, low, high):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          7,
+          10,
+          0.2,
+          0.6
+        ],
+        "expected": 0.6
+      },
+      {
+        "args": [
+          0,
+          0,
+          0.1,
+          0.9
+        ],
+        "expected": 0.1
+      }
+    ],
+    "solution": "def solve(successes, trials, low, high):\n    if trials == 0:\n        return low\n    if (high == 0 and successes > 0) or (low == 1 and successes < trials):\n        return None\n    return max(low, min(high, successes / trials))",
+    "explanation": "For a nonempty record with both outcomes, the log-likelihood score has the sign of successes\u2212trials\u00d7p. It increases before the empirical success fraction and decreases after it. For all failures or all successes the same directional conclusion holds at the boundary. Project the unrestricted fit onto the closed interval. Test impossible endpoint-only models using the integer counts before floating-point division; a proportion extremely close to one can round to one even when there was a failure. With zero trials the empty product is one and every allowed p ties, so choose low. No likelihood product or logarithm is needed. O(1) operations and bounded input sizes; None diagnoses an impossible allowed model, rather than changing the parameter domain."
+  },
+  {
+    "id": "c_l25_hard",
+    "title": "Fit the waits a selection rule retained",
+    "difficulty": "Hard",
+    "topic": "Likelihood",
+    "path": "researcher",
+    "prompt": "Underlying waits are iid Exponential(\u03bb), \\(\\lambda>0\\). A fixed export rule retains only exact completed waits shorter than cutoff c. No rejected-subject count is available. waits is a list of at most 100000 integer durations, each strictly between zero and integer cutoff, with \\(2\\leq\\text{cutoff}\\leq10^{12}\\). Treat the supplied durations as exact density-evaluation values, NOT rounded bins. Fit the CONDITIONAL distribution of retained waits, with retained sample size held fixed.\n\nReturn [scaled_rate, rate], where scaled_rate is \\(z=\\hat\\lambda c\\) and rate is \\(\\hat\\lambda\\) per input time unit. Return None when the data do not determine a unique finite positive-rate MLE: empty waits, or retained mean at least c/2. Do not return zero as an attained MLE. Do not mutate waits, simulate or round. Aim for \\(O(n)\\) data work plus a bounded one-dimensional root solve, with O(1) auxiliary state. Tiny positive roots and scaled rates up to 10^12 are valid; guard both cancellation near the uniform limit and exponential overflow. The editorial derives a bracket, monotonicity and a stable small-root expansion. No external numerical package is needed.",
+    "starter": "def solve(waits, cutoff):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          8
+        ],
+        "expected": [
+          3.5935119694474262,
+          0.4491889961809283
+        ]
+      },
+      {
+        "args": [
+          [
+            5,
+            7
+          ],
+          10
+        ],
+        "expected": null
+      }
+    ],
+    "solution": "from math import expm1\ndef solve(waits, cutoff):\n    n = len(waits)\n    if n == 0:\n        return None\n    total = sum(waits)\n    exposure = n * cutoff\n    gap = exposure - 2 * total\n    if gap <= 0:\n        return None\n    mean = total / exposure\n    delta = gap / (2 * exposure)\n    low, high = 0.0, exposure / total\n    for _ in range(120):\n        z = (low + high) / 2\n        if z < 0.01:\n            squared = z * z\n            departure = z * (1/12 + squared * (-1/720 + squared * (1/30240 - squared/1209600)))\n            increase = departure < delta\n        else:\n            conditional_mean = 1/z - (1/expm1(z) if z < 50 else 0.0)\n            increase = conditional_mean > mean\n        if increase:\n            low = z\n        else:\n            high = z\n    z = (low + high) / 2\n    return [z, z / cutoff]",
+    "explanation": "Retention has probability \\(1-e^{-\\lambda c}\\). The correct conditional density on (0,c) is \\(\\lambda e^{-\\lambda x}/(1-e^{-\\lambda c})\\); its normaliser depends on \u03bb. Let \\(r=\\sum_i x_i/(nc)\\) and \\(z=\\lambda c\\). The score vanishes precisely when\n\n\\[g(z)=\\frac1z-\\frac1{e^z-1}=r.\\]\n\nThe conditional mean g strictly decreases from \\(\\frac{1}{2}\\) to zero; its derivative is minus the variance of the normalised duration under the exponentially tilted bounded distribution. Thus r<\\(\\frac{1}{2}\\) gives exactly one finite positive root. If r\u2265\\(\\frac{1}{2}\\), the likelihood decreases throughout the open rate domain and only approaches a uniform limit at zero, so return None. Empty data give a flat likelihood and no unique estimate. Check \\(nc-2\\sum_i x_i\\) as an INTEGER before division, preserving the existence decision near equality.\n\nFor a positive root, \\(0<z<1/r\\), because g(z)<1/z. Bracket and bisect this monotone equation. Using expm1 preserves e^z\u22121, but subtracting its reciprocal from 1/z still loses precision for tiny z. Near zero instead compare \\(h(z)=1/2-g(z)\\) with \\(\\delta=(nc-2\\sum_i x_i)/(2nc)\\), computed from the exact integer gap. Expanding the exponential and dividing its series gives\n\n\\[h(z)=\\frac z{12}-\\frac{z^3}{720}+\\frac{z^5}{30240}-\\frac{z^7}{1209600}+O(z^9).\\]\n\nBelow z=0.01 the omitted leading term is about 2.1\u00d710^(-26), safely smaller than the required numerical tolerance. Away from zero compare g directly with r; for z\u226550, its exponential correction is less than 2\u00d710^(-22), so omit it to avoid overflow. Keep the lower bracket when the modeled mean is too large, otherwise the upper. Since r\u22651/c\u226510^(-12), the initial bracket is at most 10^12 wide. After 120 halvings its exact width is below 10^(-24); floating-point arithmetic eventually limits further improvement. Return z and z/c to separate the scaled fitting problem from rate units. The solver uses one count/sum pass and constant root iterations, \\(O(n)\\) time/O(1) auxiliary state. This is the selected-sample model; a known number of rejected subjects would contribute censored exposure and yield a different fit."
   }
 ]
