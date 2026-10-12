@@ -8,13 +8,16 @@ vm.createContext(require('./workspace-fixture.cjs')(context));vm.runInContext(fs
 const run=js=>vm.runInContext(js,context);run("content=bank;coding=codes;state=fresh();route=['dashboard'];");
 assert.equal(run('nextRouteActivity().activity.id'),'l01');
 run("state.lessons.l01={passed:true};state.questions.q01={reviewed:true};");
-assert.equal(run('nextRouteActivity().activity.id'),'q01','A review does not retire a problem');
-assert.match(run('dashboard()'),/href="#questions\/q01\/journey\/researcher\/l01"/);
+assert.equal(run('nextRouteActivity().activity.kind'),'question-list','A review does not complete its question list');
+assert.equal(run('nextRouteActivity().activity.id'),'l01');
+assert.match(run('dashboard()'),/href="#question-list\/l01\/journey\/researcher\/l01"/);
 assert.match(run('dashboard()'),/Next unchecked lesson: Condition, then normalise/);
-run("state.questions.q01={solved:true};state.questions.q05={selfSolved:true};");assert.equal(run('nextRouteActivity().activity.id'),'c01');
-run("state.coding.c01={accepted:true,acceptedAssisted:true};");assert.equal(run('nextRouteActivity().activity.id'),'l02','Passing with an editorial retains its provenance but completes code work');
+run("state.questions.q01={solved:true};state.questions.q05={selfSolved:true};");assert.equal(run('nextRouteActivity().activity.kind'),'question-list','Two existing solves do not complete six questions');
+run("content.lessons[0].questions.forEach(id=>state.questions[id]={selfSolved:true});");assert.equal(run('nextRouteActivity().activity.kind'),'coding-list');
+run("state.coding.c01={accepted:true,acceptedAssisted:true};");assert.equal(run('nextRouteActivity().activity.kind'),'coding-list','One existing pass does not complete three exercises');
+run("content.lessons[0].coding.forEach(id=>state.coding[id]={accepted:true,acceptedAssisted:true});");assert.equal(run('nextRouteActivity().activity.id'),'l02','Editorial provenance is kept while all three code passes complete the list');
 // All checks passed is distinct from finishing their linked practice.
-run("journeyLessons().forEach(l=>state.lessons[l.id]={passed:true});");assert.equal(run('nextRouteActivity().activity.id'),'q02');assert.doesNotMatch(run('dashboard()'),/Your core route is complete/);
+run("journeyLessons().forEach(l=>state.lessons[l.id]={passed:true});");assert.equal(run('nextRouteActivity().activity.id'),'l02');assert.equal(run('nextRouteActivity().activity.kind'),'question-list');assert.doesNotMatch(run('dashboard()'),/Your core route is complete/);
 for(const path of ['researcher','trader']){
  context.path=path;run("state=fresh();state.preferences.path=path;journeyLessons().filter(l=>l.path==='shared').forEach(l=>{state.lessons[l.id]={passed:true};l.questions.forEach(id=>state.questions[id]={solved:true});l.coding.forEach(id=>state.coding[id]={accepted:true});});");
  assert.equal(run('nextRouteActivity().lesson.path'),path);assert.match(run('dashboard()'),new RegExp(path==='researcher'?'Quant researcher / Understand':'Quant trader / Understand'));
@@ -25,7 +28,7 @@ for(const path of ['researcher','trader']){
 }
 // Progress filters distinguish true completions, draft work and editorial provenance.
 run("state=fresh();route=['questions'];filters={...emptyFilters(),status:'pending'};state.questions.q01={solved:true};state.questions.q21={selfSolved:true};state.questions.q05={reviewed:true};");
-assert.equal(run('filtered(content.questions).length'),49);assert.ok(run("filtered(content.questions).some(q=>q.id==='q05')"));
+assert.equal(run('filtered(content.questions).length'),bank.questions.length-2);assert.ok(run("filtered(content.questions).some(q=>q.id==='q05')"));
 run("filters.status='self-solved';");assert.deepEqual(JSON.parse(run('JSON.stringify(filtered(content.questions).map(q=>q.id))')),['q21']);
 run("filters.status='reviewed';");assert.equal(run('filtered(content.questions)[0].id'),'q05');
 run("state.coding.c01={accepted:true,acceptedAssisted:false,assisted:true};state.coding.c02={accepted:true,acceptedAssisted:true};state.drafts.c03='def solve(values): return []';state.coding.c04={assisted:true};filters={...emptyFilters(),status:'passed'};route=['coding'];");
@@ -39,6 +42,6 @@ els['#page']={contains:()=>false,addEventListener:(event,fn)=>handlers[event]=fn
 const before=run('JSON.stringify(state)');run('bindPage()');
 (async()=>{
  await handlers.click({target:{closest:()=>({dataset:{action:'reset-filters'},focus(){}})}});
- assert.equal(els['#search'].value,'');assert.equal(els['#status'].value,'all');assert.equal(els['#difficulty'].value,'all');assert.equal(context.focused,'search');assert.equal(els['#result-count'].textContent,51);assert.equal(els['#reset-filters'].disabled,true);assert.equal(run('JSON.stringify(state)'),before);
+ assert.equal(els['#search'].value,'');assert.equal(els['#status'].value,'all');assert.equal(els['#difficulty'].value,'all');assert.equal(context.focused,'search');assert.equal(els['#result-count'].textContent,bank.questions.length);assert.equal(els['#reset-filters'].disabled,true);assert.equal(run('JSON.stringify(state)'),before);
  console.log('Core activity resumption, separate checks/practice, both branches, completed routes, optional drills, progress filters, editorial provenance and non-destructive reset passed.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

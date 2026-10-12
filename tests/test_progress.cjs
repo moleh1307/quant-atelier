@@ -4,6 +4,9 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 const source=fs.readFileSync('static/app.js','utf8').replace(/init\(\);\s*$/,'');
 const bank=JSON.parse(fs.readFileSync('static/content.json','utf8'));
 const codes=JSON.parse(fs.readFileSync('static/coding.json','utf8'));
+const routeQuestions=new Set(bank.lessons.filter(l=>l.path!=='trader').flatMap(l=>l.questions)).size;
+const routeCodes=new Set(bank.lessons.filter(l=>l.path!=='trader').flatMap(l=>l.coding)).size;
+
 function harness(qa=true){
  const calls=[],writes=[],context={URLSearchParams,location:{search:qa?'?qa=1':'',hash:'#coding/c01'},console,Math,Date,
   setTimeout:()=>0,clearTimeout(){},localStorage:{getItem:()=>null,setItem(){}},document:{querySelector:()=>null},bank,codes,
@@ -67,15 +70,15 @@ const response=(result,ok=true)=>({ok,json:async()=>Number.isInteger(result.tota
  routePreview.context.location.hash='#paths/researcher';
  routePreview.run("route=['paths','researcher'];state.questions.q20={solved:true};state.questions.q21={selfSolved:true};state.coding.c01={accepted:true};");
  const previewRoute=routePreview.run('paths()');
- assert.match(previewRoute,/Test problems: 2 \/ 42 interview problems solved/);
- assert.match(previewRoute,/Test exercises: 1 \/ 15 Python exercises passed/);
+ assert.match(previewRoute,new RegExp('Test problems: 2 / '+routeQuestions+' interview problems solved'));
+ assert.match(previewRoute,new RegExp('Test exercises: 1 / '+routeCodes+' Python exercises passed'));
  assert.match(previewRoute,/Development results, separate from your progress/);
  assert.match(previewRoute,/href="\/#paths\/researcher">Open my personal route/);
  const routePersonal=harness(false);
  routePersonal.run("route=['paths','researcher'];");
  const personalRoute=routePersonal.run('paths()');
- assert.match(personalRoute,/0 \/ 42 interview problems solved/);
- assert.match(personalRoute,/0 \/ 15 Python exercises passed/);
+ assert.match(personalRoute,new RegExp('0 / '+routeQuestions+' interview problems solved'));
+ assert.match(personalRoute,new RegExp('0 / '+routeCodes+' Python exercises passed'));
  assert.doesNotMatch(personalRoute,/Test problems:|Test exercises:|route-preview-note/);
  // A blank understanding check cannot accidentally choose option zero.
  let quizHandler,choice=null,notice='';

@@ -1280,6 +1280,305 @@
         "Show the decisive derivation or counterexample.",
         "Explain why the tempting shortcut fails."
       ]
+    },
+    {
+      "id": "q_l01_m1",
+      "title": "The same pairs, different weights",
+      "topic": "Counting",
+      "difficulty": "Medium",
+      "path": "shared",
+      "minutes": 8,
+      "prompt": "Three distinct balls are labelled A, B and C. Procedure I draws twice independently and uniformly with replacement, then erases the order. Procedure II chooses uniformly from the six unordered multisets AA, AB, AC, BB, BC, CC. Do these procedures have the same distribution? Give every outcome its probability under each procedure, and find the probability of two different labels under each. Explain why listing six possible records is insufficient.",
+      "answer": null,
+      "hints": [
+        "Start from the nine equally likely ordered records in Procedure I.",
+        "AB can come from AB or BA, while AA has only one preimage."
+      ],
+      "solution": "Under I, AA, BB and CC each have probability \\(1/9\\); AB, AC and BC each have probability \\(2/9\\). Erasing order combines records but keeps their probability mass. Thus different labels have probability \\(6/9=2/3\\). Under II all six records have probability \\(1/6\\), so different labels have probability \\(3/6=1/2\\). The same support does not imply the same measure. A counting denominator is justified only when the records being counted have equal weights.",
+      "followup": "Change Procedure I to drawing without replacement. What happens?",
+      "followSolution": "There are six equally likely ordered records, with no AA, BB or CC. Each of AB, AC and BC now has exactly two preimages, so each unordered pair has probability \\(1/3\\). Equal-size groups preserve uniformity; replacement changed the group sizes.",
+      "lesson": "l01",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Assign \\(\\frac{1}{9}\\) to repeated-label and \\(\\frac{2}{9}\\) to distinct-label records under I.",
+        "Assign \\(\\frac{1}{6}\\) to all six records under II and derive \\(\\frac{2}{3}\\) versus \\(\\frac{1}{2}\\).",
+        "Explain uniformity through preimage sizes, rather than the number of possible records."
+      ]
+    },
+    {
+      "id": "q_l01_m2",
+      "title": "Exactly two colours",
+      "topic": "Counting",
+      "difficulty": "Medium",
+      "path": "shared",
+      "minutes": 8,
+      "prompt": "An urn contains 12 distinguishable balls: 5 red, 4 blue and 3 green. Draw three uniformly without replacement; ignore draw order. What is the probability that exactly two different colours appear? Explain your sample space and avoid counting a three-colour draw as a two-colour draw.",
+      "answer": 0.6590909090909091,
+      "hints": [
+        "Every physical three-ball subset has probability \\(1/\\binom{12}{3}\\).",
+        "Subtract the one-colour and three-colour subsets from all subsets."
+      ],
+      "solution": "There are \\(\\binom{12}{3}=220\\) equally likely subsets. One-colour subsets number \\(\\binom53+\\binom43+\\binom33=15\\). Three-colour subsets number \\(5\\cdot4\\cdot3=60\\). The categories are disjoint and exhaustive, so exactly two colours account for \\(220-15-60=145\\) subsets and probability \\(145/220=29/44\\). Counting one red-blue pair within each draw instead would give different multiplicities to different draws.",
+      "followup": "If balls of a given colour look identical, may you instead count colour multisets uniformly?",
+      "followSolution": "No. RRR has \\(\\binom53=10\\) physical preimages, while RRB has \\(\\binom52\\cdot4=40\\). Observational indistinguishability does not make those records equally probable.",
+      "lesson": "l01",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Identify uniform physical subsets and the denominator 220.",
+        "Partition into one, two and three colours with counts 15, 145 and 60.",
+        "Explain why colour records have unequal physical multiplicities."
+      ]
+    },
+    {
+      "id": "q_l01_h1",
+      "title": "A conditional multiset is still weighted",
+      "topic": "Counting",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 14,
+      "prompt": "Five draws are made independently and uniformly with replacement from five labelled balls. Given that exactly three different labels were seen, what is the probability that their multiplicities are 3, 1, 1 rather than 2, 2, 1? Derive the conditional denominator from ordered draw records. Do not assume the possible multiplicity patterns are equally likely.",
+      "answer": 0.4,
+      "hints": [
+        "Once three labels appear in five draws, the only partitions are (3,1,1) and (2,2,1).",
+        "Choose the three labels, choose which label has the exceptional multiplicity, then arrange the five draws.",
+        "The arrangement counts are \\(5!/3!\\) and \\(5!/(2!2!)\\)."
+      ],
+      "solution": "All \\(5^5\\) ordered records initially have equal probability. Fix a set of three labels. For (3,1,1), choose the tripled label in 3 ways and arrange in \\(5!/3!=20\\) ways, giving 60 records. For (2,2,1), choose the singleton in 3 ways and arrange in \\(5!/(2!2!)=30\\) ways, giving 90. There are \\(\\binom53\\) choices of labels for either pattern. Conditioning retains \\(\\binom53(60+90)\\) records, hence the required probability is \\(60/150=2/5\\). Both the chosen-label factor and the original \\(5^{-5}\\) probability cancel.",
+      "followup": "What if a machine instead selects uniformly among unordered size-five multisets with exactly three labels?",
+      "followSolution": "For each three-label set there are three multisets of each pattern, so that machine gives probability \\(1/2\\). It implements a different sampling rule. The word “unordered” describes the record, not its probability.",
+      "lesson": "l01",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Show that only the two stated multiplicity partitions remain.",
+        "Count 60 and 90 ordered records per chosen three-label set.",
+        "Normalise after conditioning and distinguish a uniform-multiset sampler."
+      ]
+    },
+    {
+      "id": "q_l01_h2",
+      "title": "One fixed point, not six independent matches",
+      "topic": "Counting",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 16,
+      "prompt": "Six researchers have six individually labelled notebooks. A uniformly chosen permutation assigns one notebook to each researcher. What is the probability that exactly one researcher receives their own notebook? Derive your count; notebook matches are not independent Bernoulli trials.",
+      "answer": 0.36666666666666664,
+      "hints": [
+        "Choose the sole fixed point, then count permutations of the other five with no fixed points.",
+        "Use inclusion–exclusion for the derangement count; forbidding one match changes the other possible matches."
+      ],
+      "solution": "Choose the fixed researcher in 6 ways. The remaining five notebooks must form a derangement. Inclusion–exclusion gives \\[D_5=5!-\\binom51 4!+\\binom52 3!-\\binom53 2!+\\binom54 1!-\\binom55 0!=44.\\] Therefore \\(6D_5/6!=264/720=11/30\\). The expression \\(6(1/6)(5/6)^5\\) would require independent matches, which a permutation does not provide. For instance, exactly five fixed points is impossible: the last notebook must then also match.",
+      "followup": "For n researchers, express the probability of exactly r matches and identify an impossible value.",
+      "followSolution": "The probability is \\(\\binom nr D_{n-r}/n!\\), where \\(D_m=m!\\sum_{j=0}^m(-1)^j/j!\\), including \\(D_0=1\\) and \\(D_1=0\\). Thus exactly \\(n-1\\) matches is impossible. For fixed r and growing n the probability tends to \\(e^{-1}/r!\\); this limiting statement follows from the alternating exponential series, not independence.",
+      "lesson": "l01",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Count permutations, rather than independent notebook assignments.",
+        "Derive D5=44 with inclusion–exclusion and probability \\(\\frac{11}{30}\\).",
+        "Use the impossible five-match outcome to expose the independence shortcut."
+      ]
+    },
+    {
+      "id": "q_l02_e1",
+      "title": "After the first red",
+      "topic": "Conditioning",
+      "difficulty": "Easy",
+      "path": "shared",
+      "minutes": 4,
+      "prompt": "An urn has 4 red and 4 blue distinguishable balls. Two are drawn uniformly without replacement. Given that the first ball was red, what is the probability that the second is blue?",
+      "answer": 0.5714285714285714,
+      "hints": [
+        "Describe what remains after the observed first draw.",
+        "The second draw is uniform over the seven remaining physical balls."
+      ],
+      "solution": "The observation leaves seven balls: three red and four blue. The next draw is uniform over these seven, so \\(P(B_2\\mid R_1)=4/7\\). The original blue fraction \\(4/8\\) is the unconditional probability for either position; conditioning changes the information and the remaining urn.",
+      "followup": "Are the two colour indicators independent?",
+      "followSolution": "No. The conditional blue probability is \\(4/7\\), different from its unconditional probability \\(1/2\\). With replacement the urn would not change and these draws would be independent.",
+      "lesson": "l02",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Update the remaining counts to 3 red and 4 blue.",
+        "Use denominator 7 and distinguish a conditional from an unconditional probability."
+      ]
+    },
+    {
+      "id": "q_l02_m1",
+      "title": "Predict the next flip of the same coin",
+      "topic": "Conditioning",
+      "difficulty": "Medium",
+      "path": "shared",
+      "minutes": 9,
+      "prompt": "A coin is selected once, with equal prior probability from two coins whose head probabilities are \\(\\frac{1}{4}\\) and \\(\\frac{3}{4}\\). All flips of a selected coin are conditionally independent. You see a head on the first flip. What is the probability of a head on the second flip of that same coin?",
+      "answer": 0.625,
+      "hints": [
+        "Update the probabilities of the two coins after the first head.",
+        "Average the next-head probabilities using the posterior, not the original prior."
+      ],
+      "solution": "The first-head probability is \\((1/2)(1/4)+(1/2)(3/4)=1/2\\). Bayes gives posterior coin weights \\(1/4\\) and \\(3/4\\). The next-head probability is therefore \\((1/4)(1/4)+(3/4)(3/4)=10/16=5/8\\). Conditional independence given the selected coin does not imply independence after the coin identity is hidden. The first flip teaches us about a latent parameter shared by both flips.",
+      "followup": "What changes if a new coin is independently selected before every flip?",
+      "followSolution": "The second coin selection then carries no information from the first head. The next-head probability stays \\(1/2\\). The distinction is whether the hidden parameter persists across observations.",
+      "lesson": "l02",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Compute posterior coin weights \\(\\frac{1}{4}\\) and \\(\\frac{3}{4}\\).",
+        "Form a posterior predictive mixture to obtain \\(\\frac{5}{8}\\).",
+        "Explain conditional independence versus marginal dependence."
+      ]
+    },
+    {
+      "id": "q_l02_h1",
+      "title": "The report is part of the experiment",
+      "topic": "Conditioning",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 14,
+      "prompt": "A household has two children, with independent boy/girl labels, each equally likely. A reporting device says “a boy was observed”. It reports this with probability 1 for BB, with probability s for each of BG and GB, and with probability 0 for GG, where 0 < s <= 1. Derive the probability of BB given the report. Then compare (a) inspecting one uniformly chosen child and reporting only if that child is a boy, and (b) inspecting both and reporting whenever at least one is a boy. Can the words “a boy was observed” alone identify the answer?",
+      "answer": null,
+      "hints": [
+        "Weight each household by the chance of this report from that household.",
+        "The two reporting devices correspond to different values of s."
+      ],
+      "solution": "Each household has prior mass \\(1/4\\). The report masses are \\(1/4,s/4,s/4,0\\), so \\[P(BB\\mid\\text{report})=\\frac{1}{1+2s}.\\] A randomly inspected child gives \\(s=1/2\\), hence posterior \\(1/2\\). An at-least-one report gives \\(s=1\\), hence posterior \\(1/3\\). The same verbal evidence can arise through different likelihoods. Without a reporting mechanism, the posterior is not identified; quietly assuming uniformity among remaining households picks one mechanism without justification.",
+      "followup": "If mixed households are more likely to send the report than BB households, can the posterior be below \\(\\frac{1}{3}\\)?",
+      "followSolution": "Yes. In the more general model let report probabilities be b for BB and s for each mixed household. Then the posterior is \\(b/(b+2s)\\), provided the report has positive probability. For example b=\\(\\frac{1}{2}\\) and s=1 gives \\(\\frac{1}{5}\\). The original bound depended on fixing b=1.",
+      "lesson": "l02",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive 1/(1+2s) by likelihood-weighting the four households.",
+        "Identify s=\\(\\frac{1}{2}\\) and s=1 and obtain the two distinct posteriors.",
+        "Explain why an unspecified observation mechanism does not identify a posterior."
+      ]
+    },
+    {
+      "id": "q_l02_h2",
+      "title": "Two passes without an independence assumption",
+      "topic": "Conditioning",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 18,
+      "prompt": "A condition is present in 10% of a population. Two tests are applied to the same person. For each test separately, its pass probability is \\(\\frac{4}{5}\\) if the condition is present and \\(\\frac{1}{5}\\) if absent. Nothing is known about dependence between tests within either class. A person passes both. What is the smallest possible probability that the condition is present? Justify an attainable bound instead of assuming conditional independence.",
+      "answer": 0.25,
+      "hints": [
+        "Let a and b be the probabilities of two passes within the present and absent classes.",
+        "For two events each of probability p, their intersection lies in \\([\\max(0,2p-1),p]\\).",
+        "The posterior increases with a and decreases with b."
+      ],
+      "solution": "Within the present class, \\(3/5\\le a\\le4/5\\); within the absent class, \\(0\\le b\\le1/5\\). Bayes gives \\(P(\\text{present}\\mid\\text{both})=(a/10)/(a/10+9b/10)\\). Its minimum uses a=\\(\\frac{3}{5}\\) and b=\\(\\frac{1}{5}\\), yielding \\(0.06/(0.06+0.18)=1/4\\). Attainability matters: in the present class use pass/pass, pass/fail, fail/pass, fail/fail probabilities (\\(\\frac{3}{5}\\),\\(\\frac{1}{5}\\),\\(\\frac{1}{5}\\),0); in the absent class use (\\(\\frac{1}{5}\\),0,0,\\(\\frac{4}{5}\\)). Both preserve the specified single-test probabilities. Conditional independence would instead give a=\\(\\frac{16}{25}\\), b=\\(\\frac{1}{25}\\) and posterior \\(\\frac{16}{25}\\), a conclusion the stated evidence does not justify.",
+      "followup": "What is the largest possible posterior, and is it attainable?",
+      "followSolution": "It is 1: set b=0, with absent-class probabilities (0,\\(\\frac{1}{5}\\),\\(\\frac{1}{5}\\),\\(\\frac{3}{5}\\)). Choose any feasible a, for example \\(\\frac{3}{5}\\). A two-pass observation then has positive probability only in the present class. Thus the identified posterior interval is [\\(\\frac{1}{4}\\),1], much wider than one assumed-independence answer.",
+      "lesson": "l02",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Bound the two within-class intersections using their marginal probabilities.",
+        "Optimise Bayes over the feasible bounds to obtain \\(\\frac{1}{4}\\).",
+        "Construct feasible joint tables attaining the lower bound and explain the missing independence assumption."
+      ]
+    },
+    {
+      "id": "q_l03_e1",
+      "title": "A sum without independent draws",
+      "topic": "Expectation",
+      "difficulty": "Easy",
+      "path": "shared",
+      "minutes": 4,
+      "prompt": "Three distinct numbered cards are drawn uniformly without replacement from cards labelled 1 through 8. What is the expected sum of the three labels? Explain why the dependence between draws does not prevent your calculation.",
+      "answer": 13.5,
+      "hints": [
+        "Each draw position has the same uniform marginal distribution on the eight labels.",
+        "Find the mean label at one position, then add the three marginal means."
+      ],
+      "solution": "Write the labels as \\(X_1,X_2,X_3\\). Each has mean \\((1+8)/2=9/2\\) by symmetry, even though they are dependent. Linearity gives \\(E[X_1+X_2+X_3]=3(9/2)=27/2\\). Independence is not an assumption of linearity; finite expectations suffice here.",
+      "followup": "Would replacement change the expected sum?",
+      "followSolution": "No: it changes the joint distribution but leaves each marginal mean \\(\\frac{9}{2}\\). It does change the variance of the sum. Equal expectations do not imply equal distributions.",
+      "lesson": "l03",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Use the marginal mean \\(\\frac{9}{2}\\) for each position.",
+        "Apply linearity without claiming the draws are independent."
+      ]
+    },
+    {
+      "id": "q_l03_e2",
+      "title": "Expected notebook matches",
+      "topic": "Expectation",
+      "difficulty": "Easy",
+      "path": "shared",
+      "minutes": 5,
+      "prompt": "Seven labelled notebooks are assigned to their seven owners by a uniform random permutation. What is the expected number of owners who receive their own notebook? Do not enumerate all permutations.",
+      "answer": 1,
+      "hints": [
+        "Use one indicator per owner and find its marginal match probability.",
+        "An owner has probability \\(\\frac{1}{7}\\) of a match; add expectations, not outcome guarantees."
+      ],
+      "solution": "For owner i, let \\(I_i\\) indicate a correct match. Every notebook is equally likely to be assigned to that owner, so \\(E[I_i]=1/7\\). The count is \\(\\sum_i I_i\\), hence its mean is \\(7/7=1\\). Indicators are dependent, but their expectations add. A mean of one does not mean exactly one match occurs in every assignment.",
+      "followup": "For two distinct owners, what is the probability they both match, and does this imply independence?",
+      "followSolution": "It is \\(5!/7!=1/(7\\cdot6)=1/42\\), whereas the product of the marginal probabilities is \\(1/49\\). Therefore they are not independent. The expected count calculation never required that product rule.",
+      "lesson": "l03",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Define match indicators with marginal expectation \\(\\frac{1}{7}\\).",
+        "Sum to one and distinguish an average count from a guaranteed outcome."
+      ]
+    },
+    {
+      "id": "q_l03_h1",
+      "title": "Count cycles without their joint distribution",
+      "topic": "Expectation",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 18,
+      "prompt": "A permutation of six labelled objects is chosen uniformly. Decompose it into disjoint cycles, counting a fixed point as a one-element cycle. What is the expected total number of cycles? Derive the expected number of cycles of each length, rather than guessing independent cycle counts.",
+      "answer": 2.45,
+      "hints": [
+        "For each k-element subset, use an indicator that these elements form one cycle.",
+        "A fixed subset can form (k-1)! directed cycles; the remaining elements can be permuted freely."
+      ],
+      "solution": "For a fixed k-element subset, the number of permutations in which it forms one complete cycle is \\((k-1)!(6-k)!\\). There are \\(\\binom6k\\) such subsets. Thus the expected number of k-cycles is \\[\\binom6k\\frac{(k-1)!(6-k)!}{6!}=\\frac1k.\\] Summing lengths gives \\(1+1/2+1/3+1/4+1/5+1/6=49/20\\). Every cycle corresponds to exactly one subset and is counted once. Different subset indicators cannot be treated as independent: overlapping subsets cannot both be separate cycles.",
+      "followup": "Derive the mean for n objects and explain why it grows much more slowly than n.",
+      "followSolution": "The same cancellation gives \\(E[C_n]=\\sum_{k=1}^n1/k\\). Comparing this sum with the integral of 1/x shows logarithmic growth: \\(\\log(n+1)\\le E[C_n]\\le1+\\log n\\). Large permutations usually contain long cycles, not a linear number of small cycles.",
+      "lesson": "l03",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Count cycles of a fixed subset as (k-1)! and permute the complement.",
+        "Sum subset indicators to obtain 1/k for every cycle length.",
+        "Sum the six contributions to \\(\\frac{49}{20}\\) without assuming independent cycles."
+      ]
+    },
+    {
+      "id": "q_l03_h2",
+      "title": "Crossings in a random matching",
+      "topic": "Expectation",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 17,
+      "prompt": "Twenty distinct points lie on a circle. Choose uniformly from all perfect matchings of these points, and join each matched pair by a straight chord. Count crossing pairs of chords: a pair counts once if their interiors cross, even if another pair happens to cross at the same geometric point. What is the expected number of crossing pairs? Explain the symmetry behind the probability for one pair; do not assume crossings are independent.",
+      "answer": 15,
+      "hints": [
+        "Temporarily label the ten matched chords; labelling does not change the crossing count.",
+        "Conditional on four endpoints, exactly one of their three pairings alternates around the circle."
+      ],
+      "solution": "Label the ten chords uniformly after matching. Fix any two chord labels. Conditional on their four endpoints, symmetry makes the three ways to pair those endpoints equally likely: each leaves exactly the same number of matchings and chord labellings on the remaining points. In circular order a,b,c,d, only (a,c) with (b,d) crosses; the other two pairings do not. The crossing indicator therefore has mean \\(\\frac{1}{3}\\). There are \\(\\binom{10}{2}=45\\) labelled pairs, so linearity gives \\(45/3=15\\). Pairwise crossings share chords and need not be independent. The calculation counts crossing pairs, not distinct intersection locations.",
+      "followup": "For 2n points, what is the expected number, and may the variance use 45 independent Bernoulli terms in the original case?",
+      "followSolution": "The mean is \\(\\binom n2/3=n(n-1)/6\\). The proposed independent-Bernoulli variance is unjustified: covariance terms must be checked for pairs of crossing indicators. Linearity settled the mean without supplying their joint distribution.",
+      "lesson": "l03",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Justify uniformity among the three pairings of four chosen endpoints.",
+        "Use crossing indicators and linearity to obtain 15.",
+        "Distinguish crossing pairs from geometric intersection locations and avoid an independence claim."
+      ]
     }
   ],
   "lessons": [
@@ -1332,10 +1631,16 @@
       "explanation": "The four equally likely ordered outcomes are HH, HT, TH and TT. Only TT has no heads. The probability of at least one head is 1 minus \\(\\frac{1}{4}\\), which is \\(\\frac{3}{4}\\).",
       "questions": [
         "q01",
-        "q05"
+        "q05",
+        "q_l01_m1",
+        "q_l01_m2",
+        "q_l01_h1",
+        "q_l01_h2"
       ],
       "coding": [
-        "c01"
+        "c01",
+        "c_l01_medium",
+        "c_l01_hard"
       ],
       "objectives": [
         "Define an experiment, sample space and event before calculating.",
@@ -1343,6 +1648,7 @@
         "Justify equal likelihood and separate independence from disjointness."
       ],
       "trainers": [],
+      "practiceExpanded": true,
       "optionLabels": [
         "1/2",
         "3/4",
@@ -1399,15 +1705,24 @@
       "explanation": "The always-heads branch contributes probability \\(\\frac{1}{2}\\); the fair branch contributes \\(\\frac{1}{4}\\). Normalise the first weight by their sum \\(\\frac{3}{4}\\) to obtain \\(\\frac{2}{3}\\).",
       "questions": [
         "q02",
-        "q03"
+        "q03",
+        "q_l02_e1",
+        "q_l02_m1",
+        "q_l02_h1",
+        "q_l02_h2"
       ],
-      "coding": [],
+      "coding": [
+        "c_l02_easy",
+        "c_l02_medium",
+        "c_l02_hard"
+      ],
       "objectives": [
         "Build a conditional sample space and normalise its probabilities.",
         "Distinguish likelihood, prior and posterior.",
         "Explain why conditioning can create dependence."
       ],
       "trainers": [],
+      "practiceExpanded": true,
       "optionLabels": [
         "1/2",
         "2/3",
@@ -1464,10 +1779,16 @@
       "explanation": "Linearity of expectation does not require independence.",
       "questions": [
         "q06",
-        "q07"
+        "q07",
+        "q_l03_e1",
+        "q_l03_e2",
+        "q_l03_h1",
+        "q_l03_h2"
       ],
       "coding": [
-        "c02"
+        "c_l03_easy",
+        "c02",
+        "c_l03_hard"
       ],
       "objectives": [
         "Define expectation and turn a count into indicators.",
@@ -1475,6 +1796,7 @@
         "Derive discrete and continuous tail-sum identities."
       ],
       "trainers": [],
+      "practiceExpanded": true,
       "optionLabels": [
         "Yes, always",
         "Only if they have equal means",
@@ -1542,6 +1864,7 @@
         "Explain exponential memorylessness and competing clocks."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "5",
         "2",
@@ -1611,6 +1934,7 @@
         "Check finite expectation and solve a bounded random walk."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "2",
         "4",
@@ -1676,6 +2000,7 @@
         "math",
         "fractions"
       ],
+      "practiceExpanded": false,
       "optionLabels": [
         "24",
         "30",
@@ -1743,6 +2068,7 @@
         "Explain the common-shock limit and feasible correlation bounds."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "12",
         "14",
@@ -1810,6 +2136,7 @@
         "Build small reference tests before optimising an implementation."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "Its event time in all cases",
         "Its availability time at the decision point",
@@ -1878,6 +2205,7 @@
         "Work through a biased maximum estimator and a Beta posterior update."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "Correlation",
         "Mean squared error",
@@ -1946,6 +2274,7 @@
         "Write a likelihood that matches dependence and censoring rather than blindly multiplying rows."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "The MLE is 0.7, but this does not give a posterior probability for p.",
         "The probability that p equals 0.7 is 70%.",
@@ -2011,6 +2340,7 @@
         "Explain singularity and stable numerical solutions."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "Yes, if correlations are small",
         "Yes, if variances are positive",
@@ -2079,6 +2409,7 @@
         "Diagnose measurement error, regularisation and causal overclaims."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "Future errors have mean zero",
         "Residuals sum to zero in sample",
@@ -2145,6 +2476,7 @@
         "Explain optional stopping and reversals after pooling."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "Yes",
         "No; posterior inference needs priors and likelihoods",
@@ -2212,6 +2544,7 @@
         "State what effective sample size and Sharpe scaling do—and do not—mean."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "Too large",
         "Too small",
@@ -2280,6 +2613,7 @@
         "Keep transformation fitting, model selection and final evaluation separate."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "On all rows once",
         "Inside each training fold",
@@ -2346,6 +2680,7 @@
         "Separate discovery, selection and confirmation of a research idea."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "Make it unbiased",
         "Bias the selected score upward",
@@ -2413,6 +2748,7 @@
         "Diagnose implementation, selection, regime and cost failures with falsifiable checks."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "High classification accuracy alone",
         "A reproducible time-aware net backtest with executable prices and stated assumptions",
@@ -2480,6 +2816,7 @@
         "Derive the optimal control coefficient and protect unbiasedness when estimating it."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "Whenever it uses the same seed",
         "When the covariance of the pair is negative",
@@ -2548,6 +2885,7 @@
         "Specify timing, ties and reference tests for research data code."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "It sorts every window",
         "Each index enters and leaves at most once",
@@ -2612,6 +2950,7 @@
         "Account for costs, uncertainty and information revealed by a fill."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "Buy",
         "Sell",
@@ -2677,6 +3016,7 @@
         "Explain a quote skew without claiming an unspecified optimum."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "Arithmetic cannot be trusted",
         "The buyer’s decision may reveal information",
@@ -2742,6 +3082,7 @@
         "Derive a toy log-growth optimum and state its assumptions."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "Yes, because 4 exceeds continuation value 3.5",
         "No, because 6 is possible",
@@ -2806,6 +3147,7 @@
         "Distinguish a risk estimate from feasibility and tail-loss control."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "Yes",
         "No; constraints, risk and costs matter",
@@ -2871,6 +3213,7 @@
         "Explain why local neutrality does not remove all risk."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "Delta",
         "Gamma",
@@ -2937,6 +3280,7 @@
         "Choose meaningful error measures for positive quantities."
       ],
       "trainers": [],
+      "practiceExpanded": false,
       "optionLabels": [
         "Bid your unconditional mean",
         "Condition value on your signal and winning",

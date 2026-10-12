@@ -477,5 +477,310 @@
     ],
     "solution": "import math\ndef solve(successes, trials, p):\n    return successes * math.log(p) + (trials - successes) * math.log1p(-p)",
     "explanation": "Logarithms turn the independent product into a sum. math.log1p(-p) computes log(1-p) without first rounding 1-p to 1 for tiny p. Zero successes and all-success records need no special case because both logarithms are finite on the specified open parameter domain. O(1) time and space. A log-likelihood is not a posterior probability."
+  },
+  {
+    "id": "c_l01_medium",
+    "title": "Keep the mass when order disappears",
+    "difficulty": "Medium",
+    "topic": "Counting",
+    "path": "shared",
+    "prompt": "An urn contains counts[i] distinct physical balls of colour i. Return every unordered colour-pair record as [i, j, probability], in ascending i then j order with i <= j. Include zero-probability records. With replacement=True, make two independent uniform physical-ball draws; otherwise make two uniform draws without replacement. counts is a list of nonnegative integers, with at most 50 colours and each count at most 10^9. If no two draws are possible, return []. Derive the probabilities from ordered physical records; do not treat unordered colour pairs uniformly. Do not modify counts or simulate.",
+    "starter": "def solve(counts, replacement):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            2,
+            1
+          ],
+          true
+        ],
+        "expected": [
+          [
+            0,
+            0,
+            0.4444444444444444
+          ],
+          [
+            0,
+            1,
+            0.4444444444444444
+          ],
+          [
+            1,
+            1,
+            0.1111111111111111
+          ]
+        ]
+      },
+      {
+        "args": [
+          [
+            2,
+            1
+          ],
+          false
+        ],
+        "expected": [
+          [
+            0,
+            0,
+            0.3333333333333333
+          ],
+          [
+            0,
+            1,
+            0.6666666666666666
+          ],
+          [
+            1,
+            1,
+            0
+          ]
+        ]
+      }
+    ],
+    "solution": "def solve(counts, replacement):\n    total = sum(counts)\n    if total == 0 or (not replacement and total < 2):\n        return []\n    denominator = total * (total if replacement else total - 1)\n    result = []\n    for i, a in enumerate(counts):\n        for j in range(i, len(counts)):\n            if i == j:\n                mass = a * (a if replacement else a - 1)\n            else:\n                mass = 2 * a * counts[j]\n            result.append([i, j, mass / denominator])\n    return result",
+    "explanation": "Use the ordered physical sample space of size \\(N^2\\) or \\(N(N-1)\\). A same-colour pair has \\(a_i^2\\) ordered records with replacement and \\(a_i(a_i-1)\\) without. A mixed pair has \\(2a_i a_j\\) because either colour can come first. Combine probability mass only after counting the records. Zero-count colours remain in the specified output, and an impossible experiment returns []. There are m(m+1)/2 output records: O(m\u00b2) time and output space, with O(1) additional working space beyond the output.",
+    "lesson": "l01"
+  },
+  {
+    "id": "c_l01_hard",
+    "title": "Count constrained notebook assignments",
+    "difficulty": "Hard",
+    "topic": "Counting",
+    "path": "shared",
+    "prompt": "n distinct notebooks must be assigned bijectively to n researchers. allowed[i][j] is 1 if researcher i may receive notebook j, otherwise 0. Return the exact integer number of permitted assignments. allowed is a square \\(\\frac{0}{1}\\) matrix with 0 <= n <= 15. For n=0 there is one empty assignment. Each notebook is used once; rows can have no permitted assignment, and individually nonempty rows do not guarantee a joint assignment exists. Aim for O(n * 2^n) time and O(2^n) space; enumerating all permutations is too slow. Do not mutate allowed.",
+    "starter": "def solve(allowed):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        ],
+        "expected": 2
+      }
+    ],
+    "solution": "def solve(allowed):\n    n = len(allowed)\n    dp = [0] * (1 << n)\n    dp[0] = 1\n    for mask in range(1 << n):\n        row = mask.bit_count()\n        if row == n or dp[mask] == 0:\n            continue\n        for notebook in range(n):\n            bit = 1 << notebook\n            if not mask & bit and allowed[row][notebook]:\n                dp[mask | bit] += dp[mask]\n    return dp[-1]",
+    "explanation": "Let dp[mask] count assignments of the first popcount(mask) researchers using exactly the notebooks named by mask. The row is determined by that count, so no extra row dimension is needed. Extend each partial assignment by an allowed unused notebook. Every complete assignment has one unique sequence of extensions, so this neither loses nor duplicates assignments. dp[0]=1 makes the empty case work. An infeasible matrix produces zero. Use integer addition throughout: the desired count is exact. Under a uniform random assignment, its probability would be this count divided by n!, not a product of independent row success rates. O(n2\u207f) time and O(2\u207f) space.",
+    "lesson": "l01"
+  },
+  {
+    "id": "c_l02_easy",
+    "title": "Restrict, then normalise",
+    "difficulty": "Easy",
+    "topic": "Conditioning",
+    "path": "shared",
+    "prompt": "weights contains nonnegative finite weights for mutually exclusive outcomes; keep contains equally many booleans describing an observed event. Return a probability list of the same length, conditional on that event: excluded outcomes have probability zero, and included weights are normalised. If the event has total weight zero, return None, including empty input. The original weights need not sum to one. Their sum is at most 10^12. Do not modify either input.",
+    "starter": "def solve(weights, keep):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            2,
+            3,
+            5
+          ],
+          [
+            true,
+            false,
+            true
+          ]
+        ],
+        "expected": [
+          0.2857142857142857,
+          0,
+          0.7142857142857143
+        ]
+      }
+    ],
+    "solution": "def solve(weights, keep):\n    total = sum(w for w, included in zip(weights, keep) if included)\n    if total == 0:\n        return None\n    return [w / total if included else 0 for w, included in zip(weights, keep)]",
+    "explanation": "The observed event removes incompatible outcomes. Its weight, not the original total, is the conditioning denominator. Scale invariance follows because multiplying every weight by the same positive constant changes both numerator and denominator equally. Conditioning on a zero-weight event is undefined in this finite model, so return None rather than inventing uniform probabilities. \\(O(n)\\) time and \\(O(n)\\) output space.",
+    "lesson": "l02"
+  },
+  {
+    "id": "c_l02_medium",
+    "title": "Update a persistent hidden model",
+    "difficulty": "Medium",
+    "topic": "Conditioning",
+    "path": "shared",
+    "prompt": "prior is a probability vector over m mutually exclusive hidden models. One model is selected once and persists. likelihoods[t][j] is the probability of observation t under model j; observations are conditionally independent given that model. Return the posterior vector after all observations, or None if they are impossible under every positive-prior model. An empty observation list returns the prior unchanged as a list. Inputs: 1 <= m <= 30, at most 20 observations, each row length m, prior nonnegative and sums to one, likelihoods entries in [0,1]; each nonzero prior and likelihood is at least 10^-6. Do not reselect the model at each observation, simulate, or mutate input.",
+    "starter": "def solve(prior, likelihoods):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            0.5,
+            0.5
+          ],
+          [
+            [
+              0.25,
+              0.75
+            ],
+            [
+              0.25,
+              0.75
+            ]
+          ]
+        ],
+        "expected": [
+          0.1,
+          0.9
+        ]
+      }
+    ],
+    "solution": "def solve(prior, likelihoods):\n    posterior = list(prior)\n    for row in likelihoods:\n        mass = [p * likelihood for p, likelihood in zip(posterior, row)]\n        total = sum(mass)\n        if total == 0:\n            return None\n        posterior = [value / total for value in mass]\n    return posterior",
+    "explanation": "For each observation, multiply current model probabilities by that observation\u2019s model-specific likelihood and normalise. The posterior becomes the next prior because the hidden model persists. Sequential normalisation gives the same posterior as one product of conditionally independent likelihoods. Zero prior mass stays zero. If every weighted likelihood is zero, the supplied model regards the observations as impossible; stop with None. The stated short-input bounds prevent product underflow, while sequential normalisation is still a useful habit. O(Tm) time and O(m) working space.",
+    "lesson": "l02"
+  },
+  {
+    "id": "c_l02_hard",
+    "title": "Condition when the hidden state can change",
+    "difficulty": "Hard",
+    "topic": "Conditioning",
+    "path": "shared",
+    "prompt": "A hidden state takes one of m labels. prior gives the initial state probabilities. transition[i][j] gives P(next state j | current state i), each row summing to one. likelihoods[t][j] gives P(the observation at time t | state j). At t=0 use prior directly; before each later observation apply one transition. Given states, observations are independent and depend only on their corresponding state. Return [final_state_posterior, natural_log_probability_of_all_observations], or None if the observation sequence is mathematically impossible. An empty sequence returns [prior, 0]. Inputs: 1 <= m <= 8, up to 2000 observations, probabilities in [0,1], prior sums to one, each row has m entries; every nonzero probability is at least 10^-200. Tiny posterior states may become important after later evidence, so do not discard them internally: compute state updates in log space using stable log-sum-exp. Direct products and ordinary scaled posterior updates can underflow. Use no external libraries or simulation. Do not modify input.",
+    "starter": "def solve(prior, transition, likelihoods):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            0.5,
+            0.5
+          ],
+          [
+            [
+              0.8,
+              0.2
+            ],
+            [
+              0.1,
+              0.9
+            ]
+          ],
+          [
+            [
+              0.2,
+              0.8
+            ],
+            [
+              0.6,
+              0.3
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            0.3870967741935484,
+            0.6129032258064516
+          ],
+          -1.6820086052689358
+        ]
+      }
+    ],
+    "solution": "import math\ndef solve(prior, transition, likelihoods):\n    if not likelihoods:\n        return [list(prior), 0.0]\n    negative_infinity = -math.inf\n    def log(p):\n        return math.log(p) if p else negative_infinity\n    def log_sum(values):\n        largest = max(values)\n        if largest == negative_infinity:\n            return largest\n        return largest + math.log(sum(math.exp(value - largest) for value in values))\n    log_posterior = [log(p) for p in prior]\n    log_transition = [[log(p) for p in row] for row in transition]\n    log_probability = 0.0\n    m = len(prior)\n    for t, row in enumerate(likelihoods):\n        if t:\n            log_posterior = [log_sum([log_posterior[i] + log_transition[i][j]\n                                     for i in range(m)]) for j in range(m)]\n        mass = [log_posterior[j] + log(row[j]) for j in range(m)]\n        scale = log_sum(mass)\n        if scale == negative_infinity:\n            return None\n        log_probability += scale\n        log_posterior = [value - scale for value in mass]\n    return [[math.exp(value) for value in log_posterior], log_probability]",
+    "explanation": "First predict: \\(\\tilde p_t(j)=\\sum_i p_{t-1}(i)T_{ij}\\). Then condition: multiply by observation likelihoods and normalise. In log space use \\(\\log\\sum_i e^{a_i}=b+\\log\\sum_i e^{a_i-b}\\), where b is the largest finite term. At time zero there is no transition. Each log scale is the log conditional probability of the next observation given earlier ones; the chain rule makes their sum the sequence log probability. A zero-probability state is represented internally by negative infinity. A positive but tiny state retains a finite log weight, so later decisive evidence can restore it; ordinary probability normalisation alone can lose this state. Convert to probabilities only for the final output, where negligible components may round to zero. If every term is negative infinity, the sequence is impossible. This O(Tm\u00b2) recurrence sums over hidden paths without enumerating m\u1d40 paths. Stored log transitions cost O(m\u00b2) space, with O(m) state-update space. The posterior and the probability of the observations are different quantities.",
+    "lesson": "l02"
+  },
+  {
+    "id": "c_l03_easy",
+    "title": "A linear payoff from marginals",
+    "difficulty": "Easy",
+    "topic": "Expectation",
+    "path": "shared",
+    "prompt": "marginals[j] is a list of [value, probability] outcomes for random variable X_j. Each marginal has nonnegative probabilities summing to one. coefficients[j] is its fixed payoff weight. Return E[sum_j coefficients[j] * X_j]. Dependence between variables is unspecified; it is not needed for this linear payoff. Empty marginals and coefficients return 0. Lists have equal length, each supplied marginal is nonempty, values and coefficients have absolute value at most 10^6. No simulation, external libraries or input mutation.",
+    "starter": "def solve(marginals, coefficients):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              [
+                1,
+                0.25
+              ],
+              [
+                5,
+                0.75
+              ]
+            ],
+            [
+              [
+                0,
+                0.5
+              ],
+              [
+                2,
+                0.5
+              ]
+            ]
+          ],
+          [
+            2,
+            -3
+          ]
+        ],
+        "expected": 5
+      }
+    ],
+    "solution": "def solve(marginals, coefficients):\n    return sum(coefficient * sum(value * probability for value, probability in marginal)\n               for marginal, coefficient in zip(marginals, coefficients))",
+    "explanation": "Compute each marginal mean, multiply by its fixed coefficient, and add. Linearity of expectation is valid for dependent variables with finite expectations. The supplied bounded finite supports guarantee this condition. Do not invent a joint distribution or enumerate combinations. The same marginals would be insufficient for a nonlinear payoff such as max(X\u2081,X\u2082). O(S) time for S supplied outcomes and O(1) working space, apart from generator machinery.",
+    "lesson": "l03"
+  },
+  {
+    "id": "c_l03_hard",
+    "title": "Expected rank without replacement",
+    "difficulty": "Hard",
+    "topic": "Expectation",
+    "path": "shared",
+    "prompt": "There are n distinguishable cards with integer labels values[i]; duplicate labels are allowed but cards remain distinct. Choose uniformly from all k-card subsets without replacement, sort the selected labels, and return the expected label in rank r (1 means the smallest). Inputs: 1 <= r <= k <= n <= 2000, labels between -10^6 and 10^6. Do not enumerate subsets or simulate. Derive the probability for each sorted population position; aim for O(n log n) sorting and \\(O(n)\\) combinatorial updates, treating integer arithmetic as one operation. Exact integer weights may be large; avoid converting binomial coefficients individually to floats. Do not mutate values.",
+    "starter": "def solve(values, k, r):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            2,
+            4,
+            9,
+            11
+          ],
+          2,
+          1
+        ],
+        "expected": 3.8333333333333335
+      },
+      {
+        "args": [
+          [
+            2,
+            4,
+            9,
+            11
+          ],
+          2,
+          2
+        ],
+        "expected": 9.166666666666666
+      }
+    ],
+    "solution": "import math\ndef solve(values, k, r):\n    ordered = sorted(values)\n    n = len(ordered)\n    denominator = math.comb(n, k)\n    first = r - 1\n    last = n - k + r - 1\n    weight = math.comb(n - r, k - r)\n    numerator = 0\n    for i in range(first, last + 1):\n        numerator += ordered[i] * weight\n        if i < last:\n            weight = (weight * (i + 1) * (n - i - 1 - (k - r))\n                      // ((i - r + 2) * (n - i - 1)))\n    return numerator / denominator",
+    "explanation": "Break label ties by original card identity to obtain a total order; the returned label does not depend on that tie rule. Position i (zero-based) is the selected r-th card exactly when it is included, r-1 cards are chosen before it, and k-r after it. Its multiplicity is \\(w_i=\\binom{i}{r-1}\\binom{n-i-1}{k-r}\\), divided by \\(\\binom nk\\). Feasible positions run from r-1 through n-k+r-1. Sum label times multiplicity as an integer, then divide once. Consecutive weights satisfy \\(w_{i+1}/w_i=(i+1)(n-i-1-k+r)/[(i-r+2)(n-i-1)]\\); stop before its final zero denominator. This avoids repeated combination calculations and overflow from individually converting enormous weights to floats. Duplicate labels remain distinct cards. Sorting costs O(n log n), followed by \\(O(n)\\) big-integer updates; actual bit-operation cost also depends on the integer sizes. \\(O(n)\\) space for the sorted copy.",
+    "lesson": "l03"
   }
 ]

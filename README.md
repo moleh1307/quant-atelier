@@ -130,7 +130,7 @@ As of 2026-10-03, all 24 modules contain learning goals, seven teaching sections
 
 ## Follow your roadmap
 
-Open **Learning roadmap**. The eight shared modules lead into ten researcher modules or six trader modules. Researcher is the default; choosing a branch is remembered and also drives Overview's next activity. All modules remain accessible.
+Open **Learning roadmap**. The eight shared modules lead into eleven researcher modules or six trader modules. Researcher is the default; choosing a branch is remembered and also drives Overview's next activity. All modules remain accessible.
 
 The module containing the first unfinished core activity expands automatically. Overview and the roadmap resume its lesson check, interview practice or Python exercise; passing a check leaves outstanding practice visible. Optional fluency rounds remain available without blocking core completion. Open any module to see its learning goals and activities. Each lesson ends with a direct continuation into its remaining practice, a return to its exact roadmap module and an optional jump to the next module.
 
@@ -140,10 +140,12 @@ The roadmap uses keyboard-operable native disclosures, subtle opening motion and
 
 ## Stay with a module
 
-Opening a lesson or practice link from the roadmap keeps that module with you. A compact sticky strip shows its title, the active Understand / Apply / Implement stage (or Fluency), and actual check/problem/code evidence. **Next step** moves from the lesson into its questions and Python exercise. The same handoff appears below the lesson check and at the end of a problem or coding page. All activities remain optional; visiting one earns no progress.
+Opening a lesson or practice link from the roadmap keeps that module with you. A compact sticky strip shows its title, the active Understand / Apply / Implement stage (or Fluency), and actual check/problem/code evidence. The lesson opens its **Interview question list**, followed by its **Coding exercise list**. Each list groups choices by Easy, Medium and Hard. Returning from an individual problem or exercise leads back to its list; it never forces the next numbered problem. All activities remain accessible; visiting one earns no progress.
 
 For example, module 01 flows through Count the right sample space → One six is enough → Without replacement → Count pairs with a target sum. Use **Steps** to jump directly to any activity, or **Roadmap** to return to the exact expanded module. The menu highlights your current activity, retains assistance/self-assessment labels, closes with Escape or a click outside it, and remains scrollable on short screens.
 
 Inside a lesson, **Sections** stays beside Steps. Jump to any teaching section, the worked example or the understanding check. The selected destination receives focus and lands below the sticky controls. Its highlight follows your reading position; it is a location marker and earns no completion credit. Escape returns focus to Sections. Reading position still survives Back and reload.
 
-Activity URLs include the originating module and branch. Reload and browser Back retain the sequence, including an exercise shared by several modules. Directly opening a lesson from Courses starts its own sequence; standalone questions and coding pages keep their existing library behaviour. Completed practice is skipped when resuming from a lesson. The final activity offers the next module, while outstanding evidence remains visible. No new completion records or changes to grading are introduced.
+Activity URLs include the originating module and branch. Reload and browser Back retain the context, including an exercise shared by several modules. Directly opening a lesson from Courses starts its own journey; standalone questions and coding pages keep their library behaviour. The lesson handoff always offers the question list, including completed items for revision. Overview resumes the first incomplete core stage, opening the relevant list rather than selecting a problem. The coding list offers the next module, while outstanding evidence remains visible. No new completion records or changes to grading are introduced.
+
+The approved bank target is at least two interview questions per difficulty and exactly one coding exercise per difficulty for **each lesson**. The expansion is in progress: [TOPIC_PRACTICE_STATUS.md](TOPIC_PRACTICE_STATUS.md) records completed and pending topics. Sources live in `topic_practice/`, alongside the original banks. The build rejects unregistered new lessons and invalid completed-topic coverage. Preserve permanent IDs and existing grading semantics when adding practice. Increasing the amount of practice increases denominators; it does not erase or fabricate existing solves.

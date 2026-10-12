@@ -58,7 +58,12 @@ class ContentTests(unittest.TestCase):
         cls.bank=json.loads((server.ROOT/'static/content.json').read_text())
     def test_link_integrity_and_quiz_contract(self):
         qids={q['id'] for q in self.bank['questions']}; lids={l['id'] for l in self.bank['lessons']}; cids={t['id'] for t in TASKS}
-        self.assertEqual(len(qids),51);self.assertEqual(len(lids),25);self.assertEqual(len(cids),15)
+        self.assertTrue({f'q{i:02d}' for i in range(1,52)} <= qids)
+        self.assertTrue({f'c{i:02d}' for i in range(1,16)} <= cids)
+        self.assertEqual(len(qids),len(self.bank['questions']))
+        self.assertEqual(len(cids),len(TASKS))
+        from topic_practice import COMPLETE_TOPICS, PENDING_TOPICS
+        self.assertEqual(lids,set(COMPLETE_TOPICS+PENDING_TOPICS))
         for q in self.bank['questions']:
             self.assertIn(q['lesson'],lids)
             self.assertIn(q['difficulty'],['Easy','Medium','Hard'])
