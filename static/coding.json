@@ -782,5 +782,222 @@
     "solution": "import math\ndef solve(values, k, r):\n    ordered = sorted(values)\n    n = len(ordered)\n    denominator = math.comb(n, k)\n    first = r - 1\n    last = n - k + r - 1\n    weight = math.comb(n - r, k - r)\n    numerator = 0\n    for i in range(first, last + 1):\n        numerator += ordered[i] * weight\n        if i < last:\n            weight = (weight * (i + 1) * (n - i - 1 - (k - r))\n                      // ((i - r + 2) * (n - i - 1)))\n    return numerator / denominator",
     "explanation": "Break label ties by original card identity to obtain a total order; the returned label does not depend on that tie rule. Position i (zero-based) is the selected r-th card exactly when it is included, r-1 cards are chosen before it, and k-r after it. Its multiplicity is \\(w_i=\\binom{i}{r-1}\\binom{n-i-1}{k-r}\\), divided by \\(\\binom nk\\). Feasible positions run from r-1 through n-k+r-1. Sum label times multiplicity as an integer, then divide once. Consecutive weights satisfy \\(w_{i+1}/w_i=(i+1)(n-i-1-k+r)/[(i-r+2)(n-i-1)]\\); stop before its final zero denominator. This avoids repeated combination calculations and overflow from individually converting enormous weights to floats. Duplicate labels remain distinct cards. Sorting costs O(n log n), followed by \\(O(n)\\) big-integer updates; actual bit-operation cost also depends on the integer sizes. \\(O(n)\\) space for the sorted copy.",
     "lesson": "l03"
+  },
+  {
+    "id": "c_l04_easy",
+    "title": "Read probabilities from a discrete CDF",
+    "difficulty": "Easy",
+    "topic": "Distributions",
+    "path": "shared",
+    "prompt": "distribution is a nonempty list of [value, probability] pairs, with distinct finite numeric values, nonnegative probabilities summing to one, and arbitrary input order. For each value t in thresholds return \\(P(X\\leq t)\\), preserving threshold order. Values and thresholds may be negative; include mass exactly at t. At most 100 support values and 100 thresholds. Return [] for no thresholds. Zero-mass support values are allowed. Do not simulate, round or modify either input. An O(support * thresholds) solution is sufficient.",
+    "starter": "def solve(distribution, thresholds):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              3,
+              0.5
+            ],
+            [
+              -1,
+              0.25
+            ],
+            [
+              0,
+              0.25
+            ]
+          ],
+          [
+            -2,
+            -1,
+            0,
+            2,
+            3
+          ]
+        ],
+        "expected": [
+          0,
+          0.25,
+          0.5,
+          0.5,
+          1
+        ]
+      }
+    ],
+    "solution": "def solve(distribution, thresholds):\n    return [sum(p for value, p in distribution if value <= t)\n            for t in thresholds]",
+    "explanation": "The CDF is the probability of an event, \\(F(t)=P(X\\leq t)\\). Add the masses of precisely the eligible support values. A point mass belongs to the CDF at its own location, so use <= rather than <. No density approximation or independence assumption is involved. Scan all support values for each threshold: O(mq) time, O(q) output space and O(1) additional working space. Sorting is optional at these limits.",
+    "lesson": "l04"
+  },
+  {
+    "id": "c_l04_medium",
+    "title": "The first of unequal discrete clocks",
+    "difficulty": "Medium",
+    "topic": "Distributions",
+    "path": "shared",
+    "prompt": "distributions is a nonempty list of PMFs for independent waiting times. Each PMF is a nonempty list of [time, probability] pairs; its times are distinct finite nonnegative numbers in arbitrary order, and its nonnegative probabilities sum to one. Return the PMF of the minimum waiting time as sorted [time, probability] pairs. Include every time appearing in any input PMF, even when the minimum has zero mass there. Different clocks need not have the same distribution, and ties count once at their common time. At most 30 clocks and 50 support times per clock. Do not enumerate all joint outcomes, simulate, mutate the inputs or round. Aim for O(S log S + mU) time, where S is total support size, m is clock count and U is the number of distinct times.",
+    "starter": "def solve(distributions):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              [
+                1,
+                0.5
+              ],
+              [
+                3,
+                0.5
+              ]
+            ],
+            [
+              [
+                2,
+                0.25
+              ],
+              [
+                3,
+                0.75
+              ]
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            0.5
+          ],
+          [
+            2,
+            0.125
+          ],
+          [
+            3,
+            0.375
+          ]
+        ]
+      }
+    ],
+    "solution": "def solve(distributions):\n    ordered = [sorted(pmf) for pmf in distributions]\n    support = sorted({value for pmf in ordered for value, _ in pmf})\n    positions = [0] * len(ordered)\n    cdfs = [0.0] * len(ordered)\n    previous_survival = 1.0\n    result = []\n    for value in support:\n        survival = 1.0\n        for j, pmf in enumerate(ordered):\n            while positions[j] < len(pmf) and pmf[positions[j]][0] <= value:\n                cdfs[j] += pmf[positions[j]][1]\n                positions[j] += 1\n            tail = max(0.0, 1.0 - cdfs[j])\n            if positions[j] == len(pmf):\n                tail = 0.0\n            survival *= tail\n        result.append([value, max(0.0, previous_survival - survival)])\n        previous_survival = survival\n    return result",
+    "explanation": "For \\(L=\\min_j X_j\\), \\(L>t\\) means every clock exceeds t. Independence gives \\(P(L>t)=\\prod_j(1-F_j(t))\\); identical distributions are unnecessary. Traverse the union of support times. At each time update the clock CDFs, multiply survival probabilities, and subtract the new survival from the previous one to obtain the point mass. All ties are already accounted for by this event identity; adding individual winning-clock probabilities would double-count tied rings. A zero-mass input location remains in the requested output. At the largest support of a clock its tail is exactly zero; clamps remove tiny negative roundoff. Sorting costs O(S log S), the traversal O(S+mU), with O(S+m) working storage and O(U) output storage.",
+    "lesson": "l04"
+  },
+  {
+    "id": "c_l04_hard",
+    "title": "A ranked outcome without identical distributions",
+    "difficulty": "Hard",
+    "topic": "Distributions",
+    "path": "shared",
+    "prompt": "There are m independent real-valued random variables. distributions[j] is variable j's nonempty PMF as [value, probability] pairs, with distinct finite values in arbitrary order and nonnegative probabilities summing to one. The variables need not be identically distributed. rank is an integer from 1 to m. Sort the realised m values, retaining duplicates: the rank-th entry is R. For each t in thresholds return \\(P(R\\leq t)\\) in input threshold order. Ties at t count as <=. Limits: 1 <= m <= 60, at most 30 support values per PMF, at most 40 thresholds. Return [] for no thresholds. Do not simulate, enumerate the Cartesian product, assume a binomial count with a common success probability, mutate inputs or round. Derive a dynamic program for the number of variables at or below a threshold; aim for O(S log S + q*m*(rank + log s_max)) time. Here S is total support size, q is threshold count and s_max is the largest individual support size.",
+    "starter": "def solve(distributions, rank, thresholds):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              [
+                0,
+                0.5
+              ],
+              [
+                2,
+                0.5
+              ]
+            ],
+            [
+              [
+                1,
+                0.25
+              ],
+              [
+                3,
+                0.75
+              ]
+            ],
+            [
+              [
+                1,
+                0.75
+              ],
+              [
+                4,
+                0.25
+              ]
+            ]
+          ],
+          2,
+          [
+            0,
+            1,
+            2,
+            4
+          ]
+        ],
+        "expected": [
+          0,
+          0.5,
+          0.8125,
+          1
+        ]
+      }
+    ],
+    "solution": "from bisect import bisect_right\ndef solve(distributions, rank, thresholds):\n    tables = []\n    for pmf in distributions:\n        ordered = sorted(pmf)\n        values = [value for value, _ in ordered]\n        prefix = [0.0]\n        for _, probability in ordered:\n            prefix.append(prefix[-1] + probability)\n        tables.append((values, prefix))\n    result = []\n    for threshold in thresholds:\n        dp = [0.0] * (rank + 1)\n        dp[0] = 1.0\n        for values, prefix in tables:\n            index = bisect_right(values, threshold)\n            probability = 1.0 if index == len(values) else prefix[index]\n            probability = min(1.0, max(0.0, probability))\n            for count in range(rank, 0, -1):\n                if count == rank:\n                    dp[count] += dp[count - 1] * probability\n                else:\n                    dp[count] = (dp[count] * (1.0 - probability)\n                                 + dp[count - 1] * probability)\n            dp[0] *= 1.0 - probability\n        result.append(dp[rank])\n    return result",
+    "explanation": "The event \\(R\\leq t\\) is equivalent to at least rank of the m realised values being <=t. Variable j contributes an independent indicator with probability \\(p_j=F_j(t)\\). These probabilities can differ, so a common-p binomial formula is generally wrong. Let dp[k] track exactly k successes for k<rank, and dp[rank] track all counts >=rank. Start with dp[0]=1. For each variable, interior masses update as \\(d_k(1-p_j)+d_{k-1}p_j\\). The capped state updates as \\(d_r+d_{r-1}p_j\\): mass already in that state stays there regardless of the next indicator. Update descending so old masses are not reused twice. Sorted PMFs and prefix sums supply each CDF by binary search, including ties. Preprocessing takes O(S log S); each threshold takes O(m(log s_max+rank)), with O(S+rank) working storage. For rank=1 this reduces to one minus the product of survivals; for rank=m it reduces to the product of CDFs.",
+    "lesson": "l04"
+  },
+  {
+    "id": "c_l05_easy",
+    "title": "Finish a sequence of geometric stages",
+    "difficulty": "Easy",
+    "topic": "Stopping times",
+    "path": "shared",
+    "prompt": "success_probabilities describes stages completed in order. At stage j, every fresh independent trial succeeds with probability success_probabilities[j]. A success advances one stage; a failure stays in that stage. Stop on completing every stage. Return the expected total number of trials, including each successful trial. Return None if any required stage has probability zero, and 0 for no stages. The list has at most 100 probabilities, each either zero or in [10^-12,1]. Trials within and between stages are independent with the stated fixed probabilities; there is no reset to stage zero. Do not simulate, round or mutate the list.",
+    "starter": "def solve(success_probabilities):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            1,
+            0.5,
+            0.25
+          ]
+        ],
+        "expected": 7
+      }
+    ],
+    "solution": "def solve(success_probabilities):\n    if any(p == 0 for p in success_probabilities):\n        return None\n    return sum(1.0 / p for p in success_probabilities)",
+    "explanation": "A stage with success probability p>0 has mean 1/p trials by the first-step recurrence, counting success. The total duration is the sum of the stage durations, so linearity gives \\(\\sum_j1/p_j\\). A zero-probability required stage is impossible to finish; None represents an infinite mean without emitting an invalid JSON infinity. Empty input is an already-complete sequence. This differs from consecutive-head search: failures here keep the stage rather than discarding all progress. \\(O(k)\\) time, O(1) working space.",
+    "lesson": "l05"
+  },
+  {
+    "id": "c_l05_hard",
+    "title": "The overlap of an arbitrary coin pattern",
+    "difficulty": "Hard",
+    "topic": "Stopping times",
+    "path": "shared",
+    "prompt": "Flip a coin independently until the first occurrence of pattern as a contiguous block. Return the expected number of flips from no previous history, counting the completing flip. pattern is a nonempty string of H and T, with length k <= 200. Heads has probability heads/total, where heads and total are integers, 2 <= total <= 100 and \\(\\frac{1}{10}\\) <= heads/total <= \\(\\frac{9}{10}\\); these are exact rational probabilities. Tails has the remaining probability. Do not treat sliding windows as independent, return the reciprocal of full-pattern probability without checking overlap, simulate, or round. A border is a nonempty prefix of pattern that is also its suffix; include the full pattern. Derive a state recurrence or an equivalent overlap identity. Aim for \\(O(k)\\) character comparisons by following prefix/suffix failure links: a link replaces a candidate prefix by its longest proper border. Ordinary exact-integer arithmetic and the final float return are allowed; account for integer sizes in your complexity discussion.",
+    "starter": "def solve(pattern, heads, total):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          "HTH",
+          1,
+          2
+        ],
+        "expected": 10
+      },
+      {
+        "args": [
+          "HHT",
+          1,
+          2
+        ],
+        "expected": 8
+      }
+    ],
+    "solution": "import math\ndef solve(pattern, heads, total):\n    k = len(pattern)\n    prefix = [0] * k\n    for i in range(1, k):\n        j = prefix[i - 1]\n        while j and pattern[i] != pattern[j]:\n            j = prefix[j - 1]\n        if pattern[i] == pattern[j]:\n            j += 1\n        prefix[i] = j\n    borders = set()\n    length = k\n    while length:\n        borders.add(length)\n        length = prefix[length - 1]\n    numerator = denominator = 1\n    contributions = []\n    for length, symbol in enumerate(pattern, 1):\n        numerator *= total\n        denominator *= heads if symbol == 'H' else total - heads\n        if length in borders:\n            contributions.append(numerator / denominator)\n    return math.fsum(contributions)",
+    "explanation": "The sufficient state is the longest suffix that is a prefix of the target. Its first-step equations have zero remaining wait at the completed target. An equivalent identity is \\[E[T]=\\sum_{b\\text{ a nonempty border}}\\frac1{P(\\text{first b symbols})}.\\] This includes the full pattern; proper borders account for surviving overlaps. Here is a justification, not a guess from examples. Before each flip, a new bettor starts with one unit and predicts successive symbols of the target, reinvesting all wealth. A correct next-symbol prediction multiplies wealth by the reciprocal of its probability; a wrong prediction loses it. Each bet is fair, so expected total wealth after n flips, stopped at completion if earlier, equals the expected number of entrants. At the first completed target, precisely the border-length bettors survive, with wealth 1/P(prefix). Their total wealth is the displayed sum. Finiteness follows by checking disjoint k-flip blocks: a block equals the target with positive probability, bounding T by k times a geometric duration. Until completion there are at most k active bettors and their wealth is bounded by a fixed sum of reciprocal prefix probabilities. These bounds justify taking the stopped limit, yielding the identity. HTH has borders of lengths 1 and 3 and fair-coin mean 2+8=10; HHT has only length 3 and mean 8. The prefix-function links find all borders with \\(O(k)\\) character comparisons and \\(O(k)\\) storage. Prefix probability numerators and denominators are accumulated as exact integers before division, avoiding repeated floating products. Integer arithmetic is not constant-cost: the intermediates have O(k log total) bits. math.fsum combines the positive float contributions accurately; the probability and length bounds keep the answer finite.",
+    "lesson": "l05"
   }
 ]

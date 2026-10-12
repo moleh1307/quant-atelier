@@ -1579,6 +1579,159 @@
         "Use crossing indicators and linearity to obtain 15.",
         "Distinguish crossing pairs from geometric intersection locations and avoid an independence claim."
       ]
+    },
+    {
+      "id": "q_l04_e1",
+      "title": "A density of one and a half",
+      "topic": "Distributions",
+      "difficulty": "Easy",
+      "path": "shared",
+      "minutes": 4,
+      "prompt": "A continuous random variable X has density \\(f(x)=2x\\) for \\(0<x<1\\), and density zero elsewhere. What is \\(P(X>3/4)\\)? A colleague reports \\(f(3/4)=3/2\\) as the probability of observing \\(\\frac{3}{4}\\). Explain what is wrong with that interpretation.",
+      "answer": 0.4375,
+      "hints": [
+        "An interval receives the area under the density, not its height.",
+        "Find the CDF by integrating from the lower support boundary."
+      ],
+      "solution": "The total area is \\(\\int_0^1 2x\\,dx=1\\), so this is a valid density even though some heights exceed one. On the support, \\(F(x)=x^2\\). Hence \\(P(X>3/4)=1-(3/4)^2=7/16\\). An individual point has probability zero in this continuous model. The height \\(\\frac{3}{2}\\) describes probability per unit of x near \\(\\frac{3}{4}\\): for a small positive interval width h, \\(P(3/4<X\\leq3/4+h)=3h/2+h^2\\), provided the interval stays inside the support.",
+      "followup": "If Y=100X is a percentage-scale measurement, does its density still reach two?",
+      "followSolution": "No. The support becomes \\((0,100)\\), the CDF is \\(F_Y(y)=(y/100)^2\\), and the density is \\(f_Y(y)=y/5000\\). Its maximum limiting height is 0.02. The event Y>75 still has probability \\(\\frac{7}{16}\\). Density heights depend on the measurement units; event probabilities do not.",
+      "lesson": "l04",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Integrate over (\\(\\frac{3}{4}\\),1) or use the CDF to obtain \\(\\frac{7}{16}\\).",
+        "Distinguish a zero-probability point from density per unit of x.",
+        "Check the support and total density area."
+      ]
+    },
+    {
+      "id": "q_l04_h1",
+      "title": "A quiet race reveals its hidden regime",
+      "topic": "Distributions",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 18,
+      "prompt": "A regime A or B is chosen once, each with probability \\(\\frac{1}{2}\\). Given A, X and Y are independent exponential waiting times with rates 4 and 1 per minute. Given B, they are independent exponential waiting times with rates 1 and 1 per minute. The regime remains fixed for the entire race. Let \\(W=\\min(X,Y)\\). You learn that neither clock has rung by \\(s=\\log 2\\) minutes, where log is natural. What is the probability that X eventually rings first? Derive how this observation changes the regime weights; do not average the rates first.",
+      "answer": 0.5333333333333333,
+      "hints": [
+        "Within each regime, the probability of surviving to s is the product of the two clock survival probabilities.",
+        "Condition on the quiet race before mixing the within-regime winner probabilities.",
+        "Memorylessness applies within a fixed regime; uncertainty about that regime can still change."
+      ],
+      "solution": "Within A, \\(P(W>s\\mid A)=e^{-5s}=1/32\\); within B it is \\(e^{-2s}=1/4\\). Including the equal prior weights and normalising gives \\(P(A\\mid W>s)=1/9\\), and B has posterior weight \\(\\frac{8}{9}\\). Given the regime and survival, exponential memorylessness leaves the rates unchanged. X therefore wins with probability \\(\\frac{4}{5}\\) under A and \\(\\frac{1}{2}\\) under B. Mixing with the updated weights gives \\[P(X<Y\\mid W>s)=\\frac19\\frac45+\\frac89\\frac12=\\frac8{15}.\\] The unconditional winner probability was \\(\\frac{13}{20}\\). A quiet race favours the slower regime and lowers the winner advantage. Conditional independence of the clocks within regimes does not justify multiplying their marginal survival functions after hiding a common regime.",
+      "followup": "Instead you learn that the first ring occurred in \\([s,s+h]\\), without being told the winner. What is the limiting probability that X was the winner as \\(h\\downarrow0\\), at the same s=log 2? Why is this different from survival past s?",
+      "followSolution": "The first-ring densities at s are \\(5e^{-5s}\\) under A and \\(2e^{-2s}\\) under B. Bayes weights these densities, not survival probabilities. At s=log 2 the posterior A weight is \\((5/32)/(5/32+1/2)=5/21\\). Within either fixed regime, winner and first-ring time are independent, since the winner-specific joint density is its rate fraction times the first-ring density. The limiting winner probability is \\((5/21)(4/5)+(16/21)(1/2)=4/7\\). The small-interval limit defines the conditioning rigorously; an exact continuous time is a zero-probability event. Observing a ring around s and observing no ring before s have different likelihoods.",
+      "lesson": "l04",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Compute the regime-specific survival likelihoods \\(\\frac{1}{32}\\) and \\(\\frac{1}{4}\\).",
+        "Update the A/B weights to \\(\\frac{1}{9}\\) and \\(\\frac{8}{9}\\) before using memorylessness.",
+        "Mix winner probabilities to obtain \\(\\frac{8}{15}\\) and explain why marginal rate averaging fails."
+      ]
+    },
+    {
+      "id": "q_l05_e1",
+      "title": "Does the successful trial count?",
+      "topic": "Stopping times",
+      "difficulty": "Easy",
+      "path": "shared",
+      "minutes": 4,
+      "prompt": "Independent trials succeed with probability \\(\\frac{1}{5}\\) each. T is the number of trials up to and including the first success. What is \\(E[T]\\)? Explain the first-step equation, then state the expected number of failed trials before that success.",
+      "answer": 5,
+      "hints": [
+        "The next trial always costs one trial, even if it succeeds.",
+        "After a failure the future is a fresh copy of the same experiment."
+      ],
+      "solution": "Let e be the expected additional number of trials before success. The next trial costs one; success leaves zero additional trials, while failure returns to the same state. Thus \\(e=1+(4/5)e\\), so e=5. The successful trial is included. The failure count is T-1 and has mean 4. Finiteness follows from \\(P(T>n)=(4/5)^n\\), whose sum over n>=0 is finite. Confusing trials with failures shifts the mean by one.",
+      "followup": "Each failed trial takes one second and the successful trial takes three seconds. What is the expected total time, and why is five times three the wrong calculation?",
+      "followSolution": "The total time is (T-1)+3=T+2 seconds, so its mean is seven seconds. Only one trial is successful; charging all five expected trials the success duration would give the wrong fifteen seconds. The random trial count and the cost attached to each outcome are different parts of the model.",
+      "lesson": "l05",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Include the successful trial and derive e=1+(\\(\\frac{4}{5}\\))e.",
+        "Obtain five trials and distinguish four failures.",
+        "Justify finite expectation by the geometric survival tail."
+      ]
+    },
+    {
+      "id": "q_l05_e2",
+      "title": "Probability is not elapsed time",
+      "topic": "Stopping times",
+      "difficulty": "Easy",
+      "path": "shared",
+      "minutes": 5,
+      "prompt": "A fair random walk starts at integer position 2. Each independent step moves left or right by one with probability \\(\\frac{1}{2}\\). Stop when position 0 or 5 is reached. What is the probability of reaching 5 first? Define the state-dependent quantity and its boundary values; do not use the expected-duration formula as a probability.",
+      "answer": 0.4,
+      "hints": [
+        "Use h_i for the probability of hitting 5 first, starting at i.",
+        "The terminal values are h_0=0 and h_5=1; there is no one-step time charge."
+      ],
+      "solution": "The hit probability satisfies \\(h_i=(h_{i-1}+h_{i+1})/2\\), because the next step selects one of those positions. The second difference is zero, so h_i is linear in i. The boundary values h_0=0 and h_5=1 give \\(h_i=i/5\\), hence \\(h_2=2/5\\). In contrast, the expected duration satisfies \\(t_i=1+(t_{i-1}+t_{i+1})/2\\), with both terminal durations zero; t_2=2*(5-2)=6 steps. Different objectives require different boundary values and immediate costs.",
+      "followup": "If you already took seven steps and are currently at position 2 without absorption, does the future hit probability change?",
+      "followSolution": "No, under this independent fair-step model the present position is sufficient for the future hitting event. The remaining hit probability is still \\(\\frac{2}{5}\\). Elapsed time affects the total duration already paid, but not these transition probabilities. A model in which step probabilities depend on time would require a larger state.",
+      "lesson": "l05",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Set h_0=0 and h_5=1 and omit a duration cost.",
+        "Solve the linear recurrence to obtain h_2=\\(\\frac{2}{5}\\).",
+        "Explain why current position is a sufficient state here."
+      ]
+    },
+    {
+      "id": "q_l05_h1",
+      "title": "Collecting symbols of unequal frequency",
+      "topic": "Stopping times",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 17,
+      "prompt": "Each independent draw returns A, B or C with probabilities \\(\\frac{1}{2}\\), \\(\\frac{1}{3}\\) and \\(\\frac{1}{6}\\) respectively. Stop as soon as all three have appeared. Starting with none seen, what is the expected number of draws, including the completing draw? Derive the answer and explain why simply tracking how many symbols have been seen loses information.",
+      "answer": 7.3,
+      "hints": [
+        "T>n means at least one of the three symbols is missing after n draws.",
+        "Use inclusion–exclusion for missing-symbol events, then the nonnegative-integer tail identity E[T]=sum_{n>=0} P(T>n).",
+        "Missing two particular symbols means every draw avoids their combined probability mass."
+      ],
+      "solution": "For n>=0, let M_A, M_B and M_C be the events that the named symbol is still missing. If symbol i has probability p_i, then \\(P(M_i)=(1-p_i)^n\\), and \\(P(M_i\\cap M_j)=(1-p_i-p_j)^n\\). All three are missing only at n=0. Inclusion–exclusion and the tail identity therefore give \\[E[T]=\\sum_i\\frac1{p_i}-\\sum_{i<j}\\frac1{p_i+p_j}+\\frac1{p_A+p_B+p_C}.\\] In this case it is \\(2+3+6-6/5-3/2-2+1=73/10\\). The final +1 includes the empty draw history; without it the mean would be off by one. A finite-mean bound is supplied by the sum of the three individual first-arrival times, whose means sum to eleven. After seeing only A, the chance of something new is \\(\\frac{1}{2}\\); after seeing only C it is \\(\\frac{5}{6}\\). Thus the count alone is not sufficient. The individual first-arrival times are dependent, so a product of their CDFs is not justified.",
+      "followup": "For m symbols with positive probabilities summing to one, write a general expression. What fails if a required symbol has probability zero?",
+      "followSolution": "For every nonempty subset S of symbols, let \\(p(S)=\\sum_{i\\in S}p_i\\). Inclusion–exclusion gives \\(E[T]=\\sum_{S\\ne\\varnothing}(-1)^{|S|+1}/p(S)\\). The required zero-probability symbol would never appear, so the collection time is infinite almost surely; expressions with \\(\\frac{1}{0}\\) are not finite expectation calculations. The subset formula has exponentially many terms and may suffer numerical cancellation; it is a derivation, not automatically an efficient or stable implementation for large m.",
+      "lesson": "l05",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Form the union of missing-symbol events with correct pair intersections.",
+        "Sum the geometric tails, including n=0, to obtain \\(\\frac{73}{10}\\).",
+        "Give a finite-mean bound and distinguish seen-set state from seen-count state."
+      ]
+    },
+    {
+      "id": "q_l05_h2",
+      "title": "Termination does not imply a finite mean",
+      "topic": "Stopping times",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 20,
+      "prompt": "A fair random walk starts at position 1 on the nonnegative integers. Each independent step moves one unit left or right until it first hits 0, when it stops. There is no upper boundary. Prove that it stops with probability one, yet its expected number of steps is infinite. You may use the bounded-walk results: from integer i strictly between 0 and N, \\(P(\\text{hit N first})=i/N\\) and the mean time to hit either boundary is \\(i(N-i)\\). Explain why a finite first-step equation alone cannot settle the unbounded problem.",
+      "answer": null,
+      "hints": [
+        "Introduce an artificial upper boundary N, without changing the original walk.",
+        "Hitting 0 before N implies the original walk eventually hits 0.",
+        "The original stopping time is at least the time to hit {0,N}, for every N."
+      ],
+      "solution": "For any integer N>1, stop the same path at its first visit to 0 or N, at time \\(\\tau_N\\). It hits 0 first with probability \\(1-1/N\\), so \\(P(T<\\infty)\\geq1-1/N\\). Letting N grow proves almost-sure termination. Pathwise \\(T\\geq\\tau_N\\); the artificial upper boundary can only shorten the wait. The bounded result gives \\(E[\\tau_N]=N-1\\). Consequently \\(E[T]\\geq N-1\\) for every N, forcing infinite mean. Eventual absorption and integrable duration are different statements. Writing \\(e_i=1+(e_{i-1}+e_{i+1})/2\\) presupposes finite quantities if used in ordinary algebra. Its real-valued formal solutions \\(e_i=-i^2+bi\\), with e_0=0, become negative for sufficiently large i and cannot represent nonnegative finite expected durations on this half-line. A finite answer from local algebra must satisfy the global state space and expectation conditions.",
+      "followup": "Now move right with probability \\(\\frac{2}{5}\\) and left with probability \\(\\frac{3}{5}\\). From position 1, derive the expected time to 0 and justify finiteness before passing to an unbounded stopping time.",
+      "followSolution": "At the bounded time \\(T\\wedge n\\), the stopped position is nonnegative and has expectation \\(1-(1/5)E[T\\wedge n]\\): each live step has mean increment -\\(\\frac{1}{5}\\). Thus \\(E[T\\wedge n]\\leq5\\). Monotone convergence proves E[T]<=5, hence T is integrable and finite almost surely. Bounded increments and integrable T justify the expected-increment identity at T (the sum of expected absolute increments is finite). At absorption the position is zero, so \\(0=1-(1/5)E[T]\\) and E[T]=5. Negative drift changes the integrability condition; it is not merely a different constant in an unchecked formal equation.",
+      "lesson": "l05",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Use bounded barriers to prove the hitting probability tends to one.",
+        "Compare the stopping time pathwise to each bounded hitting time, giving a mean lower bound of N−1 for every N.",
+        "Identify the finiteness/global-boundary failure in formal recurrence algebra."
+      ]
     }
   ],
   "lessons": [
@@ -1855,16 +2008,22 @@
         "q08",
         "q14",
         "q15",
-        "q16"
+        "q16",
+        "q_l04_e1",
+        "q_l04_h1"
       ],
-      "coding": [],
+      "coding": [
+        "c_l04_easy",
+        "c_l04_medium",
+        "c_l04_hard"
+      ],
       "objectives": [
         "Distinguish probability mass, density, CDF and survival.",
         "Derive the extremes of independent uniform draws.",
         "Explain exponential memorylessness and competing clocks."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "5",
         "2",
@@ -1923,10 +2082,16 @@
         "q09",
         "q10",
         "q11",
-        "q12"
+        "q12",
+        "q_l05_e1",
+        "q_l05_e2",
+        "q_l05_h1",
+        "q_l05_h2"
       ],
       "coding": [
-        "c03"
+        "c_l05_easy",
+        "c03",
+        "c_l05_hard"
       ],
       "objectives": [
         "Define states, terminal conditions and first-step recurrences.",
@@ -1934,7 +2099,7 @@
         "Check finite expectation and solve a bounded random walk."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "2",
         "4",
