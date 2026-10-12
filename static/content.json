@@ -448,9 +448,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Derive the covariance-pair count and the fixed-rho asymptotic variance factor.",
+        "Report \\(\\frac{100}{9}\\) for the requested asymptotic mean-estimation comparison.",
+        "Give the finite-sample taper and explain its limits near a unit root."
       ]
     },
     {
@@ -775,9 +775,9 @@
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Define the summed excess-return object, its mean and all covariance terms.",
+        "Derive square-root scaling under vanishing nonzero-lag covariances and explain the dependent denominator.",
+        "Distinguish summing from compounding and investigate smoothing, marks and costs before interpreting Sharpe."
       ]
     },
     {
@@ -2712,6 +2712,164 @@
         "Separate unconditional coverage, conditional selected-sample coverage and a posterior interpretation.",
         "Justify independent replication and the truncated-CDF confidence-set inversion with its conditional uniform pivot."
       ]
+    },
+    {
+      "id": "q_l13_e1",
+      "title": "Three observations, counted covariance pairs",
+      "topic": "Time series",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 7,
+      "prompt": "A stationary AR(1) process has constant mean µ, marginal variance 4 and autoregressive coefficient \\(\\rho\\)=\\(\\frac{1}{2}\\). Innovations are iid, centered, independent of the past and have variance 3, so these marginal assumptions are consistent. You observe THREE consecutive values and estimate µ by their arithmetic mean. What is the EXACT variance of this estimate? Count pairs at each separation; do not use a large-sample effective-size formula.",
+      "answer": 2.4444444444444446,
+      "hints": [
+        "Lag-one covariance is 2; lag-two covariance is 1.",
+        "There are two unordered lag-one pairs and one lag-two pair. Each appears twice in the variance of the sum."
+      ],
+      "solution": "The sum variance is 3·4+2(2·2+1·1)=22. Dividing by \\(3^2\\) gives \\(\\frac{22}{9}\\). The iid shortcut gives \\(\\frac{4}{3}\\) and misses the covariance pairs. The exact variance factor is (\\(\\frac{22}{9}\\))/(\\(\\frac{4}{3}\\))=\\(\\frac{11}{6}\\); its standard-error factor is √(\\(\\frac{11}{6}\\)), not \\(\\frac{11}{6}\\). Equating mean-estimation variance to 4/\\(n_{\\mathrm{eff}}\\) gives \\(n_{\\mathrm{eff}}\\)=\\(\\frac{18}{11}\\). The asymptotic AR factor three would instead give \\(n_{\\mathrm{eff}}\\)=1; that is not the requested finite calculation.",
+      "followup": "Change ONLY \\(\\rho\\) to −\\(\\frac{1}{2}\\), retaining stationary marginal variance 4 and innovation variance 3. What changes? Can this target-specific effective count exceed three?",
+      "followSolution": "Lag-one covariance becomes −2 while lag-two remains +1. Sum variance is 12+2(−4+1)=6, hence mean variance \\(\\frac{2}{3}\\). The effective count is 4/(\\(\\frac{2}{3}\\))=6, exceeding three because adjacent noise partly cancels. This is a variance comparison for the mean, not six observed independent rows. Negative lag-one correlation does not make every later covariance negative.",
+      "lesson": "l13",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Count both separations and both covariance orientations.",
+        "Obtain exact mean variance \\(\\frac{22}{9}\\) and distinguish variance from standard-error inflation.",
+        "Keep the positive lag-two term under negative rho and interpret effective count six."
+      ]
+    },
+    {
+      "id": "q_l13_e2",
+      "title": "Forecast error accumulates future innovations",
+      "topic": "Time series",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 7,
+      "prompt": "A stationary process satisfies Xₜ−2=(\\(\\frac{1}{2}\\))(Xₜ₋₁−2)+εₜ. Its iid innovations have mean zero and variance 3 and are independent of the past. All parameters are known, and Xₜ=10 is observed exactly. Forecast Xₜ₊₂ using the information through t. What is the conditional mean-squared error of the optimal conditional-mean forecast? Do not confuse it with variance of a sample mean or impose Gaussian innovations.",
+      "answer": 3.75,
+      "hints": [
+        "Iterate the recurrence twice before separating known and unknown terms.",
+        "Future innovations are independent, so add their weighted variances."
+      ],
+      "solution": "Two steps give Xₜ₊₂=2+(\\(\\frac{1}{4}\\))(Xₜ−2)+(\\(\\frac{1}{2}\\))εₜ₊₁+εₜ₊₂. The conditional mean is 4 and the forecast error is (\\(\\frac{1}{2}\\))εₜ₊₁+εₜ₊₂. Its conditional variance and mean-squared error are 3(\\(\\frac{1}{4}\\)+1)=\\(\\frac{15}{4}\\). A zero-mean independent innovation assumption justifies this conditional mean without normality. The stationary marginal variance is 3/(1−\\(\\frac{1}{4}\\))=4, slightly larger than this finite-horizon uncertainty.",
+      "followup": "Derive the h-step forecast and error variance for h≥1. Are the one-step and two-step forecast errors independent? Can this variance alone justify an exact Gaussian prediction interval?",
+      "followSolution": "The forecast is 2+(\\(\\frac{1}{2}\\))^h(Xₜ−2), and its error variance is 3\\(\\Sigma\\)_{j=0}^{h−1}(\\(\\frac{1}{4}\\))^j=4(1−4^(−h)), approaching four. The one-step error εₜ₊₁ and two-step error share that innovation; their covariance is \\(\\frac{3}{2}\\), so they are not independent. Finite variance alone does not specify their distribution or justify exact normal quantiles. A Gaussian innovation assumption would make these weighted errors jointly Gaussian.",
+      "lesson": "l13",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Iterate the model and identify forecast four and the future-innovation error.",
+        "Add independent weighted innovation variances to obtain \\(\\frac{15}{4}\\).",
+        "Derive horizon dependence, shared-error covariance and the distributional limit of a variance-only statement."
+      ]
+    },
+    {
+      "id": "q_l13_m1",
+      "title": "White returns can hide dependent risk",
+      "topic": "Time series",
+      "difficulty": "Medium",
+      "path": "researcher",
+      "minutes": 18,
+      "prompt": "Let εₜ be iid standard Gaussian over all integer times and Xₜ=εₜεₜ₋₁. You may use E[ε²]=1 and E[ε⁴]=3. Show that X has mean zero, variance one and ZERO autocovariance at every nonzero lag, yet adjacent X values are dependent. Then derive the EXACT variance of n⁻¹\\(\\Sigma\\)_{t=1}^n Xₜ² for n≥1. Is the iid shortcut for that risk estimator valid?",
+      "answer": null,
+      "hints": [
+        "The lag-one product contains two independent factors with mean zero.",
+        "For dependence, compare E[Xₜ²Xₜ₊₁²] with E[Xₜ²]E[Xₜ₊₁²].",
+        "Squared values have variance eight; only adjacent squared values share an innovation."
+      ],
+      "solution": "E[Xₜ]=0 and E[Xₜ²]=1. At lag one, E[εₜ₋₁εₜ²εₜ₊₁]=0; at larger lags the innovation sets are disjoint, so covariance is again zero. But E[Xₜ²Xₜ₊₁²]=1·3·1=3, whereas the product of the second moments is one. This proves dependence. For Yₜ=Xₜ², \\(\\mathbb E[Y]\\)=1, E[Y²]=\\(3^2\\)=9 and Var(Y)=8. Its lag-one covariance is 3−1=2; further lags vanish by independence. Therefore\n\n\\[\\operatorname{Var}(\\bar Y_n)=\\frac{8n+4(n-1)}{n^2}=\\frac{12n-4}{n^2}.\\]\n\nThe iid risk shortcut 8/n understates uncertainty for n>1 even though ordinary X autocorrelations vanish. Second-order whiteness of returns does not imply independence or second-order whiteness of a nonlinear target.",
+      "followup": "Compare exact mean-estimation effective counts for X and Y using EACH target’s own marginal variance. Does an iid-looking variance for the X mean imply iid data?",
+      "followSolution": "The X mean has variance 1/n, so its variance-comparison effective count is exactly n. For Y, it is 8n²/(12n−4)=2n²/(3\\(n-1\\)), approaching 2n/3. The reference marginal variance changed from one to eight with the target. The X mean variance identity is exact, but it does not establish an iid sampling distribution, independence, or a Gaussian interval. Effective size belongs to the estimator and assumptions.",
+      "lesson": "l13",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Compute vanishing return autocovariances without claiming independence.",
+        "Prove dependence through the shared fourth moment.",
+        "Derive squared-return marginal variance eight, lag-one covariance two and finite tapered mean variance.",
+        "Compare target-specific effective counts and avoid an iid-distribution claim."
+      ]
+    },
+    {
+      "id": "q_l13_m2",
+      "title": "Overlapping labels manufacture autocorrelation",
+      "topic": "Time series",
+      "difficulty": "Medium",
+      "path": "researcher",
+      "minutes": 20,
+      "prompt": "One-period returns rₜ are iid with mean µ and positive variance \\(\\sigma^2\\). Define k-period SUM labels Yₜ=\\(\\Sigma\\)_{j=0}^{k−1}rₜ₊ⱼ for a fixed positive integer k. Observe Y₁,…,Yₙ, with n≥k, and estimate the one-period mean by \\(\\hat\\mu\\)=(nk)⁻¹\\(\\Sigma\\)Yₜ. Derive the label autocovariances and EXACT variance of \\(\\hat\\mu\\). Explain why treating the n labels as independent fails even when the underlying returns are iid. These are sums, not compounded returns.",
+      "answer": null,
+      "hints": [
+        "Covariance comes only from underlying returns shared by two labels.",
+        "At lag h<k, exactly k−h returns overlap.",
+        "Use the finite pair count n−h, then divide by (nk)²."
+      ],
+      "solution": "\\(\\mathbb E[Y]\\)=kµ and \\(\\gamma_0\\)=\\(k\\sigma^2\\). For 1≤h<k, the shared returns give \\(\\gamma_h\\)=(k−h)\\(\\sigma^2\\); at h≥k the blocks are disjoint and independent. Thus\n\n\\[\\operatorname{Var}\\!\\left(\\sum_{t=1}^nY_t\\right)=\\sigma^2\\left[nk+2\\sum_{h=1}^{k-1}(n-h)(k-h)\\right]=\\sigma^2\\left[nk^2-\\frac{k(k^2-1)}3\\right].\\]\n\nDividing by n²k² gives Var(\\(\\hat\\mu\\))=\\(\\sigma^2\\)[1/n−(k²−1)/(3n²k)]. The independent-label shortcut \\(\\sigma^2\\)/(nk) omits the reused observations. For fixed k and large n the actual variance is approximately \\(\\frac{\\sigma^2}{n}\\), about k times the shortcut. This persistence arises from label construction, not necessarily an economically predictable daily-return process. The n≥k condition matters for the displayed polynomial; shorter samples require truncating at min(\\(n-1\\),k−1).",
+      "followup": "Use only labels starting at 1,1+k,1+2k,… within 1…n. What variance results? If all n+k−1 underlying returns are available, can their direct mean improve on the overlapping-label estimator?",
+      "followSolution": "There are m=1+floor((\\(n-1\\))/k) disjoint labels. Their mean divided by k has variance \\(\\sigma^2\\)/(mk). The direct mean of all n+k−1 iid underlying returns has variance \\(\\sigma^2\\)/(n+k−1). The overlapping estimator instead gives each underlying return a weight proportional to its multiplicity: smaller near the endpoints, larger inside. All weights sum to one, so Cauchy–Schwarz gives \\(\\Sigma\\)w²≥1/(n+k−1). Thus the direct equal-weight mean has no larger variance, with equality precisely when these multiplicities are uniform (including k=1). For n≥k>1 they are unequal. Overlapping labels create repeated use, not extra independent information.",
+      "lesson": "l13",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Count shared underlying returns and derive the finite label autocovariances.",
+        "Retain the lag taper, the n≥k condition and the exact one-period-mean variance.",
+        "Distinguish construction-induced dependence from predictable daily returns.",
+        "Derive disjoint-label variance and justify the direct-mean comparison with weights."
+      ]
+    },
+    {
+      "id": "q_l13_h1",
+      "title": "The arithmetic mean need not be the best mean estimate",
+      "topic": "Time series",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 30,
+      "prompt": "Observe \\(n\\geq2\\) consecutive values of a weakly stationary process with unknown constant mean µ and KNOWN covariance \\(\\Sigma_{ij}=\\gamma_0\\rho^{|i-j|}\\), where \\(\\gamma_0\\)>0 and −1<\\(\\rho\\)<1. Among estimators \\(\\hat\\mu\\)=\\(\\Sigma\\)wᵢXᵢ with deterministic weights summing to one, derive the unique minimum-variance weights and variance. Give explicit endpoint and interior weights, rather than only citing a generalized least-squares formula. Justify the covariance inverse or verify the vector it needs. Gaussianity is NOT assumed.",
+      "answer": null,
+      "hints": [
+        "Minimize \\(w^{\\mathsf T}\\Sigma w\\) with the sum constraint, or separate any weights from a proposed optimum.",
+        "The inverse AR correlation matrix is tridiagonal: endpoint diagonals one, interior diagonals 1+\\(\\rho\\)², off-diagonals −\\(\\rho\\), all divided by 1−\\(\\rho\\)².",
+        "Apply this matrix to the all-ones vector and normalize its sum."
+      ],
+      "solution": "Let \\(R_{ij}=\\rho^{|i-j|}\\) and let B be the stated tridiagonal matrix before division by 1−\\(\\rho\\)². Multiplying a row of B by column j of R cancels the geometric terms off the diagonal; its diagonal is 1−\\(\\rho\\)². Hence R⁻¹=B/(1−\\(\\rho\\)²). It is positive definite: \\(x^\\top Bx=(1-\\rho^2)x_1^2+\\sum_{i=2}^n(x_i-\\rho x_{i-1})^2>0\\) for x≠0. Its row sums divided by 1−\\(\\rho\\)² are 1/(1+\\(\\rho\\)) at both endpoints and (1−\\(\\rho\\))/(1+\\(\\rho\\)) inside. Write D=n−(n−2)\\(\\rho\\)=2+(n−2)(1−\\(\\rho\\)). Then\n\n\\[w_1=w_n=\\frac1D,\\qquad w_i=\\frac{1-\\rho}D\\ (2\\leq i\\leq n-1),\\qquad\\operatorname{Var}(\\hat\\mu)=\\frac{\\gamma_0(1+\\rho)}D.\\]\n\nThe weights sum to one and are positive. For \\(w^*=\\Sigma^{-1}\\mathbf1/(\\mathbf1^\\top\\Sigma^{-1}\\mathbf1)\\), \\(\\Sigma w^*\\) is a constant times 1. Any other unbiased weights w*+v have \\(\\mathbf1^\\top v=0\\); the cross term vanishes and their variance is \\(\\operatorname{Var}(\\hat\\mu_{w^*})+v^\\top\\Sigma v\\), strictly larger unless v=0. This proves uniqueness among deterministic linear unbiased estimates without normality. For n=2 both weights are one half; for n>2 positive correlation gives endpoints more weight than interior observations.",
+      "followup": "Compare n=3, \\(\\rho\\)=\\(\\frac{1}{2}\\), \\(\\gamma_0\\)=4 with the arithmetic mean. Then someone estimates weights from the same sample and claims that weights summing to one still guarantee unbiasedness. Give an explicit counterexample under iid N(µ,1) data.",
+      "followSolution": "Here D=\\(\\frac{5}{2}\\); weights are (\\(\\frac{2}{5}\\),\\(\\frac{1}{5}\\),\\(\\frac{2}{5}\\)) and variance is \\(\\frac{12}{5}\\), below arithmetic variance \\(\\frac{22}{9}\\). The gain concerns mean estimation with known covariance; it is not a universal sampling policy. For random same-sample weights, \\(\\Sigma\\)wᵢ=1 only gives \\(\\hat\\mu\\)=µ+\\(\\Sigma\\)wᵢ(Xᵢ−µ); the last term need not have mean zero. With three iid Gaussian observations, choose weights (1,0,0) if X₁≥X₃ and (0,0,1) otherwise. The estimate is max(X₁,X₃)= (X₁+X₃+|X₁−X₃|)/2 and has mean µ+1/√π, because X₁−X₃∼N(0,2). The sum constraint alone therefore does not preserve unbiasedness after data-dependent selection.",
+      "lesson": "l13",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Establish positive definiteness and verify the needed inverse or precision-vector identity.",
+        "Derive explicit normalized endpoint/interior weights and their variance.",
+        "Prove optimality and uniqueness in the deterministic linear unbiased class.",
+        "Compare the finite example and demonstrate same-sample random-weight bias."
+      ]
+    },
+    {
+      "id": "q_l13_h2",
+      "title": "A limit that holds rho fixed can fail",
+      "topic": "Time series",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 35,
+      "prompt": "For EACH n, take a stationary Gaussian AR(1) sample of n observations with common mean µ, marginal variance \\(\\gamma_0\\)>0 FIXED across n, and \\(\\rho_n=e^{-c/n}\\) for fixed c>0. Its innovation variance is \\(\\gamma_0(1-\\rho_n^2)\\), and its initial distribution is stationary. Derive the limit of \\(\\operatorname{Var}(\\bar X_n)/\\gamma_0\\) and of the exact mean-estimation effective count \\(\\gamma_0/\\operatorname{Var}(\\bar X_n)\\). Compare with substituting \\(\\rho_n\\) into the usual fixed-\\(\\rho\\) asymptotic count \\(\\frac{n(1-\\rho)}{1+\\rho}\\). Is \\(\\bar X_n\\) a consistent estimator here? State which assumptions differ from a single fixed-\\(\\rho\\) model.",
+      "answer": null,
+      "hints": [
+        "Start with n⁻²\\(\\Sigma\\)ᵢ\\(\\Sigma\\)ⱼ exp(−c|i−j|/n), not an infinite-lag shortcut.",
+        "Treat the double sum as a Riemann integral on the unit square.",
+        "The integral equals 2∫₀¹(1−u)exp(−cu)du."
+      ],
+      "solution": "The sample changes its persistence with n while retaining its marginal noise scale. The continuous kernel gives the Riemann-sum limit\n\n\\[\\begin{aligned}g(c)&=\\int_0^1\\!\\int_0^1 e^{-c|s-t|}\\,ds\\,dt\\\\&=2\\int_0^1(1-u)e^{-cu}\\,du\\\\&=\\frac{2(c-1+e^{-c})}{c^2}>0.\\end{aligned}\\]\n\nThus \\(\\operatorname{Var}(\\bar X_n)\\)→\\(\\gamma_0\\)g(c) and \\(n_{\\mathrm{eff}}\\)→1/g(c), a finite number. In contrast, the substituted fixed-\\(\\rho\\) formula tends to c/2 and is not valid uniformly in this changing model. At c=1 the exact limit is e/2≈1.359, whereas that shortcut is \\(\\frac{1}{2}\\). As c→0, g(c)→1 and the true count tends to one; it does not tend to zero. Each centered sample mean is Gaussian, so its positive limiting variance implies nonvanishing probabilities of fixed estimation errors, not consistency. Variance alone would not establish this probability conclusion for arbitrary non-Gaussian triangular arrays; Gaussianity supplies it here. Absolute lag summability for each n does not supply a uniform fixed-model limit.",
+      "followup": "Keep \\(\\rho_n\\) and innovation variance \\(\\gamma_0(1-\\rho_n^2)\\), but initialize X₀=µ deterministically instead of stationarily. Derive the changed covariance kernel and mean-variance limit. Separately, what if stationary initialization is retained but innovation variance τ²>0 is fixed across n?",
+      "followSolution": "For deterministic initialization, \\(X_i-\\mu=\\sum_{j=1}^i\\rho_n^{i-j}\\epsilon_j\\). Summing shared innovation covariances gives \\(\\gamma_0(\\rho_n^{|i-j|}-\\rho_n^{i+j})\\); it is no longer weakly stationary. The mean-variance ratio tends to\n\n\\[g(c)-\\left(\\frac{1-e^{-c}}c\\right)^2.\\]\n\nThis subtracts the random stationary initial component that the deterministic experiment removed. Its c→0 limit is zero, contrasting with g(c)→1; using the stationary formula for a zero-start simulation changes the experiment. This ratio is to the original stationary scale \\(\\gamma_0\\), not a common marginal variance in the nonstationary sample. If instead τ² is fixed with stationary initialization, the marginal variance \\(\\gamma_{0,n}=\\tau^2/(1-\\rho_n^2)\\) grows like τ²n/(2c). Consequently \\(\\operatorname{Var}(\\bar X_n)\\) grows like \\(\\tau^2 n(c-1+e^{-c})/c^3\\). Specify the initialization and which variance scale is fixed before interpreting persistence.",
+      "lesson": "l13",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive the finite covariance Riemann sum and positive limiting function g(c).",
+        "Compare exact and incorrectly substituted effective counts, including c=1 and small-c behavior.",
+        "Use the Gaussian sampling law to justify nonconsistency, rather than a variance-only assertion.",
+        "Derive both changed initialization and fixed-innovation limits with their variance scales."
+      ]
     }
   ],
   "lessons": [
@@ -3741,10 +3899,18 @@
       "explanation": "Positive covariance increases the variance of the mean.",
       "questions": [
         "q18",
-        "q31"
+        "q31",
+        "q_l13_e1",
+        "q_l13_e2",
+        "q_l13_m1",
+        "q_l13_m2",
+        "q_l13_h1",
+        "q_l13_h2"
       ],
       "coding": [
-        "c08"
+        "c_l13_easy",
+        "c08",
+        "c_l13_hard"
       ],
       "objectives": [
         "Define weak stationarity, autocovariance and autocorrelation.",
@@ -3752,7 +3918,7 @@
         "State what effective sample size and Sharpe scaling do—and do not—mean."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "Too large",
         "Too small",

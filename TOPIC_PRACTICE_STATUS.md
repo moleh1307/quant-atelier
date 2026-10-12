@@ -45,33 +45,34 @@ Students choose questions within the lists; no forced Q1 → Q2 → code chain.
 | l10 covariance | 7 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
 | l11 regression | 8 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
 | l12 inference | 8 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
-| l13–l18 researcher | Pending | Pending | Pending |
+| l13 time series | 8 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
+| l14–l18 researcher | Pending | Pending | Pending |
 | l19–l24 trader | Pending | Pending | Pending |
 
 Sources: `topic_practice/foundation_questions.py`, `foundation_coding.py`,
-`distributions.py`, `stopping.py`, `arithmetic.py`, `variance.py`, `data_time.py`, `estimation.py`, `likelihood.py`, `covariance.py`, `regression.py`, `inference.py`, the existing banks, and
+`distributions.py`, `stopping.py`, `arithmetic.py`, `variance.py`, `data_time.py`, `estimation.py`, `likelihood.py`, `covariance.py`, `regression.py`, `inference.py`, `time_series.py`, the existing banks, and
 `tests/test_topic_practice.py`, `test_distribution_stopping_practice.py`, and
 `test_arithmetic_variance_practice.py`, `test_data_time_practice.py`, and
-`test_estimation_practice.py`, and `test_likelihood_practice.py`, and `test_covariance_practice.py`, and `test_regression_practice.py`, and `test_inference_practice.py`. Generated assets are
+`test_estimation_practice.py`, and `test_likelihood_practice.py`, and `test_covariance_practice.py`, and `test_regression_practice.py`, and `test_inference_practice.py`, and `test_time_series_practice.py`. Generated assets are
 `static/content.json` and `static/coding.json`; rebuild their Python sources.
 
 The two list destinations and nonsequential journey handoffs are implemented
 across the site. Existing pending topics expose their current linked practice;
 their banks do not yet satisfy the approved difficulty contract. The eight foundation
-topics and researcher estimation l09, likelihood l25, covariance l10, regression l11 and inference l12 do. Current inventory: 25 lessons, 107 interview questions, 46 coding
-exercises. Researcher route: 19 checks, 98 distinct questions, 46 codes.
+topics and researcher estimation l09, likelihood l25, covariance l10, regression l11, inference l12 and time series l13 do. Current inventory: 25 lessons, 113 interview questions, 48 coding
+exercises. Researcher route: 19 checks, 104 distinct questions, 48 codes.
 
-Next: author researcher l13–l18; finish the trader topics.
+Next: author researcher l14–l18; finish the trader topics.
 Finish live checks of the remaining topic lists and representative exercises.
 Inspect each lesson’s
 actual learning goals and authored explanation before selecting its problems.
 The full goal remains active until all 25 topics, future-topic validation,
 navigation, preservation checks and commit/push evidence are complete.
 
-As of 2026-10-12, all 23 frontend suites and 115 Python tests pass. Independent
+As of 2026-10-12, all 23 frontend suites and 127 Python tests pass. Independent
 enumeration, exact moments and rational state equations check the completed topics' delicate
-mathematical answers and coding references; all thirty-one expanded reference solutions
-also pass the actual judge. Existing grading meaning and IDs are preserved; q44, q24, q49–q51, q20/q29 and q19/q21/q30 and q22/q26/q47 now have topic-specific
+mathematical answers and coding references; all thirty-three expanded reference solutions
+also pass the actual judge. Existing grading meaning and IDs are preserved; q44, q24, q49–q51, q20/q29 and q19/q21/q30 and q22/q26/q47 and q18/q31 now have topic-specific
 written assessment criteria in place of their generic rubrics. Personal
 assessments, drafts and trainer history match the baseline captured for this work.
 See [verification](evidence/topic-practice-20261012.md) for scope and limitations.
