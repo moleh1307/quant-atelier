@@ -1,11 +1,11 @@
 # Topic practice — verification
 
 2026-10-12. Latest verified scope: grouped list/journey navigation across the site,
-and expanded banks for l01–l05. The full 25-topic expansion remains active;
-20 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
+and expanded banks for l01–l07. The full 25-topic expansion remains active;
+18 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
 
 The first batch below documents l01–l03 at its own verification baseline
-(63 questions / 22 codes). The later l04/l05 batch is recorded at the end.
+(63 questions / 22 codes). Later batches are recorded below.
 
 ## Content
 
@@ -135,3 +135,88 @@ navigation; no personal recovery was applied. Full-page capture includes sticky
 elements and focus indicators; it is not a physical-device or screen-reader test.
 The two new banks satisfy the authored contract, but the remaining 20 banks and
 broader manual review are still required for the full goal.
+
+
+## Third batch: arithmetic and variance/dependence
+
+Added ten interview questions and five coding exercises. l06 and l07 each have
+two interviews per difficulty and exactly one coding exercise per difficulty.
+l07 keeps q45, q17 and c04 unchanged. All 69 preceding public question records
+and 27 preceding public coding records are identical after JSON parsing. Totals:
+**25 lessons / 79 questions / 32 codes**; researcher route
+**19 checks / 70 distinct questions / 32 codes**. Eighteen topic banks remain.
+
+Arithmetic moves from compensating products and scaling quotients to changed
+percentage bases, value-weighted changes, exact fraction recovery under a
+denominator bound and a rigorously constructed ranking reversal. Half-up
+rounding defines half-open intervals; tighter measurement precision is explicitly
+distinguished from adding display zeroes. Coding starts with reduced-denominator
+termination, compounds integer basis-point rates as exact rational values, then
+uses accelerated Stern–Brocot neighbor jumps to recover a minimum-denominator
+fraction consistent with up to 100 decimal places. The hard editorial proves
+minimality through the unimodular neighbor representation and distinguishes a
+simplest compatible fraction from identifying the original measurement.
+
+Variance progresses through a constant random sum, uncorrelated nonlinear
+dependence, signed covariance from overlapping windows and feasibility of a
+common correlation. The written hard problem requires both bounds, an explicit
+attainable boundary construction and a construction for the full interval; its
+self-assessment rubric names these obligations. Coding computes population
+variance from joint records, retains the existing online Welford exercise, and
+calculates coin-pattern count moments using border links and pair counts in
+O(k) character comparisons even when the flip count is 10^12. Exact-integer
+arithmetic costs are described separately.
+
+Verification on 2026-10-12:
+
+- All **51 Python tests** and **23 frontend suites** pass, including strict KaTeX
+  checks of the generated mathematical bank and actual-judge runs of all
+  seventeen expanded reference solutions. Public sample/test expectations are
+  separately checked; implementations must preserve their supplied inputs.
+- Fraction termination agrees with divisibility by powers of ten across small
+  signed numerators/denominators. Exact compounded rates agree with a separate
+  Fraction-based product oracle on deterministic and seeded lists, including a
+  430-digit result and an irreversible 100-percent loss.
+- Every nonzero one-, two- and three-decimal report (1,107 bins) agrees with
+  an independent denominator-by-denominator fraction search. Both 100-digit
+  extremes and included/excluded rounding endpoints are checked.
+- Exact fraction enumeration checks the 2/7 uniqueness at denominator 15 and
+  the additional 5/17 possibility at denominator 20. Rational comparisons check
+  the rounding reversal, sharp interval approaches and guaranteed ranking
+  after genuinely more precise measurement.
+- Joint variances agree with a separate rational raw-moment identity. Enumeration
+  of all 32 centered sign-vector inputs verifies the common-correlation boundary
+  construction's marginal variances, pair covariances and zero sum.
+- Every H/T pattern of lengths 1–4, flip counts 0–8 and three coin biases is
+  compared with direct enumeration of the flips. An independent exact
+  probability/first-moment/second-moment state calculation checks the published
+  cases, seeded longer patterns and the 100-symbol case. Huge flip counts are
+  also checked against separate analytical expressions for HT and HHH.
+- The actual judge rejects representative shortcuts: using the displayed fraction
+  as the unknown original, adding percentage changes, dropping covariance and
+  applying a binomial variance to overlapping occurrences. Judge success alone
+  is not a proof of the editorial's complexity claims.
+
+Chrome was used after the IAB connection was unavailable. The personal arithmetic
+list displayed two questions in every difficulty group and linked to a coding
+list with one exercise per group. Explicit launcher entry and the Test preview
+notice were verified before grading: the hard fraction question accepted 2/7 and
+the hard variance reference passed **12/12** complete-suite cases. The rendered
+fraction proof and the variance written rubric were checked at a 390px viewport;
+both had zero KaTeX errors and document/scroll width 390px. The variance list
+displayed six choices and its development coding pass remained confined to
+preview. A transient saved-tab recovery notice appeared after preview writes
+and disappeared upon navigation; no recovery copy was applied.
+
+Viewport overrides were reset and the review tab was returned to the personal
+arithmetic list. Question, coding, lesson, draft and trainer records match the
+fresh disk baseline captured before this batch. No personal solve was added or
+removed. This is desktop/browser breakpoint verification, not a physical-device
+or screen-reader certification.
+
+- [Arithmetic interview list, personal workspace](topic-arithmetic-list-20261012.png).
+
+Next: l08 data timing, including preservation of its second original Medium
+coding bookmark when the new list contains exactly one Medium slot. Continue
+with researcher and trader topics; do not describe seven completed banks as the
+completed 25-topic goal.

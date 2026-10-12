@@ -1732,6 +1732,260 @@
         "Compare the stopping time pathwise to each bounded hitting time, giving a mean lower bound of N−1 for every N.",
         "Identify the finiteness/global-boundary failure in formal recurrence algebra."
       ]
+    },
+    {
+      "id": "q_l06_e1",
+      "title": "Unequal offsets need a cross term",
+      "topic": "Arithmetic",
+      "difficulty": "Easy",
+      "path": "shared",
+      "minutes": 3,
+      "prompt": "Calculate \\(98\\times107\\) exactly without a calculator. Explain a short decomposition and one independent check; the offsets from 100 are not equal.",
+      "answer": 10486,
+      "hints": [
+        "Compensate from 100 groups of 107, or expand both offsets about 100.",
+        "A change of two in the first factor changes the product by two whole groups of 107."
+      ],
+      "solution": "One route is \\((100-2)107=10700-214=10486\\). Another is \\((100-2)(100+7)=10000+100(7-2)-14\\), with the cross term -14 retained. The difference-of-squares shortcut does not apply to unequal offsets. A magnitude check puts the answer below 10700, and the final digit must be 6 because 8 times 7 ends in 6. Those checks catch different errors but do not independently prove every digit.",
+      "followup": "What makes \\(98\\times102\\) different, and how would you compute it?",
+      "followSolution": "The offsets now have equal magnitude and opposite signs, so the linear terms cancel: \\((100-2)(100+2)=10000-4=9996\\). The same identity cannot be transferred to 107 without changing its correction.",
+      "lesson": "l06",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Use an equivalent decomposition and obtain 10486.",
+        "Explain the unit and sign of the correction.",
+        "Give a distinct magnitude or final-digit check."
+      ]
+    },
+    {
+      "id": "q_l06_e2",
+      "title": "Scale the whole quotient",
+      "topic": "Arithmetic",
+      "difficulty": "Easy",
+      "path": "shared",
+      "minutes": 3,
+      "prompt": "Calculate \\(3.6/0.045\\) exactly without a calculator. Explain which quantities you scale, and why the answer should be larger than 3.6.",
+      "answer": 80,
+      "hints": [
+        "Multiplying numerator and denominator by 1000 leaves the quotient unchanged.",
+        "Reduce \\(\\frac{3600}{45}\\) using an easy multiple of 45."
+      ],
+      "solution": "Equivalent scaling gives \\(3.6/0.045=3600/45=80\\). Scaling the denominator alone would instead give \\(3.6/45=0.08\\), changing the quotient by a factor of 1000. Dividing a positive number by a positive number smaller than one increases it. Reverse multiplication provides another check: \\(0.045(80)=3.6\\).",
+      "followup": "If 0.045 was itself a rounded measurement rather than an exact divisor, is 80 still an exact answer?",
+      "followSolution": "It is the exact quotient of the displayed numbers, but need not be the quotient of the underlying measurements. The uncertainty of the divisor must be specified before claiming exactness for the original quantity. Algebraic precision cannot recover information discarded by measurement or rounding.",
+      "lesson": "l06",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Scale both numerator and denominator equally.",
+        "Obtain 80 and verify by multiplication.",
+        "Distinguish an exact displayed quotient from an uncertain underlying measurement."
+      ]
+    },
+    {
+      "id": "q_l06_m1",
+      "title": "Recovering from a loss uses a new base",
+      "topic": "Arithmetic",
+      "difficulty": "Medium",
+      "path": "shared",
+      "minutes": 6,
+      "prompt": "A positive quantity falls by 30% and then rises by a proportional rate r relative to its reduced value. What r restores the original value? Return r as a fraction or decimal proportion: for example 20% would be entered as \\(\\frac{1}{5}\\), not 20. Explain why adding back 30% is insufficient.",
+      "answer": 0.42857142857142855,
+      "hints": [
+        "Write the two changes as multipliers applied to an arbitrary initial value.",
+        "The recovery gain is measured against 70% of the original base."
+      ],
+      "solution": "If the original value is B>0, restoration requires \\(0.7B(1+r)=B\\). Therefore \\(r=1/0.7-1=3/7\\), about 42.857%. A 30% increase after the loss produces \\(0.7(1.3)B=0.91B\\). Both rates are called 30%, but their absolute changes use different bases. Keeping r as a fraction avoids turning an exact recovery rate into a premature decimal approximation.",
+      "followup": "For a loss proportion d with 0<=d<=1, derive the recovery rate and identify the boundary at which recovery by a finite proportional increase becomes impossible.",
+      "followSolution": "For \\(0\\leq d<1\\), \\((1-d)(1+r)=1\\) gives \\(r=d/(1-d)\\). At d=1 the quantity has become zero. Multiplying zero by any finite growth factor cannot restore a positive original value. The divergence as d approaches one reflects a changing base, not a numerical accident.",
+      "lesson": "l06",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Write (1−0.3)(1+r)=1 with the correct recovery base.",
+        "Obtain \\(\\frac{3}{7}\\) and distinguish proportion from percentage notation.",
+        "Explain the 100% loss boundary and the failure of additive rates."
+      ]
+    },
+    {
+      "id": "q_l06_m2",
+      "title": "Equal percentage moves need not cancel",
+      "topic": "Arithmetic",
+      "difficulty": "Medium",
+      "path": "shared",
+      "minutes": 7,
+      "prompt": "One fixed group contains 40 units priced at 125 each; a second contains 60 units priced at 80 each. The first price rises by 10% and the second falls by 10%. Unit counts stay fixed. What is the proportional change in their combined value? Return a fraction or decimal proportion, and identify the base used for each change.",
+      "answer": 0.0020408163265306124,
+      "hints": [
+        "Calculate each group's initial value before weighting its percentage move.",
+        "Add the absolute value changes, then divide by the original combined value."
+      ],
+      "solution": "The two starting values are \\(40(125)=5000\\) and \\(60(80)=4800\\). Their changes are +500 and -480, so the total change is +20 on a base of 9800. The proportional change is \\(20/9800=1/490\\), about 0.20408%. Equal percentage magnitudes cancel only when applied to equal value bases. Weighting by unit counts alone would ignore the different prices; averaging +10% and -10% would ignore both value bases.",
+      "followup": "What decrease rate in the second group would exactly offset the first group's 10% increase?",
+      "followSolution": "The required absolute decrease is 500. Relative to the second group\\'s starting value 4800, its decrease rate is \\(500/4800=5/48\\), about 10.4167%. Use the group whose price is being changed as the denominator, not the overall 9800.",
+      "lesson": "l06",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Compute the value bases 5000 and 4800 rather than using unit counts as weights.",
+        "Derive the net change +20 and proportional result \\(\\frac{1}{490}\\).",
+        "Explain why equal percentage moves do not cancel here."
+      ]
+    },
+    {
+      "id": "q_l06_h1",
+      "title": "Recover an exact fraction from a rounded report",
+      "topic": "Arithmetic",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 14,
+      "prompt": "A number x in (0,1) is a reduced fraction a/b with positive integers a,b and b<=15. It is rounded to two decimal places using nearest rounding, with exact half ties rounded upward, and reported as 0.29. Determine x exactly and prove uniqueness under the denominator bound. The report is not a claim that x equals \\(\\frac{29}{100}\\).",
+      "answer": 0.2857142857142857,
+      "hints": [
+        "Translate the rounding rule into an exact half-open interval.",
+        "Use x=a/b to bound the possible integer denominator for each small numerator.",
+        "Fractions such as \\(\\frac{4}{14}\\) are the same reduced candidate as \\(\\frac{2}{7}\\)."
+      ],
+      "solution": "The report means \\(57/200\\leq a/b<59/200\\). Since b<=15, the numerator satisfies \\(a<(59/200)15<5\\), so a is 1, 2, 3 or 4. For each a, the allowed denominator interval is \\[\\frac{200a}{59}<b\\leq\\frac{200a}{57}.\\] For a=1 and a=3 it contains no integer; for a=2 it contains only b=7; for a=4 it contains only b=14. The latter fraction reduces to \\(\\frac{2}{7}\\) and violates the assumption that a,b are already coprime. Thus the sole reduced fraction is \\(x=2/7\\), which does round to 0.29. The exact integer inequalities, including the excluded upper endpoint, establish uniqueness; numerical closeness alone does not.",
+      "followup": "Does the same report identify x if the denominator bound is relaxed to 20?",
+      "followSolution": "No. In addition to \\(\\frac{2}{7}\\), \\(5/17\\approx0.2941176\\) lies in the interval and has a permitted reduced denominator. Adding a numerator bound or a rounding report is information; dropping it can destroy identifiability. Do not choose a favourite nearby fraction without justifying the candidate set.",
+      "lesson": "l06",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Derive the interval [\\(\\frac{57}{200}\\),\\(\\frac{59}{200}\\)) from the stated tie rule.",
+        "Bound the numerator and inspect all permitted integer denominator intervals.",
+        "Reduce duplicate representations and prove the unique candidate is \\(\\frac{2}{7}\\)."
+      ]
+    },
+    {
+      "id": "q_l06_h2",
+      "title": "Rounding can reverse a ranking",
+      "topic": "Arithmetic",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 18,
+      "prompt": "Four positive numbers a,b,c,d are independently rounded as measurements, not sampled randomly. Nearest rounding to two decimal places with half ties upward reports a=0.50, b=0.25, c=0.51 and d=0.26. There are no other constraints on their true values. The displayed ratios satisfy \\(\\frac{0.50}{0.25}\\) > \\(\\frac{0.51}{0.26}\\). Is the true inequality a/b > c/d guaranteed? Derive tight possible intervals for both true ratios and, if needed, give explicit true values reversing the ranking. State whether the interval endpoints are attainable.",
+      "answer": null,
+      "hints": [
+        "Each report defines a half-open interval of width 0.01.",
+        "A positive ratio increases with its numerator and decreases with its denominator.",
+        "Overlapping ratio bounds do not guarantee an ordering; construct a consistent reversal."
+      ],
+      "solution": "The true intervals are \\(a\\in[0.495,0.505)\\), \\(b\\in[0.245,0.255)\\), \\(c\\in[0.505,0.515)\\) and \\(d\\in[0.255,0.265)\\). Monotonicity yields \\[\\frac{33}{17}<\\frac ab<\\frac{101}{49},\\qquad\\frac{101}{53}<\\frac cd<\\frac{103}{51}.\\] The lower bound of each ratio needs the excluded upper denominator; the upper bound needs the excluded upper numerator. Neither endpoint is attained, but values can approach them arbitrarily closely, so the bounds are tight. A reversal is a=0.496, b=0.254, c=0.514, d=0.256, all consistent with the reports. Then \\(a/b=248/127<257/128=c/d\\), as exact cross multiplication confirms: 31744<32639. The measurements are unconstrained apart from their rounding intervals; the word independently here means the rounding acts on each separately, not a probabilistic independence assumption. Treating a two-decimal report as an exact input can give an unjustified ranking.",
+      "followup": "A new, more precise measurement reports 0.500, 0.250, 0.510 and 0.260 using the same tie rule at three decimal places. Is the ranking now guaranteed? Why can you not reach that conclusion by simply adding zeros to the old reports?",
+      "followSolution": "The new intervals give \\(a/b>0.4995/0.2505=333/167\\) and \\(c/d<0.5105/0.2595=1021/519\\). The first lower bound exceeds the second upper bound: \\(333(519)=172827>170507=1021(167)\\). Thus the new information guarantees a/b>c/d. Printing an extra zero on an old two-decimal report does not narrow its original uncertainty interval; only the more precise measurement does.",
+      "lesson": "l06",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Translate all reports into half-open intervals with correct endpoint rules.",
+        "Derive tight ratio bounds and explain their unattained endpoints.",
+        "Give a valid reversal and distinguish additional precision from cosmetic zeros."
+      ]
+    },
+    {
+      "id": "q_l07_e1",
+      "title": "Two random variables, one constant sum",
+      "topic": "Variance and dependence",
+      "difficulty": "Easy",
+      "path": "shared",
+      "minutes": 4,
+      "prompt": "X is zero or one with probability \\(\\frac{1}{2}\\) each. Set Y=1-X using that same draw, rather than making a second draw. What is \\(\\operatorname{Var}(X+Y)\\)? Reconcile the answer with \\(\\operatorname{Var}(X)=\\operatorname{Var}(Y)=1/4\\).",
+      "answer": 0,
+      "hints": [
+        "List the only two possible joint records.",
+        "The variance-of-a-sum formula includes two covariance terms."
+      ],
+      "solution": "The only records are (0,1) and (1,0), each of probability \\(\\frac{1}{2}\\). Their sum is always one, so its variance is zero. Also E[XY]=0 and \\(\\mathbb E[X]\\)\\(\\mathbb E[Y]\\)=\\(\\frac{1}{4}\\), giving covariance -\\(\\frac{1}{4}\\). Hence \\(\\operatorname{Var}(X+Y)=1/4+1/4+2(-1/4)=0\\). Adding marginal variances alone would assert zero covariance, which this shared-draw construction does not have.",
+      "followup": "What would change if Y instead came from a second independent fair zero/one draw?",
+      "followSolution": "Both margins would be unchanged, but the four joint records would each have probability \\(\\frac{1}{4}\\). Covariance would be zero and the sum variance \\(\\frac{1}{2}\\). Marginal distributions do not determine the distribution of a sum; the joint construction matters.",
+      "lesson": "l07",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Identify the constant sum from the two permitted joint records.",
+        "Compute covariance -\\(\\frac{1}{4}\\) and its doubled contribution.",
+        "Distinguish the shared draw from independent draws with the same margins."
+      ]
+    },
+    {
+      "id": "q_l07_m1",
+      "title": "Zero covariance still allows a nonlinear link",
+      "topic": "Variance and dependence",
+      "difficulty": "Medium",
+      "path": "shared",
+      "minutes": 8,
+      "prompt": "X takes -1, 0 and 1 with equal probabilities, and Y=X^2. What is \\(\\operatorname{Var}(X+Y)\\)? Compute the covariance as part of your reasoning, and decide whether X and Y are independent.",
+      "answer": 0.8888888888888888,
+      "hints": [
+        "Use symmetry for \\(\\mathbb E[X]\\) and E[XY]=E[X^3].",
+        "Check the distribution of X+Y directly as a separate verification."
+      ],
+      "solution": "\\(\\mathbb E[X]\\)=0 and E[X^2]=\\(\\frac{2}{3}\\), so Var(X)=\\(\\frac{2}{3}\\). Y is one with probability \\(\\frac{2}{3}\\) and zero with probability \\(\\frac{1}{3}\\), hence Var(Y)=\\(\\frac{2}{9}\\). Since E[XY]=E[X^3]=0, covariance is zero. The sum variance is \\(2/3+2/9=8/9\\). Directly, X+Y is zero with probability \\(\\frac{2}{3}\\) and two with probability \\(\\frac{1}{3}\\), yielding \\(E[(X+Y)^2]-E[X+Y]^2=4/3-(2/3)^2=8/9\\). Zero covariance permits this addition of variances, but does not make the variables independent: observing Y=0 determines X=0, whereas marginally X=0 has probability \\(\\frac{1}{3}\\).",
+      "followup": "Does knowing Y reveal the sign of a nonzero X? How can strong dependence coexist with zero correlation?",
+      "followSolution": "If Y=1, the sign remains equally likely positive or negative. The nonlinear observation reveals magnitude, not sign. The positive and negative products of centered deviations cancel in covariance. Correlation measures linear co-movement when variances are positive; it cannot summarize every kind of dependence.",
+      "lesson": "l07",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Compute marginal means and variances explicitly.",
+        "Use symmetry to get zero covariance and obtain sum variance \\(\\frac{8}{9}\\).",
+        "Give a conditional-probability counterexample to independence."
+      ]
+    },
+    {
+      "id": "q_l07_h1",
+      "title": "Overlap can create negative and positive covariance",
+      "topic": "Variance and dependence",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 18,
+      "prompt": "Flip a fair coin independently 20 times. C counts occurrences of the contiguous pattern HTH, including overlaps: each starting position from 1 through 18 contributes an indicator. What is \\(\\operatorname{Var}(C)\\)? Classify overlapping pairs by their distance between starting positions, instead of treating C as binomial.",
+      "answer": 1.9375,
+      "hints": [
+        "Every HTH indicator has success probability \\(\\frac{1}{8}\\).",
+        "At a distance of one, the two required patterns conflict; at distance two they share a consistent H.",
+        "Count unordered pairs at each distance and double their covariance contribution."
+      ],
+      "solution": "Each of the 18 indicators has variance \\((1/8)(7/8)=7/64\\). Two starts one apart would require the shared second flip to be both T and H, so their joint probability is zero and covariance -\\(\\frac{1}{64}\\). There are 17 such pairs. Two starts two apart require H T H T H, whose probability is \\(\\frac{1}{32}\\); covariance is \\(1/32-1/64=1/64\\). There are 16 such pairs. At distances at least three the windows use disjoint independent flips, hence zero covariance. Therefore \\[\\operatorname{Var}(C)=18\\frac7{64}+2(17)\\left(-\\frac1{64}\\right)+2(16)\\frac1{64}=\\frac{31}{16}.\\] The mean is \\(\\frac{18}{8}\\)=\\(\\frac{9}{4}\\) by linearity, but that mean does not make the count binomial. The doubled pair sums account for each cross term exactly once.",
+      "followup": "Replace HTH by HHT while keeping the same 20 flips. The mean stays the same. Does the variance?",
+      "followSolution": "No. HHT conflicts with itself at both overlapping distances one and two. Both joint probabilities are zero, so both covariances are -\\(\\frac{1}{64}\\). Thus the variance becomes \\((126-34-32)/64=15/16\\). Equal window probabilities and equal means do not specify the overlap covariances. Negative overlap dependence can reduce the variance, rather than merely increasing it.",
+      "lesson": "l07",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Derive covariance -\\(\\frac{1}{64}\\) at distance one and +\\(\\frac{1}{64}\\) at distance two.",
+        "Count 18 variances, 17 adjacent pairs and 16 distance-two pairs.",
+        "Use the doubled pair contributions to get \\(\\frac{31}{16}\\) and reject the binomial shortcut."
+      ]
+    },
+    {
+      "id": "q_l07_h2",
+      "title": "A plausible pairwise number can be collectively impossible",
+      "topic": "Variance and dependence",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 19,
+      "prompt": "Five centered random variables each have variance one. A proposed model gives every distinct pair correlation -\\(\\frac{3}{10}\\). Show that the joint model is impossible, derive the full feasible interval of a common correlation rho for five such variables, and prove the lower boundary is attainable by constructing a joint model. You may begin with five independent centered variance-one variables Z_i; their distributions need not be normal.",
+      "answer": null,
+      "hints": [
+        "A proposed variance of a sum must be nonnegative.",
+        "A variance of a difference supplies the upper bound.",
+        "Subtract the average of the Z_i from each variable, then restore unit marginal variance."
+      ],
+      "solution": "The proposed sum variance is \\(5+20(-3/10)=-1\\), impossible for a variance. More generally it is \\(5+20\\rho\\), so rho>=-\\(\\frac{1}{4}\\). A difference has variance \\(2-2\\rho\\), so rho<=1. To attain the lower bound, set \\[X_i=\\sqrt{5/4}\\,(Z_i-\\bar Z),\\qquad\\bar Z=\\tfrac15\\sum_{j=1}^5Z_j.\\] Independence and unit variance give Var(Z_i−Zbar)=\\(\\frac{4}{5}\\) and Cov(Z_i−Zbar,Z_j−Zbar)=-\\(\\frac{1}{5}\\) for i!=j. The scale restores marginal variance one and gives each correlation -\\(\\frac{1}{4}\\). The centered sum is identically zero. The upper bound is attained by making all X_i equal to one centered variance-one variable. Every intermediate correlation is attainable: independently combine the lower-bound construction Y_i with a common shock Z as \\(X_i=\\sqrt{\\alpha}Z+\\sqrt{1-\\alpha}Y_i\\), for alpha in [0,1]. This keeps each variance one and yields \\(\\rho=\\alpha-(1-\\alpha)/4\\). Thus the bounds are sufficient as well as necessary; merely checking that each correlation lies in [-1,1] is insufficient.",
+      "followup": "Can the lower-bound five-variable construction be extended to six variables while retaining variance one and the same common correlation -\\(\\frac{1}{4}\\)?",
+      "followSolution": "No. Six variables would give sum variance \\(6+30(-1/4)=-3/2\\). The general lower bound is \\(-1/(n-1)\\), so the feasible correlation depends on collection size. A valid joint construction for five cannot be extended arbitrarily while preserving all its pair correlations.",
+      "lesson": "l07",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Reject the proposed model using the negative sum variance.",
+        "Derive both common-correlation bounds and calculate the centered-noise construction.",
+        "Verify unit marginal variances, boundary correlations and attainability of the whole interval."
+      ]
     }
   ],
   "lessons": [
@@ -2154,8 +2408,19 @@
       ],
       "correct": 2,
       "explanation": "10% is 24 and 5% is 12; add them.",
-      "questions": [],
-      "coding": [],
+      "questions": [
+        "q_l06_e1",
+        "q_l06_e2",
+        "q_l06_m1",
+        "q_l06_m2",
+        "q_l06_h1",
+        "q_l06_h2"
+      ],
+      "coding": [
+        "c_l06_easy",
+        "c_l06_medium",
+        "c_l06_hard"
+      ],
       "objectives": [
         "Choose efficient decompositions for products and percentages.",
         "Convert between fractions and decimals with stated precision.",
@@ -2165,7 +2430,7 @@
         "math",
         "fractions"
       ],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "24",
         "30",
@@ -2222,10 +2487,16 @@
       "explanation": "Multiply variance by \\(3^2\\); the shift adds no variance.",
       "questions": [
         "q17",
-        "q45"
+        "q45",
+        "q_l07_e1",
+        "q_l07_m1",
+        "q_l07_h1",
+        "q_l07_h2"
       ],
       "coding": [
-        "c04"
+        "c_l07_easy",
+        "c04",
+        "c_l07_hard"
       ],
       "objectives": [
         "Define variance, covariance and correlation with their units.",
@@ -2233,7 +2504,7 @@
         "Explain the common-shock limit and feasible correlation bounds."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "12",
         "14",
