@@ -7,9 +7,9 @@ an unregistered new lesson fails the build instead of inheriting generic tasks.
 from collections import Counter
 
 DIFFICULTIES = ('Easy', 'Medium', 'Hard')
-COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05', 'l06', 'l07')
+COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05', 'l06', 'l07', 'l08')
 PENDING_TOPICS = (
-    'l08', 'l09', 'l25', 'l10', 'l11',
+    'l09', 'l25', 'l10', 'l11',
     'l12', 'l13', 'l14', 'l15', 'l16', 'l17', 'l18', 'l19', 'l20',
     'l21', 'l22', 'l23', 'l24',
 )
@@ -22,7 +22,10 @@ CODING_LINKS = {
     'l05': ['c_l05_easy', 'c03', 'c_l05_hard'],
     'l06': ['c_l06_easy', 'c_l06_medium', 'c_l06_hard'],
     'l07': ['c_l07_easy', 'c04', 'c_l07_hard'],
+    'l08': ['c_l08_easy', 'c06', 'c_l08_hard'],
 }
+# These permanent activities remain bookmarkable, but are outside current slots.
+LEGACY_CODING_LINKS = {'l08': ['c05']}
 
 
 def add_questions(add, questions):
@@ -36,6 +39,8 @@ def add_questions(add, questions):
     from .variance import add_questions as variance_questions
     arithmetic_questions(add, questions)
     variance_questions(add, questions)
+    from .data_time import add_questions as data_time_questions
+    data_time_questions(add, questions)
 
 
 def add_coding(add, tasks):
@@ -49,6 +54,8 @@ def add_coding(add, tasks):
     from .variance import add_coding as variance_coding
     arithmetic_coding(add, tasks)
     variance_coding(add, tasks)
+    from .data_time import add_coding as data_time_coding
+    data_time_coding(add, tasks)
 
 
 def attach_and_validate(lessons, questions, tasks):
@@ -59,6 +66,8 @@ def attach_and_validate(lessons, questions, tasks):
         raise ValueError('Register every new lesson in topic_practice and author its practice before publishing it.')
     if set(COMPLETE_TOPICS) & set(PENDING_TOPICS):
         raise ValueError('A topic cannot be both complete and pending.')
+    if not set(LEGACY_CODING_LINKS) <= registered:
+        raise ValueError('Additional practice must name a registered lesson.')
     q_by_id = {q['id']: q for q in questions}
     c_by_id = {c['id']: c for c in tasks}
     if len(q_by_id) != len(questions) or len(c_by_id) != len(tasks):
@@ -68,7 +77,17 @@ def attach_and_validate(lessons, questions, tasks):
         extra = [q['id'] for q in questions if q['lesson'] == l['id'] and q['id'] not in l['questions']]
         l['questions'] = l['questions'] + extra
         if l['id'] in CODING_LINKS:
+            removed = set(l['coding']) - set(CODING_LINKS[l['id']])
+            if not removed <= set(LEGACY_CODING_LINKS.get(l['id'], [])):
+                raise ValueError(f"Preserve removed coding bookmarks explicitly in {l['id']}")
             l['coding'] = CODING_LINKS[l['id']].copy()
+        legacy = LEGACY_CODING_LINKS.get(l['id'], [])
+        if legacy:
+            l['legacyCoding'] = legacy.copy()
+        if len(set(legacy)) != len(legacy) or set(legacy) & set(l['coding']):
+            raise ValueError(f"Additional practice must be distinct from current slots in {l['id']}")
+        if any(id not in c_by_id for id in legacy):
+            raise ValueError(f"Broken additional-practice coding bookmark in {l['id']}")
         if len(set(l['questions'])) != len(l['questions']) or len(set(l['coding'])) != len(l['coding']):
             raise ValueError(f"Duplicate practice links in {l['id']}")
         if any(id not in q_by_id for id in l['questions']) or any(id not in c_by_id for id in l['coding']):

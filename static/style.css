@@ -551,3 +551,6 @@ input::placeholder,textarea::placeholder { color:#65715a;opacity:1; }
   .topic-practice-row .row-title{font-size:16px}
 }
 @media(prefers-reduced-motion:reduce){.topic-practice-row{transition:none}}
+
+/* Preserve intentional paragraph boundaries in authored practice prose. */
+.prompt,.hint,.solution,.follow p{white-space:pre-line}

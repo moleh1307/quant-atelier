@@ -49,11 +49,31 @@ run("route=['coding-list','l24','journey','trader','l24'];");
 assert.equal(run('followingActivity(moduleContext())'),null);assert.match(run('moduleContinuation(moduleContext())'),/End of this route/);
 // Every old activity bookmark and every new list resolves to its own module.
 for(const path of ['researcher','trader'])for(const l of bank.lessons.filter(l=>l.path==='shared'||l.path===path)){
- for(const a of run(`[...moduleActivities(content.lessons.find(l=>l.id==='${l.id}'),'${path}'),...moduleSteps(content.lessons.find(l=>l.id==='${l.id}'),'${path}')]`)){
+ for(const a of run(`[...moduleActivities(content.lessons.find(l=>l.id==='${l.id}'),'${path}'),...moduleLegacyActivities(content.lessons.find(l=>l.id==='${l.id}'),'${path}'),...moduleSteps(content.lessons.find(l=>l.id==='${l.id}'),'${path}')]`)){
   run('route='+JSON.stringify(a.href.slice(1).split('/')));
   assert.equal(run('moduleContext().lesson.id'),l.id);assert.equal(run('moduleContext().path'),path);
  }
 }
+// A removed slot is still a valid saved-work destination, never a fourth slot.
+for(const path of ['researcher','trader']){
+ run(`route=['coding','c05','journey','${path}','l08'];state=fresh();`);
+ assert.equal(run('moduleContext().additional'),true);
+ assert.equal(run('followingActivity(moduleContext()).href'),`#coding-list/l08/journey/${path}/l08`);
+ assert.match(run('moduleTrail(moduleContext())'),/Implement/);
+ assert.match(run('moduleSupplementNotice(moduleContext())'),/Additional practice/);
+ assert.match(run("practiceBreadcrumb('coding','Time-aware data')"),new RegExp(`#coding-list/l08/journey/${path}/l08`));
+ assert.match(run('moduleLinks(\'<a href="#coding/c05">old saved work</a>\',moduleContext())'),new RegExp(`#coding/c05/journey/${path}/l08`));
+ run("state.coding.c05={accepted:true};state.drafts.c05='my original draft';");
+ assert.equal(run('moduleStageEvidence(content.lessons.find(l=>l.id===\'l08\'),"Implement")'),'0/3');
+ run(`route=['coding-list','l08','journey','${path}','l08'];`);
+ const list=run("topicPracticePage('coding')");
+ assert.doesNotMatch(list,/#coding\/c05\//);
+ assert.match(list,/0 \/ 3 passed/);
+ assert.equal(run('state.drafts.c05'),'my original draft');
+}
+run("route=['coding','c05','journey','researcher','l18'];");
+assert.equal(run('moduleContext().lesson.id'),'l18');
+assert.equal(run('moduleContext().additional'),undefined,'Another module may still own that current exercise');
 run("route=['coding-list','l09','journey','researcher','l09'];");
 assert.equal(run('followingActivity(moduleContext()).href'),'#courses/l25/journey/researcher/l25');
 run("route=['coding-list','l25','journey','researcher','l25'];");

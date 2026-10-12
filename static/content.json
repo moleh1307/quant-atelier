@@ -1101,9 +1101,9 @@
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Reject the time-10:00:01 use of a feature that first arrives at 10:00:02.",
+        "Specify an availability-based as-of join, explicit missing value, key and tie convention.",
+        "Retain event/availability timestamps and distinguish a genuinely available event-time join from assumed availability."
       ]
     },
     {
@@ -1986,6 +1986,133 @@
         "Derive both common-correlation bounds and calculate the centered-noise construction.",
         "Verify unit marginal variances, boundary correlations and attainability of the whole interval."
       ]
+    },
+    {
+      "id": "q_l08_e1",
+      "title": "Three seconds are not three records",
+      "topic": "Time-aware data",
+      "difficulty": "Easy",
+      "path": "shared",
+      "minutes": 4,
+      "prompt": "Five distinct observations have availability times [0,1,1,4,6] seconds and corresponding values [2,4,8,10,20]. Immediately before all observations at time 4 become available, a feature averages records available in the preceding three seconds: the interval \\([1,4)\\). What is the feature value? Equal-time observations are distinct records; neither is a replacement for the other.",
+      "answer": 6,
+      "hints": [
+        "Write the time interval before choosing records.",
+        "A record at the lower endpoint is included; one at the upper endpoint is excluded."
+      ],
+      "solution": "Only the two records at time 1 qualify. Their mean is \\((4+8)/2=6\\). The record at time 0 is too old, and the record at time 4 has not yet entered the information set. A three-second window does not mean the last three rows, and two distinct records at the same timestamp both count. There is no requirement to fill three records or insert zeros for missing seconds.",
+      "followup": "Under the same rule, what is the feature immediately before time 6? What if the interval contains no records?",
+      "followSolution": "The interval is [3,6), containing only the time-4 value ten, so the mean is ten. An empty interval has no arithmetic mean; return an explicit missing result such as None rather than zero. The feature contract determines elapsed-time versus record-count windows and the missing-value rule.",
+      "lesson": "l08",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Select both time-1 records and exclude both outside endpoints.",
+        "Divide by the two eligible records, not by three seconds.",
+        "Keep distinct equal-time observations separate."
+      ]
+    },
+    {
+      "id": "q_l08_e2",
+      "title": "The equality convention changes the snapshot",
+      "topic": "Time-aware data",
+      "difficulty": "Easy",
+      "path": "shared",
+      "minutes": 4,
+      "prompt": "A single feature stream has [available_at,value] records [[2,5],[4,7],[4,9]], sorted by availability. At a decision at time 4, every record with available_at<=4 is known, and a later input row wins tied availability timestamps. What value is selected? The timestamp and tie rules are guaranteed by this problem, rather than inferred from a coarse clock.",
+      "answer": 9,
+      "hints": [
+        "Consume every eligible update, including all exact-time ties.",
+        "The last eligible row wins in this particular stream."
+      ],
+      "solution": "All three records are eligible under the inclusive rule. The later of the two time-4 rows is value nine, so nine is selected. Stopping at the first tie would select seven; comparing with a strict inequality would select five. Neither alternative implements the stated contract.",
+      "followup": "What value would a strictly-before rule select, and can a millisecond timestamp alone justify inclusive eligibility in a real log?",
+      "followSolution": "A strictly-before rule would use five. A coarse timestamp alone does not establish whether an update arrived before the decision within that timestamp bucket. A sequence key, receipt log or other ordering evidence must justify equality; a convenient join convention cannot supply missing historical ordering.",
+      "lesson": "l08",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Include both exact-time records under the given rule.",
+        "Apply later-input tie precedence to select nine.",
+        "Distinguish the explicit assumption from historical ordering evidence."
+      ]
+    },
+    {
+      "id": "q_l08_m1",
+      "title": "A causal feature can be paired with a leaking sample",
+      "topic": "Time-aware data",
+      "difficulty": "Medium",
+      "path": "shared",
+      "minutes": 9,
+      "prompt": "At each decision, X is an already known fair bit and Y is a future fair bit independent of X. Predict Y=X. An analyst retains a row only if X=Y, a condition evaluated after Y arrives. On retained rows, what is \\(P(Y=1\\mid X=1,\\mathrm{retained})\\)? Compare it with the probability available at the decision, calculate the retention rate, and explain the reported accuracy.",
+      "answer": 1,
+      "hints": [
+        "Enumerate the four equally likely (X,Y) records.",
+        "Row selection can use future information even when the feature does not."
+      ],
+      "solution": "The original records 00, 01, 10 and 11 each have probability \\(\\frac{1}{4}\\). The retained set is {00,11}, so its mass is \\(\\frac{1}{2}\\). Given X=1 and retention, only 11 remains, hence the requested probability is one. At decision time, before learning the future-dependent retention event, independence gives \\(P(Y=1\\mid X=1)=1/2\\). Predicting X has 50-percent accuracy on the original population but 100-percent accuracy on the selected rows. The feature itself is available; the evaluation population was selected using its future success. A causal feature join does not repair a leaking inclusion rule.",
+      "followup": "Instead retain rows only when X=1. What accuracy does the same prediction have, and what limitation remains?",
+      "followSolution": "The prediction is now one on every retained row, and Y is still a fair independent bit, so accuracy is \\(\\frac{1}{2}\\). This inclusion rule is available at the decision and does not select by future success. It changes the target population to X=1, however; performance on that population is not automatically a statement about all decisions.",
+      "lesson": "l08",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Enumerate the retained joint records and obtain probability one.",
+        "Compute half retention and contrast 100-percent selected accuracy with 50-percent deployable accuracy.",
+        "Identify future-dependent inclusion as the source of leakage."
+      ]
+    },
+    {
+      "id": "q_l08_h1",
+      "title": "Final vintages do not identify the historical trade",
+      "topic": "Time-aware data",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 19,
+      "prompt": "Two scalar measurements are first published at times 0 and 1. Their original values are unknown real numbers in [0,10]. Each is revised once at time 2; the stored final values are respectively 4 and 8. Decisions at times \\(\\frac{1}{4}\\) and \\(\\frac{5}{4}\\) use the most recently published measurement at that decision: choose position +1 if its original value is at least 5, and -1 otherwise. Their subsequently realised unit payoffs are respectively +1 and -1; total profit is the sum of position times payoff, without costs.\n\nDetermine the exact set of historical total profits consistent with the retained final table, and construct histories attaining it. Then suppose an independently documented rule limits each revision magnitude to at most 2. Determine the new exact set.\n\nFinally replace that per-measurement limit with a shared total revision budget \\(|u-4|+|v-8|\\leq B\\), where u,v are the original values and B>=0 is known. Determine the profit set for every B, including exact boundary budgets. Explain what replaying final values by event time establishes.",
+      "answer": null,
+      "hints": [
+        "Each original value can fall on either side of the threshold unless a revision constraint excludes it.",
+        "For the extra constraint, intersect [final-2,final+2] with the allowed original range.",
+        "A compatible history must keep the publication times and final table fixed."
+      ],
+      "solution": "Let the original publications be u and v. Positions are \\(s(u),s(v)\\in\\{-1,+1\\}\\), where s(z)=+1 exactly when z>=5. Total profit is \\(s(u)-s(v)\\). With only the range [0,10], all four position pairs are possible, giving the exact set {-2,0,2}. For example (u,v)=(2,8) gives -2, (2,2) gives 0, and (8,2) gives 2; all are later revised to the same stored (4,8) at time 2. Thus neither the historical positions nor profit are identified by that table.\n\nUnder the revision bound, u must lie in [2,6] and v in [6,10]. The second position is necessarily +1, but the first can be either sign. The exact set is now {-2,0}: (4,8) attains -2 and (6,6) attains 0, with both revisions within the bound. Replaying final (4,8) produces -2, which is merely one compatible counterfactual calculation; it does not prove the unavailable original first release was below five. A publication/vintage log would identify the historical inputs. The known final table and a stated revision bound can give an identified set, but not justify inventing a first-release value.\n\nUnder the shared budget, profit -2 is always possible at (4,8), costing zero. Profit zero first becomes possible at (5,8), costing one; the alternative both-sell branch costs strictly more than three and cannot improve that threshold. Profit +2 requires u>=5 and v<5, so \\(|u-4|+|v-8|\\geq1+(8-v)>4\\). Its infimum cost four is not attained because v=5 selects +1. For every B>4, choose \\(u=5,v=5-\\epsilon\\) with \\(0<\\epsilon\\leq\\min(1,(B-4)/2)\\); this costs \\(4+\\epsilon\\leq B\\) and attains profit +2. Therefore the exact sets are {-2} for 0<=B<1, {-2,0} for 1<=B<=4, and {-2,0,2} for B>4. Checking the sum of revisions, rather than independent component bounds, is essential for these sharp budget thresholds.",
+      "followup": "If the documented revision bound were one instead of two, would historical profit become identified? What is the largest symmetric revision bound that guarantees the original positions?",
+      "followSolution": "A bound of one gives u in [3,5] and v in [7,9]. Because equality at five chooses +1, u can still switch sign; profits remain {-2,0}. Every bound strictly below one forces u<5 and v>5 and hence profit -2. There is no largest admissible bound: its supremum is one, excluded by the threshold equality. Saying that a revision is small without checking the decision boundary does not establish stability.",
+      "lesson": "l08",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive the discrete set {-2,0,2} and exhibit histories with the same final table.",
+        "Use the component constraint to derive {-2,0}, then prove and attain the shared-budget thresholds at one and strictly above four.",
+        "Separate a final-vintage replay from an identified historical decision and handle the threshold equality."
+      ]
+    },
+    {
+      "id": "q_l08_h2",
+      "title": "Characterize an implementation that cannot see the future",
+      "topic": "Time-aware data",
+      "difficulty": "Hard",
+      "path": "shared",
+      "minutes": 22,
+      "prompt": "For every n>=1, a deterministic batch transformation F_n maps a real input sequence of length n to n scalar-or-None features. Feature index i is emitted immediately before x_i is observed. One batch procedure evaluates F_n(x) in finite time when given n and x. All fixed parameters are public before the stream begins; no external data or random state is allowed.\n\nState a precise prefix condition on the whole family {F_n} that is necessary and sufficient for an online implementation to emit the same features at every index for every finite input, without knowing the final stream length. Prove both directions, give a batch transformation that violates it even though the raw observation used at index i is lagged, and explain the limit of testing only several changed future suffixes. Treat this as an information-dependence question: the online implementation may retain its entire past and need not run in constant time.",
+      "answer": null,
+      "hints": [
+        "Compare different input lengths as well as different suffix values.",
+        "For a sufficiency proof, define the emitted value using any one fixed artificial continuation.",
+        "Lagging the raw observation does not ensure that its fitted normalization excludes future data."
+      ],
+      "solution": "The condition is: for all n,m>=i+1 and all sequences x of length n and y of length m with \\((x_0,\\ldots,x_{i-1})=(y_0,\\ldots,y_{i-1})\\), \\[F_n(x)_i=F_m(y)_i.\\] Equality of an empty prefix at i=0 requires a common initial feature independent of current value, suffix and final length. Necessity follows because an online deterministic procedure has exactly the same available inputs and fixed parameters before index i in both streams; it must emit the same feature. For sufficiency, retain the observed prefix p of length i, append one fixed dummy value zero, and emit \\(F_{i+1}(p\\mathbin{\\Vert}[0])_i\\). The prefix condition makes this independent of the dummy and identical to the feature in any actual continuation, including every longer stream. This establishes information feasibility, not efficient memory or runtime.\n\nA violating family is F_n(x)_0=None and, for i>=1, \\(F_n(x)_i=x_{i-1}-n^{-1}\\sum_{j=0}^{n-1}x_j\\). The selected raw observation is lagged, but its full-stream centering changes if future values or stream length change. For x=[1,3] and y=[1,103], the index-1 features are -1 and -51 despite identical known prefix [1]. A finite set of changed-suffix tests can falsify the universal condition, but cannot prove it for every real sequence and length. An invariant or dependence argument must cover all allowed inputs; adversarial tests support it rather than replace it.",
+      "followup": "Is fitting a normalizer on a completed training period always forbidden? Can a family that satisfies the condition still be computationally impractical?",
+      "followSolution": "A normalizer fitted before the evaluated decision period may be an allowed fixed public parameter. The condition must compare streams under that same already fitted parameter, not pretend its fitting data belonged to a later information set. A prefix-causal family can still need a long history or expensive recomputation: the construction proves availability, not an O(1) state representation. Information leakage and algorithmic efficiency are separate questions.",
+      "lesson": "l08",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Quantify prefix equality across both lengths and suffixes, excluding the current observation.",
+        "Prove necessity from identical information and sufficiency by an artificial continuation.",
+        "Give the lagged-but-globally-normalized counterexample and distinguish falsification from universal proof."
+      ]
     }
   ],
   "lessons": [
@@ -2560,11 +2687,17 @@
       "correct": 1,
       "explanation": "Availability defines the actual information set.",
       "questions": [
-        "q44"
+        "q44",
+        "q_l08_e1",
+        "q_l08_e2",
+        "q_l08_m1",
+        "q_l08_h1",
+        "q_l08_h2"
       ],
       "coding": [
-        "c05",
-        "c06"
+        "c_l08_easy",
+        "c06",
+        "c_l08_hard"
       ],
       "objectives": [
         "Separate event time, availability time and decision time.",
@@ -2572,7 +2705,10 @@
         "Build small reference tests before optimising an implementation."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "legacyCoding": [
+        "c05"
+      ],
+      "practiceExpanded": true,
       "optionLabels": [
         "Its event time in all cases",
         "Its availability time at the decision point",

@@ -503,7 +503,7 @@ function render(){
   if(route[0]==='coding'&&view[route[1]]?.unread){view[route[1]].unread=false;saveRunnerResults();}
   const module=moduleContext();
   let body=({dashboard:dashboard,paths:paths,questions:questions,'question-list':()=>topicPracticePage('questions'),'coding-list':()=>topicPracticePage('coding'),courses:courses,coding:codePage,trainers:trainers,review:review,progress:progress}[route[0]]||dashboard)();
-  if(module)body=moduleTrail(module)+moduleLinks(body,module)+(route[0]==='courses'?'':moduleContinuation(module));
+  if(module)body=moduleTrail(module)+moduleSupplementNotice(module)+moduleLinks(body,module)+(route[0]==='courses'?'':moduleContinuation(module));
   const panelButtons=panelControl('navigation','Navigation','navigation-panel')+(body.includes('id="practice-panel"')?panelControl('practice','Practice','practice-panel'):'');
   $('#app').innerHTML=`<a class="skip-link" href="#page">Skip to practice</a><div class="shell">${sidebar()}<div class="panel-handles" role="group" aria-label="Workspace panels">${panelButtons}</div><main class="main" aria-label="Practice workspace"><div class="topbar"><div class="mobile-panel-tools" role="group" aria-label="Workspace panels">${panelButtons}</div>${saveStatus()}</div>${previewNotice()}<div id="sync-notice">${syncNotice()}</div><div id="runner-notice">${runnerNotice()}</div><div id="page"${module?' class="in-module"':''}>${body}</div></main></div>`;
   typesetMath($('#page'));
@@ -596,6 +596,12 @@ function moduleActivities(l,path){
     ...l.coding.map(id=>{const c=coding.find(c=>c.id===id),s=state.coding[id]||{};return make('coding',id,c.title,'Implement',!!s.accepted,s.accepted?(acceptedWithEditorial(s)?'Passed with editorial':'Tests passed'):c.difficulty);}),
     ...(l.trainers||[]).map(id=>{const t=trainerTypes.find(t=>t.id===id),finished=state.trainers.some(s=>s.type===id&&s.finished&&s.attempts>0);return make('trainers',id,t.name,'Fluency',finished,finished?'Round finished':'Start a round');})];
 }
+function moduleLegacyActivities(l,path){
+  return (l.legacyCoding||[]).map(id=>({kind:'coding',id,href:moduleHref('coding',id,l,path)}));
+}
+function moduleSupplementNotice(context){
+  return context.additional?'<p class="small muted">Additional practice · completion is tracked separately from this topic’s three exercises.</p>':'';
+}
 // The journey has three core destinations. Problems inside a list are choices,
 // not a sequence whose next item is chosen for the learner.
 function moduleSteps(l,path){
@@ -638,7 +644,11 @@ function moduleContext(){
   if(!content||!coding||!route)return null;
   if(route[2]==='journey'&&['researcher','trader'].includes(route[3])){
     const l=content.lessons.find(l=>l.id===route[4]&&(l.path==='shared'||l.path===route[3]));
-    if(l&&[...moduleSteps(l,route[3]),...moduleActivities(l,route[3])].some(a=>a.kind===route[0]&&a.id===route[1]))return {lesson:l,path:route[3]};
+    if(l){
+      const matches=a=>a.kind===route[0]&&a.id===route[1];
+      if([...moduleSteps(l,route[3]),...moduleActivities(l,route[3])].some(matches))return {lesson:l,path:route[3]};
+      if(moduleLegacyActivities(l,route[3]).some(matches))return {lesson:l,path:route[3],additional:true};
+    }
   }
   if(route[0]==='courses'||(['question-list','coding-list'].includes(route[0])&&route[2]!=='journey')){
     const l=content.lessons.find(l=>l.id===route[1]);
@@ -647,7 +657,7 @@ function moduleContext(){
   return null;
 }
 function moduleLinks(html,context){
-  const activities=[...moduleSteps(context.lesson,context.path),...moduleActivities(context.lesson,context.path)];
+  const activities=[...moduleSteps(context.lesson,context.path),...moduleActivities(context.lesson,context.path),...moduleLegacyActivities(context.lesson,context.path)];
   return html.replace(/href="#(courses|questions|coding|question-list|coding-list|trainers)\/([^"/]+)"/g,(match,kind,id)=>activities.some(a=>a.kind===kind&&a.id===id)?`href="${moduleHref(kind,id,context.lesson,context.path)}"`:match);
 }
 function followingActivity(context){
