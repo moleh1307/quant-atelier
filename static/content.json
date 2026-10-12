@@ -877,9 +877,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Use the sum of three die means to obtain 10.5, separately from the quoted midpoint.",
+        "Compare buying at 11 and selling at 10 with expected payoff 10.5.",
+        "After a six, retain its payment and use independence for the other two means to obtain 13."
       ]
     },
     {
@@ -3393,6 +3393,142 @@
         "Prove aggregate \\(O(n)\\), bound auxiliary/output storage and exhibit a costly individual update.",
         "Explain why backward re-expansion invalidates permanent discards."
       ]
+    },
+    {
+      "id": "q_l19_e2",
+      "title": "A settlement edge is not an early-exit profit",
+      "topic": "Expected value",
+      "difficulty": "Easy",
+      "path": "trader",
+      "minutes": 8,
+      "prompt": "A contract has conditional expected terminal cash payment 106. A dealer’s executable bid / ask is 104 / 105. You BUY one contract now; a purchase costs an additional 0.25 and there is no settlement fee. Interest is zero. Under expected-cash-profit preferences, what is the expected NET profit if you hold to settlement? Your quote is guaranteed executable and carries no extra information about the payment. An alternative plan is to sell before settlement at a guaranteed executable bid 104.5, paying another 0.25 sale fee. Explain why the two plans have different answers. Prices already contain the spread.",
+      "answer": 0.75,
+      "hints": [
+        "A taker buys at the dealer’s ask, not its bid or midpoint.",
+        "For holding, subtract 105 and the one applicable fee from 106."
+      ],
+      "solution": "Holding gives expected net profit 106−105−0.25=0.75. The early exit instead gives cash profit 104.5−105−0.25−0.25=−1.00. Its exit payment is the bid you receive, not the still-uncertain terminal payment you no longer own. Do not subtract an extra bid–ask spread: the entry ask and exit bid already account for it. A positive settlement expectation is not a promise about an executable early exit, nor a guarantee of a gain at settlement.",
+      "followup": "If you instead SELL short one contract at the original bid and hold it to settlement, what is expected net profit when the sale fee is 0.25? If a second identical contract settles on the SAME underlying outcome, do two contracts remove the risk?",
+      "followSolution": "The short receives 104, pays 0.25 to trade and owes the terminal payment: expected net profit 104−0.25−106=−2.25. Two identical contracts on the same outcome double the random cash profit or loss; they do not make independent trials or diversify that exposure. Cash-flow signs, number of fees and the actual exit/settlement objective must be specified separately.",
+      "lesson": "l19",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Buy at ask 105 and get 0.75 after the stated purchase fee.",
+        "Use exit bid 104.5 and two fees to obtain −1, without subtracting spread twice.",
+        "Obtain short edge −2.25 and identify shared, rather than independent, settlement risk."
+      ]
+    },
+    {
+      "id": "q_l19_m1",
+      "title": "A signal about one component moves both",
+      "topic": "Expected value",
+      "difficulty": "Medium",
+      "path": "trader",
+      "minutes": 22,
+      "prompt": "A contract pays V=A+B. The joint probabilities for (A,B)=(0,0),(0,10),(10,0),(10,10) are 0.4,0.1,0.1,0.4. A binary signal H/L is conditionally independent of B GIVEN A, with P(H|A=10)=\\(\\frac{3}{4}\\) and P(H|A=0)=\\(\\frac{1}{4}\\). You see H before acting. Derive the posterior weights and E[V|H]; explain whether updating A but leaving E[B]=5 is justified. A still-executable dealer quote is bid 12 / ask 14.5; either trade costs 0.25, interest is zero, shorting is allowed and the objective is expected cash profit at settlement. Should you buy, sell or abstain? Quote availability adds no further information.",
+      "answer": null,
+      "hints": [
+        "Weight each JOINT record by its signal likelihood before normalising.",
+        "The denominator is P(H), not the probability of the high A state.",
+        "Conditional independence given A does not make A and B independent."
+      ],
+      "solution": "The unnormalised H weights are 0.1,0.025,0.075,0.3. They sum to P(H)=\\(\\frac{1}{2}\\); posterior weights are \\(\\frac{1}{5}\\),\\(\\frac{1}{20}\\),\\(\\frac{3}{20}\\),\\(\\frac{3}{5}\\). Thus\n\n\\[\\begin{aligned}E[A\\mid H]&=10(3/20+3/5)=15/2,\\\\E[B\\mid H]&=10(1/20+3/5)=13/2,\\\\E[V\\mid H]&=14.\\end{aligned}\\]\n\nLearning about A also moves B because their joint distribution is dependent. Updating only A gives the incorrect value 12.5; treating H as a perfect reveal gives another incorrect value 15. The actual net buy edge is 14−14.5−0.25=−0.75 and sell edge is 12−14−0.25=−2.25. Abstain. The posterior is about specified payments, not a midpoint or a realised payout.",
+      "followup": "Now you also learn that B=10. What is E[V|H,B=10]? Separately compute E[V|L] and check that averaging over H/L recovers the prior E[V]. Does “the conditional means average back” imply no benefit from choosing an action after a signal?",
+      "followSolution": "Among the B=10 records after H, the weights are \\(\\frac{1}{20}\\) and \\(\\frac{3}{5}\\). The probability A=10 is (\\(\\frac{3}{5}\\))/(\\(\\frac{13}{20}\\))=\\(\\frac{12}{13}\\), so E[V|H,B=10]=10+\\(\\frac{120}{13}\\)=\\(\\frac{250}{13}\\). For L the posterior weights are \\(\\frac{3}{5}\\),\\(\\frac{3}{20}\\),\\(\\frac{1}{20}\\),\\(\\frac{1}{5}\\), giving E[V|L]=6. Hence (\\(\\frac{1}{2}\\))14+(\\(\\frac{1}{2}\\))6=10, equal to the prior mean. This is the tower property for one specified payment. Optimising a buy/sell/abstain action AFTER a signal applies a maximum to conditional edges; a maximum does not commute with averaging. Information can change the chosen action even when mean payoff averages back, provided that those actions/prices remain available.",
+      "lesson": "l19",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Normalise the four joint H weights by \\(\\frac{1}{2}\\) and obtain means 7.5, 6.5 and 14.",
+        "Explain how dependence updates B despite conditional independence of the signal given A.",
+        "Use the correct executable sides/costs and abstain on edges −0.75 and −2.25.",
+        "Derive \\(\\frac{250}{13}\\) after both observations and verify L mean six and the tower identity.",
+        "Separate the expected payment from the value of an information-dependent action."
+      ]
+    },
+    {
+      "id": "q_l19_m2",
+      "title": "A physical expectation and a replicated price",
+      "topic": "Expected value",
+      "difficulty": "Medium",
+      "path": "trader",
+      "minutes": 23,
+      "prompt": "In a one-period, frictionless two-state market, cash has gross return one. A traded asset costs S0=5 and pays 2 in the low state or 8 in the high state. Both states are possible; your physical probability of high is \\(\\frac{3}{4}\\). A new claim pays 1 in low and 13 in high. Fractional holdings, borrowing and shorting at these prices are allowed. Find the claim’s physical expected payoff and the cost of a portfolio that replicates its payment in BOTH states. Derive the no-arbitrage claim price and its risk-neutral weighting. Explain why replacing that weighting with your physical probability is not a replication argument.",
+      "answer": null,
+      "hints": [
+        "Match the high-minus-low claim payment using units of the traded asset.",
+        "Use the low state to determine the cash holding; it may be negative.",
+        "A risk-neutral high weight makes the asset’s weighted payoff equal its current price."
+      ],
+      "solution": "The physical expected payment is (\\(\\frac{1}{4}\\))1+(\\(\\frac{3}{4}\\))13=10. Matching the claim’s payoff difference gives delta=(13−1)/(8−2)=2 asset units. The cash holding is 1−2×2=−3: borrow three. Portfolio payment is two times the asset payment minus three, namely one or thirteen, and current cost is 2×5−3=7. An independently tradable claim must have price seven in this ideal market: if it trades above seven, sell it and buy the replicator; if below, buy it and sell the replicator. Either mismatch releases positive initial cash with exactly offsetting terminal payments.\n\nThe risk-neutral high weight q solves 2(1−q)+8q=5, hence q=\\(\\frac{1}{2}\\). Weighting the claim gives (\\(\\frac{1}{2}\\))1+(\\(\\frac{1}{2}\\))13=7. This q is inferred from traded prices and replication, not a forecast that high occurs half the time. Physical mean ten and replicated price seven answer different questions; neither calculation contradicts the other.",
+      "followup": "Suppose the claim has executable bid 6 / ask 8. Under your physical probabilities, buying at eight has positive expected profit. Is that an arbitrage? Can the physical probability change the replicating cost? What fails if borrowing/shorting is prohibited or a third state is added?",
+      "followSolution": "Buying at eight has expected profit 10−8=2 but loses seven in low, so it is not an arbitrage. The replicated value seven lies inside 6 / 8: buying the claim for eight or selling it for six does not lock in an arbitrage against the cost-seven replicator. If replication remains feasible, obtaining the same terminal payment through the cost-seven portfolio improves the physical expected profit, but it still has state risk when financed. Altering physical probabilities changes predicted profit, not the two state-matching equations or cost. Constraints can prevent the offsetting arbitrage portfolios; a third state generally adds a third payment equation with only two holdings, so arbitrary claims may cease to be replicable. Uniqueness here depends on the declared complete, frictionless two-state market.",
+      "lesson": "l19",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Compute physical mean ten separately from delta two, cash −3 and replicating cost seven.",
+        "Explain both directions of a price-mismatch arbitrage with offset terminal payments.",
+        "Derive risk-neutral q=\\(\\frac{1}{2}\\) from the traded asset price, without calling it the physical probability.",
+        "Separate positive physical expectation from arbitrage and explain the spread/constraint/third-state limits."
+      ]
+    },
+    {
+      "id": "q_l19_h1",
+      "title": "The value of a signal depends on the actions left open",
+      "topic": "Expected value",
+      "difficulty": "Hard",
+      "path": "trader",
+      "minutes": 30,
+      "prompt": "A contract pays zero or ten with equal prior probabilities. You may take AT MOST one action: buy one at ask six, sell one at bid four, or abstain. A trade costs an extra \\(\\frac{1}{2}\\); settlement and financing cost nothing. A binary H/L signal has P(H|V=10)=\\(\\frac{4}{5}\\) and P(H|V=0)=\\(\\frac{1}{5}\\). Its acquisition fee f is paid once, whether you trade or abstain. First assume the quote is guaranteed to stay available after the signal and adds no other information. Derive the optimal signal-dependent policy, expected profit BEFORE its acquisition fee and the largest break-even f. Then prove why cost-free additional information cannot reduce the optimal expected profit under fixed available actions. State the exact assumptions needed; the payoff mean itself averages back.",
+      "answer": null,
+      "hints": [
+        "For conditional mean m, optimise g(m)=max(0,m−6.5,3.5−m).",
+        "Compute both signal probabilities and posterior means; do not pay the acquisition fee only when trading.",
+        "A maximum of affine functions is convex, or you may imitate the old action after every signal."
+      ],
+      "solution": "Before information the mean is five, giving buy and sell edge −1.5; abstain for zero. P(H)=P(L)=\\(\\frac{1}{2}\\), posterior means are eight and two. After H buy for expected net trading profit 8−6−0.5=1.5; after L sell for 4−2−0.5=1.5. Expected trading profit is 1.5, so total expected profit is 1.5−f. Break-even is f=1.5 (indifferent to not acquiring); strictly preferable when f<1.5. Costs already incurred to obtain information are common to the later actions and must not be charged only on fills.\n\nFor a generic available signal S and finite payoff expectation, let \\(m_S=E[V\\mid S]\\). Fixed executable prices and fees give\n\n\\[g(m)=\\max\\{0,m-a-c_b,b-m-c_s\\}.\\]\n\nThe no-trade option has zero; the other terms are affine. Consequently g is convex and\n\n\\[E[g(m_S)]\\geq g(E[m_S])=g(E[V]).\\]\n\nEquivalently, after observing S you could ignore it and use the old action; maximising cannot do worse than that feasible baseline. This requires unchanged feasible actions and prices, expected-cash-profit evaluation, and the signal as the only new conditioning information relevant to those executions. It is a statement about gross information value before its acquisition cost. It is not a claim that every signal makes money, or that the average conditional payment rises.",
+      "followup": "Now the dealer sees the same signal and replaces its quote by bid \\(m_S-1\\) / ask \\(m_S+1\\) before you can act; trading still costs \\(\\frac{1}{2}\\). What is the value of buying the signal for f=1? Compare with a PERFECT signal when the original quote stays fixed. Can a positive expected information value guarantee a realised profit?",
+      "followSolution": "With the updated quote, either trade loses 1.5 in conditional expectation; abstain. Acquiring for f=1 produces −1, so do not acquire. The fixed-action proof never promised that a dealer would leave a stale price executable. With perfect information and the original quote, buy at V=10 for net trading profit 3.5 or sell at V=0 for 3.5, so gross information value is 3.5, two more than the noisy signal. With the noisy signal, H can occur in the zero state (conditional probability \\(\\frac{1}{5}\\)), causing buy loss 6.5 before acquisition cost. L can occur in the ten state, causing sell loss 6.5. Positive expected information value under a model is compatible with an actual loss. Acquisition cost and loss tolerance are separate decisions.",
+      "lesson": "l19",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive both posterior means and signal weights, and choose buy after H/sell after L.",
+        "Average the optimised conditional edges to 1.5 and charge f on every signal acquisition.",
+        "Prove the inequality by convexity/tower property or by feasibility of the old action.",
+        "State the fixed executable action set and expected-profit assumptions explicitly.",
+        "Reject signal purchase after quote updating, compute perfect-information value 3.5 and exhibit a noisy-signal loss."
+      ]
+    },
+    {
+      "id": "q_l19_h2",
+      "title": "A set of models is not a mixture of models",
+      "topic": "Expected value",
+      "difficulty": "Hard",
+      "path": "trader",
+      "minutes": 32,
+      "prompt": "A contract pays V=12 or zero. The prior high-state probability p is only known to lie in [\\(\\frac{1}{4}\\),\\(\\frac{3}{4}\\)]; this is a SET of possible priors, not a probability distribution over p. A signal H has P(H|V=12)=\\(\\frac{3}{4}\\) and P(H|V=0)=\\(\\frac{1}{4}\\) under every model. You observe H, then may buy one at ask nine, sell one at bid eight, or abstain; either trade costs \\(\\frac{1}{4}\\). Quotes are still executable and add no information, interest is zero and the objective is worst-case CONDITIONAL expected cash profit across the model set. Derive the posterior fair-value interval, worst-case buy/sell edges and optimal robust action. Could randomising between buy, sell and abstain strictly improve that minimax value? Do not average posterior endpoints as if ambiguity supplied probabilities.",
+      "answer": null,
+      "hints": [
+        "Normalising a likelihood-weighted prior produces a ratio in p.",
+        "A buy is hurt by the LOWEST conditional mean, a sale by the HIGHEST.",
+        "To rule out randomisation, look for one allowed model that hurts both trading actions simultaneously."
+      ],
+      "solution": "For any fixed allowed p, P(H)=(1+2p)/4 is positive, and\n\n\\[m(p)=E[V\\mid H,p]=\\frac{36p}{1+2p}.\\]\n\nIts derivative is 36/(1+2p)²>0. Endpoints give m(\\(\\frac{1}{4}\\))=6 and m(\\(\\frac{3}{4}\\))=\\(\\frac{54}{5}\\), so the conditional value interval is [6,10.8]. Net buy edge is m−\\(\\frac{37}{4}\\), with worst case 6−\\(\\frac{37}{4}\\)=−\\(\\frac{13}{4}\\). Sell edge is \\(\\frac{31}{4}\\)−m, with worst case \\(\\frac{31}{4}\\)−\\(\\frac{54}{5}\\)=−\\(\\frac{61}{20}\\). Abstention has worst-case profit zero and is optimal among deterministic actions.\n\nOne must not simply mix the TWO DIFFERENT worst-case endpoints to assess a randomised policy: one model governs its average payoff. At the allowed \\(p=1\\)/2, m=9, buy edge is −\\(\\frac{1}{4}\\) and sell edge −\\(\\frac{5}{4}\\). Any mixture with positive trading probability has negative conditional expected profit in this single model; its worst case is therefore negative. Pure abstention attains zero. This common adverse model proves that randomisation cannot strictly improve the minimax value.",
+      "followup": "Change the interpretation: before any signal, a hidden model is \\(p=1\\)/4 or p=\\(\\frac{3}{4}\\) with equal probability, then V and H are drawn from that model. Compute the model probabilities AFTER H and the mixture E[V|H]. Why is the average of the two posterior values with equal weights incorrect? Does this new answer remove the original ambiguity?",
+      "followSolution": "The signal probabilities under the low/high models are \\(\\frac{3}{8}\\) and \\(\\frac{5}{8}\\). With equal PRIOR model weights, posterior model weights become \\(\\frac{3}{8}\\) and \\(\\frac{5}{8}\\) (their normalising signal probability is \\(\\frac{1}{2}\\)). Thus mixture value is (\\(\\frac{3}{8}\\))6+(\\(\\frac{5}{8}\\))(\\(\\frac{54}{5}\\))=9, also obtained by first marginalising to prior high probability \\(\\frac{1}{2}\\) and then applying Bayes. The naive equal average of posterior values is \\(\\frac{42}{5}\\)=8.4; it failed to update model weights after observing H. This hierarchy is an additional modelling choice with assigned model probabilities. It does not turn the earlier set-valued uncertainty into an empirical fact or change its minimax answer. Within-model conditioning, across-model mixing and worst-case optimisation are three distinct operations.",
+      "lesson": "l19",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive and normalise m(p), prove monotonicity and obtain interval [6,\\(\\frac{54}{5}\\)].",
+        "Compute worst-case buy −\\(\\frac{13}{4}\\), sell −\\(\\frac{61}{20}\\) and choose abstention.",
+        "Rule out randomisation using one allowed \\(p=1\\)/2, rather than mixing incompatible adverse models.",
+        "Update hierarchical model weights to \\(\\frac{3}{8}\\) and \\(\\frac{5}{8}\\) and compute mixture value nine.",
+        "Explain why equal posterior averaging gives 8.4 and why a model mixture differs from a prior set."
+      ]
     }
   ],
   "lessons": [
@@ -4873,16 +5009,25 @@
       "correct": 3,
       "explanation": "Both directions lose one unit in expectation.",
       "questions": [
-        "q35"
+        "q35",
+        "q_l19_e2",
+        "q_l19_m1",
+        "q_l19_m2",
+        "q_l19_h1",
+        "q_l19_h2"
       ],
-      "coding": [],
+      "coding": [
+        "c_l19_easy",
+        "c_l19_medium",
+        "c_l19_hard"
+      ],
       "objectives": [
         "Translate a payoff into a conditional expected value.",
         "Read bid and ask from the correct side of the trade.",
         "Account for costs, uncertainty and information revealed by a fill."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "Buy",
         "Sell",
