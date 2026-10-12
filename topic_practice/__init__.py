@@ -7,9 +7,9 @@ an unregistered new lesson fails the build instead of inheriting generic tasks.
 from collections import Counter
 
 DIFFICULTIES = ('Easy', 'Medium', 'Hard')
-COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05', 'l06', 'l07', 'l08')
+COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05', 'l06', 'l07', 'l08', 'l09')
 PENDING_TOPICS = (
-    'l09', 'l25', 'l10', 'l11',
+    'l25', 'l10', 'l11',
     'l12', 'l13', 'l14', 'l15', 'l16', 'l17', 'l18', 'l19', 'l20',
     'l21', 'l22', 'l23', 'l24',
 )
@@ -23,6 +23,7 @@ CODING_LINKS = {
     'l06': ['c_l06_easy', 'c_l06_medium', 'c_l06_hard'],
     'l07': ['c_l07_easy', 'c04', 'c_l07_hard'],
     'l08': ['c_l08_easy', 'c06', 'c_l08_hard'],
+    'l09': ['c_l09_easy', 'c04', 'c_l09_hard'],
 }
 # These permanent activities remain bookmarkable, but are outside current slots.
 LEGACY_CODING_LINKS = {'l08': ['c05']}
@@ -41,6 +42,8 @@ def add_questions(add, questions):
     variance_questions(add, questions)
     from .data_time import add_questions as data_time_questions
     data_time_questions(add, questions)
+    from .estimation import add_questions as estimation_questions
+    estimation_questions(add, questions)
 
 
 def add_coding(add, tasks):
@@ -56,6 +59,8 @@ def add_coding(add, tasks):
     variance_coding(add, tasks)
     from .data_time import add_coding as data_time_coding
     data_time_coding(add, tasks)
+    from .estimation import add_coding as estimation_coding
+    estimation_coding(add, tasks)
 
 
 def attach_and_validate(lessons, questions, tasks):
