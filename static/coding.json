@@ -1383,5 +1383,105 @@
     "solution": "import heapq\ndef solve(updates, decisions, horizon):\n    releases = sorted(updates, key=lambda row: (row[0],row[1]))\n    ordered = sorted(enumerate(decisions), key=lambda item: item[1][0])\n    latest = {}\n    heaps = {}\n    result = [None]*len(decisions)\n    cursor = 0\n    for index, (timestamp,key) in ordered:\n        while cursor < len(releases) and releases[cursor][0] <= timestamp:\n            available,sequence,stream,event,value = releases[cursor]\n            latest[(stream,event)] = (sequence,value)\n            if value is not None:\n                heapq.heappush(heaps.setdefault(stream,[]),(-event,sequence,value))\n            cursor += 1\n        heap = heaps.get(key,[])\n        while heap:\n            negative_event,sequence,value = heap[0]\n            event = -negative_event\n            if event < timestamp-horizon or latest[(key,event)] != (sequence,value):\n                heapq.heappop(heap)\n            else:\n                result[index] = value\n                break\n    return result",
     "explanation": "Sort publication records by their information order, and sort indexed decisions by time. Before answering each decision, consume every eligible release. latest[(key,event)] stores the version that actually existed at this decision; this is separate from ranking events by economic time. Per-key heaps prioritize the greatest event_at. Numeric releases push candidates; retractions update the version map without pushing. Lazily discard a candidate if its version has been replaced/retracted, or if its event is below the inclusive expiration boundary. A newer publication of an older event cannot jump ahead of a newer active event. A retraction invalidates its old candidate and lets the heap reveal the next eligible event. A later numeric revision restores a measurement, provided its event remains in the window. Zero is a real value, not a missing flag. Since event_at<=available_at<=decision_at for consumed releases, no upper-window check is missing. Every candidate is pushed and popped at most once; sorting and heap work are O((U+D) log(U+D+2)), with O(U+D) stored records including output. Restore output using the original decision indices. After processing one decision, later releases change the mutable version map for later decisions only: earlier scalar results are already captured.\n\nThe independent reference should instead filter eligible releases, rebuild versions and scan active events separately for each decision; that slower model is useful for small cases. A final-vintage table or one last value per key loses information required by this contract.",
     "lesson": "l08"
+  },
+  {
+    "id": "c_l09_easy",
+    "title": "Update a probability without discarding its uncertainty",
+    "difficulty": "Easy",
+    "topic": "Estimation",
+    "path": "researcher",
+    "prompt": "An unknown common Bernoulli success probability p has a Beta(alpha,beta) prior. Conditional on p, all past and future trials are independent with that same p. alpha and beta are integers from 1 to 10^6. batches contains at most 100000 [successes,failures] pairs; each count is an integer from 0 to 10^9, and batches are disjoint. After EACH batch, return [posterior_mean, posterior_variance] for p, in input order. Return [] for no batches. A [0,0] batch still emits the current posterior summary. Do not round or mutate batches. Use cumulative counts, O(number of batches) time and O(1) auxiliary state apart from output. This variance measures uncertainty about p, not the variance of a new Bernoulli outcome.",
+    "starter": "def solve(alpha, beta, batches):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          2,
+          2,
+          [
+            [
+              3,
+              1
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "expected": [
+          [
+            0.625,
+            0.026041666666666668
+          ],
+          [
+            0.625,
+            0.026041666666666668
+          ],
+          [
+            0.5,
+            0.019230769230769232
+          ]
+        ]
+      }
+    ],
+    "solution": "def solve(alpha, beta, batches):\n    a, b = alpha, beta\n    result = []\n    for successes, failures in batches:\n        a += successes\n        b += failures\n        total = a + b\n        result.append([a / total, (a / total) * (b / total) / (total + 1)])\n    return result",
+    "explanation": "After cumulative counts s,f, multiply the prior by the Bernoulli likelihood to get Beta(A,B), with A=alpha+s and B=beta+f. Its mean is A/(A+B). To obtain the variance, the beta-integral moment ratios give \\(E[p^2]=A(A+1)/[(A+B)(A+B+1)]\\); subtracting the squared mean gives \\(AB/[(A+B)^2(A+B+1)]\\). Compute this as two proportions divided by total+1, keeping cumulative counts as integers. Resetting to the prior at each batch loses information. An empty batch changes nothing but still emits; no batches emit nothing. A new single outcome has predictive variance mean\u00d7(1\u2212mean), which includes outcome noise and differs from posterior variance. O(b) time and O(1) extra state, excluding the b output rows."
+  },
+  {
+    "id": "c_l09_hard",
+    "title": "Predict a batch without pretending p is known",
+    "difficulty": "Hard",
+    "topic": "Estimation",
+    "path": "researcher",
+    "prompt": "Prior p is Beta(alpha,beta). Observe successes successful trials and failures unsuccessful trials, then predict m future trials. Conditional on the SAME p, all observed and future trials are independent Bernoulli(p). alpha,beta are integers in [1,10000]; observed counts are integers in [0,10^9]; m is an integer in [0,100000]. thresholds has at most 100000 integers r in [0,m+1]. Return the posterior predictive probability that the future success count H is AT LEAST r, for each query in its original order, retaining duplicates. Return [] for no queries; if m=0 only H=0 is possible. Do not mutate inputs, simulate, round, or replace p by its posterior mean.\n\nAim for O(m+number of queries) time and O(m) auxiliary space, with floating-point probabilities. A direct endpoint probability can underflow for valid inputs: normalise relative masses from a mode or use an equivalently stable method. The editorial derives the predictive mass, adjacent-mass ratios and a mode; no external numerical libraries are needed. Numerical answers are checked with absolute tolerance 10^(-7), so unrepresentably small tails may return zero. P(H\u22650) is one and P(H\u2265m+1) is zero.",
+    "starter": "def solve(alpha, beta, successes, failures, m, thresholds):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          1,
+          1,
+          0,
+          0,
+          2,
+          [
+            2,
+            1,
+            0,
+            3,
+            2
+          ]
+        ],
+        "expected": [
+          0.3333333333333333,
+          0.6666666666666666,
+          1,
+          0,
+          0.3333333333333333
+        ]
+      },
+      {
+        "args": [
+          2,
+          2,
+          3,
+          1,
+          2,
+          [
+            2,
+            1
+          ]
+        ],
+        "expected": [
+          0.4166666666666667,
+          0.8333333333333334
+        ]
+      }
+    ],
+    "solution": "from math import fsum\ndef solve(alpha, beta, successes, failures, m, thresholds):\n    if not thresholds:\n        return []\n    a, b = alpha + successes, beta + failures\n    mode = 0 if a + b == 2 else min(m, (m + 1) * (a - 1) // (a + b - 2))\n    weights = [0.0] * (m + 1)\n    weights[mode] = 1.0\n    for k in range(mode, m):\n        weights[k + 1] = weights[k] * ((m - k) * (k + a)) / ((k + 1) * (m - k - 1 + b))\n    for k in range(mode, 0, -1):\n        weights[k - 1] = weights[k] * (k * (m - k + b)) / ((m - k + 1) * (k - 1 + a))\n    normalizer = fsum(weights)\n    tail = [0.0] * (m + 2)\n    for k in range(m, -1, -1):\n        tail[k] = tail[k + 1] + weights[k] / normalizer\n    tail[0] = 1.0\n    return [tail[r] for r in thresholds]",
+    "explanation": "First update to A=alpha+successes, B=beta+failures. Integrate the conditional count mass \\(\\binom mk p^k(1-p)^{m-k}\\) against the Beta(A,B) posterior. This gives \\(w_k=P(H=k)=\\binom mk\\,\\mathrm B(A+k,B+m-k)/\\mathrm B(A,B)\\), where \\(\\mathrm B\\) is the beta integral, not the posterior parameter B. Future trials are independent conditional on p, but share parameter uncertainty after integrating it out. For example a uniform posterior makes H uniform on 0,\u2026,m, rather than Binomial(m,\\(\\frac{1}{2}\\)).\n\nCancel neighbouring factorial/beta factors to obtain \\(w_{k+1}/w_k=(m-k)(k+A)/[(k+1)(m-k-1+B)]\\). Because A,B\u22651, the condition that this ratio is at least one reduces to \\((A+B-2)k\\leq m(A-1)+1-B\\). One mode is \\(k_* = \\min(m,\\lfloor(m+1)(A-1)/(A+B-2)\\rfloor)\\) when A+B>2. If A=B=1, every mass is equal, so choose zero. Exact integer arithmetic locates the mode, including ties and one-sided modes. Set its RELATIVE mass to one, propagate right using the ratio, and left using the reciprocal ratio. Moving away from a mode never increases exact relative masses above one. This avoids starting from a tiny endpoint mass that has already rounded to zero; tails may still harmlessly underflow below the stated absolute tolerance.\n\nNormalise the relative masses using math.fsum, then build suffix probabilities from k=m down to zero. Read each requested suffix directly; computing 1\u2212a CDF can lose a small upper tail through cancellation. The empty-query shortcut and m=0 are covered. With prior \\(\\operatorname{Beta}(2,2)\\) and 3 successes/1 failure, the posterior is \\(\\operatorname{Beta}(5,3)\\); P(H=2) for m=2 is E[p\u00b2]=5\u00d76/(8\u00d79)=\\(\\frac{5}{12}\\), not (\\(\\frac{5}{8}\\))\u00b2. Each recurrence step and query costs O(1) with the bounded integer sizes, giving O(m+q) time and O(m) working space, excluding output. This calculation relies on one common p; a changing probability or extra conditional dependence requires a different model."
   }
 ]

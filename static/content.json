@@ -599,9 +599,9 @@
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Derive the centred-sum identity and use iid finite-variance sampling to get expectation \\((n-1)\\sigma^2\\).",
+        "Require n>1 for the corrected divisor; distinguish unbiased variance from unbiased standard deviation.",
+        "Explain that dependence changes Var(sample mean), so the same \\(n-1\\) correction is not generally unbiased."
       ]
     },
     {
@@ -2113,6 +2113,85 @@
         "Prove necessity from identical information and sufficiency by an artificial continuation.",
         "Give the lagged-but-globally-normalized counterexample and distinguish falsification from universal proof."
       ]
+    },
+    {
+      "id": "q_l09_e1",
+      "title": "Spread of observations, uncertainty of a mean",
+      "topic": "Estimation",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 5,
+      "prompt": "You observe 36 iid measurements with unknown mean \\(\\mu\\) and known population standard deviation 12 units. Their observed sample mean is 10 units. What is the standard error of the sample-mean estimator, in units? Assume finite variance; do not assume normality or substitute the observed mean for the unknown \\(\\mu\\).",
+      "answer": 2,
+      "hints": [
+        "What varies if you repeat the whole 36-observation experiment?",
+        "Independence makes the variance of the mean equal to the individual variance divided by 36."
+      ],
+      "solution": "The estimator is \\(\\bar X\\); its realised estimate is 10. Under iid sampling, \\(\\operatorname{Var}(\\bar X)=12^2/36=4\\), so its standard error is \\(\\sqrt4=2\\) units. The 12 describes individual measurements, not repeated sample means. The realised error \\(10-\\mu\\) remains unknown. This calculation is exact without normality; it does not justify an exact normal confidence interval.",
+      "followup": "For one fresh measurement Y, independent of the sample and from the same population, what is the repeated-experiment mean squared prediction error of using \\(\\bar X\\) to predict Y?",
+      "followSolution": "Write \\(Y-\\bar X=(Y-\\mu)-(\\bar X-\\mu)\\). Both terms have zero mean and are independent. Thus \\(E[(Y-\\bar X)^2]=144+4=148\\) square units. Its root is \\(\\sqrt{148}\\), approximately 12.166 units. Predicting an individual adds its own noise; the standard error 2 describes estimation of the common mean. After conditioning on the observed sample, prediction MSE is \\(144+(10-\\mu)^2\\), not necessarily 148.",
+      "lesson": "l09",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Compute variance \\(\\frac{144}{36}\\) before taking its square root.",
+        "Distinguish the random estimator from the observed value 10 and its unknown realised error.",
+        "State that finite-variance iid sampling suffices for the standard error, but not exact Gaussian coverage."
+      ]
+    },
+    {
+      "id": "q_l09_h1",
+      "title": "The correction that improves bias and worsens risk",
+      "topic": "Estimation",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 20,
+      "prompt": "Let \\(X_1,\\ldots,X_n\\) be iid \\(\\operatorname{Uniform}(0,\\theta)\\), with integer \\(n\\geq1\\) and unknown \\(\\theta>0\\). Write \\(M=\\max_iX_i\\). Use squared-error risk \\(R_\\theta(T)=E_\\theta[(T-\\theta)^2]\\).\n\nAmong estimators \\(T_c=cM\\), choose a real coefficient c depending only on n, not on \\(\\theta\\) or the realised sample. Derive its risk, find the risk-minimising c, and compare it with both M and the unbiased correction \\((n+1)M/n\\). Does the unbiased rule have the smallest risk? Justify the comparison for every \\(\\theta\\), including n=1.",
+      "answer": null,
+      "hints": [
+        "From \\(P(M\\leq x)=(x/\\theta)^n\\), derive both \\(E[M]\\) and \\(E[M^2]\\).",
+        "Expand the squared error as a quadratic in c. The unknown scale \\(\\theta\\) factors out.",
+        "Compare complete risks, not just biases; a coefficient greater than one need not remove all bias."
+      ],
+      "solution": "On \\([0,\\theta]\\), the maximum has density \\(nx^{n-1}/\\theta^n\\). Integration gives \\(E[M]=n\\theta/(n+1)\\) and \\(E[M^2]=n\\theta^2/(n+2)\\). Therefore\n\n\\[R_\\theta(cM)=\\theta^2\\left(\\frac{nc^2}{n+2}-\\frac{2nc}{n+1}+1\\right).\\]\n\nIts positive quadratic coefficient gives a unique minimum at \\(c_*=(n+2)/(n+1)\\). Completing the square gives \\(R_\\theta(cM)=\\theta^2/(n+1)^2+[n\\theta^2/(n+2)](c-c_*)^2\\). The best rule has negative bias \\(-\\theta/(n+1)^2\\); its risk is \\(\\theta^2/(n+1)^2\\). The raw maximum has risk \\(2\\theta^2/[(n+1)(n+2)]\\), and the unbiased correction has risk \\(\\theta^2/[n(n+2)]\\). Each exceeds the best risk for every positive \\(\\theta\\) and every n≥1. Bias removal increases variance enough to lose under this loss. At \\(n=1\\), the three risks are \\(\\theta^2/4\\), \\(\\theta^2/3\\) and \\(\\theta^2/3\\), respectively.\n\nThis proves optimality within fixed multiples of M and pointwise dominance over those two comparators. It does not, by itself, prove minimax optimality over all estimators or all \\(\\theta\\); absolute risks grow without bound as \\(\\theta\\) grows.",
+      "followup": "Instead use \\(T_a=a\\bar X\\), with a depending only on n. Find its best squared-error risk and compare it with \\(c_*M\\). Does using all observations through their mean necessarily improve this estimation problem?",
+      "followSolution": "Here \\(E[\\bar X]=\\theta/2\\) and \\(\\operatorname{Var}(\\bar X)=\\theta^2/(12n)\\). Thus \\(R_\\theta(a\\bar X)/\\theta^2=a^2/(12n)+(a/2-1)^2\\). Minimising gives \\(a_*=6n/(3n+1)\\), with risk \\(\\theta^2/(3n+1)\\). Since \\((n+1)^2-(3n+1)=n(n-1)\\), the best maximum rule has strictly smaller risk for n>1 and equal risk for n=1. The mean compresses the sample differently from the maximum; using every value in an arithmetic average is not a universal efficiency guarantee.",
+      "lesson": "l09",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive the first and second moments of the uniform maximum under the stated iid model.",
+        "Optimise the whole risk quadratic to obtain c*=(n+2)/(n+1) and its residual negative bias.",
+        "Compute and compare all three risks for every \\(\\theta\\)>0, checking n=1.",
+        "Keep the restricted-class result separate from a global minimax claim."
+      ]
+    },
+    {
+      "id": "q_l09_h2",
+      "title": "Balance endpoint error against central noise",
+      "topic": "Estimation",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 25,
+      "prompt": "Observe the success count \\(K\\sim\\operatorname{Binomial}(n,p)\\), where \\(n\\geq1\\) is known and \\(p\\in[0,1]\\) is unknown. Only K is observed. Under squared-error loss, consider \\(\\delta_a(K)=(K+a)/(n+2a)\\), with \\(a>0\\) chosen from n before observing K.\n\nDerive the frequentist risk at fixed p, choose a so that the risk is constant over the whole parameter interval, and prove that this rule minimises the worst-case risk among ALL estimators based on K, not merely this family. “Minimax” here means minimising \\(\\sup_{0\\leq p\\leq1}E_p[(\\delta(K)-p)^2]\\).\n\nFor the global lower bound you may introduce a \\(\\operatorname{Beta}(a,a)\\) prior. Derive why its posterior mean minimises posterior expected squared error, and explain how an average risk can lower-bound a worst-case risk. Do not treat constant risk alone as a proof of optimality.",
+      "answer": null,
+      "hints": [
+        "Compute the bias and variance separately; use \\((1-2p)^2=1-4p(1-p)\\).",
+        "The endpoint risks and the \\(p=1\\)/2 risk must agree to flatten this quadratic.",
+        "For any competing rule, its worst risk is at least its average risk under your chosen prior. Which rule minimises that average?"
+      ],
+      "solution": "The bias is \\(a(1-2p)/(n+2a)\\), and the variance is \\(np(1-p)/(n+2a)^2\\). Thus\n\n\\[R_p(\\delta_a)=\\frac{a^2+(n-4a^2)p(1-p)}{(n+2a)^2}.\\]\n\nChoose \\(a_* = \\sqrt n/2\\). Then the coefficient of p(1−p) vanishes and the risk is the constant \\(r_*=1/[4(\\sqrt n+1)^2]\\), including at p=0 and \\(p=1\\). Constant risk supplies an attainable upper bound on the minimax value, but an inferior rule could also have constant risk.\n\nFor a lower bound assign p the proper \\(\\operatorname{Beta}(a_*,a_*)\\) prior. After count \\(K=k\\), its posterior is \\(\\operatorname{Beta}(k+a_*,n-k+a_*)\\), whose mean is \\(\\delta_{a_*}(k)\\). For any proposed output d, expand its posterior squared error as \\(E[(d-p)^2\\mid K=k]=\\operatorname{Var}(p\\mid K=k)+(d-E[p\\mid K=k])^2\\). The posterior mean minimises this for every k, hence minimises average risk under this prior. Its average risk equals \\(r_*\\), since its fixed-p risk is constant. For any other rule g,\n\n\\[\\sup_{p\\in[0,1]}R_p(g)\\ \\geq\\ \\int_0^1R_p(g)\\,d\\pi(p)\\ \\geq\\ r_*.\\]\n\nOur rule attains \\(r_*\\), proving global minimax optimality for the specified observation and loss. Independent randomisation cannot improve the lower bound: conditional on K, randomising the output adds nonnegative variance to the same decomposition. This is a frequentist worst-case claim established using a prior as a proof device, not a claim that the unknown p was actually sampled from that prior.",
+      "followup": "For \\(a=1\\) (a uniform Beta prior), give the worst-case risk for arbitrary n and identify exactly when that rule equals the minimax rule. Why is a fixed amount of shrinkage not universally optimal?",
+      "followSolution": "The risk is \\([1+(n-4)p(1-p)]/(n+2)^2\\). For n<4, its largest value is \\(1/(n+2)^2\\), attained at p=0 or 1; for n>4 it is \\(n/[4(n+2)^2]\\), attained at \\(p=1\\)/2. At \\(n=4\\) it is constant \\(\\frac{1}{36}\\), and \\(a_*=1\\), so the uniform-prior rule is exactly minimax. For other n its worst risk is strictly larger than \\(r_*\\). Changing the parameter interval or the loss changes this balance; the proof used the full [0,1] interval and squared error.",
+      "lesson": "l09",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive the risk as a function of the fixed p and identify \\(a_*=\\sqrt n/2\\).",
+        "Check that the constant includes p=0 and \\(p=1\\) and compute \\(r_*\\).",
+        "Derive posterior-mean optimality via the conditional squared-error decomposition.",
+        "Give the prior-average lower bound for every competing rule, including randomisation; constant risk alone is insufficient."
+      ]
     }
   ],
   "lessons": [
@@ -2766,10 +2845,15 @@
       "questions": [
         "q23",
         "q24",
-        "q46"
+        "q46",
+        "q_l09_e1",
+        "q_l09_h1",
+        "q_l09_h2"
       ],
       "coding": [
-        "c04"
+        "c_l09_easy",
+        "c04",
+        "c_l09_hard"
       ],
       "objectives": [
         "Distinguish parameters, estimators, estimates and uncertainty.",
@@ -2777,7 +2861,7 @@
         "Work through a biased maximum estimator and a Beta posterior update."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "Correlation",
         "Mean squared error",

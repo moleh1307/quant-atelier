@@ -40,32 +40,34 @@ Students choose questions within the lists; no forced Q1 → Q2 → code chain.
 | l06 arithmetic | 6 interviews; 3 coding | Verified | Automated + desktop list/narrow numeric proof |
 | l07 variance/dependence | 6 interviews; 3 coding | Verified | Automated + live code grading/narrow written rubric |
 | l08 data timing | 6 interviews; 3 coding | Verified | Automated + live grading/legacy bookmark/narrow proof |
-| l09, l25, l10–l18 researcher | Pending | Pending | Pending |
+| l09 estimation | 6 interviews; 3 coding | Verified | Automated + live grading/narrow minimax proof |
+| l25, l10–l18 researcher | Pending | Pending | Pending |
 | l19–l24 trader | Pending | Pending | Pending |
 
 Sources: `topic_practice/foundation_questions.py`, `foundation_coding.py`,
-`distributions.py`, `stopping.py`, `arithmetic.py`, `variance.py`, `data_time.py`, the existing banks, and
+`distributions.py`, `stopping.py`, `arithmetic.py`, `variance.py`, `data_time.py`, `estimation.py`, the existing banks, and
 `tests/test_topic_practice.py`, `test_distribution_stopping_practice.py`, and
-`test_arithmetic_variance_practice.py` / `test_data_time_practice.py`. Generated assets are
+`test_arithmetic_variance_practice.py`, `test_data_time_practice.py`, and
+`test_estimation_practice.py`. Generated assets are
 `static/content.json` and `static/coding.json`; rebuild their Python sources.
 
 The two list destinations and nonsequential journey handoffs are implemented
 across the site. Existing pending topics expose their current linked practice;
 their banks do not yet satisfy the approved difficulty contract. The eight foundation
-topics do. Current inventory: 25 lessons, 84 interview questions, 34 coding
-exercises. Researcher route: 19 checks, 75 distinct questions, 34 codes.
+topics and researcher estimation l09 do. Current inventory: 25 lessons, 87 interview questions, 36 coding
+exercises. Researcher route: 19 checks, 78 distinct questions, 36 codes.
 
-Next: author researcher l09, then l25 and l10–l18; finish the trader topics.
+Next: author researcher l25, then l10–l18; finish the trader topics.
 Finish live checks of the remaining topic lists and representative exercises.
 Inspect each lesson’s
 actual learning goals and authored explanation before selecting its problems.
 The full goal remains active until all 25 topics, future-topic validation,
 navigation, preservation checks and commit/push evidence are complete.
 
-As of 2026-10-12, all 23 frontend suites and 62 Python tests pass. Independent
-enumeration and rational state equations check the eight foundation topics' delicate
-mathematical answers and coding references; all nineteen new reference solutions
-also pass the actual judge. Existing grading meaning and IDs are preserved; q44 now has topic-specific
-written assessment criteria in place of its generic rubric. Personal
+As of 2026-10-12, all 23 frontend suites and 73 Python tests pass. Independent
+enumeration, exact moments and rational state equations check the completed topics' delicate
+mathematical answers and coding references; all twenty-one new reference solutions
+also pass the actual judge. Existing grading meaning and IDs are preserved; q44 and q24 now have topic-specific
+written assessment criteria in place of their generic rubrics. Personal
 assessments, drafts and trainer history match the baseline captured for this work.
 See [verification](evidence/topic-practice-20261012.md) for scope and limitations.

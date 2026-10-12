@@ -1,8 +1,8 @@
 # Topic practice — verification
 
 2026-10-12. Latest verified scope: grouped list/journey navigation across the site,
-and expanded banks for l01–l08. The full 25-topic expansion remains active;
-17 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
+and expanded banks for l01–l09. The full 25-topic expansion remains active;
+16 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
 
 The first batch below documents l01–l03 at its own verification baseline
 (63 questions / 22 codes). Later batches are recorded below.
@@ -311,3 +311,93 @@ and trader banks. Preserve the new additional-practice mechanism when later
 lessons have multiple original coding links at the same difficulty. The full goal
 remains active until all 25 topics and the final preservation/navigation audit
 are complete.
+
+
+## Fifth batch: researcher estimation l09
+
+As of 2026-10-12, l09 has two Easy, two Medium and two Hard interview questions,
+and exactly one coding exercise per difficulty. Read the actual authored
+`static/lesson-estimation.js` argument and learning goals before selecting the
+practice. The chapter itself, its check and all assessment meanings are unchanged.
+Current total: 25 lessons / 87 interviews / 36 codes; researcher route 19 checks /
+78 distinct questions / 36 codes. Sixteen topics remain unfinished.
+
+New interviews distinguish standard error from observation/prediction noise,
+optimise the uniform-maximum risk rather than its bias, compare the best scaled
+sample mean, and prove Bernoulli minimax optimality beyond a chosen shrinkage
+family. Hard prompts define the loss, observed information, fixed versus
+sample-dependent choices and the scope of the conclusion. Written solutions
+include intermediate moments, risk comparisons, a posterior-loss decomposition
+and an average-risk lower bound; follow-ups test a changed estimator or fixed
+amount of shrinkage. New written rubrics name the proof obligations. The existing
+q24 variance-divisor rubric now names its iid assumption, n>1 correction and
+dependence limitation; every other field of q24 and all 83 other preceding
+question records are unchanged. All 34 preceding public code records are equal
+to the previous commit, including the original c04 streaming-variance exercise.
+
+`topic_practice/estimation.py` adds posterior summaries after disjoint batches
+(Easy) and stable posterior predictive batch tails (Hard). The Hard editorial
+integrates the conditional binomial distribution, derives adjacent-mass ratios
+and a mode, and explains why a mode-anchored relative distribution and suffix
+sums avoid endpoint underflow and upper-tail cancellation. The shared-p model,
+integer parameters, no-mutation rule, empty/zero-trial cases, equality endpoints,
+query order/duplicates, numerical tolerance and O(m+q) target are explicit.
+
+Independent verification in `tests/test_estimation_practice.py`:
+
+- Eleven tests include exact polynomial integration for uniform-maximum risk,
+  completed-square perturbations, sample-mean comparison and n=1 boundaries.
+- Binomial count enumeration verifies constant risk for n=1–44 across interior
+  and endpoint probabilities. Rational square-n examples independently integrate
+  posterior variance under the prior, checking the attained global lower bound
+  and a competing-rule perturbation. These checks support the written proof;
+  finite enumeration alone is not the universal minimax proof.
+- Three hundred seeded cumulative-posterior cases use exact prefix moments,
+  rather than the reference's update/variance factorisation. All published
+  posterior-summary expectations agree with that oracle; splitting batches
+  retains the same final posterior.
+- All 325 combinations A,B=1–5, m=0–12 use exact beta-integral count masses.
+  Means/variances agree with independent moment identities; asymmetric examples
+  reject swapped parameter conventions and mean plug-in predictions.
+- An 85-digit Decimal distribution starts at the endpoint and is not
+  renormalised. It independently checks all nonuniform large official cases,
+  including 100000 future trials with billion-count posteriors. The 3000-trial
+  balanced case has a true endpoint below double precision; the floating
+  reference still computes its central tail correctly. Uniform predictions use
+  an exact closed form, including a separate 100000-query check.
+- One hundred fifty seeded symmetry/update/order cases, input-preservation
+  assertions, and actual-judge checks reject batch-reset, binomial plug-in and
+  underflowed-endpoint shortcuts. All new official cases also fit the editor's
+  existing 200000-character combined debugging-copy limit; the official stress
+  case uses 6004 queries spread over the full 100000-trial support.
+
+All 73 Python tests and 23 frontend suites passed. All 21 expanded reference
+solutions pass the actual judge. Strict parsing covers the generated/authored
+math with no errors. The standard minimax argument was cross-checked against
+[UC Berkeley's statistical decision theory notes](https://stat210a.berkeley.edu/fall-2025/reader/minimax-estimation.html).
+The predictive model was cross-checked against the
+[NIST beta-binomial reference](https://www.itl.nist.gov/div898/software/dataplot/refman2/auxillar/bbnpdf.htm);
+NIST uses a different shape-parameter order, so the exercise defines A as the
+success shape and checks asymmetric cases explicitly. These are mathematical
+verification sources, not claims of an employer's exact interview questions.
+
+The in-app browser connection was unavailable; Chrome reviewed the normal
+lesson-to-list handoff, both difficulty lists and the minimax worked proof.
+Preview entry was explicit and the Test preview notice was verified before
+solution inspection and coding submission. The final server suite passed 15/15
+in the browser, including its long numerical/query cases. The proof, specific
+rubric and Python exercise rendered at 390px with zero math errors and document
+width equal to scroll width (390px). No written self-assessment was awarded.
+Temporary viewport settings were reset and the review tab was left at the
+personal l09 coding list, showing 0/3 rather than the preview's development pass.
+All five personal question/code/lesson/draft/trainer groups matched the fresh
+baseline captured for this batch. No recovery copy was applied or data reset.
+
+- [Estimation interview list, personal workspace](estimation-question-list-20261012.png).
+- [Estimation coding list, personal workspace](estimation-coding-list-20261012.png).
+
+Next: likelihood l25, researcher l10–l18, then trader l19–l24. The goal remains
+active until every topic bank, future-topic coverage guard and final
+preservation/navigation audit are complete. Passing checks validate the stated
+calculations and behaviour; they do not certify learning outcomes or universal
+interview readiness.
