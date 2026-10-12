@@ -1391,3 +1391,114 @@ observed navigation, not learner mastery or physical touch/screen-reader coverag
 Inventory is **25 lessons /138 interviews /61 codes**. **20 topics complete;
 l20–l24 remain**, followed by the full navigation/preservation audit and removal
 of the pending-topic exception. The full goal remains active.
+
+## Seventeenth batch: order flow, l20
+
+Read the authored `static/lesson-order-flow.js` and its learning goals before
+selecting practice. The bank has **two Easy, two Medium and three Hard interviews**
+and **one code at each difficulty**. Five interviews and three codes are new.
+Permanent q36 and q42 retain their prompts, types, answers, tolerances, hints,
+solutions, follow-ups and difficulty; only their generic rubrics become specific
+to selected fill populations, quote centre/width and constraints. All **138 prior
+interview records** retain grading meaning; those two rubrics are their only
+record differences. All **61 prior public coding records** are exact. No old
+links, saved assessments or drafts were removed or replaced.
+
+Progression follows the lesson’s conceptual obstacles. Easy separates profit
+per fill from profit per opportunity and customer/dealer inventory directions.
+Medium conditions on an entire buy/no-order history, then conditions again on a
+future execution; its follow-up identifies conditional independence and persistent
+counterparty types. The other Medium recomputes demand after each ask change,
+handles undefined zero-fill conditional values and derives an informed-fraction
+break-even threshold under the stated participation model. New Hard evaluates
+complete paths over two opportunities with a signed inventory bound. A quote
+with zero immediate expected edge reveals the state; adapting after buy OR no
+order gives value five versus four for the greedy purchase. Its proof compares
+all feasible first actions, defines the subsequent belief/inventory/horizon state
+and excludes quotes that can breach limits before execution. Existing written
+work remains explicitly self-assessed; numeric acceptance does not certify a proof.
+
+Easy code reconciles selected liability, fill probability and both profit
+denominators. Medium chooses a quote from its OWN stated state-dependent demand
+and per-opportunity economics, including refraining and original-index ties.
+Hard solves a small finite-horizon partially observed inventory game. One hidden
+payoff stays fixed; every buy, sale or no-order observation changes its posterior.
+Skip supplies no observation. Terminal marked inventory and a specified quadratic
+penalty are separated from cash, and reported gain subtracts the initial
+hold-to-settlement objective. Integer Bellman numerators share a positive common
+denominator. Gcd-normalised beliefs are cached, with the removed weight factor
+restored in parent contributions. This avoids rounded posterior comparisons and
+incorrect branch weights. Feasibility uses CURRENT reachable events rather than
+all hypothetical states or retroactively discarded fills. All exact outputs use
+canonical decimal strings, including large public sample fractions.
+
+**210 Python tests and all 23 frontend suites pass.** Eleven new topic tests
+independently enumerate the four informed/uninformed branches, complete conditional
+histories, cash-flow directions and the price-response threshold. Easy references
+have 400 seeded independent Fraction branch models with denominator reconciliation;
+Medium has 300 action-enumeration comparisons, zero/tie cases and a 100,000-quote
+reference check. Hard is checked by enumerating COMPLETE observation-indexed
+policies, evaluating each policy in both physical states and only then averaging
+and maximising. Seventy seeded two-opportunity models include zero prior weights,
+reachable/unreachable events, fees, penalties and binding inventory limits.
+A separate Fraction-posterior recursion agrees with full-policy enumeration and
+checks a three-menu/five-opportunity, state-dependent case with gain
+11179260/7891499 and action two. A full-horizon three-event uninformative model
+has an independently derived gain twenty. Prior/likelihood scaling invariance,
+no input mutation, canonical fractions and all official debug-copy round trips
+are checked. All **49 expanded reference solutions** pass the actual full judge.
+No official fixture, time/request bound, dependency or grading rule was weakened.
+Final strict checks parse over **2,700 authored/generated math spans**.
+
+The old browser connection was unavailable. The native in-app browser control
+was reachable and used for final checks. The local server had stopped; its
+remembered PID was verified to belong to a different process and was NOT stopped.
+A new server was started on the free local port. Every graded or solution session
+entered the explicit launcher and visibly verified **Test preview**. Numeric
+**−6/5** was accepted. Easy passed **5/5** (0.7ms observed), Medium **8/8** (1.1ms),
+Hard **12/12** (5.2ms). The public Hard numerator **999999999000000000** and
+denominator **1999999999** survived the actual expected-output textbox and
+submission-case copy. Both samples plus the copied case passed **3/3** as
+**debugging only, completion unchanged**. Selecting Hard before Easy/Medium was
+allowed; returns stayed in the coding list. The actual lesson continued to the
+interview list, and a question continued to the coding list. Reloads defaulted
+to personal and preview was explicitly re-entered. A restored worked solution
+was already open; its separate follow-up was opened after confirming preview.
+
+At a **390px viewport**, this browser’s scrollbar leaves a **375px document**;
+client/scroll widths both equal 375, with no page overflow. Both integer-recursion
+displays have matching width/scroll width **241px**, and the policy terminal-value
+display **255px**. Zero KaTeX errors and no browser console errors observed.
+Proof review caught symbols introduced before definition: the final wording
+explicitly defines low/high payments, penalty coefficient, likelihood ROW COUNTS,
+posterior weights, event cash and inventory increments before using the equations.
+Saved proof crops and both personal lists were visually inspected. Temporary
+viewport reset; final loaded personal URL was confirmed with no preview notice
+and **0/7 interviews /0/3 codes**. An immediate observation after the exit click
+briefly still showed the previous page; the final loaded-route check confirmed
+personal mode before delivery.
+
+The temporary pre-edit verification copy became unavailable after runtime
+reconnection, so a direct equality claim against that lost copy is not made.
+The actual saved study file’s creation/last-modification time precedes this topic’s
+source creation and remains unchanged; no saved study-file write occurred during
+this batch. A durable, ignored verification copy was then retained locally.
+Its whole-file hash and all five study groups (questions, coding, lessons, drafts,
+trainers) match at final review. Existing study records were preserved; no
+reset/replacement or personal grading was performed. The temporary-copy limitation
+is recorded here rather than presenting a later capture as a pre-edit baseline.
+
+- [Order-flow interviews, personal workspace](order-flow-personal-question-list-20261012.png).
+- [Order-flow coding list, personal workspace](order-flow-personal-coding-list-20261012.png).
+- [Defined policy state and terminal value, isolated narrow preview](order-flow-policy-proof-narrow-20261012.png).
+- [Integer Bellman numerator and branch contribution, isolated narrow preview](order-flow-bellman-proof-narrow-20261012.png).
+
+Primary context consulted: [Jane Street’s Probability & Markets guide, market
+making, adverse selection and recursion sections](https://www.janestreet.com/static/pdfs/trading-interview.pdf).
+New examples, proofs, demand rules, wording and code are original. No employer
+question provenance or calibrated difficulty is claimed. Verification establishes
+the declared finite models/contracts and observed navigation, not learner mastery,
+actual-market profitability or physical touch/screen-reader coverage. Inventory:
+**25 lessons /143 interviews /64 codes**; **21 topics complete**, **l21–l24 remain**,
+then the full navigation/preservation audit and removal of the pending-topic
+exception. The full goal remains active.
