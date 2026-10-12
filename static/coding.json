@@ -4263,5 +4263,384 @@
     ],
     "solution": "def solve(gains, loadings, margins, capital, exposure_limit):\n    n = len(gains)\n    states = {(0,0):(0,0,0)}\n    for i,(gain,loading,margin) in enumerate(zip(gains,loadings,margins)):\n        updated = dict(states)\n        bit = 1 << (n-1-i)\n        for (spent,exposure),(score,negative_count,mask) in states.items():\n            if spent+margin > capital:\n                continue\n            key = (spent+margin,exposure+loading)\n            candidate = (score+gain,negative_count-1,mask|bit)\n            if key not in updated or candidate > updated[key]:\n                updated[key] = candidate\n        states = updated\n    best = (0,0,0,0)\n    for (spent,exposure),(score,negative_count,mask) in states.items():\n        if abs(exposure) <= exposure_limit:\n            best = max(best,(score,-spent,negative_count,mask))\n    score,negative_spent,_,mask = best\n    return {'gain':score,'margin':-negative_spent,\n            'indices':[i for i in range(n) if mask & (1 << (n-1-i))]}",
     "explanation": "A state records exact used gross capital and SIGNED factor loading after an item prefix. Keep the best expected gain for that state; on equal gains keep fewer trades, then the lexicographically smaller original-index list. All future choices affect two equal-state prefixes identically, so this dominance preserves the final objective and tie rules. Read transitions from the previous prefix and write into a copied next map: each opportunity is selected at most once. A load of +10 followed by \u221210 is feasible at final limit zero, so applying the final risk test during intermediate layers would discard sample one; so would discarding the negative-gain hedge. Gross margins add even when factor exposure cancels.\n\nFor compact exact reconstruction, give earlier indices more significant bits. When selection counts tie, the larger mask has the smaller first differing index and therefore the lexicographically smaller sorted list. Prefix dominance stores (gain,negative_count,mask). The final comparison additionally prefers smaller capital BEFORE fewer items. Empty selection supplies zero gain and zero capital. The possible capital coordinates are 0..B and exposure coordinates \u2212A..A, where A is the sum of absolute input loadings; each item considers at most their product, rather than enumerating all 2^n subsets. Masks carry up to n bits and are internal, never an approximate numeric risk measure. This exact constrained optimum inherits every assumption and omitted risk of the supplied single-factor model."
+  },
+  {
+    "id": "c_l23_easy",
+    "title": "Aggregate signed Greeks with their contract multipliers",
+    "difficulty": "Easy",
+    "topic": "Mathematical finance",
+    "path": "trader",
+    "prompt": "positions contains up to 10000 rows [quantity,multiplier,delta_num,gamma_num,theta_num]. Quantity is an integer in [\u221210^6,10^6]; multiplier is a positive integer \u226410^6. All sensitivity numerators are integers in [\u221210^6,10^6] and share positive integer sensitivity_denominator D\u226410^9. These are per-unit delta, gamma and CALENDAR-TIME theta, with theta per DAY. stock_units is an integer in [\u221210^6,10^6]; stock contributes delta stock_units and zero gamma/theta. move is an integer underlying price change in [\u221210^6,10^6], and days is an integer in [0,10^6]. Other inputs, financing and fees are held fixed. Aggregate SIGNED quantities/multipliers first. Write \\(x=\\texttt{move}\\), \\(h=\\texttt{days}\\), and compute the retained Taylor change \\(\\Delta x+\\tfrac12\\Gamma x^2+\\Theta h\\). Return {\"delta\":[num_text,den_text],\"gamma\":[num_text,den_text],\"theta\":[num_text,den_text],\"change\":[num_text,den_text]}, all exact reduced canonical decimal STRINGS with positive denominators; zero=[\"0\",\"1\"]. Preserve positions. Use \\(O(n)\\) integer arithmetic/O(1) working integers, with bit/gcd costs additional. The retained quantity is computed exactly as algebra; it is a local value approximation for a general instrument, especially unreliable for arbitrary large moves. Do not omit the half factor, change theta to a remaining-time derivative, or treat the output as terminal payoff or guaranteed trading profit.",
+    "starter": "def solve(positions, stock_units, sensitivity_denominator, move, days):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              2,
+              100,
+              50,
+              2,
+              -3
+            ]
+          ],
+          -100,
+          100,
+          5,
+          1
+        ],
+        "expected": {
+          "delta": [
+            "0",
+            "1"
+          ],
+          "gamma": [
+            "4",
+            "1"
+          ],
+          "theta": [
+            "-6",
+            "1"
+          ],
+          "change": [
+            "44",
+            "1"
+          ]
+        }
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              1,
+              1,
+              -1,
+              -1
+            ]
+          ],
+          0,
+          2,
+          -3,
+          2
+        ],
+        "expected": {
+          "delta": [
+            "1",
+            "2"
+          ],
+          "gamma": [
+            "-1",
+            "2"
+          ],
+          "theta": [
+            "-1",
+            "2"
+          ],
+          "change": [
+            "-19",
+            "4"
+          ]
+        }
+      },
+      {
+        "args": [
+          [
+            [
+              1000000,
+              1000000,
+              1000000,
+              1000000,
+              -1000000
+            ]
+          ],
+          0,
+          999999937,
+          1000000,
+          1
+        ],
+        "expected": {
+          "delta": [
+            "1000000000000000000",
+            "999999937"
+          ],
+          "gamma": [
+            "1000000000000000000",
+            "999999937"
+          ],
+          "theta": [
+            "-1000000000000000000",
+            "999999937"
+          ],
+          "change": [
+            "500000999999000000000000000000",
+            "999999937"
+          ]
+        }
+      }
+    ],
+    "solution": "from math import gcd\n\ndef rational(num,den):\n    divisor = gcd(abs(num),den)\n    return [str(num//divisor),str(den//divisor)]\n\ndef solve(positions, stock_units, sensitivity_denominator, move, days):\n    denominator = sensitivity_denominator\n    delta = stock_units*denominator\n    gamma = theta = 0\n    for quantity,multiplier,d,g,t in positions:\n        scale = quantity*multiplier\n        delta += scale*d\n        gamma += scale*g\n        theta += scale*t\n    change = 2*delta*move+gamma*move*move+2*theta*days\n    return {'delta':rational(delta,denominator),'gamma':rational(gamma,denominator),\n            'theta':rational(theta,denominator),'change':rational(change,2*denominator)}",
+    "explanation": "Use D as the common denominator for each aggregate sensitivity. Stock delta starts at stock_units\u00b7D; each row adds quantity\u00b7multiplier times each numerator. A short position reverses ALL of that contract\u2019s contributions. Write d,g,t for the aggregate sensitivity numerators, x for move and h for days. The retained change has common denominator 2D and numerator \\(2dx+gx^2+2th\\). Reduce each result separately. This keeps the half-gamma coefficient, signed theta and stated day units without floating arithmetic. For sample one, the stock neutralises delta but aggregate gamma four/time contribution minus six remain, giving forty-four. Local initial delta cancellation does not maintain neutrality after a move; summing these numbers is not a self-financing rehedging calculation. Large exact strings survive display and copied cases."
+  },
+  {
+    "id": "c_l23_medium",
+    "title": "Evaluate a signed option book at every terminal price",
+    "difficulty": "Medium",
+    "topic": "Mathematical finance",
+    "path": "trader",
+    "prompt": "contracts contains up to 20000 rows [kind,strike,quantity,multiplier]. kind is \"call\" or \"put\"; strike is an integer in [0,10^9], quantity in [\u221210^6,10^6], and multiplier in [1,10^6]. All European contracts use the SAME nonnegative terminal underlying price and maturity. Each unit call pays max(S\u2212strike,0), each put max(strike\u2212S,0). stock_units is an integer in [\u221210^6,10^6]; cash is a fixed TERMINAL cash payment in [\u221210^9,10^9], possibly a liability. prices contains up to 20000 integer terminal prices in [0,10^9], in arbitrary order with duplicates. Return the exact combined TERMINAL cash payoff at each price, including stock_units\u00b7S+cash, as canonical signed decimal STRINGS in original query order; zero is \"0\". Do not subtract premiums or reinterpret terminal cash as its present value. Preserve every input. Use sorting and slope changes or equivalent preprocessing, avoiding a scan through every contract for every query: O(n log n+m log m) arithmetic/comparisons and O(n+m) storage is sufficient. Integer bit costs are additional. Handle shared strikes, calls/puts at zero strike, negative quantities, exact strike prices and empty lists. A signed book need not be convex; slope jumps can be negative. No volatility model, early exercise, simulation or Greek approximation is involved.",
+    "starter": "def solve(contracts, stock_units, cash, prices):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              "call",
+              100,
+              1,
+              1
+            ],
+            [
+              "put",
+              100,
+              -1,
+              1
+            ]
+          ],
+          -1,
+          100,
+          [
+            0,
+            90,
+            100,
+            120,
+            200
+          ]
+        ],
+        "expected": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              "call",
+              100,
+              1,
+              1
+            ],
+            [
+              "put",
+              120,
+              -1,
+              1
+            ]
+          ],
+          0,
+          0,
+          [
+            90,
+            110,
+            130,
+            0
+          ]
+        ],
+        "expected": [
+          "-30",
+          "0",
+          "30",
+          "-120"
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              "call",
+              1,
+              1000000,
+              1000000
+            ]
+          ],
+          0,
+          0,
+          [
+            1000000000,
+            1,
+            0
+          ]
+        ],
+        "expected": [
+          "999999999000000000000",
+          "0",
+          "0"
+        ]
+      }
+    ],
+    "solution": "def solve(contracts, stock_units, cash, prices):\n    events = {}\n    slope = stock_units\n    value = cash\n    for kind,strike,quantity,multiplier in contracts:\n        amount = quantity*multiplier\n        events[strike] = events.get(strike,0)+amount\n        if kind == 'put':\n            slope -= amount\n            value += amount*strike\n    cuts = sorted(events)\n    cursor = 0\n    previous = 0\n    answer = [None]*len(prices)\n    for index in sorted(range(len(prices)),key=lambda i:prices[i]):\n        price = prices[index]\n        while cursor < len(cuts) and cuts[cursor] <= price:\n            strike = cuts[cursor]\n            value += slope*(strike-previous)\n            slope += events[strike]\n            previous = strike\n            cursor += 1\n        answer[index] = str(value+slope*(price-previous))\n    return answer",
+    "explanation": "At price zero the book value is terminal cash plus every signed put amount times strike; its initial right-hand slope starts at stock units minus all put amounts. At each strike, BOTH a call and a put add their signed amount to the slope: a call begins paying above its strike, while a put stops losing one unit of payoff per added stock-price unit. Combine events sharing a strike. Advance the value continuously to each event, change the slope there, then evaluate sorted queries in the current linear segment. At a strike either adjoining segment gives the same payoff; processing the event before the equal-price query is safe. Restore the original query order. Zero-strike put events cancel their provisional initial slope; signed events can cancel or create negative curvature. The stock/cash piece is already a terminal linear payment. This exact piecewise calculation does not price the options, include premiums or use local sensitivities."
+  },
+  {
+    "id": "c_l23_hard",
+    "title": "Validate call quotes and bound an unquoted strike exactly",
+    "difficulty": "Hard",
+    "topic": "Mathematical finance",
+    "path": "trader",
+    "prompt": "Use a ONE-period, zero-interest, no-dividend pricing class defined by \\(C(K)=E[(S_T-K)^+]\\) and \\(E[S_T]=S_0\\), with a NONNEGATIVE probability measure supported on [0,M]. Zero masses are explicitly allowed; no physical probabilities or strictly-positive-support condition are imposed. M=max_price is an integer in [1,10^9]. price_denominator D is an integer in [1,10^9]; spot_numerator and call_numerators are integers in [0,10^9]. Spot is S\u2080=spot_numerator/D. strikes is a strictly increasing list of n integers with 0<K<M, n\u226420000; call_numerators has matching length and quote i is call_numerators[i]/D. queries contains m\u226420000 integer strikes in [0,M], arbitrarily ordered with duplicates. Input dimensions/order are guaranteed, but quote FEASIBILITY is not. Return {\"feasible\":False,\"bounds\":None} if NO such probability measure matches all quotes/spot. Otherwise return {\"feasible\":True,\"bounds\":[[lower_pair,upper_pair],...]} in query order, with SHARP inclusive price bounds over ALL matching measures. Each pair is [signed_numerator_text,positive_denominator_text], exact reduced canonical decimal STRINGS; zero=[\"0\",\"1\"]. A quoted strike and endpoints have fixed prices. Preserve all lists. Aim for O(n+m log(n+2)) exact arithmetic/comparisons and O(n+m) auxiliary storage; bit/gcd costs are additional. Use collective convexity, decreasing slopes and endpoint slope bounds, not independent pairwise price tests or a linear-programming package. The support cap matters. These inclusive bounds describe the declared NONNEGATIVE-measure class; they do not prove strict no-arbitrage for a different specified physical support in which every state must have positive probability.",
+    "starter": "def solve(max_price, spot_numerator, price_denominator, strikes, call_numerators, queries):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          200,
+          100,
+          1,
+          [
+            50,
+            150
+          ],
+          [
+            60,
+            10
+          ],
+          [
+            100,
+            25,
+            175,
+            50,
+            0,
+            200
+          ]
+        ],
+        "expected": {
+          "feasible": true,
+          "bounds": [
+            [
+              [
+                "20",
+                "1"
+              ],
+              [
+                "35",
+                "1"
+              ]
+            ],
+            [
+              [
+                "75",
+                "1"
+              ],
+              [
+                "80",
+                "1"
+              ]
+            ],
+            [
+              [
+                "0",
+                "1"
+              ],
+              [
+                "5",
+                "1"
+              ]
+            ],
+            [
+              [
+                "60",
+                "1"
+              ],
+              [
+                "60",
+                "1"
+              ]
+            ],
+            [
+              [
+                "100",
+                "1"
+              ],
+              [
+                "100",
+                "1"
+              ]
+            ],
+            [
+              [
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ]
+          ]
+        }
+      },
+      {
+        "args": [
+          200,
+          100,
+          1,
+          [
+            50,
+            100,
+            150
+          ],
+          [
+            55,
+            40,
+            5
+          ],
+          [
+            100
+          ]
+        ],
+        "expected": {
+          "feasible": false,
+          "bounds": null
+        }
+      },
+      {
+        "args": [
+          1000000000,
+          1000000000,
+          999999937,
+          [
+            123456789,
+            876543211
+          ],
+          [
+            800000000,
+            100000000
+          ],
+          [
+            333333333
+          ]
+        ],
+        "expected": {
+          "feasible": true,
+          "bounds": [
+            [
+              [
+                "66666666700000000",
+                "123456781222222293"
+              ],
+              [
+                "227777778400000000",
+                "376543187277777707"
+              ]
+            ]
+          ]
+        }
+      }
+    ],
+    "solution": "from bisect import bisect_left\nfrom math import gcd\n\ndef rational(num,den):\n    divisor = gcd(abs(num),den)\n    return [str(num//divisor),str(den//divisor)]\n\ndef solve(max_price, spot_numerator, price_denominator, strikes, call_numerators, queries):\n    d = price_denominator\n    if spot_numerator > d*max_price:\n        return {'feasible':False,'bounds':None}\n    x = [0]+strikes+[max_price]\n    y = [spot_numerator]+call_numerators+[0]\n    slopes = [(y[i+1]-y[i],x[i+1]-x[i]) for i in range(len(x)-1)]\n    previous_num,previous_den = -d,1\n    for num,den in slopes:\n        if num > 0 or num*previous_den < previous_num*den:\n            return {'feasible':False,'bounds':None}\n        previous_num,previous_den = num,den\n    answer = []\n    for k in queries:\n        right = bisect_left(x,k)\n        if x[right] == k:\n            fixed = rational(y[right],d)\n            answer.append([fixed[:],fixed[:]])\n            continue\n        left = right-1\n        ln,ld = slopes[left-1] if left else (-d,1)\n        rn,rd = slopes[right] if right < len(x)-1 else (0,1)\n        low_left = y[left]*ld+ln*(k-x[left])\n        low_right = y[right]*rd-rn*(x[right]-k)\n        if low_left*rd >= low_right*ld:\n            lower = rational(low_left,d*ld)\n        else:\n            lower = rational(low_right,d*rd)\n        upper = rational(y[left]*(x[right]-k)+y[right]*(k-x[left]),d*(x[right]-x[left]))\n        answer.append([lower,upper])\n    return {'feasible':True,'bounds':answer}",
+    "explanation": "Add the known endpoint quotes C(0)=S\u2080 and C(M)=0. A bounded nonnegative expectation gives a continuous convex decreasing call curve, with strike slope between \u22121 and zero. In scaled numerators, adjacent secant slopes must therefore be nondecreasing, between \u2212D and zero. Check every secant by integer cross multiplication, including the first/last bounds and S\u2080\u2264M. These are also SUFFICIENT: linearly join the quotes, extend slope \u22121 left of zero and zero right of M, and put probability mass equal to each nonnegative slope jump divided by D at its knot. The jumps sum to one; the resulting call expectations equal the curve and its mean is C(0).\n\nFor a query K strictly between adjacent knots a,b with prices A,B, the largest feasible price is their chord. A new price cannot fall below the line through A with the PREVIOUS secant slope, or the line through B with the NEXT secant slope. Use synthetic boundary slopes \u22121 and zero where those neighbouring intervals do not exist. Thus\n\n\\[\\begin{aligned}L&=\\max\\{A+s_L(K-a),\\\\&\\qquad B-s_R(b-K)\\},\\end{aligned}\\]\n\n\\[\\begin{aligned}U&=\\frac{A(b-K)}{b-a}\\\\&\\quad+\\frac{B(K-a)}{b-a}.\\end{aligned}\\]\n\nAny inserted price in [L,U] maintains all adjacent slope inequalities; the SAME slope-jump construction yields a matching measure on the augmented knots. This proves sharpness over continuous terminal support, not merely a fixed grid or numerical sample. Equality/zero mass is allowed by this task\u2019s class. Each query is bounded separately: its extremising measure need not attain every OTHER query bound simultaneously. Binary-search the interval, calculate the two lower candidate rationals and the chord with integer products, compare exactly, and reduce each pair. For the first example at strike one hundred, both supporting lines give twenty while the chord gives thirty-five. Merely interpolating the old quotes would select one admissible price, not establish a unique implied price. No probability forecast, Black\u2013Scholes parameter or extra empirical regularity was supplied."
   }
 ]

@@ -1744,3 +1744,136 @@ Inventory: **25 lessons /153 interviews /70 codes**. Researcher: **19 checks
 /124 questions /56 codes**; trader: **14 checks /79 questions /37 codes**.
 **23 topics complete**, **l23–l24 remain**, followed by full navigation/record
 preservation audit and removal of the pending-topic exception. Full goal active.
+
+
+## Twentieth batch — mathematical-finance core, 2026-10-13
+
+Reviewed the actual authored l23 body in `static/lesson-finance-core.js` and
+checked its objectives: European payoff replication, correctly scaled local
+sensitivities and the limitations of local neutrality. New
+`topic_practice/finance_core.py` adds **five original interviews /three codes**.
+With preserved q39/q40, l23 has **two Easy, three Medium and two Hard interviews**
+and exactly one code per difficulty. Only the rubrics of q39/q40 change among
+all **153 prior interview records**; their answers one/zero, grading types and
+every other field remain unchanged. All **70 prior public codes match exactly**.
+No old coding slot or bookmark is removed.
+
+Easy quantity practice distinguishes two long calls/one short put from the unit
+synthetic-forward identity. Terminal payment forty at stock 120, minus ten at
+ninety, changed payoff slopes and the exact extra-call decomposition are
+worked out; payment is not confused with profit after premiums. The dividend
+question matches both dated financing liabilities and derives put price four
+from spot 108, strike present value 95, known dividend present value three and
+call price fourteen. Its follow-up explains the unmatched dividend and why
+terminal matching alone does not establish American exercise parity.
+
+The added Medium question treats actual bid/ask crossings and funding signs.
+The two named four-leg parity trades have initial cash **−4 /−6**, despite a
+midpoint discrepancy. A changed put quote produces an executable initial
+receipt **one** under the declared feasible trading assumptions; terminal
+payments cancel in every state. Checking those two directions is not presented
+as proof of absence of every possible arbitrage. The original local-gamma and
+unit-parity questions remain available with specific assessment obligations.
+
+Hard incomplete-market practice proves that an affine stock/cash payoff cannot
+match the three-state call, derives positive pricing weights and the OPEN
+arbitrage-free interval **0<C<50**, and constructs arbitrages at/outside both
+endpoints. The middle-state digital supplies the missing priced payoff direction
+and forces C=50(1−d), with an explicit stock/digital replication. Physical
+probabilities are distinguished from pricing weights. Hard self-financing
+practice derives the actual cash account and the sum of interval squared moves
+minus time decay for a CONSTRUCTED quadratic mark. Rebalanced wealth is one
+versus minus three on two same-endpoint paths; a frozen initial hedge gives
+minus three on both. Including initial/interior/final stock costs gives
+**0.116 /−3.8**. Initial external outlay remains zero when the fee is financed;
+post-trade marked wealth is minus that fee, without an outside injection to
+reset it. Refining hedge dates can raise or lower squared-move totals. This
+constructed identity is not asserted to be a general option price/strategy.
+
+All new interviews contain explicit experiments, information, assumptions,
+hints, worked arguments, changed-condition follow-ups and specific rubrics.
+The new Easy cases apply the concepts to changed contract quantities/financing
+data instead of repeating the lesson's original numerical examples.
+
+Coding covers three different aspects of the topic:
+
+- **Easy:** aggregate signed quantity/multiplier-scaled delta, gamma and calendar
+  theta, preserving day units and the half-gamma coefficient. All outputs are
+  reduced rational decimal strings; the public retained-change numerator
+  **500000999999000000000000000000** over **999999937** remains exact. Its
+  algebra is exact while a real local repricing interpretation may be approximate.
+- **Medium:** sweep actual strike slope changes for a signed European option
+  book, stock and TERMINAL cash, returning payoff strings in original query
+  order. Handle shared/zero strikes, shorts and duplicate/empty queries.
+  Premiums and present-value cash are not silently mixed in. The public payment
+  **999999999000000000000** is preserved; the large fixture has 20,000 contracts
+  and 19,000 queries without scanning every contract for every query.
+- **Hard:** validate an explicitly defined bounded-support NONNEGATIVE
+  expectation-pricing class, then give sharp individual bounds for unquoted
+  strikes. Collective secant inequalities and endpoint slopes are necessary
+  and sufficient, proved through slope-jump atomic measures. Bounds use two
+  supporting lines and a chord; each admissible inserted value has a matching
+  measure. Zero mass is allowed by THIS class, unlike the earlier interview's
+  separately specified strictly positive physical support. Query extrema need
+  not be attained by one measure simultaneously. Binary searches, integer
+  comparisons and reduced strings preserve exact large rational outputs.
+
+Final verification: **243 Python tests /23 frontend suites** pass, and all
+**58 expanded reference solutions** pass the actual complete judge. Eleven
+new tests use independent evidence: per-contract rational local polynomials
+(350 seeded cases), direct payoff sums (450 seeded books), matched-contract
+identities, four-leg bid/ask ledgers, strict endpoint and digital payoff tables,
+and **150 exact self-financing cash ledgers** with/without costs. Hard bounds
+are checked against pivoted Fraction elimination enumerating finite pricing
+vertices in **100 seeded markets**, including the public large-rational case.
+All **343 small quote/spot combinations** are checked against the complete
+finite probability-table set. Knots include every payoff breakpoint, so
+compressing an arbitrary continuous-support law to those knots preserves the
+relevant constraints and objective; the oracle does not assume the reference's
+slope formulas. Max dimensions, equality/zero-mass cases, no input mutation,
+canonical outputs and EVERY official debug-copy character limit are checked.
+No fixture, output precision, grading meaning or runner bound was weakened.
+Final notation-only polish was followed by topic/strict-math/frontend checks;
+references and expected outputs were unchanged. Over **2,900 math spans** parse.
+
+Native in-app browser sessions explicitly used the development launcher and
+verified **Test preview** before grading/revealing. Hard was freely selected
+before Easy/Medium. Actual complete submissions passed **11/11** (104.9ms
+observed), **8/8** (1.5ms) and **10/10** (16.7ms), respectively. Each of the
+THREE large public expected outputs survived the actual textbox and copied
+submission case; sample-plus-copy debugging passed **4/4** for each, with
+completion unchanged. Numeric dividend price **four** was accepted. The actual
+lesson opens the interview list, a question continues to the coding LIST, and
+details return to their own freely chosen lists in the originating module.
+
+At **390px viewport /375px document**, the self-financing identities have
+matching client/scroll width **289px**; the fee expression is **255px**. The
+incomplete-pricing display is **289px**; the Hard code editorial's supporting
+line/chord displays are **241px**. No page or formula overflow, KaTeX errors or
+console errors were observed. Symbols for initial value/cash, interval moves,
+time increments and state weights are defined before use; multi-line displays
+retain the exact arguments at narrow widths. Four screenshots were visually
+inspected. Viewport override reset; final loaded PERSONAL interview list
+shows **0/7** interviews and **0/3** codes with no preview notice. These are
+this topic's counts, not a global reset or a statement that existing work is zero.
+
+The ignored durable personal baseline was captured BEFORE edits. Final saved
+bytes and questions/coding/lessons/drafts/trainers match it exactly. No personal
+grade, reset, replacement or import was performed. Reloads returned to personal;
+subsequent solution review re-entered preview explicitly.
+
+- [Finance interviews, personal workspace](finance-personal-question-list-20261013.png).
+- [Finance coding, personal workspace](finance-personal-coding-list-20261013.png).
+- [Incomplete pricing and positive weights, isolated narrow preview](finance-incomplete-price-proof-narrow-20261013.png).
+- [Self-financing cash ledger, isolated narrow preview](finance-cash-ledger-proof-narrow-20261013.png).
+
+Primary context: [Kogan, MIT 15.450 Arbitrage-Free Pricing Models, finite
+state prices, replication and self-financing](https://www.ocw.mit.edu/courses/15-450-analytics-of-finance-fall-2010/219406be97b96bc540e0be6aa778c0b7_MIT15_450F10_lec01.pdf).
+All new cases, wording, proofs and code are original; no commercial interview
+bank, employer attribution or calibrated employer difficulty is claimed.
+These checks establish the declared finite/model contracts and observed
+navigation, not learner mastery or live execution/risk certification. Inventory:
+**25 lessons /158 interviews /73 codes**; researcher **19 checks /124 questions
+/56 codes**; trader **14 checks /84 questions /40 codes**. **24 topics complete**;
+**l24 remains**, then the full navigation/record preservation/semantic-math
+audit and removal of the pending-topic exception. Full goal remains active.
