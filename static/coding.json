@@ -2432,5 +2432,274 @@
     ],
     "solution": "from bisect import bisect_left, bisect_right\ndef solve(rows, queries):\n    valid = [(a,b,r) for a,b,f,r in rows if f <= a]\n    if not valid:\n        return [0] * len(queries)\n    starts = sorted(set(a for a,b,r in valid))\n    n = len(starts)\n    ends = [[] for _ in range(n+1)]\n    for a,b,r in valid:\n        i = bisect_left(starts,a)+1\n        while i <= n:\n            ends[i].append(b)\n            i += i & -i\n    ends = [sorted(set(values)) for values in ends]\n    trees = [[0] * (len(values)+1) for values in ends]\n    def activate(a,b):\n        i = bisect_left(starts,a)+1\n        while i <= n:\n            j = bisect_left(ends[i],b)+1\n            while j < len(trees[i]):\n                trees[i][j] += 1\n                j += j & -j\n            i += i & -i\n    def prefix(x,y):\n        i = bisect_left(starts,x)\n        count = 0\n        while i:\n            j = bisect_right(ends[i],y)\n            while j:\n                count += trees[i][j]\n                j -= j & -j\n            i -= i & -i\n        return count\n    valid.sort(key=lambda row:row[2])\n    result = [0] * len(queries)\n    cursor = 0\n    infinity = 10**12+1\n    for index,(cutoff,lower,u,v) in sorted(enumerate(queries),key=lambda item:item[1][0]):\n        while cursor < len(valid) and valid[cursor][2] <= cutoff:\n            a,b,r = valid[cursor]\n            activate(a,b)\n            cursor += 1\n        result[index] = (prefix(infinity,u)-prefix(lower,u)\n                         +cursor-prefix(max(lower,v),infinity))\n    return result",
     "explanation": "Ignore feature-ineligible rows and sweep queries by fit_at, activating a row once its label receipt is \u2264that cutoff. Store each active interval as a point (start,end). Non-overlap is end\u2264u OR start\u2265v for protected [u,v). These branches are DISJOINT because start<end and u<v. The first branch also needs start\u2265L; the second needs start\u2265max(L,v).\n\nLet P(x,y) count active points with start<x and end\u2264y, and let M=10^12+1, strictly beyond every input timestamp. The answer is\n\n\\[P(M,u)-P(L,u)+P(M,M)-P(\\max(L,v),M).\\]\n\nBuild a compressed Fenwick tree over start; each outer node has its own sorted list of end coordinates and inner Fenwick counts. A point activation touches O(log N) outer nodes and O(log N) work inside each. Prefix counting uses the same two logarithmic traversals. Inner coordinate lists are compiled from all feature-eligible rows, but initially store ZERO counts: reading coordinate support during preprocessing does not activate future labels. Restore original query order after the fit-time sweep. The earliest boundary is inclusive, so prefix subtraction uses STRICT start<L; end\u2264u includes the disjoint touching case. Empty eligible support returns zeros. Purging is the stated interval operation, not a guarantee of independence or correct model-selection evidence."
+  },
+  {
+    "id": "c_l15_easy",
+    "title": "Summarize discovery ratios per repetition",
+    "difficulty": "Easy",
+    "topic": "Search",
+    "path": "researcher",
+    "prompt": "runs is an unsorted list of [false_rejections,total_rejections]. Each pair satisfies 0\u2264V\u2264R\u226410^9 and contains integers; repetitions, including duplicate pairs, are distinct. There are at most 100000 pairs. Return [empirical_FDR,empirical_FWER,pooled_false_fraction]. The first is the mean of V/max(R,1) over ALL runs; the second is the fraction of runs with V>0; the third is sum(V)/sum(R), or None if there are no rejections. Empty input returns [None,None,None]. Use ordinary finite floats for defined ratios, \\(O(n)\\) time and O(1) auxiliary accumulators; preserve the input. These summarize supplied repetitions, without certifying calibrated p-values or estimating posterior usefulness.",
+    "starter": "def solve(runs):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              9
+            ]
+          ]
+        ],
+        "expected": [
+          0.5,
+          0.5,
+          0.1
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        ],
+        "expected": [
+          0.25,
+          0.5,
+          0.5
+        ]
+      }
+    ],
+    "solution": "def solve(runs):\n    if not runs:\n        return [None,None,None]\n    fractions = 0.0\n    any_false = total_false = total_rejections = 0\n    for v,r in runs:\n        fractions += v / max(r,1)\n        any_false += v > 0\n        total_false += v\n        total_rejections += r\n    n = len(runs)\n    return [fractions/n,any_false/n,\n            total_false/total_rejections if total_rejections else None]",
+    "explanation": "Compute the false fraction before accumulating each repetition. The zero-rejection case contributes zero to that mean and still belongs in its denominator. Accumulate a separate indicator for any false report and separate integer totals for pooling. A pooled ratio weights runs by discovery counts; it must not replace an average of ratios. The loop makes one pass and leaves the input unchanged. Empty and all-zero cases have different outputs because the former has no repetition denominator."
+  },
+  {
+    "id": "c_l15_medium",
+    "title": "Holm adjustment with exact boundaries",
+    "difficulty": "Medium",
+    "topic": "Search",
+    "path": "researcher",
+    "prompt": "p_values is a list of rational pairs [numerator,denominator], each with 0\u2264numerator\u2264denominator\u226410^9 and denominator\u22651. alpha is another such pair. Fractions need not be reduced; the list may be empty and has at most 20000 entries. Every position names a separate hypothesis, even at equal or copied p-values. Sort the values ascending conceptually, and define the adjusted value at sorted position i (one-based) as \\(\\min(1,\\max_{j\\leq i}(m-j+1)p_{(j)})\\). Return {\"adjusted\": [exact adjusted pairs in ORIGINAL order], \"rejected\": [original indices whose adjusted value\u2264alpha, in input order]}. Output every rational as a reduced pair of decimal STRINGS with positive denominator; zero is [\"0\",\"1\"]. Reject at equality. Preserve both inputs. Avoid floating comparisons; aim for O(m log m) comparisons and O(m) storage, with integer/gcd bit costs additional.\n\nThis is Holm\u2019s step-down Bonferroni method. For a fixed finite family it controls the probability of ANY false rejection under arbitrary dependence, provided every true-null individual p-value is valid (Pr(p\u2264t)\u2264t). It does not establish those prerequisite p-value assumptions. The formula above defines this task even for an arbitrary supplied list.",
+    "starter": "def solve(p_values, alpha):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              1,
+              10
+            ],
+            [
+              1,
+              10
+            ],
+            [
+              2,
+              5
+            ]
+          ],
+          [
+            3,
+            10
+          ]
+        ],
+        "expected": {
+          "adjusted": [
+            [
+              "3",
+              "10"
+            ],
+            [
+              "3",
+              "10"
+            ],
+            [
+              "2",
+              "5"
+            ]
+          ],
+          "rejected": [
+            0,
+            1
+          ]
+        }
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              7
+            ],
+            [
+              2,
+              20
+            ]
+          ],
+          [
+            1,
+            5
+          ]
+        ],
+        "expected": {
+          "adjusted": [
+            [
+              "1",
+              "2"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "1",
+              "5"
+            ]
+          ],
+          "rejected": [
+            1,
+            2
+          ]
+        }
+      }
+    ],
+    "solution": "from functools import cmp_to_key\nfrom math import gcd\ndef solve(p_values, alpha):\n    def compare(i,j):\n        a,b = p_values[i]\n        c,d = p_values[j]\n        difference = a*d-c*b\n        return (difference > 0)-(difference < 0)\n    m = len(p_values)\n    adjusted = [None]*m\n    rejected = []\n    running_n,running_d = 0,1\n    for rank,index in enumerate(sorted(range(m),key=cmp_to_key(compare))):\n        n,d = p_values[index]\n        n *= m-rank\n        if n >= d:\n            n,d = 1,1\n        if n*running_d > running_n*d:\n            divisor = gcd(n,d)\n            running_n,running_d = n//divisor,d//divisor\n        adjusted[index] = [str(running_n),str(running_d)]\n    a,b = alpha\n    for index,(n,d) in enumerate(adjusted):\n        if int(n)*b <= a*int(d):\n            rejected.append(index)\n    return {\"adjusted\":adjusted,\"rejected\":rejected}",
+    "explanation": "Sort original indices by cross multiplication. At sorted rank i starting at zero, compare (m\u2212i) times that p-value against the running maximum, cap at one and reduce by gcd. Restore original positions; compare adjusted and alpha by exact cross products. Ties give equal adjusted values, regardless of stable ordering.\n\nWhy strong family-wise control does not need independence: if there are m0 true nulls, consider the FIRST true null rejected by the step-down procedure. At its rank at least m0 hypotheses remain, so its raw p-value must be\u2264alpha/m0. Thus any false rejection implies that at least one true-null p-value is\u2264alpha/m0. Validity and the union bound give probability at most m0(alpha/m0)=alpha. False-null p-values can behave arbitrarily. No rejection is possible after the first step-down failure; the running maximum expresses that rule for every alpha at once. Copies remain positions in the declared family and can make adjustment conservative. Do not substitute Holm\u2013Sidak, which is a different method."
+  },
+  {
+    "id": "c_l15_hard",
+    "title": "Calibrate the whole search by exact label randomization",
+    "difficulty": "Hard",
+    "topic": "Search",
+    "path": "researcher",
+    "prompt": "features has n rows and m columns of integers in [\u221210^6,10^6], where n is even, 2\u2264n\u226418 and 1\u2264m\u22648. assignment is a length-n binary list with exactly n/2 ones. All candidate columns and their comparable scales were fixed BEFORE inspecting assignment. Conditional on this fixed matrix, the GLOBAL NULL states that assignment is uniform over ALL balanced assignments. This assumption is supplied, not inferred from having a dataset: arbitrary time-series label shuffling is not justified. Preserve both inputs.\n\nFor each column compute the ABSOLUTE difference between the mean over group one and the mean over group zero. In every balanced reassignment recompute ALL columns jointly and take their maximum statistic. Enumerate every distinct balanced assignment, including the observed one. Return {\"statistics\": [observed column statistics], \"adjusted\": [Pr(randomized maximum\u2265observed column statistic)], \"global_p\": Pr(randomized maximum\u2265observed maximum)}. Each value must be an exact reduced [numerator_text,denominator_text] string pair with positive denominator, including [\"0\",\"1\"] for zero. Preserve original column order and include ties in the upper tail. This is exhaustive enumeration, so do NOT use a Monte Carlo +1 correction.\n\nLet C=binomial(n,n/2). Aim for O(Cnm+C log C+m log C+nm) time and O(C+nm) storage, rather than scanning all C maxima for each observed column. The exponential enumeration is intentional and bounded by n\u226418. Calibration here concerns the complete/global null. Strong family-wise control under partial nulls needs extra assumptions; the Holm exercise instead establishes that control from valid marginal p-values.",
+    "starter": "def solve(features, assignment):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          [
+            0,
+            0,
+            1,
+            1
+          ]
+        ],
+        "expected": {
+          "statistics": [
+            [
+              "2",
+              "1"
+            ],
+            [
+              "0",
+              "1"
+            ]
+          ],
+          "adjusted": [
+            [
+              "1",
+              "3"
+            ],
+            [
+              "1",
+              "1"
+            ]
+          ],
+          "global_p": [
+            "1",
+            "3"
+          ]
+        }
+      },
+      {
+        "args": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          [
+            0,
+            1,
+            0,
+            1
+          ]
+        ],
+        "expected": {
+          "statistics": [
+            [
+              "1",
+              "1"
+            ],
+            [
+              "1",
+              "1"
+            ]
+          ],
+          "adjusted": [
+            [
+              "2",
+              "3"
+            ],
+            [
+              "2",
+              "3"
+            ]
+          ],
+          "global_p": [
+            "2",
+            "3"
+          ]
+        }
+      }
+    ],
+    "solution": "from itertools import combinations\nfrom bisect import bisect_left\nfrom math import gcd\ndef solve(features, assignment):\n    n,m = len(features),len(features[0])\n    k = n//2\n    totals = [sum(row[j] for row in features) for j in range(m)]\n    observed = [abs(2*sum(features[i][j] for i in range(n) if assignment[i])-totals[j])\n                for j in range(m)]\n    maxima = []\n    for chosen in combinations(range(n),k):\n        maxima.append(max(abs(2*sum(features[i][j] for i in chosen)-totals[j])\n                          for j in range(m)))\n    maxima.sort()\n    count = len(maxima)\n    def pair(a,b):\n        d = gcd(a,b)\n        return [str(a//d),str(b//d)]\n    def tail(d):\n        return pair(count-bisect_left(maxima,d),count)\n    return {\"statistics\":[pair(d,k) for d in observed],\n            \"adjusted\":[tail(d) for d in observed],\n            \"global_p\":tail(max(observed))}",
+    "explanation": "With k=n/2, total column sum T and group-one sum S, the mean difference is (2S\u2212T)/k. Keep absolute integer numerators D=|2S\u2212T|; the common positive denominator k cancels in every comparison. Enumerate balanced index subsets, compute the JOINT maximum D for each, sort those maxima once, and use a lower-bound search to count values\u2265each observed numerator. Reduce counts/C and observed D/k exactly by gcd. Equal rows still have distinct indices and must not be deduplicated.\n\nUnder the stated conditional uniform assignment, the observed global statistic is one uniformly chosen member of this finite null multiset. Its inclusive upper-tail rank has a super-uniform p-value: ties can make it conservative. Rejecting any column when its maximum-adjusted tail is\u2264alpha is the same event as the global p-value\u2264alpha, because the largest observed statistic has the smallest tail. This proves global-null family calibration, not unrestricted partial-null strong control. Joint reassignment retains correlations; independent column shuffles destroy the declared joint null. A copied or sign-reversed column does not change an absolute-statistic maximum. Every exhaustive tail includes at least the observed assignment, so p-values cannot be zero. No randomized-sampling adjustment belongs in this exact calculation."
   }
 ]
