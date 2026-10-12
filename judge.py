@@ -1,0 +1,36 @@
+"""Bounded personal Python runner; not a security boundary for hostile users."""
+import ast, json, subprocess, sys
+from pathlib import Path
+from coding_bank import TASKS
+ALLOWED = {'math','statistics','collections','heapq','itertools','functools','bisect','random'}
+BLOCKED = {'eval','exec','open','compile','input','breakpoint','globals','locals','vars','getattr','setattr','delattr','dir','help','exit','quit','__import__'}
+
+def validate(code):
+    if len(code) > 30000:
+        raise ValueError('Keep the solution below 30,000 characters.')
+    tree = ast.parse(code)
+    for item in ast.walk(tree):
+        if isinstance(item, ast.Import) and any(a.name not in ALLOWED for a in item.names):
+            raise ValueError('Available imports: '+', '.join(sorted(ALLOWED)))
+        if isinstance(item, ast.ImportFrom) and (item.level or item.module not in ALLOWED or any(a.name.startswith('_') for a in item.names)):
+            raise ValueError('This import is unavailable in the practice runner.')
+        if isinstance(item, ast.Attribute) and item.attr.startswith('_'):
+            raise ValueError('Private and dunder attributes are unavailable.')
+        if isinstance(item, ast.Name) and (item.id in BLOCKED or item.id.startswith('__')):
+            raise ValueError('This builtin is unavailable in the practice runner: '+item.id)
+
+def run(task_id, code, mode='submit'):
+    task = next((t for t in TASKS if t['id']==task_id),None)
+    if not task: return {'error':'Unknown exercise.'}
+    try: validate(code)
+    except (ValueError,SyntaxError) as error:
+        result={'error':str(error)}
+        if isinstance(error,SyntaxError) and error.lineno: result['errorLine']=error.lineno
+        return result
+    cases = task['samples'] + (task['tests'] if mode == 'submit' else [])
+    try:
+        child = subprocess.run([sys.executable,'-I',str(Path(__file__).with_name('runner.py'))],input=json.dumps({'code':code,'cases':cases}),capture_output=True,text=True,timeout=4)
+        if child.returncode: return {'error':'The process exceeded its resource limit or exited unexpectedly.'}
+        return json.loads(child.stdout)
+    except subprocess.TimeoutExpired: return {'error':'Time limit exceeded (4 seconds). Check your algorithm or loops.'}
+    except (ValueError,OSError): return {'error':'Runner could not return a valid result.'}

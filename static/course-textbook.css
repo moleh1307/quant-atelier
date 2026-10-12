@@ -1,0 +1,201 @@
+/* Topic-specific figures use the approved reading styles; no global UI changes. */
+.course-figure,.course-bayes-lab,.course-indicator-lab,.course-wait-lab { max-width:700px; }
+.course-table-wrap { max-width:100%;overflow-x:auto;margin:24px 0; }
+.course-table { background:transparent;table-layout:fixed;min-width:380px;font:13px var(--font-body); }
+.course-table th { font:12px var(--font-body);text-transform:none;letter-spacing:0;background:none; }
+.course-table td,.course-table th { padding:12px 8px; }
+.course-table th:first-child { width:30%; }
+.course-table th:nth-child(2) { width:18%; }
+.course-table th:nth-child(3) { width:24%; }
+.course-table th:nth-child(4) { width:28%; }
+.course-table tbody tr:last-child th { border-bottom:0; }
+.course-table tbody tr:hover { background:none; }
+.course-mass-label { font:12px var(--font-body);color:#5f6b54;margin-bottom:12px; }
+.course-mass-strip { display:flex;height:28px;overflow:hidden; }
+.course-mass-strip > span { transition:width 360ms cubic-bezier(.22,.61,.36,1); }
+.course-mass-strip .fair { background:#6f9195; }
+.course-mass-strip .always { background:#b8755d; }
+.course-mass-legend { display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin:12px 0;font:12px var(--font-body); }
+.course-bayes-lab .atlas-range-label { margin-top:25px; }
+.course-record-line { display:flex;flex-wrap:wrap;gap:12px;margin:24px 0; }
+.course-record { font:14px var(--font-mono);padding:12px 15px;border-bottom:1px solid #b9bead; }
+.course-record.selected { color:#526b35;background:#e4eada;border-color:#71865b; }
+.course-flip { display:grid;place-items:center;border:1px solid #adb898;width:42px;height:42px;border-radius:50%;font:13px var(--font-mono);transition:background-color 280ms ease,color 280ms ease; }
+.course-flip.heads { background:#e4eada;color:#526b35; }
+.course-indicator-lab .select { width:120px; }
+.course-window-list { display:grid;gap:5px; }
+.course-window { display:grid;grid-template-columns:minmax(0,1fr) 42px 22px;gap:15px;align-items:center;padding:11px 12px;font:12px var(--font-body);border-bottom:1px solid #d7d9ce;transition:background-color 280ms ease; }
+.course-window strong { font:13px var(--font-mono); }
+.course-window.selected { background:#e4eada;color:#526b35; }
+.course-tail-rows { display:grid;gap:16px;font:12px var(--font-mono); }
+.course-tail-row { display:grid;grid-template-columns:62px minmax(0,1fr) 60px;align-items:center;gap:15px; }
+.course-bar-track { height:13px;background:#e0e2d7;overflow:hidden; }
+.course-bar-track > span { display:block;height:100%;background:#6f9195;transition:width 360ms cubic-bezier(.22,.61,.36,1); }
+.course-bar-track > span.rust { background:#b8755d; }
+.course-wait-row { display:grid;grid-template-columns:180px minmax(0,1fr) 60px;gap:12px;align-items:center;margin:18px 0;font:12px var(--font-body); }
+.course-wait-row strong { font:12px var(--font-mono); }
+.course-plot-pair { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px; }
+.course-plot-pair svg,.course-cuts-plot { width:100%;height:auto;display:block; }
+.course-cuts-plot { max-width:530px; }
+.course-plot-pair text,.course-cuts-plot text { font:14px var(--font-body);fill:#3d4438; }
+.course-plot-pair text.blue { fill:#35616b; }
+.course-plot-pair text.rust { fill:#9e3d27; }
+.course-cuts-plot text.green { fill:#526b35; }
+.course-axis { fill:none;stroke:#78846b;stroke-width:1.3; }
+.course-guide { fill:none;stroke:#929788;stroke-width:1;stroke-dasharray:4 4; }
+.course-curve { fill:none;stroke-width:2; }
+.course-curve.blue { stroke:#35616b; }
+.course-curve.rust { stroke:#9e3d27; }
+.course-state-diagram { display:block;width:100%;max-width:620px;height:auto; }
+.course-state-diagram text { font:12px var(--font-body);fill:#3d4438; }
+.course-state-edges path { fill:none;stroke:#78846b;stroke-width:1.5;marker-end:url(#suffix-arrow); }
+.course-state-empty { fill:#dce6e6;stroke:#6f9195; }
+.course-state-head { fill:#f1ded2;stroke:#b8755d; }
+.course-state-done { fill:#e4eada;stroke:#71865b; }
+.course-state-names text { text-anchor:middle;font:18px var(--font-mono); }
+#suffix-reset,#suffix-retain { transition:opacity 280ms ease; }
+.course-stage-list { display:grid;gap:12px; }
+.course-stage-row { display:grid;grid-template-columns:70px minmax(0,1fr) minmax(110px,1fr);gap:14px;padding:12px 0;border-bottom:1px solid #d7d9ce;font:12px var(--font-body); }
+.course-stage-row strong { font-weight:500; }
+.course-anchor-line { display:block;width:100%;max-width:640px;height:auto; }
+.course-anchor-line text { font:14px var(--font-body);fill:#3d4438; }
+.course-anchor-origin { fill:#35616b; }
+.course-anchor-correction { fill:none;stroke:#9e3d27;stroke-width:2; }
+#anchor-product { transition:transform 420ms cubic-bezier(.22,.61,.36,1); }
+#anchor-product circle { fill:#526b35; }
+#anchor-product text { fill:#526b35;font-family:var(--font-mono); }
+#anchor-delta-label { fill:#9e3d27; }
+.course-joint-table { width:100%;min-width:0;table-layout:fixed;background:transparent;font:13px var(--font-body);margin:25px 0; }
+.course-joint-table caption { text-align:left;font:12px/1.7 var(--font-body);color:#5f6b54;padding-bottom:12px; }
+.course-joint-table th,.course-joint-table td { width:33.333%;padding:15px 10px;text-align:center; }
+.course-joint-table th { background:none;font:12px var(--font-body);letter-spacing:0;text-transform:none; }
+.course-joint-table td { transition:background-color 280ms ease; }
+.course-joint-table .has-mass { background:#e4eada;color:#526b35; }
+.course-joint-table tbody tr:hover { background:none; }
+.course-code { max-width:100%;overflow-x:auto;white-space:pre;padding:20px 22px;background:#eeeae2;border:1px solid #dad8cc;border-radius:3px;margin:28px 0;font:12px/1.85 var(--font-mono);color:#30372f; }
+.course-code code { font:inherit;background:none;padding:0; }
+.course-code:focus-visible { outline:2px solid #c84220;outline-offset:3px; }
+.course-code-keyword { color:#9e3d27; }
+.course-code-string { color:#526b35; }
+.course-code-number { color:#35616b; }
+.course-code-comment { color:#5f6b54; }
+.course-window-timeline { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:26px 0 15px; }
+.course-time-value { display:grid;gap:12px;padding:18px 8px;text-align:center;font:12px var(--font-body);border:1px solid #adb898; }
+.course-time-value strong { font:22px var(--font-mono); }
+.course-time-value small { font:11px/1.5 var(--font-body); }
+.course-time-value.is-known { background:#e4eada;color:#526b35; }
+.course-time-value.is-future { background:#f1ded2;color:#9e3d27;border-style:dashed;border-color:#b8755d; }
+.course-time-boundary { font:12px/1.8 var(--font-body);color:#5f6b54; }
+.course-availability-table { min-width:500px;background:transparent;font:13px/1.7 var(--font-body); }
+.course-availability-table caption { text-align:left;font:12px/1.7 var(--font-body);color:#5f6b54;margin-bottom:15px; }
+.course-availability-table td,.course-availability-table th { padding:12px 10px; }
+.course-availability-table th { background:none;letter-spacing:0;text-transform:none;font:12px var(--font-body); }
+.course-availability-table th:first-child { width:23%; }
+.course-availability-table th:nth-child(2) { width:24%; }
+.course-availability-table tbody tr:hover { background:none; }
+.sample-space-reading .course-sampling-control { display:flex;align-items:center;gap:15px;font:12px var(--font-body);margin:10px 0 26px; }
+.sample-space-reading .course-sampling-control .select { width:90px;flex:0 0 90px; }
+.course-sampling-plot { width:100%;max-width:640px;height:auto;display:block; }
+.course-sampling-plot text { font:14px var(--font-body);fill:#3d4438; }
+.course-sampling-plot text.raw { fill:#35616b; }
+.course-sampling-plot text.shrunk { fill:#526b35; }
+.course-sampling-stem { fill:none;stroke-width:6;transform-origin:0 0;transition:transform 360ms cubic-bezier(.22,.61,.36,1); }
+.course-sampling-stem.raw { stroke:#35616b; }
+.course-sampling-stem.shrunk { stroke:#526b35; }
+.course-sampling-truth { fill:none;stroke:#9e3d27;stroke-dasharray:4 4;stroke-width:1.2; }
+#sampling-truth-label { fill:#9e3d27; }
+.course-covariance-geometry { width:100%;max-width:540px;height:auto;display:block; }
+.course-covariance-geometry text { font:17px var(--font-body);fill:#3d4438; }
+.course-covariance-circle { fill:none;stroke:#b9bead;stroke-width:1; }
+.course-covariance-vector { fill:none;stroke-width:2.5;marker-end:url(#covariance-vector-arrow); }
+.course-covariance-vector.raw { stroke:#35616b; }
+.course-covariance-vector.shrunk { stroke:#526b35; }
+.course-covariance-geometry text.raw { fill:#35616b; }
+.course-covariance-geometry text.shrunk { fill:#526b35; }
+.course-regression-plot,.course-regression-geometry { width:100%;max-width:600px;height:auto;display:block; }
+.course-regression-plot text,.course-regression-geometry text { font:17px var(--font-body);fill:#3d4438; }
+.course-regression-fit { fill:none;stroke:#35616b;stroke-width:2; }
+.course-regression-residual { fill:none;stroke:#9e3d27;stroke-width:2; }
+.course-regression-response { fill:none;stroke:#30372f;stroke-width:2; }
+.course-regression-fitted { fill:#35616b; }
+.course-regression-observed { fill:#30372f; }
+.course-regression-plot text.rust,.course-regression-geometry text.rust { fill:#9e3d27; }
+.course-regression-geometry text.raw { fill:#35616b; }
+.course-series-plot { width:100%;max-width:640px;height:auto;display:block; }
+.course-series-plot text { font:16px var(--font-body);fill:#3d4438; }
+.course-series-curve { fill:none;stroke-width:2; }
+.course-series-curve.positive { stroke:#35616b; }
+.course-series-curve.negative { stroke:#526b35; }
+.course-series-curve.zero { stroke:#78846b;stroke-dasharray:3 3; }
+.course-series-point { fill:#35616b; }
+.course-series-legend { display:flex;flex-wrap:wrap;gap:12px 25px;font:12px var(--font-body);margin:14px 0 26px; }
+.course-validation-timeline { width:100%;max-width:640px;height:auto;display:block; }
+.course-validation-timeline text { font:17px var(--font-body);fill:#3d4438; }
+.course-validation-cutoff { stroke:#78846b;stroke-width:1.3;stroke-dasharray:4 4; }
+.course-validation-interval { fill:none;stroke-width:3; }
+.course-validation-interval.mature,.course-validation-end.mature { stroke:#526b35; }
+.course-validation-interval.unfinished,.course-validation-end.unfinished { stroke:#9e3d27; }
+.course-validation-interval.protected,.course-validation-end.protected { stroke:#35616b; }
+.course-validation-start.mature { fill:#526b35; }
+.course-validation-start.unfinished { fill:#9e3d27; }
+.course-validation-start.protected { fill:#35616b; }
+.course-validation-end { fill:#f5f2ed;stroke-width:2; }
+.course-search-plot { width:100%;max-width:640px;height:auto;display:block; }
+.course-search-plot text { font:17px var(--font-body);fill:#3d4438; }
+.course-search-independent { fill:none;stroke:#35616b;stroke-width:2; }
+.course-search-copied { fill:none;stroke:#9e3d27;stroke-width:2; }
+.course-search-dot { fill:#35616b; }
+.course-search-copied-label { color:#9e3d27; }
+.course-mc-plot { width:100%;max-width:640px;height:auto;display:block; }
+.course-mc-plot text { font:17px var(--font-body);fill:#3d4438; }
+.course-mc-curve { fill:none;stroke-width:2; }
+.course-mc-curve.raw { stroke:#35616b; }
+.course-mc-curve.partner { stroke:#9e3d27; }
+.course-mc-curve.average { stroke:#526b35;stroke-width:2.5; }
+@media(max-width:600px) {
+ .course-plot-pair { grid-template-columns:1fr;gap:24px; }
+ .course-wait-row { grid-template-columns:minmax(0,1fr) 65px;gap:9px; }
+ .course-wait-row > span { grid-column:1/-1; }
+ .course-tail-row { gap:8px; }
+ .course-record-line { gap:8px; }
+ .course-record { padding:10px 12px;font-size:12px; }
+ .course-stage-row { grid-template-columns:55px minmax(0,1fr);gap:8px; }
+ .course-stage-row strong { grid-column:2; }
+ .course-state-diagram text { font-size:20px; }
+ .course-state-names text { font-size:24px; }
+ .course-anchor-line text { font-size:20px; }
+ .course-window-timeline { gap:6px; }
+ .course-time-value { padding:14px 5px; }
+ .course-code { padding:16px; }
+ .course-sampling-plot text { font-size:20px; }
+ .course-covariance-geometry text { font-size:20px; }
+ .course-regression-plot text,.course-regression-geometry text { font-size:20px; }
+ .course-series-plot text { font-size:20px; }
+ .course-validation-timeline text { font-size:20px; }
+ .course-search-plot text { font-size:20px; }
+ .course-mc-plot text { font-size:20px; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .course-mass-strip > span,.course-bar-track > span,.course-flip,.course-window,.course-joint-table td { transition:none; }
+ #suffix-reset,#suffix-retain { transition:none; }
+ #anchor-product { transition:none; }
+ .course-sampling-stem { transition:none; }
+}
+.course-value-plot,.course-growth-plot{display:block;width:100%;max-width:640px;height:auto;margin:0 auto;font:17px var(--font-body);fill:#3d4438}
+.course-value-plot rect{fill:#35616b;opacity:.75;transition:y 360ms cubic-bezier(.22,.61,.36,1),height 360ms cubic-bezier(.22,.61,.36,1)}
+.course-value-mean{stroke:#526b35;stroke-width:2;stroke-dasharray:4 4;fill:none}
+.sample-space-reading #value-information{width:148px;flex:0 0 148px}
+.course-growth-curve{fill:none;stroke-width:2.2;stroke:#35616b}
+.course-growth-curve.uncertain{stroke:#9e3d27;stroke-dasharray:5 4}
+.course-growth-curve.arithmetic{stroke:#526b35}
+.course-growth-optimum{fill:#35616b}
+@media(max-width:600px){.course-value-plot,.course-growth-plot{font-size:20px}.sample-space-reading #value-information{width:132px;flex-basis:132px}}
+@media(prefers-reduced-motion:reduce){.course-value-plot rect{transition:none}}
+.course-risk-plot,.course-finance-plot,.course-score-plot{display:block;width:100%;max-width:640px;height:auto;font:17px var(--font-body);fill:#3d4438}
+.course-risk-diagonal,.course-finance-dot,.course-score-dot{fill:#526b35}
+.course-risk-cross{fill:#9e3d27;opacity:.75}
+.course-finance-linear{fill:none;stroke:#35616b;stroke-width:2;stroke-dasharray:5 4}
+.course-finance-quadratic,.course-score-curve{fill:none;stroke:#526b35;stroke-width:2.5}
+.course-finance-gap{fill:none;stroke:#9e3d27;stroke-width:3}
+.course-score-guide{fill:none;stroke:#526b35;stroke-width:1;stroke-dasharray:4 4}
+@media(max-width:600px){.course-risk-plot,.course-finance-plot,.course-score-plot{font-size:20px}}
