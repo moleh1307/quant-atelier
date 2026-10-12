@@ -3950,5 +3950,318 @@
     ],
     "solution": "import math\n\ndef solve(net_returns, weights, cap):\n    if cap == 0 or any(sum(w*r for w,r in zip(row,net_returns)) <= 0 for row in weights):\n        return [0.0,0.0]\n    models = []\n    for row in weights:\n        total = sum(row)\n        models.append([(r,w/total) for r,w in zip(net_returns,row) if w])\n    def growth(fraction):\n        return min(math.fsum(p*math.log1p(fraction*r) for r,p in model) for model in models)\n    left,right = 0.0,cap\n    for _ in range(120):\n        first = left+(right-left)/3\n        second = right-(right-left)/3\n        if growth(first) < growth(second):\n            left = first\n        else:\n            right = second\n    candidates = [(0.0,0.0),(cap,growth(cap))]\n    middle = (left+right)/2\n    candidates.append((middle,growth(middle)))\n    fraction,value = min(candidates,key=lambda item:(-item[1],item[0]))\n    return [fraction,value]",
     "explanation": "For each model j, define \\(g_j(f)=\\sum_i p_{ji}\\log(1+fr_i)\\), where \\(r_i\\) is its net return and \\(p_{ji}\\) its normalised state probability. The positivity condition covers the UNION of reachable states, while zero-weight terms need no logarithm. Each g_j is concave; its pointwise minimum h is concave because every g_j at an interior convex combination is at least the same combination of endpoint h values. With a positive-mean nonconstant model, g_j is strictly concave. If ANY model has nonpositive mean return, concavity and its derivative at zero imply g_j(f)\u2264g_j(0)=0 for nonnegative f. Since h(0)=0, choose zero; an all-zero model is handled without an arbitrary positive stake. Otherwise every model has positive mean and strict curvature; for cap>0, h initially increases and has a unique maximum, which may occur at a boundary or a kink. Ternary search uses concavity without differentiating the minimum; compare cap and zero explicitly after narrowing. There is no need to infer which model is active near a numerical crossing.\n\nIn sample three, the two curves cross at a nonzero root of \\((1-f)^8=(1+f)^7(1-9f)\\). One is increasing and the other decreasing there, so the MINIMUM peaks at that kink, about 0.07547246, not at either separate model optimum or an averaged distribution\u2019s optimum. This bounded scalar model-set calculation does not address estimation, drawdown or action-dependent learning. Probabilities are normalised once, log1p retains small increments, and fsum reduces summation loss; finite binary64 accuracy is checked against independent high-precision objectives and closed-form/polynomial roots."
+  },
+  {
+    "id": "c_l22_easy",
+    "title": "Aggregate shared loadings before squaring risk",
+    "difficulty": "Easy",
+    "topic": "Risk",
+    "path": "trader",
+    "prompt": "Centred unit cash payoffs satisfy \\(Y_i=\\sum_j b_{ij}F_j+\\varepsilon_i\\), where \\(b_{ij}\\) is loadings[i][j]. quantities gives n fixed signed INTEGER position quantities, 1\u2264n\u22641000; loadings is an n by k integer matrix, 0\u2264k\u226420. Each factor F_j has integer variance factor_variances[j]; residual \u03b5_i has integer variance residual_variances[i]. All factors and residuals are pairwise uncorrelated with finite second moments. Quantities and loadings are in [\u221210^6,10^6]; variances in [0,10^6]. All dimensions match. Return {\"exposures\":[signed_integer_strings],\"factor_variance\":integer_string,\"residual_variance\":integer_string,\"variance\":integer_string} for the combined CASH payoff \\(\\sum_i q_iY_i\\), where \\(q_i\\) is quantities[i]. Every number must be a canonical decimal STRING; zero is \"0\". Means, fees, funding and higher moments are outside this task. Preserve all inputs. Use O(n(k+1)) integer arithmetic/\\(O(k)\\) auxiliary integers, with bit costs additional. Do not normalise quantities into portfolio weights or square each position loading before aggregating a shared factor.",
+    "starter": "def solve(quantities, loadings, factor_variances, residual_variances):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            1,
+            -1
+          ],
+          [
+            [
+              1
+            ],
+            [
+              1
+            ]
+          ],
+          [
+            9
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "expected": {
+          "exposures": [
+            "0"
+          ],
+          "factor_variance": "0",
+          "residual_variance": "2",
+          "variance": "2"
+        }
+      },
+      {
+        "args": [
+          [
+            2,
+            -1
+          ],
+          [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              -1
+            ]
+          ],
+          [
+            4,
+            9
+          ],
+          [
+            1,
+            4
+          ]
+        ],
+        "expected": {
+          "exposures": [
+            "-1",
+            "5"
+          ],
+          "factor_variance": "229",
+          "residual_variance": "8",
+          "variance": "237"
+        }
+      },
+      {
+        "args": [
+          [
+            1000000
+          ],
+          [
+            [
+              1000000
+            ]
+          ],
+          [
+            1000000
+          ],
+          [
+            1000000
+          ]
+        ],
+        "expected": {
+          "exposures": [
+            "1000000000000"
+          ],
+          "factor_variance": "1000000000000000000000000000000",
+          "residual_variance": "1000000000000000000",
+          "variance": "1000000000001000000000000000000"
+        }
+      }
+    ],
+    "solution": "def solve(quantities, loadings, factor_variances, residual_variances):\n    exposures = [0]*len(factor_variances)\n    residual = 0\n    for q,row,rv in zip(quantities,loadings,residual_variances):\n        residual += q*q*rv\n        for j,beta in enumerate(row):\n            exposures[j] += q*beta\n    factor = sum(a*a*v for a,v in zip(exposures,factor_variances))\n    return {'exposures':[str(a) for a in exposures], 'factor_variance':str(factor),\n            'residual_variance':str(residual), 'variance':str(factor+residual)}",
+    "explanation": "The combined loading on factor j is the SIGNED sum a_j=\\(\\Sigma\\)_i q_i b_ij. Pairwise uncorrelated factors and residuals give factor variance \\(\\Sigma\\)_j a_j\u00b2 Var(F_j) and residual variance \\(\\Sigma\\)_i q_i\u00b2 Var(\u03b5_i). A shared factor must be summed before it is squared; opposing exposures can cancel that factor while residual terms remain. Independence is stronger than necessary for this second-moment calculation. Empty factor lists leave only residual risk; zero factor variances do not make nonzero reported exposures disappear. A single pass accumulates the k exposures and residual scalar; exact Python integers and decimal strings preserve large squared quantities in the browser. This computes risk under the supplied model, not an empirical covariance estimate or an execution guarantee."
+  },
+  {
+    "id": "c_l22_medium",
+    "title": "Average the worst probability mass of the whole book",
+    "difficulty": "Medium",
+    "topic": "Risk",
+    "path": "trader",
+    "prompt": "scenario_pnl is an m by n integer matrix of JOINT unit cash payoffs for fixed same-horizon scenarios, 1\u2264m\u22645000 and 1\u2264n\u226420. quantities has n signed integer quantities. weights has m integer probability COUNTS in [0,10^6] with positive total W. Pnl entries and quantities are in [\u221210^6,10^6]. Each portfolio cash LOSS is \\(L_s=-\\sum_i q_iP_{si}\\), where \\(q_i\\) is quantities[i] and \\(P_{si}\\) is scenario_pnl[s][i]. Supplied payoffs already include all stated costs/exits: do not subtract them again. tail=[a,b], integers 1\u2264a\u2264b\u226410^6, specifies alpha=a/b. Sort positive-mass scenarios by DESCENDING loss and take exactly the worst alpha fraction of total probability, splitting the final scenario mass if necessary. Return {\"threshold\":signed_integer_string,\"tail_mean\":[signed_numerator_string,positive_denominator_string]}. threshold is the SMALLEST loss used with positive mass in that selected tail, including when the cutoff is an exact boundary. tail_mean is the exact average loss in the selected probability mass. Losses may be NEGATIVE; never clamp profits to zero. Equal losses, duplicate scenarios and zero counts are permitted. Rationals must be reduced canonical decimal strings, with zero=[\"0\",\"1\"]. Preserve all inputs. Use O(mn+m log m) arithmetic/comparisons and O(m) auxiliary records, with integer bit/gcd costs additional. Aggregate the JOINT book before sorting; averaging whole scenario records or summing independently selected component tails is wrong. This is a specified finite-distribution tail measure, not an estimated probability or a guaranteed funding limit.",
+    "starter": "def solve(scenario_pnl, quantities, weights, tail):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              -10
+            ],
+            [
+              -4
+            ],
+            [
+              6
+            ]
+          ],
+          [
+            1
+          ],
+          [
+            1,
+            2,
+            7
+          ],
+          [
+            1,
+            4
+          ]
+        ],
+        "expected": {
+          "threshold": "4",
+          "tail_mean": [
+            "32",
+            "5"
+          ]
+        }
+      },
+      {
+        "args": [
+          [
+            [
+              -5,
+              5
+            ],
+            [
+              5,
+              -5
+            ]
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "expected": {
+          "threshold": "0",
+          "tail_mean": [
+            "0",
+            "1"
+          ]
+        }
+      },
+      {
+        "args": [
+          [
+            [
+              -1000000,
+              -1000000
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          [
+            1000000,
+            1000000
+          ],
+          [
+            1000000,
+            999999
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "expected": {
+          "threshold": "0",
+          "tail_mean": [
+            "2000000000000000000",
+            "1999999"
+          ]
+        }
+      }
+    ],
+    "solution": "from math import gcd\n\ndef solve(scenario_pnl, quantities, weights, tail):\n    a,b = tail\n    total = sum(weights)\n    remaining = total*a\n    rows = sorted((-sum(q*p for q,p in zip(quantities,row)),w)\n                  for row,w in zip(scenario_pnl,weights) if w)\n    numerator = 0\n    threshold = None\n    for loss,w in reversed(rows):\n        take = min(w*b,remaining)\n        numerator += take*loss\n        threshold = loss\n        remaining -= take\n        if remaining == 0:\n            break\n    denominator = total*a\n    divisor = gcd(abs(numerator),denominator)\n    return {'threshold':str(threshold),\n            'tail_mean':[str(numerator//divisor),str(denominator//divisor)]}",
+    "explanation": "First aggregate each joint scenario into the actual signed book loss. Weight counts describe probability mass, not equally likely scenario rows. Multiply count masses by b, so total scaled mass is Wb and the requested tail is the INTEGER amount Wa. Descending losses receive up to w_s b units until exactly Wa units are allocated. Their weighted loss numerator divided by Wa is the tail mean; the final positive allocation identifies the explicitly defined threshold. Splitting an atom is essential: sample one uses one count at loss ten and one-and-a-half counts at loss four, producing (10+1.5\u00b74)/2.5=\\(\\frac{32}{5}\\). Taking every observation at or above the cutoff would instead average a different probability mass. Duplicate equal losses do not change the answer, and zero-count states are excluded before threshold selection. Alpha one recovers the full expected loss, which may be negative. Sample two has opposite unit movements but an identically zero book; summing two separate component tails would invent book losses. Exact integer scaling avoids rounding the tail size or a large rational numerator."
+  },
+  {
+    "id": "c_l22_hard",
+    "title": "Choose trades under shared-factor and gross-capital limits",
+    "difficulty": "Hard",
+    "topic": "Risk",
+    "path": "trader",
+    "prompt": "There are n indivisible opportunities, 0\u2264n\u226440. Integer lists gains, loadings and margins have length n: gain_i in [\u221210^6,10^6] is the declared expected NET cash payoff if selected once; loading_i in [\u221210,10] is its signed exposure to one centred variance-one common factor; margin_i in [1,80] is required gross capital. Write \\(g_i\\)=gains[i], \\(\\ell_i\\)=loadings[i] and \\(m_i\\)=margins[i]. The stylised payoff is \\(g_i+\\ell_iF\\), with no residual risks. A chosen subset I has expected payoff \\(\\sum_{i\\in I}g_i\\), factor loading \\(\\sum_{i\\in I}\\ell_i\\) and variance \\((\\sum_{i\\in I}\\ell_i)^2\\). Choose once BEFORE outcomes. Integer capital in [0,80] bounds \\(\\sum_{i\\in I}m_i\\); integer exposure_limit in [0,400] requires \\(\\left|\\sum_{i\\in I}\\ell_i\\right|\\leq\\texttt{exposure\\_limit}\\) at the FINAL book. Margins do not net, even for opposing exposures. Empty selection is allowed. Maximise total expected gain; ties prefer lower total margin, then fewer selected opportunities, then lexicographically smaller SORTED original index list. Return {\"gain\":integer,\"margin\":integer,\"indices\":[indices]}. Preserve all inputs. Negative-gain opportunities must not be discarded automatically: they can make a desirable combined exposure feasible. Do not prune an intermediate loading merely because it exceeds the FINAL limit; later positions may offset it. With B=capital and A=sum(abs(loadings)), use a dynamic program that selects each opportunity at most once, with O(n(B+1)(2A+1)) score transitions and O((B+1)(2A+1)) stored score/reconstruction states. State counts are finite; exact bit masks may use \\(O(n)\\) bits per state for reconstruction. This is a discrete specified selection model, not a live profitability or funding certification. No borrowing, partial trades, changing gains after outcomes or assumed zero covariance among these common-factor payoffs.",
+    "starter": "def solve(gains, loadings, margins, capital, exposure_limit):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            10,
+            -3
+          ],
+          [
+            10,
+            -10
+          ],
+          [
+            1,
+            1
+          ],
+          2,
+          0
+        ],
+        "expected": {
+          "gain": 7,
+          "margin": 2,
+          "indices": [
+            0,
+            1
+          ]
+        }
+      },
+      {
+        "args": [
+          [
+            6,
+            6,
+            12
+          ],
+          [
+            1,
+            -1,
+            0
+          ],
+          [
+            1,
+            1,
+            2
+          ],
+          2,
+          0
+        ],
+        "expected": {
+          "gain": 12,
+          "margin": 2,
+          "indices": [
+            2
+          ]
+        }
+      },
+      {
+        "args": [
+          [
+            5,
+            5,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          1,
+          0
+        ],
+        "expected": {
+          "gain": 5,
+          "margin": 1,
+          "indices": [
+            0
+          ]
+        }
+      }
+    ],
+    "solution": "def solve(gains, loadings, margins, capital, exposure_limit):\n    n = len(gains)\n    states = {(0,0):(0,0,0)}\n    for i,(gain,loading,margin) in enumerate(zip(gains,loadings,margins)):\n        updated = dict(states)\n        bit = 1 << (n-1-i)\n        for (spent,exposure),(score,negative_count,mask) in states.items():\n            if spent+margin > capital:\n                continue\n            key = (spent+margin,exposure+loading)\n            candidate = (score+gain,negative_count-1,mask|bit)\n            if key not in updated or candidate > updated[key]:\n                updated[key] = candidate\n        states = updated\n    best = (0,0,0,0)\n    for (spent,exposure),(score,negative_count,mask) in states.items():\n        if abs(exposure) <= exposure_limit:\n            best = max(best,(score,-spent,negative_count,mask))\n    score,negative_spent,_,mask = best\n    return {'gain':score,'margin':-negative_spent,\n            'indices':[i for i in range(n) if mask & (1 << (n-1-i))]}",
+    "explanation": "A state records exact used gross capital and SIGNED factor loading after an item prefix. Keep the best expected gain for that state; on equal gains keep fewer trades, then the lexicographically smaller original-index list. All future choices affect two equal-state prefixes identically, so this dominance preserves the final objective and tie rules. Read transitions from the previous prefix and write into a copied next map: each opportunity is selected at most once. A load of +10 followed by \u221210 is feasible at final limit zero, so applying the final risk test during intermediate layers would discard sample one; so would discarding the negative-gain hedge. Gross margins add even when factor exposure cancels.\n\nFor compact exact reconstruction, give earlier indices more significant bits. When selection counts tie, the larger mask has the smaller first differing index and therefore the lexicographically smaller sorted list. Prefix dominance stores (gain,negative_count,mask). The final comparison additionally prefers smaller capital BEFORE fewer items. Empty selection supplies zero gain and zero capital. The possible capital coordinates are 0..B and exposure coordinates \u2212A..A, where A is the sum of absolute input loadings; each item considers at most their product, rather than enumerating all 2^n subsets. Masks carry up to n bits and are internal, never an approximate numeric risk measure. This exact constrained optimum inherits every assumption and omitted risk of the supplied single-factor model."
   }
 ]

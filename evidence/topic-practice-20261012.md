@@ -1620,3 +1620,127 @@ learner mastery or a real-market policy. Inventory: **25 lessons /148 interviews
 **14 checks /74 questions /34 codes**. **22 topics complete**; **l22–l24 remain**,
 then the full navigation/preservation audit and removal of the pending-topic
 exception. The full goal remains active.
+
+
+## Nineteenth batch — joint exposures and risk, 2026-10-13
+
+Read the actual authored l22 lesson, `static/lesson-joint-risk.js`, and its goals
+before designing practice. New `topic_practice/joint_risk.py` adds **five original
+interviews /three codes**. With preserved q38, the topic has **two Easy, two
+Medium and two Hard interviews**, and exactly one code per difficulty. Only
+q38's rubric changes among all **148 prior interview records**; its numeric
+answer three and every other prior field remain unchanged. All **67 prior
+public coding records match exactly**. No old coding bookmark is removed.
+
+Easy checks apply signed factor aggregation, residual risk and variance/volatility
+units. Final review changed the new hedge setup to loadings two/three and
+residual variances four/nine, avoiding repetition of the lesson's worked hedge.
+A two-thirds short cancels the factor but leaves variance **eight**. Changed
+loading 2.5 restores factor variance one and total variance nine; merely netting
+one unit against one unit gives **61/4**. The stress check changes one volatility
+to four while the other stays two: covariance eight, portfolio variance nine,
+and standard-deviation ratio **√3** relative to baseline. These final questions
+require applying the concept to changed conditions. Numeric grading verifies
+a number; it does not certify the requested reasoning.
+
+Medium derives the common-factor floor and the minimum **forty names** for
+variance at most 1.1 under the stated uncorrelated residual model. Its changed
+residual-correlation follow-up derives variance **1.2+3.8/n**, proves the target
+unattainable and constructs a coherent shared-residual covariance model.
+The preserved original question supplies the other Medium task.
+
+Hard joint-crash practice derives all eight binary cell masses from fair
+marginals and pairwise independence, giving the SHARP crash interval **[0,1/4]**.
+Endpoint constructions have identical means/covariance I and equal-weight
+portfolio variance **1/3**, yet different crash probabilities; mixing gives
+every intermediate value. Joint independence instead fixes probability **1/8**.
+Hard hedge practice minimises the worst variance for uncertain loading b in
+[1,3]. Convexity in b selects endpoint stress models; their active envelope
+switches at h=1/2. Left/right derivatives **−3 /13** prove the kink optimum
+**h=1/2, variance 9/4**, rather than choosing an individual model's smooth root.
+The residual-variance follow-up derives h*=min(1/2,4/(4+d)), handles d=4 exactly,
+and shows at d=12 why a smaller hedge reduces the total worst variance.
+All new questions specify information, units, feasible actions and assumptions,
+with purposeful hints, complete reasoning, changed-condition follow-ups and
+specific assessment criteria.
+
+Coding extends three distinct aspects of the lesson:
+
+- **Easy:** aggregate signed shared-factor loadings BEFORE squaring, then add
+  uncorrelated residual variance. Empty factor sets, zero variance factors,
+  negative positions and large quantities are explicit. All exact outputs are
+  canonical decimal strings; the public sample includes factor variance **10³⁰**
+  and total **1000000000001000000000000000000**.
+- **Medium:** aggregate the whole joint scenario book, then average exactly the
+  worst alpha probability mass. Split a cutoff atom, exclude zero-count states,
+  keep negative losses and define an exact-boundary threshold explicitly.
+  Integer scaling avoids rounding; the public rational output retains
+  **2000000000000000000/1999999**. Summing independently chosen component tails
+  would invent losses in the zero-book example.
+- **Hard:** select indivisible opportunities under an additive gross-capital cap
+  and a FINAL signed factor-exposure limit. Prefix-state dominance, fresh item
+  layers, negative-gain hedges, intermediate offsetting exposures and all three
+  tie priorities are proved. Exact masks reconstruct the preferred index list;
+  no factor independence or netted margin is invented. Complexity and omitted
+  single-factor-model risks are explicit.
+
+Final validation: **232 Python tests /23 frontend suites** pass, including
+**55 expanded references through the actual complete judge**. The ten new tests
+use independent full covariance quadratic forms (250 seeded models), physical
+independent-shock enumeration (40 models), hinge-loss variational objectives
+(250 weighted books), complete scaled-mass allocations (60 small tails), and
+**500 exhaustive small subset comparisons** using natural index-list tie order.
+They also enumerate feasible eight-cell tables, check exact
+moment/tail identities, one-sided robust-hedge derivatives and changed d values,
+maximum dimensions, no input mutation and exact official debug copies.
+Initial copied-case field/count assumptions in the new harness were corrected
+to the existing backend contract; no fixture or runner bound was weakened.
+All official Easy/Medium copies remain within the existing debugging limit.
+The final new numerical setup was rechecked, including a fresh complete Python
+run; final notation/prose passed strict KaTeX checks over **2,900 math spans**.
+
+Native in-app browser grading and solution inspection explicitly entered
+`/test-preview.html#destination` and confirmed **Test preview**. Hard was chosen
+before Easy/Medium; actual complete submissions passed **11/11** (1.6ms observed),
+**7/7** (4.8ms) and **10/10** (11.7ms). Both large public expected outputs survived
+the actual textbox and submission-case copy; sample-plus-copy debugging passed
+**4/4** each with completion unchanged. The final revised numeric hedge answer
+**eight** was accepted in a fresh isolated attempt. Lesson → interview list,
+question → coding list and detail → own list handoffs were observed. One footer
+click after a full-page screenshot lost its target; a fresh visible module-stage
+link completed the same handoff. This observation is recorded without treating
+the failed click as completed navigation.
+
+At a **390px viewport /375px document**, the robust-hedge display has matching
+client/scroll width **289px**. Both Hard written explanations and the final
+formatted coding prompt have no page overflow or KaTeX errors. Coding sum/index
+notation is defined explicitly; the phrase naming a binary item-selection
+program uses words so it is not automatically rendered as a fraction. The
+underscore in the literal exposure-limit name is escaped in math text.
+No console errors were observed. Four screenshots were visually inspected.
+Viewport override reset; final loaded PERSONAL interview list has **0/6**
+interviews and **0/3** codes with no preview notice. These new-topic zero counts
+do not erase or recategorise existing study work.
+
+A durable ignored baseline was captured BEFORE edits. Final saved bytes and
+questions/coding/lessons/drafts/trainers match it exactly. No personal grade,
+reset, import or replacement occurred. Reloading returned to personal, and
+subsequent graded work explicitly re-entered preview.
+
+- [Joint-risk interviews, personal workspace](joint-risk-personal-question-list-20261013.png).
+- [Joint-risk coding, personal workspace](joint-risk-personal-coding-list-20261013.png).
+- [Uncertain-hedge envelope, isolated narrow preview](joint-risk-hedge-proof-narrow-20261013.png).
+- [Sharp joint-crash reasoning, isolated narrow preview](joint-risk-crash-proof-narrow-20261013.png).
+
+Primary context: [Rockafellar and Uryasev's publisher-indexed abstract on atoms
+in general loss distributions](https://www.sciencedirect.com/science/article/pii/S0378426602002716),
+listed in [the author's publications](https://uryasev.github.io/publications/).
+The linked full paper was not accessible in this verification. The finite cases,
+contracts, worked proofs and code here are original and independently checked;
+no commercial question bank, employer question attribution or calibrated
+employer difficulty is claimed. These checks establish the specified models
+and observed UI behavior, not learner mastery or real-market risk certification.
+Inventory: **25 lessons /153 interviews /70 codes**. Researcher: **19 checks
+/124 questions /56 codes**; trader: **14 checks /79 questions /37 codes**.
+**23 topics complete**, **l23–l24 remain**, followed by full navigation/record
+preservation audit and removal of the pending-topic exception. Full goal active.
