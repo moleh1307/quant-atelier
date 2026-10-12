@@ -473,9 +473,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Derive covariance two and observed predictor variance four under the stated independence assumptions.",
+        "Obtain the population slope \\(\\frac{1}{2}\\) and explain which latent coefficient it differs from.",
+        "When measurement and response noise covary, include that covariance in the numerator rather than assuming attenuation."
       ]
     },
     {
@@ -524,9 +524,9 @@
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Differentiate with respect to the unpenalized intercept to derive the zero residual sum.",
+        "Identify the intercept column in the normal equations and explain why removing it removes that constraint.",
+        "Separate an in-sample stationarity identity from unbiased predictions on future data."
       ]
     },
     {
@@ -750,9 +750,9 @@
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Derive (\\(X^{\\mathsf T}X\\)+\\(\\lambda I\\))β=Xᵀy from the stated penalty on every coefficient.",
+        "Use eigen-directions to explain shrinkage when the ordinary least-squares coefficients are identified.",
+        "Explain why changing feature units changes the stated coefficient penalty and motivates consistent scaling."
       ]
     },
     {
@@ -2451,6 +2451,136 @@
         "Describe every minimiser and explain when uniqueness holds.",
         "Distinguish unrestricted cancellation, nonnegative constraints and perfectly duplicated common noise."
       ]
+    },
+    {
+      "id": "q_l11_e1",
+      "title": "A population slope is a covariance ratio",
+      "topic": "Regression",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 6,
+      "prompt": "Random variables W and Y have finite second moments, with E[W]=2, \\(\\mathbb E[Y]\\)=5, Var(W)=4 and Cov(W,Y)=6. Choose real a,b to minimize the POPULATION mean squared error \\(E[(Y-a-bW)^2]\\). What is the optimal slope b? An intercept is fitted; no causal or conditional-mean model is assumed.",
+      "answer": 1.5,
+      "hints": [
+        "First optimize the intercept for a fixed slope.",
+        "Centering leaves a quadratic with cross term −2b Cov(W,Y)."
+      ],
+      "solution": "For fixed b, the optimal intercept is \\(a=E[Y]-bE[W]\\). The remaining error is \\(\\operatorname{Var}(Y)-2b\\operatorname{Cov}(W,Y)+b^2\\operatorname{Var}(W)\\). Its derivative vanishes at b=\\(\\frac{6}{4}\\)=\\(\\frac{3}{2}\\), and a=5−(\\(\\frac{3}{2}\\))·2=2. Positive predictor variance makes this quadratic strictly convex in b. These are coefficients of the best LINEAR prediction; the conditional mean need not itself be linear, and an association is not an intervention effect.",
+      "followup": "If Var(Y)=13 as well, find the minimum mean squared error. Why would forcing a=0 generally change the slope?",
+      "followSolution": "The minimum error is \\(13-6^2/4=4\\). Without an intercept the derivative gives \\(b=E[WY]/E[W^2]\\), rather than the centered ratio. Here E[WY]=6+2·5=16 and E[W²]=4+2²=8, so b=2. Its error is E[Y²]−E[WY]²/E[W²]=38−\\(\\frac{256}{8}\\)=6. An intercept allows the mean level and the slope to be fitted separately.",
+      "lesson": "l11",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Center both variables after optimizing the intercept.",
+        "Derive b=\\(\\frac{3}{2}\\) and a=2 from the population moments.",
+        "Compute the minimum error and distinguish linear prediction from a causal or conditional-mean claim."
+      ]
+    },
+    {
+      "id": "q_l11_e2",
+      "title": "A changed unit changes the coefficient",
+      "topic": "Regression",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 6,
+      "prompt": "An ordinary least-squares fit with a free intercept gives \\(\\widehat Y=0.5+1.5X\\) for observations X=[0,1,2], Y=[1,1,4]. Report the predictor instead as W=10X+20. Keeping EXACTLY the same fitted predictions, write \\(\\widehat Y=a^{\\prime}+b^{\\prime}W\\). What is the new slope?",
+      "answer": 0.15,
+      "hints": [
+        "Solve the change of coordinates for X.",
+        "A changed label on the predictor must not change the predictions."
+      ],
+      "solution": "Substitute X=(W−20)/10: \\(\\widehat Y=0.5+0.15(W-20)=-2.5+0.15W\\). Thus b′=0.15 and a′=−2.5. Both lines give predictions [0.5,2,3.5]. The coefficient value changes with the unit, while the fitted quantity and its residuals stay identical.",
+      "followup": "Now fit ridge regression with objective SSE+λb², where \\(\\lambda>0\\) and the intercept is UNPENALIZED. After the same change W=10X+20, what λ′ preserves the entire objective and hence the physical predictions? What happens if λ is kept unchanged?",
+      "followSolution": "Because b′=b/10, the same penalty needs \\(\\lambda^{\\prime}(b^{\\prime})^2=\\lambda b^2\\), so λ′=100λ. The free intercept absorbs the shift of twenty. Keeping λ unchanged divides the physical slope penalty by 100; it generally changes the fitted predictions. This argument concerns a penalty on the slope only. Penalizing the intercept would make the shift matter as well. Scaling learned from data also belongs inside the training procedure, not on a held-out record.",
+      "lesson": "l11",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Transform the slope and intercept together and verify unchanged predictions.",
+        "Give slope 0.15 and intercept −2.5.",
+        "Derive λ′=100λ for a slope-only penalty and explain the free-intercept assumption."
+      ]
+    },
+    {
+      "id": "q_l11_m1",
+      "title": "Orthogonal residuals do not remove confounding",
+      "topic": "Regression",
+      "difficulty": "Medium",
+      "path": "researcher",
+      "minutes": 16,
+      "prompt": "Let U,V be independent centered random variables with variance one. Interpret the following equations as a CAUSAL GENERATOR: \\(X=U+V\\), \\(Y=X+2U\\). An intervention on X replaces its first equation while leaving U and the equation for Y unchanged.\n\nDerive the population least-squares slope of Y on X with a free intercept and its residual. Show that the residual is uncorrelated with X. Compare this observational slope with the change in Y caused by increasing X by one under the stated intervention. Does residual orthogonality resolve the discrepancy?",
+      "answer": null,
+      "hints": [
+        "In observed data Y=3U+V, but an intervention uses the stated structural equation.",
+        "Compute Cov(X,Y) and Var(X) before forming the slope.",
+        "Orthogonality is a property of the fitted projection, not a test for an unconfounded causal generator."
+      ],
+      "solution": "Means are zero, Var(X)=2 and Cov(X,Y)=Cov(U+V,3U+V)=4. The fitted intercept is zero and slope is 2. The residual is \\(r=Y-2X=U-V\\), so Cov(X,r)=Var(U)−Var(V)=0. Nevertheless the structural equation Y=X+2U gives an intervention effect of ONE when U is held fixed. The observational coefficient contains the association between X and U: Cov(X,2U)/\\(\\operatorname{Var}(X)=1\\) in addition to the direct coefficient one. Least squares made the residual orthogonal by choosing its coefficient; it did not remove the common cause. No Gaussian assumption was needed so far.",
+      "followup": "Additionally suppose U,V are independent standard Gaussian variables. Construct another causal generator with exactly the SAME observed joint distribution of (X,Y), but with intervention effect two. Explain why matching only a slope would have been a weaker argument.",
+      "followSolution": "In the first generator, X=U+V and η=U−V are jointly Gaussian with zero covariance, so they are independent; each has variance two. The alternative generator draws independent X,η with distributions N(0,2) and sets Y=2X+η. It has the same centered Gaussian observed law, with Var(X)=2, Cov(X,Y)=4 and Var(Y)=10, but its intervention effect is two. Thus even the complete observed law, not merely its fitted slope, fails to choose between these two causal explanations. Zero covariance alone would not imply independence without the Gaussian assumption.",
+      "lesson": "l11",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive the observed slope two and residual U−V.",
+        "Show Cov(X,r)=0 explicitly and derive intervention effect one from the specified generator.",
+        "Give the Gaussian alternative with the same full observed law and explain its different intervention effect."
+      ]
+    },
+    {
+      "id": "q_l11_h1",
+      "title": "Two noisy views can identify a latent slope",
+      "topic": "Regression",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 28,
+      "prompt": "All variables below are centered and have finite second moments. A latent variable Z has variance s>0. Observed measurements and response obey \\(W_1=Z+u_1\\), \\(W_2=Z+u_2\\), \\(Y=\\beta Z+\\varepsilon\\). Z is uncorrelated with u₁,u₂,ε. Assume Cov(u₁,u₂)=0 and Cov(u₂,ε)=0, but allow Cov(u₁,ε) to be nonzero.\n\nUsing only observable population covariances, identify β and prove why the denominator is nonzero. Compare your result with the population ordinary least-squares slope on W₁. Explain which assumptions made the second measurement useful; do not assume full independence or claim that a sample ratio is unbiased.",
+      "answer": null,
+      "hints": [
+        "Cross the response with the measurement whose noise is uncorrelated with response noise.",
+        "The cross-covariance of the two measurements isolates the latent variance.",
+        "The first measurement may have both a variance inflation and a response-noise covariance."
+      ],
+      "solution": "The restrictions give Cov(W₂,Y)=βs and Cov(W₂,W₁)=s, so\n\n\\[\\beta=\\frac{\\operatorname{Cov}(W_2,Y)}{\\operatorname{Cov}(W_2,W_1)}.\\]\n\nThe denominator is positive by s>0. In contrast, the ordinary slope on W₁ is \\(\\{\\beta s+\\operatorname{Cov}(u_1,\\varepsilon)\\}/\\{s+\\operatorname{Var}(u_1)\\}\\); it need not equal β or even exhibit attenuation. W₂ acts as an instrument for W₁ in this specified measurement model: it shares the latent variation but its error contributes neither to the cross-measurement moment nor to the cross-response moment. Only the stated covariance restrictions were used. Identification here is of a latent slope within that model, not an established causal effect. Replacing population moments by sample moments produces a ratio, not automatically an unbiased finite-sample estimator; a small empirical denominator can be unstable.",
+      "followup": "Drop ONLY Cov(u₁,u₂)=0, keeping all other restrictions. Construct two centered joint Gaussian latent models with different β and exactly the same FULL observed law of (W₁,W₂,Y). Use observed covariance [[2,1,1],[1,2,1],[1,1,2]], and verify each variance and cross-covariance. Why does this prove more than saying the ratio now has an extra term?",
+      "followSolution": "Model A has s=1, β=1, mutually independent Z,u₁,u₂,ε of variance one. It gives the displayed observed covariance. Model B has s=\\(\\frac{3}{4}\\), β=\\(\\frac{4}{3}\\), Var(u₁)=Var(u₂)=\\(\\frac{5}{4}\\), Cov(u₁,u₂)=\\(\\frac{1}{4}\\) and Var(ε)=\\(\\frac{2}{3}\\). Z, the error pair and ε are independent Gaussian blocks. The error covariance is positive definite: its eigenvalues are \\(\\frac{3}{2}\\) and 1. For example, u₁=H/2+\\(E_1\\) and u₂=H/2+\\(E_2\\), with independent standard Gaussian H,\\(E_1\\),\\(E_2\\), constructs it.\n\nModel B gives measurement variances \\(\\frac{3}{4}\\)+\\(\\frac{5}{4}\\)=2, their covariance \\(\\frac{3}{4}\\)+\\(\\frac{1}{4}\\)=1, response cross-covariances βs=1, and response variance \\((4/3)^2(3/4)+2/3=2\\). Both observed vectors are centered jointly Gaussian with identical covariance, hence identical joint distributions, while β is respectively one and \\(\\frac{4}{3}\\). All retained covariance restrictions hold. The observable ratio is one for both, and no amount of observing this same law distinguishes the latent slopes. This is an explicit nonidentification proof, not just failure of a particular estimator.",
+      "lesson": "l11",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive both cross-moments and the nonzero denominator from the exact restrictions.",
+        "Compare with ordinary least squares, including Cov(u₁,ε), without adding independence.",
+        "Separate population identification from finite-sample ratio behavior and causal claims.",
+        "Verify two feasible Gaussian models with the same complete observed law and different latent slopes."
+      ]
+    },
+    {
+      "id": "q_l11_h2",
+      "title": "One training fit encodes every deletion error",
+      "topic": "Regression",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 30,
+      "prompt": "A fixed real design matrix X has n rows and p columns and FULL COLUMN RANK. In ordinary unweighted least squares, set \\(M=X^TX\\), \\(\\widehat\\beta=M^{-1}X^Ty\\), \\(H=XM^{-1}X^T\\). Let xᵢ be the column vector representing row i, \\(h_i=x_i^TM^{-1}x_i\\), and \\(r_i=y_i-x_i^T\\widehat\\beta\\).\n\nDerive the prediction error at row i when the fit is trained on every OTHER row. Express it using rᵢ and hᵢ when hᵢ<1. Justify this condition, and show precisely why hᵢ=1 does not mean a zero held-out error even though rᵢ=0 in the full fit. Do not silently assume every deleted design still has full rank.",
+      "answer": null,
+      "hints": [
+        "Deletion subtracts xᵢxᵢᵀ from M and xᵢyᵢ from the right-hand side.",
+        "Try a coefficient correction in direction M⁻¹xᵢ.",
+        "At hᵢ=1 that direction becomes a null vector of the deleted normal matrix."
+      ],
+      "solution": "H is an orthogonal projection, so 0≤hᵢ≤1. Put z=M⁻¹xᵢ. For hᵢ<1, the rank-one inverse identity or direct substitution gives\n\n\\[\\widehat\\beta^{(-i)}=\\widehat\\beta-\\frac{z r_i}{1-h_i}.\\]\n\nIndeed the deleted normal matrix is M−xᵢxᵢᵀ, and (M−xᵢxᵢᵀ)z=xᵢ(1−hᵢ); substituting the correction leaves exactly Xᵀy−xᵢyᵢ. Its inverse exists when 1−hᵢ>0. The held-out error is therefore\n\n\\[y_i-x_i^T\\widehat\\beta^{(-i)}=r_i+\\frac{h_i r_i}{1-h_i}=\\frac{r_i}{1-h_i}.\\]\n\nIf hᵢ=1, z is a nonzero null vector of the deleted matrix and xᵢᵀz=1. Since that matrix is the Gram matrix of the remaining rows, those rows annihilate z. Adding any multiple of z to a deleted-fit minimizer changes no remaining fitted value but changes the held-out prediction arbitrarily. It is not identified without an extra fitting convention. Meanwhile \\(\\|(I-H)e_i\\|^2=1-h_i=0\\), where eᵢ is a coordinate vector, so the full-fit residual at i is zero for every y. The apparent \\(\\frac{0}{0}\\) is not an error of zero. Summing squared valid deletion errors gives the fixed-procedure leave-one-out score; the small training residual alone hides leverage.",
+      "followup": "Now X includes an intercept column of ones and ridge penalizes every other coefficient, with FIXED \\(\\lambda>0\\) and no penalty on the intercept. Set \\(M=X^TX+\\operatorname{diag}(0,\\lambda,\\ldots,\\lambda)\\). Does the same deletion formula apply if features are redundant? When is its denominator positive? What changes if preprocessing or λ selection uses the held-out observation?",
+      "followSolution": "For any nonempty training set, vᵀMv is the sum of squared fitted linear values plus λ times squared slope coefficients. A nonzero slope vector makes the penalty positive; a pure nonzero intercept gives a positive data term. Thus M is positive definite even with redundant features. For \\(n\\geq2\\) the deleted training set is also nonempty and positive definite. The determinant identity \\(\\det(M-x_ix_i^T)=\\det(M)(1-h_i)\\) makes 1−hᵢ positive, and the same coefficient substitution proves the deletion formula. The ridge smoother H need not be an idempotent projection; the algebra uses a fixed quadratic penalty, not projection idempotence. For n=1, deletion leaves an unpenalized intercept with no data, so the held-out prediction is again unidentified. A λ or feature transform learned using the held-out row changes the procedure: this formula alone does not undo that information use. Fix such ingredients in advance, or refit their training-only selection inside each deletion; choosing λ by the same score also creates a separate model-selection assessment issue.",
+      "lesson": "l11",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive the rank-one coefficient correction and residual rᵢ/(1−hᵢ).",
+        "Use the projection bound and explain rank loss, null directions and unidentified predictions at leverage one.",
+        "Prove positive definiteness for slope-only ridge on nonempty data and positivity after deletion for \\(n\\geq2\\).",
+        "Keep penalty and preprocessing fixed and separate deletion identities from an independent model-selection evaluation."
+      ]
     }
   ],
   "lessons": [
@@ -3329,10 +3459,17 @@
       "questions": [
         "q19",
         "q21",
-        "q30"
+        "q30",
+        "q_l11_e1",
+        "q_l11_e2",
+        "q_l11_m1",
+        "q_l11_h1",
+        "q_l11_h2"
       ],
       "coding": [
-        "c07"
+        "c_l11_easy",
+        "c07",
+        "c_l11_hard"
       ],
       "objectives": [
         "Derive the normal equations and the intercept residual property.",
@@ -3340,7 +3477,7 @@
         "Diagnose measurement error, regularisation and causal overclaims."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "Future errors have mean zero",
         "Residuals sum to zero in sample",

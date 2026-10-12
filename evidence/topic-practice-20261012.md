@@ -1,8 +1,8 @@
 # Topic practice — verification
 
 2026-10-12. Latest verified scope: grouped list/journey navigation across the site,
-and expanded banks for l01–l10 and likelihood l25. The full 25-topic expansion remains active;
-14 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
+and expanded banks for l01–l11 and likelihood l25. The full 25-topic expansion remains active;
+13 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
 
 The first batch below documents l01–l03 at its own verification baseline
 (63 questions / 22 codes). Later batches are recorded below.
@@ -579,5 +579,98 @@ formats for exact outputs beyond browser-safe integers.
 - [Narrow worked proof after the layout repair](covariance-proof-narrow-20261012.png).
 
 Next: researcher l11–l18 and trader l19–l24. The goal remains active until all
+25 topic banks, future-topic validation and final preservation/navigation audit
+are complete.
+
+## Eighth batch: regression l11
+
+2026-10-12. Read the actual regression chapter before selecting the practice.
+Added five interviews, giving 2 Easy, 2 Medium and 4 Hard. Existing q19/q21/q30
+retain their meanings, numeric answers, difficulty and worked solutions; only
+specific assessment rubrics replace generic ones. All 97 preceding interview
+records match the previous commit apart from those three rubrics, and all 41
+preceding public coding records match exactly. The original c07 remains Medium.
+
+Easy questions derive population slope/intercept/error and transform a fitted
+line plus its slope-only ridge penalty under changed units. Medium practice
+constructs an orthogonal residual with confounding, then two Gaussian causal
+generators with the same full observed law but different intervention effects.
+The new Hard questions derive identification from two noisy measurements with
+precise covariance restrictions, exhibit full-law nonidentification when sensor
+errors may covary, and derive deletion errors from leverage. The latter handles
+leverage one, unidentified deleted predictions, redundant-feature ridge,
+unpenalized intercepts and fixed preprocessing/penalties explicitly. Hints,
+complete proofs, changed-condition follow-ups and specific written rubrics are
+included; a self-assessment remains distinct from automatic proof verification.
+
+The coding list contains proposed-fit verification (Easy), original OLS (Medium)
+and exact ridge leave-one-out residuals (Hard). The Hard reference builds one
+integer normal matrix and computes its determinant/adjugate by fraction-free
+elimination, then obtains all deletion errors in O(n(d+1)²+(d+1)³) scalar work.
+Its output is a list of reduced rational pairs of decimal strings. The contract
+states dimensions, empty/one-row behavior, redundant features, an unpenalized
+intercept, positive fixed penalty, no mutation and additional integer bit costs.
+This exact arithmetic teaching task does not prescribe explicitly inverting
+floating normal equations for a production regression pipeline.
+
+Ten independent tests in `tests/test_regression_practice.py` check:
+
+- Exact population moments, unchanged predictions and equivalent penalties after
+  unit conversion; finite-factor confounding/instrument examples and the full
+  covariance tables of both Gaussian countermodels.
+- An OLS deletion proof on a concrete fit, and an explicit deleted-design null
+  direction at leverage one. The Gaussian full-law claims additionally use the
+  mathematical fact that a centered Gaussian law is determined by covariance;
+  finite enumeration alone is not presented as proving Gaussianity.
+- Proposed minimizers against independently computed minimum SSE in 350 seeded
+  records, constant predictors, wrong slopes with zero residual sum, and the
+  maximum 100,000-row bound.
+- A separate oracle refitting EACH deleted dataset using centered rational
+  feature covariances and an independently solved slope system. It uses no
+  full-data augmented inverse or leverage shortcut. All official expected
+  results and 180 seeded models agree with the production reference.
+- Analytic intercept-only errors, empty and single-row records, nearly unit
+  leverage, redundant and constant columns, maximum dimension and a direct
+  10,000-row six-feature large-integer case. Permuting rows/columns, changing
+  feature signs/offsets, jointly scaling features/penalty, adding zero columns
+  and transforming targets preserve the appropriate predictions/errors.
+- Exact rational reduction, strings beyond browser-safe integers, input
+  preservation, debugging-copy size limits and actual-judge checks. Mean-zero
+  residual-only and always-zero shortcuts fail. A passing suite is not a formal
+  asymptotic complexity proof.
+
+All **103 Python tests** and **23 frontend suites** pass, including strict local
+KaTeX parsing and all current/legacy journey bookmarks. All **28 expanded coding
+references** pass the actual judge. Inventory is 25 lessons / 102 interviews /
+43 codes; the researcher route has 19 checks / 93 distinct questions / 43 codes.
+Twelve topics now meet the contract. The standard OLS deletion formula was
+cross-checked with the
+[University of Chicago computational companion](https://uchicago-pol-methods.github.io/EstimationI/ch04-sensitivity.html).
+The measurement-error instrument assumptions were cross-checked with
+[Angrist and Krueger's identification discussion](https://economics.mit.edu/sites/default/files/publications/Instrumental%20Variables%20and%20the%20Search%20for%20Identifi.pdf).
+These sources support standard mathematical principles; the tasks, numerical
+examples, countermodels, coding contract and implementations are original.
+
+The IAB connection was unavailable. Chrome verified the actual regression
+lesson → interview list → coding list handoffs, with 2/2/4 interview choices and
+one code in each group. After explicit launcher entry and visible **TEST
+PREVIEW** verification, the Hard reference passed **13/13** server cases. Copying
+a case with 32-digit rational numerators into the debugger preserved every digit;
+the three-case debug run passed and reported completion unchanged. No preview
+record was imported, recovered, reset or self-assessed as personal work.
+
+At 390px the worked deletion proof and follow-up have zero math errors, a 356px
+question panel and document scroll width exactly 390px. The proof was visually
+inspected, including the coefficient correction, held-out residual formula and
+rank-loss argument. Viewport settings were reset. The review tab returned to
+the personal regression coding list showing **0/3**. Actual personal question,
+coding, lesson, draft and trainer groups match this batch's fresh baseline.
+The local server was restarted after bank generation.
+
+- [Regression interview list, personal workspace](regression-question-list-20261012.png).
+- [Regression coding list, personal workspace](regression-coding-list-20261012.png).
+- [Narrow worked deletion proof, test preview](regression-proof-narrow-20261012.png).
+
+Next: researcher l12–l18 and trader l19–l24. The goal remains active until all
 25 topic banks, future-topic validation and final preservation/navigation audit
 are complete.
