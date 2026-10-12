@@ -952,9 +952,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Compute covariance two in the same units/horizon and include both cross terms.",
+        "Obtain equal-weight variance three and distinguish variance from standard deviation.",
+        "Explain why the exact negative-correlation cancellation needs matching volatilities/exposures."
       ]
     },
     {
@@ -3796,6 +3796,135 @@
         "Identify worst ε=0.02 and derive the robust root/domain, including the zero-fraction tie.",
         "Separate expected cash, a Bayesian model mixture, a worst-case model and realised outcomes."
       ]
+    },
+    {
+      "id": "q_l22_e1",
+      "title": "A factor-neutral hedge still moves",
+      "topic": "Risk",
+      "difficulty": "Easy",
+      "path": "trader",
+      "minutes": 8,
+      "prompt": "Centred unit cash payoffs are X=2F+ε₁ and Y=3F+ε₂. The factor has variance nine; residual variances are four for ε₁ and nine for ε₂. F, ε₁ and ε₂ are pairwise uncorrelated with finite second moments. Take one unit of X and SHORT two thirds of a unit of Y, fixed before outcomes: H=X−(\\(\\frac{2}{3}\\))Y. What is Var(H)? Explain what was neutralised and what remains. These are position quantities, not fully allocated capital-fraction weights; no costs or other risks are included.",
+      "answer": 8,
+      "hints": [
+        "Combine factor loadings before measuring their variance.",
+        "The short residual coefficient is −\\(\\frac{2}{3}\\); square it before multiplying by residual variance nine."
+      ],
+      "solution": "The factor coefficient is 2−(\\(\\frac{2}{3}\\))·3=0, so H=ε₁−(\\(\\frac{2}{3}\\))ε₂. Residual covariance is zero and \\(\\operatorname{Var}(H)=4+(2/3)^2\\cdot9=8\\). Only the specified common factor is neutralised. Gross position quantity is \\(\\frac{5}{3}\\), net quantity \\(\\frac{1}{3}\\); neither is the remaining variance. Independence or normality is unnecessary for this calculation.",
+      "followup": "The second factor loading changes from three to 2.5, while all stated variances and uncorrelated-residual assumptions remain. Keep the same positions. What is the new factor loading and total variance? Does setting net position quantity to zero by shorting one whole Y instead solve the problem?",
+      "followSolution": "The old hedge now has factor loading 2−(\\(\\frac{2}{3}\\))·2.5=\\(\\frac{1}{3}\\), giving factor variance (\\(\\frac{1}{3}\\))²·9=1 and total variance nine. A whole-unit short has net quantity zero but factor loading 2−2.5=−\\(\\frac{1}{2}\\); variance is (\\(\\frac{1}{2}\\))²·9+4+9=\\(\\frac{61}{4}\\). Net units and net factor exposure are different. An estimated model hedge is sensitive to changed loadings and does not eliminate residual, funding or execution risk.",
+      "lesson": "l22",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Cancel the factor coefficient before squaring and obtain residual variance eight.",
+        "Separate quantities, factor loading and remaining risk.",
+        "Derive changed loading one third, total variance nine and reject net-unit neutrality as a substitute."
+      ]
+    },
+    {
+      "id": "q_l22_e2",
+      "title": "Joint stress changes variance and volatility differently",
+      "topic": "Risk",
+      "difficulty": "Easy",
+      "path": "trader",
+      "minutes": 8,
+      "prompt": "Two same-horizon returns are measured in percentage points. Fixed capital weights are one half each. Baseline standard deviations are two percentage points each, with correlation 0.5. A specified stress increases the FIRST standard deviation to four, keeps the SECOND at two, and raises correlation to one. What is the ratio of stressed portfolio STANDARD DEVIATION to baseline portfolio standard deviation? Derive both variances; do not report their ratio as the volatility ratio. The stress is a specified joint model, not a probability forecast.",
+      "answer": 1.7320508075688772,
+      "hints": [
+        "Baseline covariance is 0.5×2×2.",
+        "Standard deviation is the square root of variance."
+      ],
+      "solution": "Baseline variance is (\\(\\frac{1}{4}\\))·4+(\\(\\frac{1}{4}\\))·4+2(\\(\\frac{1}{4}\\))·2=3. Stress covariance is 4·2=8, so stressed variance is (\\(\\frac{1}{4}\\))·16+(\\(\\frac{1}{4}\\))·4+2(\\(\\frac{1}{4}\\))·8=9. Standard deviations are √3 and three percentage points; the ratio is 3/√3=√3. Variance triples, but standard deviation does not. Variance units are squared percentage points.",
+      "followup": "Now use standard deviations two and three, and correlation −1. Do equal weights cancel risk? Which long-only weights summing to one do cancel the centred linear fluctuations in this exact model? Does zero variance imply zero mean return?",
+      "followSolution": "Equal-weight variance is (2−3)²/4=\\(\\frac{1}{4}\\). Perfect anticorrelation relates standardised centred fluctuations, not raw returns with different scales. Cancellation needs 2w₁=3w₂, hence w₁=\\(\\frac{3}{5}\\) and w₂=\\(\\frac{2}{5}\\). The centred portfolio is then zero almost surely, while its raw return equals its weighted mean, which need not be zero. This is an exact specified relationship, not a claim that estimated correlation stays −1.",
+      "lesson": "l22",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Compute variances three and nine in consistent units.",
+        "Return the standard-deviation ratio √3 rather than three.",
+        "Handle unequal-volatility anticorrelation and distinguish a constant level from a zero mean."
+      ]
+    },
+    {
+      "id": "q_l22_m1",
+      "title": "More names cannot diversify away the shared shock",
+      "topic": "Risk",
+      "difficulty": "Medium",
+      "path": "trader",
+      "minutes": 15,
+      "prompt": "For each positive integer n, consider n centred same-horizon returns Rᵢ=F+εᵢ and weights 1/n. Var(F)=1 and Var(εᵢ)=4; residuals are mutually uncorrelated and uncorrelated with F, with finite second moments. No rebalancing or costs. What is the SMALLEST n for portfolio variance at most 1.1? Derive the variance rather than dividing the entire single-name variance by n.",
+      "answer": 40,
+      "hints": [
+        "The portfolio factor loading stays one.",
+        "Only the independent or uncorrelated residual part scales down with the number of names."
+      ],
+      "solution": "The average is F+(1/n)\\(\\Sigma\\) εᵢ. Its variance is 1+4/n, so 4/n≤0.1 requires n≥40. At \\(n=4\\)0 variance equals 1.1; n=39 fails. The single-name variance five cannot simply be divided by n because every name contains the SAME factor. Mutually uncorrelated residuals suffice; independence is not required.",
+      "followup": "Instead every distinct residual pair has correlation 0.05, while residual variances remain four and all residuals stay uncorrelated with F. Derive the variance for general n and decide whether ANY finite n can achieve 1.1. Give a coherent construction for these residuals, rather than assuming arbitrary pairwise stress numbers form a valid matrix.",
+      "followSolution": "Each residual pair now has covariance 0.2. The average residual variance is 4/n+0.2(\\(n-1\\))/n=0.2+3.8/n. Total variance is 1.2+3.8/n, exceeding 1.2 for every finite n; the target 1.1 is impossible. A coherent construction is εᵢ=√0.2·G+√3.8·Zᵢ, where G and all Zᵢ are centred, variance one, mutually uncorrelated and uncorrelated with F. The common residual component creates another nondiversifying exposure. A common correlation assumption should be checked collectively, not merely cell by cell.",
+      "lesson": "l22",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Derive the factor floor and residual term 1+4/n; identify \\(n=4\\)0 with the boundary.",
+        "Include all residual cross terms under the changed model.",
+        "Prove the unattainable target and exhibit a valid shared-residual construction."
+      ]
+    },
+    {
+      "id": "q_l22_h1",
+      "title": "The same covariance matrix hides different joint crashes",
+      "topic": "Risk",
+      "difficulty": "Hard",
+      "path": "trader",
+      "minutes": 30,
+      "prompt": "Three binary crash indicators X₁,X₂,X₃ each satisfy P(Xᵢ=1)=\\(\\frac{1}{2}\\). Every distinct pair is INDEPENDENT, but joint independence is not assumed. Unit cash payoffs are Yᵢ=1−2Xᵢ and the fixed equal-weight payoff is H=(Y₁+Y₂+Y₃)/3. Derive the SHARP possible interval for P(H<−\\(\\frac{2}{3}\\)) over all joint distributions consistent with these assumptions. Construct distributions attaining both endpoints, and verify they have the SAME payoff means and covariance matrix. A covariance-only calculation must not invent a joint crash probability.",
+      "answer": null,
+      "hints": [
+        "The strict loss threshold occurs exactly when all three indicators are one.",
+        "Write all eight cell probabilities in terms of q=P(1,1,1), using the marginal and pair constraints.",
+        "Nonnegativity of every cell gives bounds; explicit endpoint tables prove sharpness."
+      ],
+      "solution": "Let q=P(X₁=X₂=X₃=1). Pair independence gives each double-one marginal probability \\(\\frac{1}{4}\\). Consequently each EXACTLY-two-one cell has mass \\(\\frac{1}{4}\\)−q. The individual one-margins then force each EXACTLY-one-one cell to have mass q; total mass forces P(0,0,0)=\\(\\frac{1}{4}\\)−q. Nonnegativity is equivalent to \\(0\\leq q\\leq1/4\\). Since H=1−(\\(\\frac{2}{3}\\))(X₁+X₂+X₃), the strict event H<−\\(\\frac{2}{3}\\) is exactly the all-one cell.\n\nAt q=0 use equal probability \\(\\frac{1}{4}\\) on 000,011,101,110. At q=\\(\\frac{1}{4}\\) use equal probability \\(\\frac{1}{4}\\) on 001,010,100,111. Every indicator is fair and every two-indicator table is uniform in both constructions. Each Yᵢ has mean zero/variance one, and each payoff pair has covariance zero. Therefore both give the same covariance matrix I and Var(H)=\\(\\frac{1}{3}\\), yet their joint crash probabilities are zero and \\(\\frac{1}{4}\\). Every intermediate q is attained by mixing the two tables; the full interval is sharp. Jointly independent indicators would give \\(\\frac{1}{8}\\), which is only one permitted value.",
+      "followup": "Can you reject the high-crash construction by calling its zero covariances evidence of three independent risks? If instead the requirement was full JOINT independence, what happens to the interval and the distribution of H? What additional evidence would a risk report need beyond second moments?",
+      "followSolution": "Zero payoff covariance, even paired with pairwise indicator independence, does not imply mutual independence. Under full joint independence all eight cells have probability \\(\\frac{1}{8}\\), so the crash probability is fixed at \\(\\frac{1}{8}\\). The crash count is then Binomial(3,\\(\\frac{1}{2}\\)) and H has values 1,\\(\\frac{1}{3}\\),−\\(\\frac{1}{3}\\),−1 with probabilities \\(\\frac{1}{8}\\),\\(\\frac{3}{8}\\),\\(\\frac{3}{8}\\),\\(\\frac{1}{8}\\). A report about the joint downside needs a specified or estimated joint law, including higher-order dependence and appropriate support/horizon, plus uncertainty and executable loss assumptions. The identical mean/variance alone do not determine it.",
+      "lesson": "l22",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Translate the strict portfolio event to the all-one cell.",
+        "Derive all eight masses and prove 0≤q≤\\(\\frac{1}{4}\\) from their nonnegativity.",
+        "Construct both endpoints, verify pairwise independence and the identical covariance I/portfolio variance \\(\\frac{1}{3}\\).",
+        "Distinguish pairwise from joint independence and compute the independent case \\(\\frac{1}{8}\\)."
+      ]
+    },
+    {
+      "id": "q_l22_h2",
+      "title": "A hedge chosen before uncertain loadings are known",
+      "topic": "Risk",
+      "difficulty": "Hard",
+      "path": "trader",
+      "minutes": 30,
+      "prompt": "In each specified model, centred payoffs are X=F+ε₁ and Y=bF+ε₂, with Var(F)=4, Var(ε₁)=Var(ε₂)=1 and all three components pairwise uncorrelated. The loading b is an unknown FIXED model parameter in [1,3], with no probability distribution assigned. Choose a fixed nonnegative short quantity h before knowing b: H=X−hY. Minimise the WORST-MODEL variance over that interval. Derive the globally optimal h and value, including where the active stress model changes. Do not replace the ambiguity set by its midpoint or choose h separately after learning b.",
+      "answer": null,
+      "hints": [
+        "For fixed h, the variance is convex in b, so its maximum on the interval occurs at an endpoint.",
+        "Compare the two endpoint squared factor loadings; the active one switches at h=\\(\\frac{1}{2}\\).",
+        "Check derivatives on both sides of the switch, rather than averaging endpoint models."
+      ],
+      "solution": "The specified variance is \\(v_b(h)=4(1-bh)^2+1+h^2\\). For fixed h its maximum in b is at 1 or 3. Their difference is \\(v_1(h)-v_3(h)=16h(1-2h)\\). Thus the worst-model envelope is\n\n\\[v(h)=\\begin{cases}5-8h+5h^2,&0\\leq h\\leq1/2,\\\\5-24h+37h^2,&h\\geq1/2.\\end{cases}\\]\n\nThe left derivative −8+10h stays negative up to the switch, where it is −3. The right derivative −24+74h is positive from the switch onward, starting at 13. The unique global minimum is therefore h=\\(\\frac{1}{2}\\), with worst variance \\(\\frac{9}{4}\\). Both endpoint models are active there; no single smooth derivative is zero at this kink. The midpoint model alone has minimiser \\(\\frac{8}{17}\\), which gives worse worst-case variance \\(\\frac{677}{289}\\). Averaging endpoint variances also describes another objective, not the model-set maximum.",
+      "followup": "Now the hedge residual variance is a known d≥0 instead of one, while the primary residual variance remains one. Derive the optimal robust hedge for ALL d, not just the original case. Explain why a factor-balanced hedge can become too costly in residual risk.",
+      "followSolution": "The factor comparison and switch at \\(\\frac{1}{2}\\) are unchanged. The left branch is 5−8h+(4+d)h², whose unconstrained minimum is 4/(4+d); the right derivative at the switch is 12+d>0 and increases thereafter. Thus h*=min(\\(\\frac{1}{2}\\),4/(4+d)). For 0≤d≤4 the minimum is at the kink, with variance 2+d/4. For d≥4 it is on the low-loading branch, with variance 5−16/(4+d); the two formulas agree at d=4. At d=12, h*=\\(\\frac{1}{4}\\) and variance four, whereas the factor-balanced \\(\\frac{1}{2}\\) hedge gives variance five. A hedge can reduce factor uncertainty while adding enough residual risk that a smaller position is preferable. Costs, means and funding rules could further change the action set/objective; none is included in this variance problem.",
+      "lesson": "l22",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive each model variance with squared signed loadings and residual exposures.",
+        "Justify the endpoint worst case and active-model switch.",
+        "Use both one-sided derivatives to prove h=1/2/variance \\(\\frac{9}{4}\\) is globally optimal.",
+        "Derive the d-dependent minimum, its boundary d=4 and d=12 counterexample."
+      ]
     }
   ],
   "lessons": [
@@ -5500,16 +5629,25 @@
       "correct": 1,
       "explanation": "Expected value does not describe feasibility or the full distribution.",
       "questions": [
-        "q38"
+        "q38",
+        "q_l22_e1",
+        "q_l22_e2",
+        "q_l22_m1",
+        "q_l22_h1",
+        "q_l22_h2"
       ],
-      "coding": [],
+      "coding": [
+        "c_l22_easy",
+        "c_l22_medium",
+        "c_l22_hard"
+      ],
       "objectives": [
         "Calculate portfolio variance including covariance.",
         "Stress correlations and identify shared exposures.",
         "Distinguish a risk estimate from feasibility and tail-loss control."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "Yes",
         "No; constraints, risk and costs matter",
