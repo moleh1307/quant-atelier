@@ -1,0 +1,19 @@
+# Python workspace issues #1–#4 — 2026-10-12
+
+Implemented Cmd+apostrophe for Run tests and Cmd+Enter for Submit, with editor-level handling before CodeMirror defaults and a workspace/fallback handler. Handled combinations prevent character/newline insertion; running jobs and repeated keydown events do not start duplicate checks. Both controls display their shortcuts.
+
+Added per-exercise editable debugging cases: add/remove/select, include/exclude, JSON arguments and optional expected JSON. Blank expected output is inspection only; `null` explicitly asserts Python `None`. Raw JSON text is retained in the existing draft persistence/backup/conflict mechanism, preserving invalid intermediate edits and integers beyond JavaScript's safe range. Active debugging drafts receive the same external-tab conflict protection as solution drafts. Checked code and cases are snapshots; subsequent edits are labelled against their earlier result.
+
+Submission result rows expose **Debug this case**, including passed and failed cases. A separate local endpoint supplies selectable official cases without running code. Copies retain complete arguments/expected data rather than truncated Python representations, and copying reveals/focuses the case editor. The official suite is always selected by the server for Submit regardless of custom-case payloads. Debug runs, case loading/copying and restored results confer no completion. Integer-to-integer and Boolean checks are exact; large integer assertions cannot pass by floating-point rounding. Ordinary floating-point comparisons retain the existing numerical tolerance.
+
+Limits: 1–20 included debug cases, 200,000 characters per case, 50 JSON nesting levels, finite JSON numbers, existing two-megabyte HTTP body limit and bounded local Python runner. The optional expected value cannot validate correctness on its own. This remains a trusted personal-code runner, not a hosted hostile-code sandbox.
+
+Verification:
+
+- All 22 frontend suites passed, including new editable-case, raw-copy fidelity, invalid-input, optional-output, snapshot, per-exercise persistence, conflict and shortcut/duplicate-guard checks.
+- All 24 Python tests passed, including all 15 reference solutions and new full-suite immunity, nested/null/large-integer fidelity, long runtime-error copies, arity/JSON/finite-number validation, and loopback HTTP contracts.
+- Live Chrome, after explicit development-launcher admission: Cmd+Enter sent the exact editor text to the complete c01/c04 suites; Cmd+apostrophe reran the edited/included cases without inserting characters. A failed c01 empty-list case copied exact `[[], 0]` / `0`; malformed arity produced a useful error. Blank expected output displayed output without awarding a pass. Navigation away/back retained edits. The official picker copied the chosen c01 case without submission.
+- Final assets on c04: a failed singleton case copied `[[7]]` / `[7, null]` and focused the argument editor. Excluding the example and implementing only singleton handling passed that debug case while the exercise remained unpassed. Adding `[[]]` / `[null, null]` passed both included debugging cases without awarding completion. Removing the custom case preserved prior result snapshots. At 390×844, inputs stacked at 324px width, controls wrapped, and document width remained 390px. Temporary viewport override was reset.
+- Preview reload returned to personal mode. Personal questions, coding, lessons, drafts and trainer records were compared with the pre-task baseline and remained unchanged. The browser was left in the personal workspace. In-app browser connection was unavailable; Chrome was used.
+
+Screenshot: [debug panel and results](python-debug-20261012.png), captured in the isolated preview with artificial practice code. Keyboard auto-repeat and pending-job duplicates are covered by fixtures; physical repeated-key timing was not separately measured.

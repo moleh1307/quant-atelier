@@ -470,3 +470,7 @@ User authorised publication to `moleh1307/quant-atelier` and future verified cha
 ## 2026-10-12 — first researcher expansion and revision selector
 
 See [likelihood verification](likelihood-20261012.md) for l25, q49–q51, c15, route placement, all 21 frontend suites / 18 Python tests, isolated preview submissions, preserved personal study records and the clipped revision-select fix.
+
+## 2026-10-12 — GitHub Python workspace issues #1–#4
+
+See [Python debugging verification](python-debug-20261012.md) for Cmd+apostrophe / Cmd+Enter, editable per-exercise cases, exact copies from results and the official picker, grading separation, 22 frontend suites / 24 Python tests, live isolated-preview and responsive checks, and unchanged personal assessment records/drafts.

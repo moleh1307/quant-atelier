@@ -14,6 +14,11 @@ class LimitedOutput(io.StringIO):
         if self.tell() < 4000: return super().write(text[:4000-self.tell()])
         return len(text)
 def equal(a,b):
+    if isinstance(b,bool): return isinstance(a,bool) and a==b
+    if isinstance(b,int) and not isinstance(a,bool):
+        if isinstance(a,int): return a==b
+        # Large integer assertions must not pass through floating-point rounding.
+        if abs(b)>2**53: return isinstance(a,float) and a==b
     if isinstance(b,(int,float)) and not isinstance(b,bool):
         return isinstance(a,(int,float)) and not isinstance(a,bool) and math.isfinite(a) and abs(a-b) <= max(1e-7, 8*math.ulp(float(b)))
     if isinstance(b,list): return isinstance(a,(list,tuple)) and len(a)==len(b) and all(equal(x,y) for x,y in zip(a,b))
@@ -33,12 +38,13 @@ try:
         for index,case in enumerate(payload['cases']):
             try:
                 result=solve(*case['args'])
-                passed=equal(result,case['expected'])
-                entry={'passed':passed,'actual':repr(result)[:450],'expected':repr(case['expected'])[:450]}
-                if not passed: entry['arguments']=repr(case['args'])[:450]
+                passed=equal(result,case['expected']) if 'expected' in case else None
+                entry={'passed':passed,'actual':repr(result)[:450]}
+                if 'expected' in case: entry['expected']=repr(case['expected'])[:450]
+                if passed is False: entry['arguments']=repr(case['args'])[:450]
                 results.append(entry)
             except Exception as error:
                 results.append({'passed':False,'arguments':repr(case['args'])[:450],**error_details(error)})
-    response={'results':results,'passed':sum(r['passed'] for r in results),'total':len(results),'elapsedMs':round((time.perf_counter()-start)*1000,1),'stdout':output.getvalue()}
+    response={'results':results,'passed':sum(r['passed'] is True for r in results),'total':len(results),'elapsedMs':round((time.perf_counter()-start)*1000,1),'stdout':output.getvalue()}
 except Exception as error: response={**error_details(error),'stdout':output.getvalue()}
 print(json.dumps(response,allow_nan=False))

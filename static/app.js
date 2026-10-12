@@ -185,7 +185,7 @@ function receiveExternal(remote,base=browserBase){
   state=result.state;
   // Preserve an open editor/answer when the same draft changes elsewhere.
   if(base===browserBase&&route&&['coding','questions'].includes(route[0])){
-    for(const id of [route[1],route[1]+'-scratch'])if(!sameRecord(base.drafts[id],remote.drafts[id])&&!sameRecord(base.drafts[id],undefined)&&!sameRecord(base.drafts[id],state.drafts[id])&&!result.conflicts.some(c=>c.group==='drafts'&&c.id===id)){
+    for(const id of [route[1],route[1]+'-scratch',...(route[0]==='coding'?[route[1]+'-tests']:[])])if(!sameRecord(base.drafts[id],remote.drafts[id])&&!sameRecord(base.drafts[id],undefined)&&!sameRecord(base.drafts[id],state.drafts[id])&&!result.conflicts.some(c=>c.group==='drafts'&&c.id===id)){
       result.conflicts.push({group:'drafts',id,local:base.drafts[id],remote:remote.drafts[id]});state.drafts[id]=base.drafts[id];
     }
   }
@@ -259,7 +259,7 @@ function handleStorageChange(event){
 }
 function syncFieldTitle(item){
   if(item.group==='preferences')return 'Learning route';
-  const id=item.id.replace(/-scratch$/,''),entry=item.group==='coding'||item.group==='drafts'&&id.startsWith('c')?coding.find(c=>c.id===id):item.group==='lessons'?content.lessons.find(l=>l.id===id):content.questions.find(q=>q.id===id);
+  const id=item.id.replace(/-(?:scratch|tests)$/,''),entry=item.group==='coding'||item.group==='drafts'&&id.startsWith('c')?coding.find(c=>c.id===id):item.group==='lessons'?content.lessons.find(l=>l.id===id):content.questions.find(q=>q.id===id);
   return (item.id.endsWith('-scratch')?'Scratchpad · ':'')+(entry?.title||item.id);
 }
 function syncValue(item,value){
@@ -383,18 +383,18 @@ function recoveryControl(){
   return recovery?`<div class="recovery-control"><div><strong>Previous record available</strong><p>Saved before your last replacement on ${esc(new Date(recovery.date).toLocaleString())}. Review it before restoring.</p></div><button class="btn compact" type="button" data-action="review-recovery">Review previous record</button></div>`:'';
 }
 function saveRunnerResults(){
-  try{const records={workspace:QA?'preview':'personal'};for(const [id,v] of Object.entries(view))if(v.checkedCode!==undefined&&(v.running||v.result))records[id]={mode:v.mode,checkedCode:v.checkedCode,origin:v.origin,started:v.started,running:!!v.running,result:v.result,unread:!!v.unread};sessionStorage.setItem(RUNNER_KEY,JSON.stringify(records));}catch{}
+  try{const records={workspace:QA?'preview':'personal'};for(const [id,v] of Object.entries(view))if(v.checkedCode!==undefined&&(v.running||v.result))records[id]={mode:v.mode,checkedCode:v.checkedCode,checkedCases:v.checkedCases,origin:v.origin,started:v.started,running:!!v.running,result:v.result,unread:!!v.unread};sessionStorage.setItem(RUNNER_KEY,JSON.stringify(records));}catch{}
 }
 function suspendRunnerChecks(){runnerGeneration++;saveRunnerResults();}
 function validRunnerResult(result){
   if(!result||typeof result!=='object'||Array.isArray(result))return false;
   if(typeof result.error==='string'&&result.error)return true;
-  return Number.isInteger(result.total)&&result.total>0&&Number.isInteger(result.passed)&&result.passed>=0&&result.passed<=result.total&&Number.isFinite(result.elapsedMs)&&result.elapsedMs>=0&&Array.isArray(result.results)&&result.results.length===result.total&&result.results.every(r=>r&&typeof r.passed==='boolean')&&result.results.filter(r=>r.passed).length===result.passed;
+  return Number.isInteger(result.total)&&result.total>0&&Number.isInteger(result.passed)&&result.passed>=0&&result.passed<=result.total&&Number.isFinite(result.elapsedMs)&&result.elapsedMs>=0&&Array.isArray(result.results)&&result.results.length===result.total&&result.results.every(r=>r&&(typeof r.passed==='boolean'||result.mode==='debug'&&r.passed===null))&&result.results.filter(r=>r.passed===true).length===result.passed;
 }
 function restoreRunnerResults(){
   try{const records=JSON.parse(sessionStorage.getItem(RUNNER_KEY));if(!records||typeof records!=='object'||Array.isArray(records))return;
     if(records.workspace!==undefined&&records.workspace!==(QA?'preview':'personal'))return;
-    for(const c of coding){const v=records[c.id];if(!v||!['run','submit'].includes(v.mode)||typeof v.checkedCode!=='string'||v.checkedCode.length>30000)continue;
+    for(const c of coding){const v=records[c.id];if(!v||!['run','submit','debug'].includes(v.mode)||typeof v.checkedCode!=='string'||v.checkedCode.length>30000)continue;
       const result=v.running?{error:'This check was interrupted. Your draft is saved; run or submit again.'}:v.result;
       if(!validRunnerResult(result))continue;
       view[c.id]={...v,running:false,result,origin:typeof v.origin==='string'&&v.origin.startsWith('#coding/'+c.id)?v.origin:'#coding/'+c.id,unread:!!v.unread||!!v.running};
@@ -406,23 +406,28 @@ function runnerNotice(){
   return jobs.length?`<aside class="runner-notice" aria-label="Python checks">${jobs.map(c=>{const v=view[c.id];return `<div><span>${v.running?'Python check running':'Python check finished'} · ${esc(c.title)}</span><a href="${esc(v.origin||'#coding/'+c.id)}">${v.running?'Return to check':'View result'} ↗</a></div>`;}).join('')}</aside>`:'';
 }
 function updateRunnerNotice(){const notice=$('#runner-notice');if(notice)notice.innerHTML=runnerNotice();}
-function runnerDraftNote(c){const v=view[c.id];return v?.checkedCode!==undefined&&(state.drafts[c.id]??c.starter)!==v.checkedCode?'<p class="runner-draft-note">Your draft changed after this check began. These results refer to the checked version below.</p>':'';}
+function runnerDraftNote(c){
+  const v=view[c.id];if(!v)return '';
+  const codeChanged=v.checkedCode!==undefined&&(state.drafts[c.id]??c.starter)!==v.checkedCode;
+  const casesChanged=v.mode==='debug'&&Array.isArray(v.checkedCases)&&!sameRecord(v.checkedCases,debugCases(c).cases.filter(t=>t.enabled).map(t=>({argumentsJSON:t.argumentsJSON,expectedJSON:t.expectedJSON})));
+  return (codeChanged?'<p class="runner-draft-note">Your draft changed after this check began. These results refer to the checked version below.</p>':'')+(casesChanged?'<p class="runner-draft-note">Your debugging cases changed after this check began. Results show the cases sent for that run; run tests again to check your edits.</p>':'');
+}
 function updateRunnerDraftNote(id){const c=coding.find(c=>c.id===id),note=$('#runner-draft-note');if(c&&note&&route[0]==='coding'&&route[1]===id)note.innerHTML=runnerDraftNote(c);}
-async function executeCode(c,mode,code){
+async function executeCode(c,mode,code,cases){
   const v=view[c.id]||={};if(v.running)return;
   const generation=runnerGeneration;
   const assisted=!!state.coding[c.id]?.assisted;
-  state.drafts[c.id]=code;touch();Object.assign(v,{running:true,mode,result:null,checkedCode:code,origin:location.hash||'#coding/'+c.id,started:Date.now(),unread:false,returnFocus:pageFocus()});saveRunnerResults();render();announce(mode==='run'?'Running the visible example.':'Checking the complete suite.');
+  state.drafts[c.id]=code;touch();Object.assign(v,{running:true,mode,result:null,checkedCode:code,checkedCases:mode==='debug'?cases:undefined,origin:location.hash||'#coding/'+c.id,started:Date.now(),unread:false,returnFocus:pageFocus()});saveRunnerResults();render();announce(mode==='debug'?'Running your debugging cases.':mode==='run'?'Running the visible example.':'Checking the complete suite.');
   let deadline,controller=typeof AbortController!=='undefined'?new AbortController():null;
   try{
-    const request=(async()=>{const response=await fetch('/api/judge',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:c.id,code,mode}),...(controller?{signal:controller.signal}:{})});const result=await response.json();if(!response.ok)throw Error(result.error||'The local runner could not complete this request.');return result;})();
+    const request=(async()=>{const response=await fetch('/api/judge',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:c.id,code,mode,...(mode==='debug'?{cases}:{})}),...(controller?{signal:controller.signal}:{})});const result=await response.json();if(!response.ok)throw Error(result.error||'The local runner could not complete this request.');return result;})();
     const timeout=new Promise((resolve,reject)=>{deadline=setTimeout(()=>{controller?.abort();reject(Error('The local runner did not respond in time. Your draft is saved; try the check again.'));},7000);});
     const result=await Promise.race([request,timeout]);if(generation!==runnerGeneration)return;if(!validRunnerResult(result))throw Error('The local runner returned an incomplete result. Your draft is saved; try again.');v.result=result;
     if(mode==='submit'&&!result.error&&Number.isInteger(result.total)&&result.total>0&&result.passed===result.total){state.coding[c.id]={...state.coding[c.id],accepted:true,acceptedAssisted:assisted,date:Date.now()};touch();}
   }catch(error){if(generation===runnerGeneration)v.result={error:/load failed|failed to fetch|networkerror|network request failed|aborterror/i.test(error.message||error.name||'')?'This check was interrupted or the local server is unavailable. Your draft is saved; restart the server if needed, then run or submit again.':error.message||'Local Python server is unavailable. Restart it and try again.'};}
   finally{
     clearTimeout(deadline);if(generation!==runnerGeneration)return;v.running=false;const current=route[0]==='coding'&&route[1]===c.id;v.unread=!current;saveRunnerResults();
-    if(current){const returnFocus=pageFocus()?null:v.returnFocus;render();const epoch=renderEpoch;frame(()=>{if(epoch===renderEpoch)restoreFocus(returnFocus);});announce(v.result.error||`${v.result.passed} of ${v.result.total} tests passed. ${mode==='run'?'Visible example only.':'Complete suite.'}`);}
+    if(current){const returnFocus=pageFocus()?null:v.returnFocus;render();const epoch=renderEpoch;frame(()=>{if(epoch===renderEpoch)restoreFocus(returnFocus);});announce(v.result.error||`${v.result.passed} of ${v.result.total-(v.result.results?.filter(r=>r.passed===null).length||0)} checked tests passed. ${mode==='debug'?'Debugging only; completion unchanged.':mode==='run'?'Visible example only.':'Complete suite.'}`);}
     else{updateRunnerNotice();announce('Python check finished for '+c.title+'. The result is available in the Python check notice.');}
   }
 }
@@ -781,15 +786,84 @@ function lessonDetail(l){const result=view[l.id]||{},authored=authoredLesson(l),
 function codeTable(data){return `<div class="table-wrap"><table><thead><tr><th>Exercise</th><th>Topic</th><th>Difficulty</th><th>Progress</th></tr></thead><tbody>${data.map(c=>`<tr><td class="title-cell"><a href="#coding/${c.id}">${esc(c.title)} ↗</a></td><td class="muted">${esc(c.topic)}</td><td>${badge(c.difficulty)}</td><td class="status ${state.coding[c.id]?.accepted?'solved':''}">${state.coding[c.id]?.accepted?`✓ Passed${acceptedWithEditorial(state.coding[c.id])?' · with editorial':''}`:codingStatus(c)==='reviewed'?'↗ Editorial read':codingStatus(c)==='practising'?'Draft in progress':'—'}</td></tr>`).join('')||emptyCollection('exercises',4)}</tbody></table></div>`;}
 function codePage(){
   if(route[1]){const c=coding.find(c=>c.id===route[1]);if(c)return codeDetail(c);}
-  return header('Practice / Python','Python workspace','')+filterBar(coding,'exercises')+`<div class="practice-note"><span role="status" aria-live="polite" aria-atomic="true"><span id="result-count">${filtered(coding).length}</span> <span id="result-unit">${filtered(coding).length===1?'exercise':'exercises'}</span></span> · Python 3 · Standard library only · Sample runs and full submissions are tracked separately.</div><div id="collection">${codeTable(filtered(coding))}</div>`;
+  return header('Practice / Python','Python workspace','')+filterBar(coding,'exercises')+`<div class="practice-note"><span role="status" aria-live="polite" aria-atomic="true"><span id="result-count">${filtered(coding).length}</span> <span id="result-unit">${filtered(coding).length===1?'exercise':'exercises'}</span></span> · Python 3 · Standard library only · Debugging runs earn no completion; Submit checks the official suite.</div><div id="collection">${codeTable(filtered(coding))}</div>`;
 }
-function codeDetail(c){const v=view[c.id]||{},s=state.coding[c.id]||{};return `<div class="breadcrumbs"><a href="#coding">Python workspace</a><span>/</span><span>${esc(c.topic)}</span></div><div class="coding-layout"><article class="panel coding-description"><div class="tags">${badge(c.difficulty)}<span class="badge written">Python 3</span></div><h1>${esc(c.title)}</h1><p>${esc(c.prompt)}</p><div class="divider"></div><div class="eyebrow">Visible examples</div>${c.samples.map((s,i)=>`<div class="sample">Example ${i+1}\nArguments: ${esc(JSON.stringify(s.args))}\nExpected: ${esc(JSON.stringify(s.expected))}</div>`).join('')}<p class="practice-note">Define solve with the supplied signature. Return the result rather than printing it. Float comparison uses a small numerical tolerance.</p><button class="btn link" data-action="editorial">${v.editorial?'Hide':'Read'} editorial ↗</button>${v.editorial?`<div class="editorial"><h3>The approach</h3><p>${esc(c.explanation)}</p><pre>${esc(c.solution)}</pre></div>`:''}</article><section class="panel python-workspace" aria-label="Python editor and results"><div class="editor-head"><span>solution.py</span><span>${s.accepted?(acceptedWithEditorial(s)?'✓ Exercise passed · with editorial':'✓ Exercise passed · full suite'):'Python 3'}</span></div><div id="code-host" class="code-host math-plain"><textarea id="code" class="code-editor" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Python solution">${esc(state.drafts[c.id]??c.starter)}</textarea></div><div class="editor-status"><span id="editor-position">Ln 1, Col 1</span><span>Python · 4 spaces</span></div><div class="editor-help" id="editor-help">Tab to indent · Shift+Tab to unindent · Esc then Tab to leave editor</div><div class="editor-actions"><button class="btn compact" data-action="restore-starter" ${v.running?'disabled':''}>Restore starter</button><button class="btn" data-action="run-code" ${v.running?'disabled':''}>${v.running&&v.mode==='run'?'Running…':'Run example'}</button><button class="btn primary" data-action="submit-code" ${v.running?'disabled':''}>${v.running&&v.mode==='submit'?'Checking…':'Submit →'}</button></div><div id="runner-draft-note">${runnerDraftNote(c)}</div><div id="runner-result" class="runner-result" aria-busy="${!!v.running}">${v.running?'<p class="small muted">Executing Python locally… You can keep editing; this check uses the version sent when you clicked.</p>':runnerHTML(v.result,v.mode)}${v.checkedCode!==undefined?`<details class="checked-code"><summary>Checked version · ${v.mode==='run'?'visible example':'complete suite'}</summary><pre>${esc(v.checkedCode)}</pre></details>`:''}</div></section></div>`;}
+// Debug cases live beside solution drafts, so they use the same workspace,
+// backup, recovery and multi-tab conflict handling. They never confer credit.
+function debugCases(c){
+  try{
+    const saved=JSON.parse(state.drafts[c.id+'-tests']);
+    if(saved&&Array.isArray(saved.cases)&&saved.cases.length<=20&&saved.cases.every(t=>t&&typeof t.id==='string'&&typeof t.label==='string'&&typeof t.argumentsJSON==='string'&&typeof t.expectedJSON==='string'&&typeof t.enabled==='boolean')&&new Set(saved.cases.map(t=>t.id)).size===saved.cases.length){
+      if(!saved.cases.some(t=>t.id===saved.selected))saved.selected=saved.cases[0]?.id||'';
+      return saved;
+    }
+  }catch{}
+  const cases=c.samples.map((sample,i)=>({id:'example-'+i,label:'Example '+(i+1),argumentsJSON:JSON.stringify(sample.args),expectedJSON:JSON.stringify(sample.expected),enabled:true}));
+  return {selected:cases[0]?.id||'',cases};
+}
+function saveDebugCases(c,record){state.drafts[c.id+'-tests']=JSON.stringify(record);touch();}
+function debugError(c,message){(view[c.id]||={}).debugError=message;const node=$('#debug-feedback');if(node)node.textContent=message;if(message)announce(message);}
+function debugRunCases(c){
+  const selected=debugCases(c).cases.filter(t=>t.enabled);
+  if(!selected.length)throw Error('Include at least one debugging case before running.');
+  return selected.map(t=>{
+    try{
+      if(t.argumentsJSON.length+t.expectedJSON.length>200000)throw Error('Keep each case below 200,000 characters.');
+      const args=JSON.parse(t.argumentsJSON);
+      if(!Array.isArray(args))throw Error('Arguments must be a JSON array, with one entry per function parameter.');
+      if(t.expectedJSON.trim())JSON.parse(t.expectedJSON);
+    }catch(error){throw Error(t.label+': '+error.message);}
+    // Preserve the original JSON text, particularly integers beyond JS precision.
+    return {argumentsJSON:t.argumentsJSON,expectedJSON:t.expectedJSON};
+  });
+}
+function addDebugCase(c,copy,label){
+  const record=debugCases(c);
+  if(record.cases.length>=20){debugError(c,'You can keep up to 20 debugging cases. Remove one before adding another.');return false;}
+  const id='case-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
+  record.cases.push({id,label:label||'Custom '+(record.cases.length+1),argumentsJSON:copy?.argumentsJSON??'[]',expectedJSON:copy?.expectedJSON??'',enabled:true});
+  record.selected=id;saveDebugCases(c,record);debugError(c,'');render();
+  const epoch=renderEpoch;frame(()=>{if(epoch!==renderEpoch)return;const field=$('#debug-arguments');field?.focus({preventScroll:true});field?.scrollIntoView?.({block:'center',behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});});return true;
+}
+async function loadSubmissionCases(c){
+  const v=view[c.id]||={};if(v.loadingCases)return;v.loadingCases=true;v.debugError='';render();
+  const generation=runnerGeneration;
+  try{
+    const response=await fetch('/api/coding-cases',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:c.id})});
+    const result=await response.json();if(!response.ok)throw Error(result.error||'Could not load submission cases.');
+    if(!Array.isArray(result.cases)||!result.cases.length||!result.cases.every(t=>typeof t.argumentsJSON==='string'&&typeof t.expectedJSON==='string'))throw Error('The server returned incomplete cases.');
+    if(generation===runnerGeneration)v.officialCases=result.cases;
+  }catch(error){if(generation===runnerGeneration)v.debugError=error.message||'The local server is unavailable.';}
+  finally{v.loadingCases=false;if(generation===runnerGeneration&&route[0]==='coding'&&route[1]===c.id){render();$('#submission-case')?.focus({preventScroll:true});}}
+}
+function startCodeCheck(c,mode){
+  if(view[c.id]?.running)return;
+  let cases;
+  if(mode==='debug'){try{cases=debugRunCases(c);debugError(c,'');}catch(error){debugError(c,error.message);return;}}
+  const code=codeEditor?codeEditor.getValue():$('#code').value;
+  return executeCode(c,mode,code,cases);
+}
+function handleCodingShortcut(event,c){
+  if(event.defaultPrevented||event.isComposing||!event.metaKey||event.ctrlKey||event.altKey||event.shiftKey)return false;
+  const mode=event.key==='Enter'?'submit':event.key==="'"?'debug':null;
+  if(!mode)return false;
+  event.preventDefault();event.stopPropagation();
+  if(!event.repeat&&!view[c.id]?.running)startCodeCheck(c,mode);
+  return true;
+}
+function debugPanel(c){
+  const record=debugCases(c),selected=record.cases.find(t=>t.id===record.selected),v=view[c.id]||{};
+  return `<section class="debug-panel math-plain" aria-labelledby="debug-title"><div class="debug-heading"><h3 id="debug-title">Test cases</h3><span class="small muted">${record.cases.filter(t=>t.enabled).length} included · debugging only</span><button type="button" class="btn compact" data-action="add-debug-case" ${record.cases.length>=20?'disabled':''}>+ Add case</button></div><div class="debug-case-tabs" role="group" aria-label="Choose a debugging case">${record.cases.map(t=>`<button type="button" class="debug-case-tab" id="debug-case-${esc(t.id)}" data-action="select-debug-case" data-case="${esc(t.id)}" aria-pressed="${t.id===record.selected}">${esc(t.label)}${t.enabled?'':' · excluded'}</button>`).join('')}</div>${selected?`<div class="debug-case-tools"><label class="debug-include"><input type="checkbox" id="debug-enabled" ${selected.enabled?'checked':''}> Include in run</label><button type="button" class="btn link" data-action="remove-debug-case">Remove case</button></div><div class="debug-fields"><div><label for="debug-arguments">Arguments · JSON array</label><textarea id="debug-arguments" rows="3" spellcheck="false" aria-describedby="debug-input-help debug-feedback">${esc(selected.argumentsJSON)}</textarea></div><div><label for="debug-expected">Expected result · optional</label><textarea id="debug-expected" rows="3" spellcheck="false" aria-describedby="debug-input-help debug-feedback">${esc(selected.expectedJSON)}</textarea></div></div>`:'<p class="small muted">Add a case or copy one from the submission suite.</p>'}<p id="debug-input-help" class="small muted">One array entry per solve parameter. Use JSON: lists, numbers, strings, true, false, null. Leave expected blank to inspect output; null checks for Python None.</p><details class="submission-cases" ${v.officialCases||v.loadingCases?'open':''}><summary>Copy from submission suite</summary><p class="small muted">Editable debugging copies. Submit always checks the original suite.</p>${v.officialCases?`<div class="submission-case-picker"><label class="sr-only" for="submission-case">Submission case</label><select class="select" id="submission-case">${v.officialCases.map((t,i)=>`<option value="${i}">Submission case ${t.caseNumber||i+1}</option>`).join('')}</select><button type="button" class="btn compact" data-action="copy-submission-case">Add copy</button></div>`:`<button type="button" class="btn compact" data-action="load-submission-cases" ${v.loadingCases?'disabled':''}>${v.loadingCases?'Loading…':'Choose a submission case'}</button>`}</details><p id="debug-feedback" class="debug-feedback" role="alert">${esc(v.debugError||'')}</p></section>`;
+}
+
+function codeDetail(c){const v=view[c.id]||{},s=state.coding[c.id]||{};return `<div class="breadcrumbs"><a href="#coding">Python workspace</a><span>/</span><span>${esc(c.topic)}</span></div><div class="coding-layout"><article class="panel coding-description"><div class="tags">${badge(c.difficulty)}<span class="badge written">Python 3</span></div><h1>${esc(c.title)}</h1><p>${esc(c.prompt)}</p><div class="divider"></div><div class="eyebrow">Visible examples</div>${c.samples.map((s,i)=>`<div class="sample">Example ${i+1}\nArguments: ${esc(JSON.stringify(s.args))}\nExpected: ${esc(JSON.stringify(s.expected))}</div>`).join('')}<p class="practice-note">Define solve with the supplied signature. Return the result rather than printing it. Float comparison uses a small numerical tolerance.</p><button class="btn link" data-action="editorial">${v.editorial?'Hide':'Read'} editorial ↗</button>${v.editorial?`<div class="editorial"><h3>The approach</h3><p>${esc(c.explanation)}</p><pre>${esc(c.solution)}</pre></div>`:''}</article><section class="panel python-workspace" aria-label="Python editor and results"><div class="editor-head"><span>solution.py</span><span>${s.accepted?(acceptedWithEditorial(s)?'✓ Exercise passed · with editorial':'✓ Exercise passed · full suite'):'Python 3'}</span></div><div id="code-host" class="code-host math-plain"><textarea id="code" class="code-editor" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Python solution">${esc(state.drafts[c.id]??c.starter)}</textarea></div><div class="editor-status"><span id="editor-position">Ln 1, Col 1</span><span>Python · 4 spaces</span></div><div class="editor-help" id="editor-help">Tab to indent · Shift+Tab to unindent · Esc then Tab to leave editor</div>${debugPanel(c)}<div class="editor-actions"><button class="btn compact" data-action="restore-starter" ${v.running?'disabled':''}>Restore starter</button><button class="btn" data-action="run-code" ${v.running?'disabled':''}>${v.running&&v.mode!=='submit'?'Running…':'Run tests'} <kbd>⌘ '</kbd></button><button class="btn primary" data-action="submit-code" ${v.running?'disabled':''}>${v.running&&v.mode==='submit'?'Checking…':'Submit'} <kbd>⌘ ↵</kbd></button></div><div id="runner-draft-note">${runnerDraftNote(c)}</div><div id="runner-result" class="runner-result" aria-busy="${!!v.running}">${v.running?'<p class="small muted">Executing Python locally… You can keep editing; this check uses the version sent when you clicked.</p>':runnerHTML(v.result,v.mode)}${v.checkedCode!==undefined?`<details class="checked-code"><summary>Checked version · ${v.mode==='debug'?'debugging cases':v.mode==='run'?'visible example':'complete suite'}</summary><pre>${esc(v.checkedCode)}</pre></details>`:''}</div></section></div>`;}
 function errorLineButton(line){return Number.isInteger(line)&&line>0?`<button class="btn link error-line" type="button" data-action="error-line" data-line="${line}">Go to line ${line} ↗</button>`:'';}
 function runnerHTML(result,mode){
-  if(!result)return '<p class="small muted">Run the visible example, then submit against the complete test suite.</p>';
+  if(!result)return '<p class="small muted">Run your debugging cases, then submit against the complete test suite.</p>';
   const stdout=result.stdout?`<details class="runner-output" open><summary>Printed output</summary><pre>${esc(result.stdout)}</pre></details>`:'';
   if(result.error)return `<div class="feedback bad"><strong>Check could not finish</strong><pre>${esc(result.error)}</pre>${errorLineButton(result.errorLine)}${/your draft is saved/i.test(result.error)?'':'<p>Your draft is saved. Correct the issue, then run or submit again.</p>'}</div>${stdout}`;
-  return `<h3>${result.passed===result.total?'✓':'↗'} ${result.passed} / ${result.total} tests passed</h3><div class="small muted">${mode==='run'?'Visible example only':'Complete suite'} · ${result.elapsedMs} ms${mode==='submit'&&result.passed===result.total?' · Submission saved':''}</div>${(result.results||[]).map((r,i)=>`<div class="result-row"><span>${r.passed?'✓':'×'} ${i===0?'Example':'Case '+(i+1)} · ${r.passed?'Passed':'Failed'}</span>${!r.passed?`<details><summary>Inspect ${i===0?'example':'case '+(i+1)} failure</summary><pre>${esc(r.arguments!==undefined?'Arguments: '+r.arguments+'\n':'')}${esc(r.error||`Expected: ${r.expected}\nReturned: ${r.actual}`)}</pre>${errorLineButton(r.errorLine)}</details>`:''}</div>`).join('')}${stdout}`;
+  const unchecked=result.results.filter(r=>r.passed===null).length;
+  return `<h3>${result.passed===result.total?'✓':'↗'} ${result.passed} / ${result.total-unchecked} tests passed${unchecked?` · ${unchecked} output${unchecked===1?'':'s'} inspected`:''}</h3><div class="small muted">${mode==='debug'?'Debugging only · completion unchanged':mode==='run'?'Visible example only':'Complete suite'} · ${result.elapsedMs} ms${mode==='submit'&&result.passed===result.total?' · Submission saved':''}</div>${(result.results||[]).map((r,i)=>`<div class="result-row"><div class="result-case-heading"><span>${r.passed===null?'○':r.passed?'✓':'×'} ${i===0&&mode!=='debug'?'Example':'Case '+(i+1)} · ${r.passed===null?'Output only':r.passed?'Passed':'Failed'}</span>${typeof r.argumentsJSON==='string'?`<button type="button" class="btn compact" data-action="debug-result-case" data-index="${i}">Debug this case</button>`:''}</div>${!r.passed||mode==='debug'?`<details ${mode==='debug'?'open':''}><summary>${r.passed===false?`Inspect ${i===0&&mode!=='debug'?'example':'case '+(i+1)} failure`:'Inspect output'}</summary><pre>${esc(r.argumentsJSON!==undefined?'Arguments: '+r.argumentsJSON+'\n':r.arguments!==undefined?'Arguments: '+r.arguments+'\n':'')}${esc(r.expectedJSON!==undefined?'Expected: '+r.expectedJSON+'\n':r.expected!==undefined?'Expected: '+r.expected+'\n':'')}${esc(r.error||'Returned: '+r.actual)}</pre>${errorLineButton(r.errorLine)}</details>`:''}</div>`).join('')}${stdout}`;
 }
 function revisionRows(items){return `<div class="panel revision-list">${items.map(q=>`<a class="row" href="${revisionHref(q)}"><div><span class="row-title">${esc(q.title)}</span><span class="row-meta">${esc(q.topic)} · ${q.difficulty} · ${q.minutes} min · ${questionState(q.id).due<=Date.now()?'Due ':'Scheduled '}${esc(dateLabel(questionState(q.id).due))}</span>${statusHTML(q.id)}</div><span class="row-arrow" aria-hidden="true">↗</span></a>`).join('')}</div>`;}
 function review(){
@@ -837,10 +911,15 @@ function bindPage(){
   if(l)$('#quiz-form').addEventListener('submit',event=>{event.preventDefault();retainFormFocus(event);const raw=new FormData(event.target).get('option');if(raw===null){notify('Choose an answer before checking.');return;}const option=Number(raw);if(!Number.isInteger(option)||option<0||option>=l.options.length)return;const passed=option===l.correct;view[l.id]={passed,choice:option,message:passed?'Correct. '+l.explanation:'Not quite. Return to the key idea and try another answer.'};if(passed){state.lessons[l.id]={passed:true,date:Date.now()};touch();}render();announce(view[l.id].message);});
   const c=coding.find(c=>route[0]==='coding'&&c.id===route[1]);
   if(c){
+    $('#page').addEventListener('keydown',event=>{if(event.target.closest?.('.python-workspace'))handleCodingShortcut(event,c);});
+    for(const [selector,field] of [['#debug-arguments','argumentsJSON'],['#debug-expected','expectedJSON'],['#debug-enabled','enabled']]){
+      $(selector)?.addEventListener(field==='enabled'?'change':'input',event=>{const record=debugCases(c),selected=record.cases.find(t=>t.id===record.selected);if(!selected)return;selected[field]=field==='enabled'?event.target.checked:event.target.value;saveDebugCases(c,record);debugError(c,'');updateRunnerDraftNote(c.id);if(field==='enabled')render();});
+    }
     if(typeof QuantPythonEditor!=='undefined'){
       codeEditor=QuantPythonEditor.mount({parent:$('#code-host'),id:c.id,
         value:state.drafts[c.id]??c.starter,status:$('#editor-position'),
         onChange:value=>{state.drafts[c.id]=value;touch();updateRunnerDraftNote(c.id);},
+        onShortcut:event=>handleCodingShortcut(event,c),
         onExit:backwards=>{const target=(backwards?null:$('#page .editor-actions button:not(:disabled)'))||$('#page [data-action="editorial"]');if(!target)return false;target.focus();return true;}});
     }else{
       // A plain input remains usable if the bundled editor cannot load.
@@ -870,10 +949,14 @@ function bindPage(){
       if(action==='editorial'){v.editorial=!v.editorial;if(v.editorial)markEditorialRead(c.id);render();}
       if(action==='error-line'){const line=Number(button.dataset.line);if(Number.isInteger(line)&&line>0){if(codeEditor)codeEditor.goToLine(line);else{const editor=$('#code'),position=editor.value.split('\n').slice(0,line-1).join('\n').length+(line>1?1:0);editor.focus();editor.setSelectionRange(position,position);}}}
       if(action==='restore-starter'){if(codeEditor)codeEditor.replace(c.starter);else{state.drafts[c.id]=c.starter;touch();render();}}
+      if(action==='add-debug-case')addDebugCase(c);
+      if(action==='select-debug-case'){const record=debugCases(c);if(record.cases.some(t=>t.id===button.dataset.case)){record.selected=button.dataset.case;saveDebugCases(c,record);render();}}
+      if(action==='remove-debug-case'){const record=debugCases(c),index=record.cases.findIndex(t=>t.id===record.selected);record.cases=record.cases.filter(t=>t.id!==record.selected);record.selected=record.cases[Math.min(index,record.cases.length-1)]?.id||'';saveDebugCases(c,record);debugError(c,'');render();$('#debug-arguments')?.focus({preventScroll:true});}
+      if(action==='load-submission-cases')await loadSubmissionCases(c);
+      if(action==='copy-submission-case'){const selected=v.officialCases?.[Number($('#submission-case')?.value)];if(selected)addDebugCase(c,selected,'Submission '+selected.caseNumber);}
+      if(action==='debug-result-case'){const selected=v.result?.results?.[Number(button.dataset.index)];if(selected&&typeof selected.argumentsJSON==='string')addDebugCase(c,selected,(v.mode==='submit'?'Submission ':'Run ')+(selected.caseNumber||Number(button.dataset.index)+1));}
       if(action==='run-code'||action==='submit-code'){
-        if(v.running)return;
-        const code=codeEditor?codeEditor.getValue():$('#code').value;
-        await executeCode(c,action==='run-code'?'run':'submit',code);
+        await startCodeCheck(c,action==='run-code'?'debug':'submit');
       }
     }
 

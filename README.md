@@ -20,7 +20,7 @@ Visit <http://127.0.0.1:8768/>. This is a local website; opening `static/index.h
 
 - 51 original interview problems: numerical answers and written reasoning, graduated hints, worked solutions, harder follow-ups, scratchpads, and revision scheduling.
 - 25 lessons: 8 foundation, 11 researcher, 6 trader. Modules have topic-specific illustrated explanations, learning goals, explicit assumptions and worked examples. Understanding checks determine completion. Exercises are linked to each lesson.
-- 15 Python exercises with actual local execution, sample runs, full test submissions, persistent drafts, and optional editorials.
+- 15 Python exercises with actual local execution, editable debugging cases, full test submissions, persistent drafts, and optional editorials.
 - 5 generated trainers: mental arithmetic, fraction conversions, probability, sequence patterns, and conditional dice pricing. Difficulty levels, timed rounds, accuracy, pace, latency, and mistake review.
 - Honest progress: unaided numeric checks, self-assessed written answers, reviewed solutions, passed coding suites, and passed lesson checks are distinguished.
 
@@ -47,7 +47,13 @@ The workspace uses a locally bundled CodeMirror editor with Python syntax colour
 - Cmd+Z / Cmd+Shift+Z undo and redo on this Mac. Undo history survives sample runs, submissions and navigating between exercises within the same session.
 - Restore starter can be undone. Draft text continues to save in the browser/local backup and survives reloads; undo history is kept only for the current page session.
 
-Run checks only the visible example; Submit checks the complete suite. Error feedback includes line jumps when Python can identify the source line, failure arguments and optional printed output. **Checked version** shows the exact source sent to the runner. Editing while it runs keeps your new draft and labels the older result clearly. Leaving the exercise displays a check notice; **View result** returns to the originating learning module without stealing focus when the check finishes.
+**Run tests** (Cmd+apostrophe) checks the included debugging cases against your current code. **Submit** (Cmd+Enter) checks the complete official suite. Both shortcuts work inside the Python workspace, including the editor, and ignore repeated presses while a check is running.
+
+The test-case panel starts with editable copies of the visible examples. Add cases, edit arguments/expected output, remove cases, and choose which cases to include. Arguments must be a JSON array with one entry per `solve` parameter: for example, `[[1,2,2,3],4]` supplies a list and a target. Expected output uses JSON too: `null` checks Python `None`; a blank field just inspects the returned output. JSON syntax and argument-count errors are shown without awarding progress. Up to 20 cases are supported, with 200,000 characters per case; the existing request/storage limits also apply. Cases are saved per exercise alongside solution drafts and included in progress backups.
+
+**Debug this case** copies exact arguments and the expected result from a submission result, including failed cases. **Copy from submission suite** also lets you choose a case before submitting. These are editable debugging copies; changing them never changes official grading. Nested values and large integers are preserved as JSON text. Passing debugging cases earns no exercise completion; only passing the official Submit suite does.
+
+ Error feedback includes line jumps when Python can identify the source line, failure arguments and optional printed output. **Checked version** shows the exact source sent to the runner. Editing while it runs keeps your new draft and labels the older result clearly. Debugging-case edits also label results as belonging to the cases sent for the earlier run. Leaving the exercise displays a check notice; **View result** returns to the originating learning module without stealing focus when the check finishes.
 
 Results survive reload in this tab. A pending check interrupted by reload requires a fresh Run or Submit; restoring feedback never awards a pass. Python has a four-second runtime limit and the browser releases its busy state after seven seconds if the local request does not respond. Tab-local result recovery depends on session storage; portable progress backups contain drafts and earned results rather than this temporary feedback.
 
