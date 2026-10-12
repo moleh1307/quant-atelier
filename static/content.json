@@ -3260,6 +3260,139 @@
         "Condition on an independent pilot to restore mean \\(\\frac{5}{3}\\).",
         "Derive pilot moments and variance \\(\\frac{19}{27}\\), compare optimum \\(\\frac{1}{9}\\) and explain the zero conditional-mean variance term."
       ]
+    },
+    {
+      "id": "q_l18_e1",
+      "title": "Use the old mean and the new mean",
+      "topic": "Research coding",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 7,
+      "prompt": "Three stored observations are [8,10,12]. Their count is n=3, mean m=10 and CENTRED squared-deviation sum M2=8. A new observation x=14 arrives. Update the mean, then use the old-mean deviation times the new-mean deviation to update M2. What is the NEW M2? Work in exact arithmetic; M2 is a sum, not an already-divided variance.",
+      "answer": 20,
+      "hints": [
+        "The new mean is 11; the old-mean deviation is four.",
+        "Add (14−10)(14−11) to the old M2."
+      ],
+      "solution": "The new count is four and the new mean is 10+(14−10)/4=11. The M2 increment is (14−10)(14−11)=12, giving M2=20. Direct residuals around 11 are −3, −1, 1 and 3; their squares sum to 20. Using the old mean twice adds 16 and incorrectly gives 24. The update preserves a centred sum whose centre itself changes.",
+      "followup": "What are the descriptive variance and the usual sample-variance estimate? Which assumption lets you interpret the latter as unbiased for a population variance? Could an algorithm settle that assumption?",
+      "followSolution": "The descriptive variance is \\(\\frac{20}{4}\\)=5. The usual sample variance is 20/(4−1)=\\(\\frac{20}{3}\\). Under iid sampling from a population with a finite second moment, the latter is unbiased for that population variance. The arithmetic can compute both quantities for dependent observations, but their usual population interpretation does not follow from the update. A data-structure invariant is distinct from a sampling assumption.",
+      "lesson": "l18",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Update the count/mean to four and 11 before the second deviation.",
+        "Obtain M2=20 and reject the old-mean-twice increment.",
+        "Separate 5 from \\(\\frac{20}{3}\\) and state the iid finite-second-moment interpretation."
+      ]
+    },
+    {
+      "id": "q_l18_e2",
+      "title": "A maximum value can hide a wrong tie rule",
+      "topic": "Research coding",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 8,
+      "prompt": "values=[5,5,4,5] has indices 0,1,2,3. At index 3, consider the complete CURRENT-INCLUSIVE window of width k=3. Return the EARLIEST index attaining its maximum. What index should be returned? Explain which expired and tied observations remain eligible; values alone are insufficient for this contract.",
+      "answer": 1,
+      "hints": [
+        "The final window contains indices 1,2,3, not 0,1,2.",
+        "The eligible maxima occur at indices one and three."
+      ],
+      "solution": "The eligible window is [1,2,3], containing [5,4,5]. Index zero is expired because it is ≤3−3. The earliest eligible maximum is index one. Replacing an older equal-valued candidate with index three preserves the maximum VALUE but violates the earliest-index answer. Store indices so equality and expiry remain distinguishable.",
+      "followup": "Which back-removal comparison should a monotone deque use for earliest ties? Which should it use for newest ties? If value zero arrives at index four, what becomes the earliest maximum in the new window?",
+      "followSolution": "For earliest ties, remove older candidates only when their values are STRICTLY smaller than the new value; retain equal values in increasing index order. For newest ties, remove smaller-or-equal values. At index four the window is [2,3,4], so index one expires and index three is the earliest maximum. Tie handling and expiry are independent obligations; keeping all equal candidates can use k entries for a constant window.",
+      "lesson": "l18",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Use the final current-inclusive window [1,2,3] and return index one.",
+        "Explain why the same maximum value does not certify a tie-index contract.",
+        "Distinguish < from ≤ back-removal and derive index three after the next arrival."
+      ]
+    },
+    {
+      "id": "q_l18_m1",
+      "title": "Merge statistics without mixing up within and between",
+      "topic": "Research coding",
+      "difficulty": "Medium",
+      "path": "researcher",
+      "minutes": 21,
+      "prompt": "Two DISJOINT batches contain finite real observations. Each is summarised by count n, arithmetic mean m and CENTRED sum M2=\\(\\Sigma\\)(x−m)², with no variance denominator applied. Derive a constant-arithmetic-work merge of two nonempty summaries that equals recomputing these three summaries on the concatenated data in exact arithmetic. Evaluate it for batch A=[0,2] and batch B=[8,10,12]. Include an empty-batch identity, the descriptive/sample variance conventions and whether exact associativity implies bit-for-bit floating associativity.",
+      "answer": null,
+      "hints": [
+        "The combined mean is weighted by batch counts, not by number of batches.",
+        "Expand each batch’s residuals around the combined mean; its residual sum around its own mean is zero.",
+        "Different batch means create a between-batch term even if both within-batch variances vanish."
+      ],
+      "solution": "Let n=n_A+n_B and delta=m_B−m_A. For nonempty batches,\n\n\\[\\begin{aligned}m&=m_A+\\frac{n_B}{n}\\delta,\\\\M_2&=M_{2,A}+M_{2,B}+\\frac{n_A n_B}{n}\\delta^2.\\end{aligned}\\]\n\nWithin each batch, expanding x−m=(x−m_batch)+(m_batch−m) makes its cross term zero. Thus its contribution is its old M2 plus n_batch(m_batch−m)². The two mean-shift terms simplify to n_A n_B delta²/n. Counts, not batches, supply the weights. For A, (n,m,M2)=(2,1,2); for B, (3,10,8). Their union has n=5, mean \\(\\frac{32}{5}\\) and M2=10+(\\(\\frac{6}{5}\\))81=\\(\\frac{536}{5}\\). Descriptive variance is \\(\\frac{536}{25}\\); sample variance is \\(\\frac{134}{5}\\). Simply averaging 1 and 10, or averaging the within variances, answers a different question.\n\nAn empty summary has count zero with undefined mean and zero centred sum; merging it returns the other summary without subtracting an undefined mean. Two empty batches stay empty. For count one, descriptive variance is zero and sample variance is undefined. Since concatenation determines the exact sufficient summaries, the exact merge is associative and commutative. Floating addition/multiplication round at each operation, so different merge trees can produce different final bits; exact associativity is not a reproducibility or numerical-accuracy guarantee.",
+      "followup": "A colleague proposes averaging worker variances by their observation counts, omitting the between-worker term. Give a two-worker example where every worker variance is zero but the combined variance is positive. What changes if batches overlap or worker outputs have already been divided by \\(n-1\\)?",
+      "followSolution": "Workers containing [0,0] and [10,10] each have M2=0 and descriptive variance zero. Their union has mean five and M2=100, descriptive variance 25. The missing quantity is variability between worker means. For disjoint nonempty batches, a supplied sample variance must first be converted to M2=(\\(n-1\\))s²; an empty/singleton convention is needed when that variance is undefined. Overlapping batches duplicate observations if treated as disjoint; the formulas then describe the multiset with those repetitions, not the intended unique dataset. Counts and moment summaries alone generally cannot identify which records overlap.",
+      "lesson": "l18",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive both count-weighted mean and between-batch centred-sum term.",
+        "Compute n=5, m=\\(\\frac{32}{5}\\), M2=\\(\\frac{536}{5}\\) and the two variance conventions.",
+        "Handle empty/singleton summaries without undefined operations.",
+        "Separate exact associativity from floating reproducibility and disjointness from duplicated records."
+      ]
+    },
+    {
+      "id": "q_l18_h1",
+      "title": "A rolling statistic must remember what leaves",
+      "topic": "Research coding",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 28,
+      "prompt": "A streaming monitor reports the mean and centred squared-deviation sum M2 for the latest FULL window of width k≥2. An insertion-only Welford implementation retains just (k,m,M2). Derive an exact-arithmetic REMOVE-THEN-ADD update when the departing oldest value y is known and a new value x arrives. Can (k,m,M2) plus x alone determine the new window statistics for every ordered history? Give an explicit indistinguishable-summary counterexample. State the needed data structure and arithmetic/storage costs. Discuss the k=1 boundary and numerical risks separately from the exact derivation.",
+      "answer": null,
+      "hints": [
+        "Invert a Welford insertion to obtain the mean and M2 after removing y.",
+        "Compare ordered windows [0,1,2] and [2,1,0], then append three.",
+        "A streaming source does not necessarily let you reread the value from k arrivals ago."
+      ],
+      "solution": "Remove y from k observations. The remaining k−1 observations have\n\n\\[\\begin{aligned}m_-&=m+\\frac{m-y}{k-1},\\\\M_{2,-}&=M_2-(y-m)(y-m_-).\\end{aligned}\\]\n\nThe mean follows from km−y; the M2 formula inverts the centred insertion identity. Now add x:\n\n\\[\\begin{aligned}m_+&=m_-+\\frac{x-m_-}{k},\\\\M_{2,+}&=M_{2,-}+(x-m_-)(x-m_+).\\end{aligned}\\]\n\nBoth [0,1,2] and [2,1,0] have k=3, m=1 and M2=2. Appending three removes zero from the first and two from the second. Their new windows are [1,2,3] with mean two/M2 two, and [1,0,3] with mean 4/3/M2 \\(\\frac{14}{3}\\). Identical retained summaries plus identical arrival require different answers, so the proposed state is insufficient. In a one-pass source, a FIFO queue or ring buffer of the k recent values supplies y. Updates use O(1) arithmetic and \\(O(k)\\) value storage, excluding output; a batch array can instead supply y by index, but that array is still retained history.\n\nFor k=1 replace the only observation: mean x, M2 zero, descriptive variance zero, no sample variance. Do not divide by k−1. The formulas are exact identities, not floating stability theorems. Repeated subtract/add updates can accumulate rounding and a slightly negative M2. Blindly clamping all negatives can conceal an indexing error or a materially wrong statistic. Validate against centred recomputation and a scale-aware numerical tolerance; rebasing every k replacements costs \\(O(k)\\) per rebase and \\(O(n)\\) total work over n replacements, but still supplies no universal error guarantee for arbitrary inputs or rounded observations.",
+      "followup": "For binary observations, justify an information lower bound for a state that can report the current exact k-window sum and continue under arbitrary next arrivals. Does this prove that every implementation needs k Python objects or k machine words? Could storing one unbounded integer evade the bound?",
+      "followSolution": "There are \\(2^k\\) ordered binary windows, written \\(b_1,\\ldots,b_k\\). Query the current sum \\(s_0\\), then append k zeros and query each resulting sum \\(s_1,\\ldots,s_k=0\\):\n\n\\[\\begin{aligned}s_t&=\\sum_{j=t+1}^k b_j,\\\\b_t&=s_{t-1}-s_t\\quad(1\\leq t\\leq k).\\end{aligned}\\]\n\nThe differences recover the original observations in order. Therefore two different binary windows cannot share the same state under this query/continuation contract: at least \\(2^k\\) distinguishable states, or k bits, are necessary. This is a BIT lower bound; it does not assert k objects or words. Bit-packing can compress a binary ring buffer, and one unbounded integer could encode the whole window, but that integer still occupies \\(\\Omega(k)\\) bits and its arithmetic is not a constant-cost fixed-width-word operation. Exact means reveal sums by multiplying by k. This argument fixes the reporting/window contract and does not claim that one approximate variance estimate requires the same state.",
+      "lesson": "l18",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive removal and insertion identities with old/new means in the correct factors.",
+        "Use two ordered histories with equal retained summaries and different departing values.",
+        "Separate O(1) arithmetic from \\(O(k)\\) retained values and handle k=1 explicitly.",
+        "Discuss floating drift/rebasing without silently certifying accuracy.",
+        "Prove the binary k-bit lower bound and distinguish bits from objects/words."
+      ]
+    },
+    {
+      "id": "q_l18_h2",
+      "title": "Correct heap maxima with an incorrect space claim",
+      "topic": "Research coding",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 27,
+      "prompt": "For a current-inclusive rolling maximum of width k, an implementation pushes (−value,index) into an ordinary binary min-heap at each arrival. Before reporting, it removes heap ROOTS whose indices are ≤i−k. Python tuple ties choose the smaller index, so the intended returned index is the earliest maximum. The author claims O(n log k) total time and \\(O(k)\\) auxiliary memory because every active window has at most k values. Audit correctness and the cost claim. Exhibit a fixed-small-k stream with unbounded retained heap size, then design and prove an \\(O(n)\\)-total-time/\\(O(k)\\)-auxiliary deque algorithm that returns the earliest maximum index. Separate worst-case single-update cost, amortised cost and result storage.",
+      "answer": null,
+      "hints": [
+        "An expired item can remain buried below a better current maximum.",
+        "At k=2, consider a strictly increasing input stream.",
+        "For earliest ties, equal old candidates must survive back dominance."
+      ],
+      "solution": "Root eviction yields a correct answer once the root is eligible: if the root were expired it would be removed; among surviving entries the heap orders by greatest value and then earliest index, so no eligible entry is better. But eligibility of the root does not bound all retained entries. For k=2 and a strictly increasing stream, each new value is the global maximum at the root. Old expired smaller values stay buried and are never popped. After n arrivals the heap contains n entries. Its space is Θ(n) on this input and pushing successive new minima in the negated-key heap can require Θ(log i) swaps, hence Θ(n log n) total work; a log-k/\\(O(k)\\) claim is false.\n\nStore a deque of increasing candidate indices with NONINCREASING values. At arrival i: remove front indices ≤i−k; remove back indices whose values are STRICTLY smaller than values[i]; append i. An older strictly smaller value is dominated: any future right-moving fixed-width window containing it also contains the newer larger value, which expires later. Equal values are retained because the earlier index wins the declared tie. Thus the front is the earliest eligible maximum. A complete window exists only when i≥k−1.\n\nEach index enters once and leaves at most once, by expiry or dominance, so there are at most n pushes and n total pops. Deque end operations give \\(O(n)\\) total work and O(min(k,n)) auxiliary entries; result storage is separately O(max(n−k+1,0)). One arrival can still pop Θ(k) candidates: build a decreasing full window, then insert a value larger than all of them. Constant AMORTISED update cost does not mean every update finishes in constant worst-case work.",
+      "followup": "Now allow a query to move its left boundary BACKWARD after indices have been evicted. Does the same dominance/expiry proof survive? Give a concrete example. Could a bounded-size heap fix its storage just by dropping any expired item while still supporting such re-expansion?",
+      "followSolution": "It does not survive. With [10,1,2] processed using width one, only index two/value two is retained. Re-expanding the query to [0,2] needs the discarded value ten. The proof depended on a left boundary that never moves backward and on newer dominators remaining in every relevant future window. Expired does not mean permanently irrelevant when re-expansion is permitted. A heap that permanently drops those records loses the same information. Retain a history with a suitable range-query structure, or restrict the query contract; neither is the same \\(O(k)\\) fixed-window streaming promise. Handling out-of-order arrivals likewise requires a defined reordering/late-data policy before reusing the chronological proof.",
+      "lesson": "l18",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Prove root-answer correctness separately from the size/cost claim.",
+        "Construct increasing input at fixed k=2 with n retained heap entries and logarithmic pushes.",
+        "Give the earliest-tie deque invariant, strict dominance proof and independent expiry rule.",
+        "Prove aggregate \\(O(n)\\), bound auxiliary/output storage and exhibit a costly individual update.",
+        "Explain why backward re-expansion invalidates permanent discards."
+      ]
     }
   ],
   "lessons": [
@@ -4663,12 +4796,17 @@
       "correct": 1,
       "explanation": "That amortised argument gives \\(O(n)\\) total time and \\(O(\\text{window})\\) space.",
       "questions": [
-        "q44"
+        "q44",
+        "q_l18_e1",
+        "q_l18_e2",
+        "q_l18_m1",
+        "q_l18_h1",
+        "q_l18_h2"
       ],
       "coding": [
+        "c_l18_easy",
         "c05",
-        "c13",
-        "c14"
+        "c13"
       ],
       "objectives": [
         "Derive and implement Welford mean/variance updates.",
@@ -4676,7 +4814,10 @@
         "Specify timing, ties and reference tests for research data code."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "legacyCoding": [
+        "c14"
+      ],
+      "practiceExpanded": true,
       "optionLabels": [
         "It sorts every window",
         "Each index enters and leaves at most once",

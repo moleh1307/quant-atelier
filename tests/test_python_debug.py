@@ -33,6 +33,15 @@ class DebugTests(unittest.TestCase):
         self.assertEqual(self.debug('def solve(a,b): return 0','[[],0]','false')['passed'],0)
         # Preserve the existing numerical tolerance for ordinary float results.
         self.assertEqual(self.debug('def solve(a,b): return 2.000000001','[[],0]','2')['passed'],1)
+    def test_debug_text_limit_accepts_boundary_and_rejects_overflow(self):
+        # Large official sliding-window copies need more than the former 200k cap.
+        empty=json.dumps(['',0],separators=(',',':'))
+        args=json.dumps(['x'*(500000-len(empty)-len('null')),0],separators=(',',':'))
+        self.assertEqual(len(args)+len('null'),500000)
+        result=self.debug('def solve(a,b): return None',args,'null')
+        self.assertNotIn('error',result);self.assertEqual(result['passed'],1)
+        too_large=json.dumps(['x'*(500001-len(empty)-len('null')),0],separators=(',',':'))
+        self.assertIn('500,000',self.debug('def solve(a,b): return None',too_large,'null')['error'])
     def test_invalid_cases_have_actionable_errors(self):
         for args,expected,message in [('oops','','Debug case 1'),('{}','','JSON array'),('[1]','','expects 2 arguments'),('[1,2]','oops','Debug case 1'),('[NaN,0]','','finite'),('[1e999,0]','','finite')]:
             with self.subTest(args=args,expected=expected):self.assertIn(message,self.debug('def solve(a,b): return a',args,expected)['error'])

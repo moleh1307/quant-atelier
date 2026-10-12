@@ -864,7 +864,7 @@ function debugRunCases(c){
   if(!selected.length)throw Error('Include at least one debugging case before running.');
   return selected.map(t=>{
     try{
-      if(t.argumentsJSON.length+t.expectedJSON.length>200000)throw Error('Keep each case below 200,000 characters.');
+      if(t.argumentsJSON.length+t.expectedJSON.length>500000)throw Error('Use at most 500,000 characters per case.');
       const args=JSON.parse(t.argumentsJSON);
       if(!Array.isArray(args))throw Error('Arguments must be a JSON array, with one entry per function parameter.');
       if(t.expectedJSON.trim())JSON.parse(t.expectedJSON);
