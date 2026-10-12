@@ -2196,5 +2196,241 @@
     ],
     "solution": "from math import gcd\ndef solve(rho_numerator, rho_denominator, innovation_variance, prior_mean, prior_variance, observations, requests):\n    def fraction(a, b=1):\n        if b < 0:\n            a, b = -a, -b\n        g = gcd(a, b)\n        return (a // g, b // g)\n    def add(x, y):\n        return fraction(x[0] * y[1] + y[0] * x[1], x[1] * y[1])\n    def multiply(x, y):\n        return fraction(x[0] * y[0], x[1] * y[1])\n    def divide(x, y):\n        return fraction(x[0] * y[1], x[1] * y[0])\n    def text(x):\n        return [str(x[0]), str(x[1])]\n    rho = fraction(rho_numerator, rho_denominator)\n    rho_squared = multiply(rho, rho)\n    process_variance = (innovation_variance, 1)\n    horizon = max([0] + [row[0] for row in observations] + [row[1] for row in requests])\n    measurements = {t: (y, r) for t, y, r in observations}\n    means = [(prior_mean, 1)]\n    variances = [(prior_variance, 1)]\n    powers, noise_sums = [(1, 1)], [(0, 1)]\n    for t in range(1, horizon + 1):\n        m = multiply(rho, means[-1])\n        p = add(multiply(rho_squared, variances[-1]), process_variance)\n        if t in measurements:\n            y, r = measurements[t]\n            denominator = add(p, (r, 1))\n            gain = divide(p, denominator)\n            innovation = add((y, 1), (-m[0], m[1]))\n            m = add(m, multiply(gain, innovation))\n            p = divide(multiply(p, (r, 1)), denominator)\n        means.append(m)\n        variances.append(p)\n        powers.append(multiply(rho, powers[-1]))\n        noise_sums.append(add(multiply(rho_squared, noise_sums[-1]), process_variance))\n    result = []\n    for asof, target in requests:\n        a = powers[target - asof]\n        m = multiply(a, means[asof])\n        p = add(multiply(multiply(a, a), variances[asof]), noise_sums[target - asof])\n        result.append({\"mean\": text(m), \"variance\": text(p)})\n    return result",
     "explanation": "Gaussian conditioning yields the given scalar update, because Cov(X,Y)=P and Var(Y)=P+R. If P=0, the gain is zero: a noisy observation cannot change a state already known exactly. Between observations, a prediction sends (m,P) to (\\(\\rho\\)m,\\(\\rho\\)\u00b2P+Q), where Q is innovation_variance. Filter once through the finite timeline, applying only that time\u2019s measurement AFTER its transition, and store the filtered distribution at every asof. This is filtering, not smoothing with all later measurements.\n\nFor h=target\u2212asof, precompute A\u2080=1,G\u2080=0 and A\u2095\u208a\u2081=\\(\\rho\\)A\u2095, G\u2095\u208a\u2081=\\(\\rho\\)\u00b2G\u2095+Q. The requested latent mean is A\u2095m_asof and variance A\u2095\u00b2P_asof+G\u2095. These formulas sum future innovation uncertainty; they do not assimilate any future Y. Unit roots work through the recurrence, without dividing by 1\u2212\\(\\rho\\)\u00b2. Store all fractions in reduced integer pairs and normalize denominators. The reference uses math.gcd because the practice runner does not import fractions. Its timeline and per-request work satisfy the scalar bound; exact arithmetic here teaches the information boundary and is not a production floating Kalman implementation."
+  },
+  {
+    "id": "c_l14_easy",
+    "title": "Keep only historically usable training rows",
+    "difficulty": "Easy",
+    "topic": "Validation",
+    "path": "researcher",
+    "prompt": "rows is an unsorted list of [decision_at,feature_received_at,label_received_at]. Each row is a distinct sample, including identical triples. For a fit at cutoff, require decision_at<cutoff, feature_received_at\u2264decision_at and label_received_at\u2264cutoff. Exact-time receipts are included by the stated rule. Features arriving after the original decision cannot be filled retrospectively. Return qualifying ORIGINAL indices in input order; do not reorder or mutate rows. Times and cutoff are integers in [0,10^12], label_received_at>decision_at, and there are at most 100000 rows. Empty inputs return []. Use \\(O(n)\\) time and O(1) auxiliary space beyond output. This checks availability of the declared feature/label, not all preprocessing, selection, independence or execution assumptions.",
+    "starter": "def solve(rows, cutoff):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              0,
+              0,
+              3
+            ],
+            [
+              2,
+              3,
+              5
+            ],
+            [
+              4,
+              4,
+              9
+            ],
+            [
+              7,
+              7,
+              10
+            ],
+            [
+              8,
+              8,
+              12
+            ],
+            [
+              9,
+              11,
+              10
+            ]
+          ],
+          10
+        ],
+        "expected": [
+          0,
+          2,
+          3
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              5,
+              5,
+              6
+            ],
+            [
+              0,
+              0,
+              5
+            ],
+            [
+              0,
+              0,
+              5
+            ],
+            [
+              4,
+              5,
+              5
+            ]
+          ],
+          5
+        ],
+        "expected": [
+          1,
+          2
+        ]
+      }
+    ],
+    "solution": "def solve(rows, cutoff):\n    return [i for i,(decision,feature,label) in enumerate(rows)\n            if decision < cutoff and feature <= decision and label <= cutoff]",
+    "explanation": "Check the three information boundaries independently on every original row. Feature causality uses the original decision; label maturity uses the later fit. Equality is deliberately inclusive for receipts and strict for historical decisions. Preserve duplicates as distinct indices. A single pass makes \\(O(n)\\) comparisons; output storage depends on how many rows qualify. Keeping a row with an unavailable feature by retroactively filling it implements a different, leaking pipeline."
+  },
+  {
+    "id": "c_l14_hard",
+    "title": "Audit many delayed-label folds without scanning each one",
+    "difficulty": "Hard",
+    "topic": "Validation",
+    "path": "researcher",
+    "prompt": "Each unsorted row is [start,end,feature_received_at,label_received_at]. Its label uses the half-open information interval [start,end). All times are integers in [0,10^12], with start<end\u2264label_received_at. The feature may arrive later than start; such a row is permanently unusable for its original decision. Duplicate rows are distinct samples.\n\nEach unsorted query is [fit_at,earliest_start,protected_start,protected_end], with 0\u2264earliest_start\u2264fit_at\u226410^12 and 0\u2264protected_start<protected_end\u226410^12. Count rows that simultaneously have feature_received_at\u2264start, label_received_at\u2264fit_at, start\u2265earliest_start, and NO overlap with [protected_start,protected_end). Receipt equality is included; touching interval endpoints is disjoint. Since end\u2264label_received_at, active rows automatically have start<fit_at. Return counts in ORIGINAL query order, retaining duplicate queries and preserving both inputs. Empty lists are allowed; each list has at most 20000 entries.\n\nProtected blocks can lie earlier than fit_at: this task audits interval exclusion in a candidate resampling design. A count does not certify that such a design estimates a forward-deployed model. When protected_start\u2265fit_at, maturity already prevents label overlap. You must still honor earliest_start and feature causality.\n\nAim for O((N+Q)log\u00b2(N+Q+2)) time and O(N log(N+2)+Q) storage, including preprocessing/sorting, where N and Q are input lengths. Do not scan all N rows for every query. Prerequisite: coordinate compression and a Fenwick prefix-count tree; a nested Fenwick structure can count active points with start<x and end\u2264y. Derive a query decomposition that respects both endpoints.",
+    "starter": "def solve(rows, queries):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              2,
+              6,
+              2,
+              6
+            ],
+            [
+              6,
+              10,
+              6,
+              10
+            ],
+            [
+              9,
+              12,
+              9,
+              12
+            ],
+            [
+              14,
+              17,
+              14,
+              17
+            ],
+            [
+              8,
+              10,
+              8,
+              13
+            ]
+          ],
+          [
+            [
+              10,
+              0,
+              10,
+              14
+            ],
+            [
+              20,
+              0,
+              10,
+              14
+            ],
+            [
+              20,
+              8,
+              10,
+              14
+            ],
+            [
+              20,
+              0,
+              6,
+              10
+            ]
+          ]
+        ],
+        "expected": [
+          2,
+          4,
+          2,
+          2
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              0,
+              3,
+              0,
+              3
+            ],
+            [
+              0,
+              3,
+              0,
+              3
+            ],
+            [
+              3,
+              5,
+              4,
+              5
+            ],
+            [
+              5,
+              7,
+              5,
+              9
+            ]
+          ],
+          [
+            [
+              9,
+              0,
+              3,
+              5
+            ],
+            [
+              3,
+              0,
+              3,
+              5
+            ],
+            [
+              8,
+              5,
+              7,
+              8
+            ],
+            [
+              9,
+              5,
+              7,
+              8
+            ],
+            [
+              9,
+              6,
+              7,
+              8
+            ]
+          ]
+        ],
+        "expected": [
+          3,
+          2,
+          0,
+          1,
+          0
+        ]
+      }
+    ],
+    "solution": "from bisect import bisect_left, bisect_right\ndef solve(rows, queries):\n    valid = [(a,b,r) for a,b,f,r in rows if f <= a]\n    if not valid:\n        return [0] * len(queries)\n    starts = sorted(set(a for a,b,r in valid))\n    n = len(starts)\n    ends = [[] for _ in range(n+1)]\n    for a,b,r in valid:\n        i = bisect_left(starts,a)+1\n        while i <= n:\n            ends[i].append(b)\n            i += i & -i\n    ends = [sorted(set(values)) for values in ends]\n    trees = [[0] * (len(values)+1) for values in ends]\n    def activate(a,b):\n        i = bisect_left(starts,a)+1\n        while i <= n:\n            j = bisect_left(ends[i],b)+1\n            while j < len(trees[i]):\n                trees[i][j] += 1\n                j += j & -j\n            i += i & -i\n    def prefix(x,y):\n        i = bisect_left(starts,x)\n        count = 0\n        while i:\n            j = bisect_right(ends[i],y)\n            while j:\n                count += trees[i][j]\n                j -= j & -j\n            i -= i & -i\n        return count\n    valid.sort(key=lambda row:row[2])\n    result = [0] * len(queries)\n    cursor = 0\n    infinity = 10**12+1\n    for index,(cutoff,lower,u,v) in sorted(enumerate(queries),key=lambda item:item[1][0]):\n        while cursor < len(valid) and valid[cursor][2] <= cutoff:\n            a,b,r = valid[cursor]\n            activate(a,b)\n            cursor += 1\n        result[index] = (prefix(infinity,u)-prefix(lower,u)\n                         +cursor-prefix(max(lower,v),infinity))\n    return result",
+    "explanation": "Ignore feature-ineligible rows and sweep queries by fit_at, activating a row once its label receipt is \u2264that cutoff. Store each active interval as a point (start,end). Non-overlap is end\u2264u OR start\u2265v for protected [u,v). These branches are DISJOINT because start<end and u<v. The first branch also needs start\u2265L; the second needs start\u2265max(L,v).\n\nLet P(x,y) count active points with start<x and end\u2264y, and let M=10^12+1, strictly beyond every input timestamp. The answer is\n\n\\[P(M,u)-P(L,u)+P(M,M)-P(\\max(L,v),M).\\]\n\nBuild a compressed Fenwick tree over start; each outer node has its own sorted list of end coordinates and inner Fenwick counts. A point activation touches O(log N) outer nodes and O(log N) work inside each. Prefix counting uses the same two logarithmic traversals. Inner coordinate lists are compiled from all feature-eligible rows, but initially store ZERO counts: reading coordinate support during preprocessing does not activate future labels. Restore original query order after the fit-time sweep. The earliest boundary is inclusive, so prefix subtraction uses STRICT start<L; end\u2264u includes the disjoint touching case. Empty eligible support returns zeros. Purging is the stated interval operation, not a guarantee of independence or correct model-selection evidence."
   }
 ]

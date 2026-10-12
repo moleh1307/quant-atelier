@@ -7,9 +7,9 @@ an unregistered new lesson fails the build instead of inheriting generic tasks.
 from collections import Counter
 
 DIFFICULTIES = ('Easy', 'Medium', 'Hard')
-COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05', 'l06', 'l07', 'l08', 'l09', 'l25', 'l10', 'l11', 'l12', 'l13')
+COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05', 'l06', 'l07', 'l08', 'l09', 'l25', 'l10', 'l11', 'l12', 'l13', 'l14')
 PENDING_TOPICS = (
-    'l14', 'l15', 'l16', 'l17', 'l18', 'l19', 'l20',
+    'l15', 'l16', 'l17', 'l18', 'l19', 'l20',
     'l21', 'l22', 'l23', 'l24',
 )
 
@@ -28,9 +28,10 @@ CODING_LINKS = {
     'l11': ['c_l11_easy', 'c07', 'c_l11_hard'],
     'l12': ['c_l12_easy', 'c_l12_medium', 'c_l12_hard'],
     'l13': ['c_l13_easy', 'c08', 'c_l13_hard'],
+    'l14': ['c_l14_easy', 'c09', 'c_l14_hard'],
 }
 # These permanent activities remain bookmarkable, but are outside current slots.
-LEGACY_CODING_LINKS = {'l08': ['c05']}
+LEGACY_CODING_LINKS = {'l08': ['c05'], 'l14': ['c10']}
 
 
 def add_questions(add, questions):
@@ -58,6 +59,8 @@ def add_questions(add, questions):
     inference_questions(add, questions)
     from .time_series import add_questions as time_series_questions
     time_series_questions(add, questions)
+    from .validation import add_questions as validation_questions
+    validation_questions(add, questions)
 
 
 def add_coding(add, tasks):
@@ -85,6 +88,8 @@ def add_coding(add, tasks):
     inference_coding(add, tasks)
     from .time_series import add_coding as time_series_coding
     time_series_coding(add, tasks)
+    from .validation import add_coding as validation_coding
+    validation_coding(add, tasks)
 
 
 def attach_and_validate(lessons, questions, tasks):

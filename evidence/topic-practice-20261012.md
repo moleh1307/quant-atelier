@@ -1,8 +1,8 @@
 # Topic practice — verification
 
 2026-10-12. Latest verified scope: grouped list/journey navigation across the site,
-and expanded banks for l01–l13 and likelihood l25. The full 25-topic expansion remains active;
-11 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
+and expanded banks for l01–l14 and likelihood l25. The full 25-topic expansion remains active;
+10 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
 
 The first batch below documents l01–l03 at its own verification baseline
 (63 questions / 22 codes). Later batches are recorded below.
@@ -868,3 +868,108 @@ they do not certify firm-specific interview difficulty, learning outcomes,
 physical touch or screen-reader use. Next: researcher l14–l18 and trader
 l19–l24, followed by the final site-wide navigation/preservation audit.
 The full goal remains active.
+
+
+## Eleventh batch: validation l14
+
+The authored validation lesson and learning goals were inspected before
+selecting practice. The topic now has **2 Easy, 2 Medium and 2 Hard interviews**
+and exactly **one coding exercise per difficulty**. Existing q27/q28 remain,
+with specific rubrics; q27's casual "touch" wording is clarified to overlapping
+test-label information. Its original prompt, written grading meaning and
+follow-up remain. All **113 preceding interview records** otherwise match the
+preceding commit, and all **48 preceding public coding records** remain exact.
+
+Four original interviews practice distinct evaluation failures and reasoning:
+
+- Historical decisions with features received too late or labels not yet mature;
+  inclusive versus strict receipt boundaries and causal missing-input policies.
+- Decision-weighted versus equally weighted block scores, defining the estimand
+  before assigning uncertainty to an aggregated number.
+- Disjoint half-open intervals versus chronological availability, including
+  delayed label publication and why purging does not establish independence.
+- Honest predictable adaptive evaluation. The argument defines its nested
+  information sets, centered increments and random conditional-risk target,
+  proves zero cross moments, and derives a fixed-horizon Chebyshev band. A
+  two-fair-outcome counterexample separates predictable adaptation from choosing
+  the best retrospectively scored constant classifier. The selected reported
+  loss is 1/4 while independent future error is 1/2.
+
+Every new interview includes hints, justified worked reasoning, a substantive
+follow-up and specific self-check obligations. A numeric answer does not assess
+the unwritten reasoning. The uncertainty argument evaluates the recorded
+procedure's average conditional risk, not a frozen final model or future regime.
+
+Easy coding preserves original sample indices while checking historical
+feature and label receipt boundaries. Medium retains c09 interval purging.
+Hard coding audits many candidate folds with independently delayed labels,
+a rolling lower bound on sample starts and a protected half-open information
+block. A receipt-time sweep and nested compressed Fenwick counts implement
+independent maturity/causality/overlap constraints without scanning every row
+per query. The two non-overlap branches are proved disjoint; exact endpoint
+rules, duplicate samples/queries, ordering, mutation, bounds and complexity
+including query sorting are stated. Arbitrary historical protected blocks
+serve the declared interval-audit contract, not a claim of forward-deployment
+validity. Future coordinate support never activates future labels.
+
+The old second Medium c10 remains available through `LEGACY_CODING_LINKS` and
+`legacyCoding` as **Additional practice**. Its draft, result and permanent
+standalone/journey URLs survive; its pass does not fill one of the three
+current coding slots. Automated journey tests now exercise this exact l14
+bookmark and preserve a synthetic old draft separately from real user data.
+
+Twelve independent validation tests check:
+
+- Availability, weighting and half-open boundaries by direct membership and
+  explicit half-unit interval sets; the original c09/c10 examples remain valid.
+- Exhaustive fair-bit histories under three predictable policies and an exact
+  dependent-outcome model with genuinely varying conditional-risk averages.
+  Their probability-weighted centered moments agree with the written argument.
+- Exact retrospective selection over the four binary pairs and an independent
+  future bit; finite checks support the proof rather than replace it.
+- Exhaustive small Easy row pairs, feature/label bounds and 100000 rows.
+- 240 seeded Hard instances against direct per-query intersection membership,
+  independently of the reference's sweep, complement and Fenwick structure.
+- Every authored fixture, row/query permutations, duplicate multiplicity,
+  prefix-only equivalence, future-label additions, timestamp endpoints,
+  maximum 20000 rows and queries, input preservation and empty cases.
+- Actual judge execution, rejection of a maturity-only shortcut, official
+  debugging-copy size bounds and exact serialization round trips.
+
+All **139 Python tests** and **23 frontend suites** pass. All **35 expanded
+coding references** pass the actual judge. Inventory: **25 lessons / 117
+interviews / 50 codes**; researcher route: **19 checks / 108 distinct questions /
+49 current codes**. c10 remains in the coding library and saved-work history
+outside current route slots. Fifteen topics meet the contract; ten remain pending.
+
+Standard preprocessing and selection distinctions were cross-checked with
+[scikit-learn's leakage guidance](https://scikit-learn.org/stable/common_pitfalls.html)
+and its [nested-evaluation example](https://scikit-learn.org/stable/auto_examples/model_selection/plot_nested_cross_validation_iris.html).
+The finite examples, adaptive-risk argument, exercise contracts and code are
+original; no commercial interview content was copied.
+
+Chrome verified lesson → question list → coding list with the correct grouped
+counts. In explicit **Test preview**, the Hard reference passed **9/9** complete
+server cases. Submission case 9 copied **3000 rows and 2000 queries** exactly
+(arguments JSON 120857 characters, expected JSON 9890); with the two examples,
+the debugger passed **3/3** and explicitly reported completion unchanged.
+The old c10 personal bookmark visibly labels Additional practice and retains
+its module/list return. No personal grading occurred.
+
+The final adaptive proof and follow-up were reviewed at **390px** viewport:
+zero math-render errors, document width **375px**, solution **289px**, and
+multiline display **289px** with equal scroll width. Actual screenshots were
+visually inspected. Viewport was reset and the tab returned to the personal
+coding list **0/3**, with interview stage **0/6**. Personal question, coding,
+lesson, draft and trainer groups match the fresh pre-edit baseline. No personal
+assessment was awarded, reset or recovered. Server restarted after generating
+the new bank; later changes only clarified prose and mathematical notation.
+
+- [Validation interview list, personal workspace](validation-question-list-20261012.png).
+- [Validation coding list, personal workspace](validation-coding-list-20261012.png).
+- [Narrow adaptive-evaluation proof, isolated preview](validation-proof-narrow-20261012.png).
+
+These checks establish the specified cases and observed navigation, not
+employer-certified difficulty, learner mastery, touch or screen-reader use.
+Next: researcher l15–l18 and trader l19–l24, then final site-wide navigation
+and preservation audit. The full goal remains active.

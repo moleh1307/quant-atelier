@@ -71,6 +71,16 @@ for(const path of ['researcher','trader']){
  assert.match(list,/0 \/ 3 passed/);
  assert.equal(run('state.drafts.c05'),'my original draft');
 }
+// l14 retains its former second Medium exercise through a permanent bookmark.
+run("route=['coding','c10','journey','researcher','l14'];state=fresh();");
+assert.equal(run('moduleContext().additional'),true);
+assert.equal(run('followingActivity(moduleContext()).href'),'#coding-list/l14/journey/researcher/l14');
+assert.match(run('moduleSupplementNotice(moduleContext())'),/Additional practice/);
+run("state.coding.c10={accepted:true};state.drafts.c10='saved old fold implementation';");
+assert.equal(run('moduleStageEvidence(content.lessons.find(l=>l.id===\'l14\'),"Implement")'),'0/3');
+run("route=['coding-list','l14','journey','researcher','l14'];");
+assert.doesNotMatch(run("topicPracticePage('coding')"),/#coding\/c10\//);
+assert.equal(run('state.drafts.c10'),'saved old fold implementation');
 run("route=['coding','c05','journey','researcher','l18'];");
 assert.equal(run('moduleContext().lesson.id'),'l18');
 assert.equal(run('moduleContext().additional'),undefined,'Another module may still own that current exercise');
