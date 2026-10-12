@@ -1,8 +1,8 @@
 # Topic practice — verification
 
 2026-10-12. Latest verified scope: grouped list/journey navigation across the site,
-and expanded banks for l01–l12 and likelihood l25. The full 25-topic expansion remains active;
-12 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
+and expanded banks for l01–l13 and likelihood l25. The full 25-topic expansion remains active;
+11 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
 
 The first batch below documents l01–l03 at its own verification baseline
 (63 questions / 22 codes). Later batches are recorded below.
@@ -777,3 +777,94 @@ These checks verify the specified cases and navigation; they do not certify
 employer difficulty, learning outcomes, physical touch or screen-reader use.
 Next: researcher l13–l18 and trader l19–l24, followed by the final site-wide
 preservation/navigation audit. The full goal remains active.
+
+
+## Tenth batch: time series l13
+
+The actual authored lesson and learning goals were reviewed before selecting
+practice. l13 retains original q18/q31 and c08 and now has **2 Easy, 2 Medium,
+4 Hard interviews** and exactly **one coding exercise per difficulty**.
+The six new interviews are original:
+
+- Three-observation stationary covariance counting, negative correlation and
+  variance versus standard-error inflation.
+- Conditional forecast error as future innovation loadings, shared forecast
+  errors and the limits of variance-only prediction intervals.
+- Gaussian innovation products with zero return autocovariance but dependent
+  squares; exact uncertainty for the nonlinear risk target.
+- Overlapping summed labels, finite lag counts and the unequal weights placed
+  on underlying returns; disjoint-label and direct-mean comparisons.
+- Explicit minimum-variance deterministic unbiased weights under a known AR
+  covariance; positive definiteness, uniqueness and same-sample weight bias.
+- A stationary Gaussian triangular array with persistence exp(-c/n), its
+  covariance integral and failure of a fixed-rho shortcut. The follow-up changes
+  initial-state and innovation-variance assumptions separately.
+
+Every task has hints, worked reasoning, a substantive follow-up and specific
+assessment obligations. q18/q31 change only their rubrics. All **107 preceding
+interview records** otherwise match the preceding commit; all **46 preceding
+public coding records** remain exactly unchanged. No original identifier or
+assessment meaning is replaced.
+
+Easy coding computes exact finite mean variance from feasible lag covariances,
+including zero variance, negative lags, irrelevant supplied lags, long kernels
+and large integer bounds. Medium remains the original sample-autocorrelation
+exercise. Hard coding filters a scalar Gaussian latent state observed with
+noise and answers unordered, repeated forecasts conditional only on information
+through each asof. Missing measurements, deterministic states, unit roots,
+negative persistence and future observations have explicit semantics. The
+Gaussian update is supplied as a prerequisite; forecasting requires deriving
+and applying the innovation recurrence. Canonical string rational pairs avoid
+browser integer rounding. Bounds, input preservation and rational-operation
+complexity plus bit/gcd/string costs are explicit.
+
+Twelve independent time-series tests check finite covariance matrices and
+innovation loadings; finite moment-matching enumeration for the nonlinear
+risk example; exhaustive small overlapping labels; dense exact covariance
+solutions for optimal weights; changing-persistence sums at increasing sample
+sizes; 180 seeded moving-average kernels for Easy coding; and 90 seeded latent
+models against joint Gaussian conditioning by independent Fraction matrix
+elimination. That oracle does not reuse the production filtering recurrence.
+Further checks cover causal prefixes, signs, probability reparameterization,
+request ordering, maximum time and 10000 requests, fixture-contract bounds,
+actual judge execution, input preservation and lossless debug-case round trips.
+Finite checks support the written derivations; they are not proofs of arbitrary
+limit theorems or Gaussianity of the moment-matching proxy.
+
+All **127 Python tests** and **23 frontend suites** pass. All **33 expanded
+coding references** pass the actual judge. Inventory: **25 lessons / 113
+interviews / 48 codes**; researcher route: **19 checks / 104 distinct questions /
+48 codes**. Fourteen topics meet the contract; eleven remain pending.
+
+The scalar state-space conditioning principle was cross-checked against
+[Zivot's University of Washington state-space/Kalman notes](https://faculty.washington.edu/ezivot/econ584/notes/statespacemodels.pdf).
+The exercise specification, finite examples and exact-arithmetic implementation
+are original, rather than copied interview questions.
+
+Chrome reviewed the actual lists and the Hard proof. Earlier in this batch,
+after explicit launcher entry and visible **Test preview** verification, the
+Hard reference passed **11/11** complete server cases. Submission case 10,
+containing 392-digit rational components, was copied into the debugger and
+passed **3/3** checks with its examples; debugging reported completion unchanged.
+Only explicit preview held those development results.
+
+The final changing-persistence proof and follow-up were checked at a **390px**
+viewport. Long integral equality was revised into three mathematical lines:
+its solution and display widths are **289px**, with equal scroll widths; the
+follow-up display is 255px. Document width is **375px**, and there are **zero
+math-render errors**. The actual screenshot was visually inspected. The
+viewport was reset; the browser returned to the personal coding list showing
+**0/3**, while its interview stage shows **0/8**. All five personal question,
+coding, lesson, draft and trainer groups match the fresh pre-edit baseline.
+No personal assessment was awarded, reset or recovered. The local server was
+restarted after generating the new bank; later changes only polished notation.
+
+- [Time-series interview list, personal workspace](time-series-question-list-20261012.png).
+- [Time-series coding list, personal workspace](time-series-coding-list-20261012.png).
+- [Narrow changing-persistence proof, isolated preview](time-series-proof-narrow-20261012.png).
+
+These checks establish the stated mathematical cases and observed UI behavior;
+they do not certify firm-specific interview difficulty, learning outcomes,
+physical touch or screen-reader use. Next: researcher l14–l18 and trader
+l19–l24, followed by the final site-wide navigation/preservation audit.
+The full goal remains active.

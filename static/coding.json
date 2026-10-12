@@ -1971,5 +1971,230 @@
     ],
     "solution": "from math import gcd\ndef solve(horizon, looks, head_numerator, head_denominator):\n    n = horizon\n    a, d = head_numerator, head_denominator\n    b = d - a\n    bounds = dict(looks)\n    a_powers, b_powers, d_powers, two_powers = [1], [1], [1], [1]\n    for _ in range(n):\n        a_powers.append(a_powers[-1] * a)\n        b_powers.append(b_powers[-1] * b)\n        d_powers.append(d_powers[-1] * d)\n        two_powers.append(two_powers[-1] * 2)\n    alive = [1]\n    size_mass = power_mass = null_cost = alternative_cost = 0\n    for t in range(1, n + 1):\n        null_cost += sum(alive) * two_powers[n - t + 1]\n        alternative_cost += sum(count * a_powers[k] * b_powers[t - 1 - k] for k, count in enumerate(alive)) * d_powers[n - t + 1]\n        next_alive = [0] * (t + 1)\n        for k, count in enumerate(alive):\n            next_alive[k] += count\n            next_alive[k + 1] += count\n        if t in bounds:\n            for k in range(bounds[t], t + 1):\n                count = next_alive[k]\n                size_mass += count * two_powers[n - t]\n                power_mass += count * a_powers[k] * b_powers[t - k] * d_powers[n - t]\n                next_alive[k] = 0\n        alive = next_alive\n    def pair(numerator, denominator):\n        divisor = gcd(numerator, denominator)\n        return [str(numerator // divisor), str(denominator // divisor)]\n    return {\"size\": pair(size_mass, two_powers[n]),\n            \"power\": pair(power_mass, d_powers[n]),\n            \"null_flips\": pair(null_cost, two_powers[n]),\n            \"alternative_flips\": pair(alternative_cost, d_powers[n])}",
     "explanation": "Let alive[k] count length-(t\u22121) ordered prefixes with k heads that did NOT reject at an earlier look. Each extends once by a tail to k and once by a head to k+1. At a scheduled time t, any resulting count at or above the threshold is a FIRST rejection; record its probability and zero it before the next extension. Do not propagate stopped paths and count them twice. Paths with the same cumulative count have the same probability under either iid model, so these counts are sufficient.\n\nFor null probability, a length-t rejected prefix has mass count/2\u1d57. Put every contribution over the common denominator 2\u1d3a by multiplying its numerator by 2\u1d3a\u207b\u1d57. Under alternative a/d, the prefix mass is count\u00b7a\u1d4f(d\u2212a)\u1d57\u207b\u1d4f/d\u1d57; multiply its numerator by d\u1d3a\u207b\u1d57 to use denominator d\u1d3a. Summing these disjoint FIRST-hit masses gives size and power, with no independence assumption between looks. A threshold t+1 never rejects; zero rejects all still-alive paths at that time.\n\nFor stopping time T\u2264N, \\(E[T]=\\sum_{t=1}^N P(T\\geq t)\\). Before taking flip t, this event is exactly survival through t\u22121, whose null probability is \\(\\Sigma\\)alive/2\u1d57\u207b\u00b9 and whose alternative probability weights each alive count by a\u1d4f(d\u2212a)\u1d57\u207b\u00b9\u207b\u1d4f/d\u1d57\u207b\u00b9. Accumulate them over the same final denominators. Nonrejecting paths contribute every flip through N, so no terminal-cost correction is needed. Precompute integer powers once; all zero-probability branches work using the empty-product convention 0\u2070=1. At N=0 rejection masses and costs are zero. Reduce all four rationals by gcd and preserve their digits as strings. State propagation and probability weighting each cost O(t) per step, giving O(N\u00b2+len(looks)) scalar work and O(N) integer slots, plus integer bit/power/gcd costs. This computes the actual supplied finite procedure; it does not itself choose calibrated boundaries or certify an infinite continuation."
+  },
+  {
+    "id": "c_l13_easy",
+    "title": "Count the finite lag pairs exactly",
+    "difficulty": "Easy",
+    "topic": "Time series",
+    "path": "researcher",
+    "prompt": "For n consecutive observations with a constant mean, variance is a positive integer marginal variance, and lag_covariances[h\u22121] is their integer covariance at separation h. Unlisted covariances are zero; supplied lags h\u2265n have no pairs in this window and are ignored. The resulting n\u00d7n covariance matrix is GUARANTEED positive semidefinite; you do not need to test feasibility. Return the EXACT variance of the arithmetic sample mean as a reduced canonical decimal-string rational pair [numerator_text,denominator_text]. Zero is [\"0\",\"1\"]. This is finite covariance-pair counting, not an asymptotic effective count.\n\n1\u2264n\u226410^9, 1\u2264variance\u226410^18, at most 100000 supplied lags, and each covariance has absolute value at most variance. Use O(min(\\(n-1\\),len(lag_covariances))) scalar iterations and O(1) integer accumulators beyond the output; integer multiplication/gcd/bit costs are additional. Preserve the input list. Do not use float arithmetic or omit the n\u2212h taper.",
+    "starter": "def solve(n, variance, lag_covariances):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          3,
+          4,
+          [
+            2,
+            1
+          ]
+        ],
+        "expected": [
+          "22",
+          "9"
+        ]
+      },
+      {
+        "args": [
+          3,
+          4,
+          [
+            -2,
+            1
+          ]
+        ],
+        "expected": [
+          "2",
+          "3"
+        ]
+      }
+    ],
+    "solution": "from math import gcd\ndef solve(n, variance, lag_covariances):\n    numerator = n * variance\n    for h in range(1, min(n - 1, len(lag_covariances)) + 1):\n        numerator += 2 * (n - h) * lag_covariances[h - 1]\n    denominator = n * n\n    divisor = gcd(numerator, denominator)\n    return [str(numerator // divisor), str(denominator // divisor)]",
+    "explanation": "Expanding the sum\u2019s variance counts n marginal terms and, for each relevant lag h, n\u2212h unordered pairs in both orientations. Therefore the mean variance is \\([n\\gamma_0+2\\sum_{h=1}^{n-1}(n-h)\\gamma_h]/n^2\\). Ignore beyond-window lags before iterating. Reduce the integer numerator and denominator by their gcd; PSD guarantees a nonnegative numerator, including possible zero. Negative covariances can reduce mean uncertainty. A covariance estimate not guaranteed feasible could give a negative answer, but validation of such estimates is outside this contract."
+  },
+  {
+    "id": "c_l13_hard",
+    "title": "Forecast noisy states without seeing future measurements",
+    "difficulty": "Hard",
+    "topic": "Time series",
+    "path": "researcher",
+    "prompt": "This task extends the lesson\u2019s observed AR process to a LATENT Gaussian state measured with noise. X\u2080\u223cN(prior_mean,prior_variance), and for integer t\u22651, X\u209c=\\(\\rho\\)X\u209c\u208b\u2081+\u03b5\u209c with \\(\\rho\\)=rho_numerator/rho_denominator and iid \u03b5\u209c\u223cN(0,innovation_variance). A supplied observation [time,value,noise_variance] means Y_time=X_time+\u03b7_time with independent \u03b7_time\u223cN(0,noise_variance). Initial state, innovations and all measurement errors are mutually independent. Missing observations mean no measurement, not a zero value. All parameters are KNOWN; no stationarity is required, and \\(\\rho\\)=0 or \u00b11 is allowed.\n\nFor each request [asof,target] return {\"mean\":[signed_numerator_text,denominator_text],\"variance\":[nonnegative_numerator_text,denominator_text]} for X_target CONDITIONAL ONLY on supplied Y measurements at times \u2264asof, including equality. target\u2265asof. Later measurements must be ignored even when they occur before target or at target. Predict the latent X, not a future noisy Y. Preserve request order and duplicates. Every pair must be exact, reduced canonical decimal strings with positive denominator; zero is [\"0\",\"1\"].\n\nAll inputs are integers: 1\u2264rho_denominator\u226420, |rho_numerator|\u2264rho_denominator; 0\u2264innovation_variance,prior_variance\u226410^6, |prior_mean|\u226410^6. Observations have distinct STRICTLY increasing times 1\u2026120, |value|\u226410^6 and 1\u2264noise_variance\u226410^6. There are at most 10000 requests with 0\u2264asof\u2264target\u2264120. Lists may be empty. Use O(T+len(observations)+len(requests)) scalar rational operations and O(T+len(observations)) rational storage beyond outputs, where T is the largest supplied time or zero. Additional rational bit/gcd/string costs apply. Do not mutate inputs, use floats, refit a dense covariance system per request or assimilate future observations.\n\nPrerequisite: Gaussian conditioning. If the current predicted state has mean m and variance P, observing Y=x+noise with independent noise variance R uses gain K=P/(P+R), updated mean m+K(y\u2212m), and variance PR/(P+R). P may be zero because R is strictly positive. Derive the prediction step and keep its information set explicit.",
+    "starter": "def solve(rho_numerator, rho_denominator, innovation_variance, prior_mean, prior_variance, observations, requests):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          1,
+          2,
+          3,
+          0,
+          4,
+          [
+            [
+              1,
+              8,
+              1
+            ],
+            [
+              3,
+              -10,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        ],
+        "expected": [
+          {
+            "mean": [
+              "0",
+              "1"
+            ],
+            "variance": [
+              "4",
+              "1"
+            ]
+          },
+          {
+            "mean": [
+              "16",
+              "5"
+            ],
+            "variance": [
+              "16",
+              "5"
+            ]
+          },
+          {
+            "mean": [
+              "16",
+              "5"
+            ],
+            "variance": [
+              "16",
+              "5"
+            ]
+          },
+          {
+            "mean": [
+              "-158",
+              "39"
+            ],
+            "variance": [
+              "76",
+              "39"
+            ]
+          },
+          {
+            "mean": [
+              "32",
+              "5"
+            ],
+            "variance": [
+              "4",
+              "5"
+            ]
+          }
+        ]
+      },
+      {
+        "args": [
+          1,
+          1,
+          1,
+          2,
+          0,
+          [
+            [
+              2,
+              5,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "expected": [
+          {
+            "mean": [
+              "2",
+              "1"
+            ],
+            "variance": [
+              "3",
+              "1"
+            ]
+          },
+          {
+            "mean": [
+              "7",
+              "2"
+            ],
+            "variance": [
+              "1",
+              "1"
+            ]
+          },
+          {
+            "mean": [
+              "7",
+              "2"
+            ],
+            "variance": [
+              "3",
+              "1"
+            ]
+          },
+          {
+            "mean": [
+              "2",
+              "1"
+            ],
+            "variance": [
+              "3",
+              "1"
+            ]
+          }
+        ]
+      }
+    ],
+    "solution": "from math import gcd\ndef solve(rho_numerator, rho_denominator, innovation_variance, prior_mean, prior_variance, observations, requests):\n    def fraction(a, b=1):\n        if b < 0:\n            a, b = -a, -b\n        g = gcd(a, b)\n        return (a // g, b // g)\n    def add(x, y):\n        return fraction(x[0] * y[1] + y[0] * x[1], x[1] * y[1])\n    def multiply(x, y):\n        return fraction(x[0] * y[0], x[1] * y[1])\n    def divide(x, y):\n        return fraction(x[0] * y[1], x[1] * y[0])\n    def text(x):\n        return [str(x[0]), str(x[1])]\n    rho = fraction(rho_numerator, rho_denominator)\n    rho_squared = multiply(rho, rho)\n    process_variance = (innovation_variance, 1)\n    horizon = max([0] + [row[0] for row in observations] + [row[1] for row in requests])\n    measurements = {t: (y, r) for t, y, r in observations}\n    means = [(prior_mean, 1)]\n    variances = [(prior_variance, 1)]\n    powers, noise_sums = [(1, 1)], [(0, 1)]\n    for t in range(1, horizon + 1):\n        m = multiply(rho, means[-1])\n        p = add(multiply(rho_squared, variances[-1]), process_variance)\n        if t in measurements:\n            y, r = measurements[t]\n            denominator = add(p, (r, 1))\n            gain = divide(p, denominator)\n            innovation = add((y, 1), (-m[0], m[1]))\n            m = add(m, multiply(gain, innovation))\n            p = divide(multiply(p, (r, 1)), denominator)\n        means.append(m)\n        variances.append(p)\n        powers.append(multiply(rho, powers[-1]))\n        noise_sums.append(add(multiply(rho_squared, noise_sums[-1]), process_variance))\n    result = []\n    for asof, target in requests:\n        a = powers[target - asof]\n        m = multiply(a, means[asof])\n        p = add(multiply(multiply(a, a), variances[asof]), noise_sums[target - asof])\n        result.append({\"mean\": text(m), \"variance\": text(p)})\n    return result",
+    "explanation": "Gaussian conditioning yields the given scalar update, because Cov(X,Y)=P and Var(Y)=P+R. If P=0, the gain is zero: a noisy observation cannot change a state already known exactly. Between observations, a prediction sends (m,P) to (\\(\\rho\\)m,\\(\\rho\\)\u00b2P+Q), where Q is innovation_variance. Filter once through the finite timeline, applying only that time\u2019s measurement AFTER its transition, and store the filtered distribution at every asof. This is filtering, not smoothing with all later measurements.\n\nFor h=target\u2212asof, precompute A\u2080=1,G\u2080=0 and A\u2095\u208a\u2081=\\(\\rho\\)A\u2095, G\u2095\u208a\u2081=\\(\\rho\\)\u00b2G\u2095+Q. The requested latent mean is A\u2095m_asof and variance A\u2095\u00b2P_asof+G\u2095. These formulas sum future innovation uncertainty; they do not assimilate any future Y. Unit roots work through the recurrence, without dividing by 1\u2212\\(\\rho\\)\u00b2. Store all fractions in reduced integer pairs and normalize denominators. The reference uses math.gcd because the practice runner does not import fractions. Its timeline and per-request work satisfy the scalar bound; exact arithmetic here teaches the information boundary and is not a production floating Kalman implementation."
   }
 ]
