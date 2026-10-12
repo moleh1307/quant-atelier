@@ -1,8 +1,8 @@
 # Topic practice — verification
 
 2026-10-12. Latest verified scope: grouped list/journey navigation across the site,
-and expanded banks for l01–l11 and likelihood l25. The full 25-topic expansion remains active;
-13 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
+and expanded banks for l01–l12 and likelihood l25. The full 25-topic expansion remains active;
+12 topic banks are pending, as recorded in [the status file](../TOPIC_PRACTICE_STATUS.md).
 
 The first batch below documents l01–l03 at its own verification baseline
 (63 questions / 22 codes). Later batches are recorded below.
@@ -674,3 +674,106 @@ The local server was restarted after bank generation.
 Next: researcher l12–l18 and trader l19–l24. The goal remains active until all
 25 topic banks, future-topic validation and final preservation/navigation audit
 are complete.
+
+
+## Ninth batch: inference l12
+
+2026-10-12. Read the actual inference chapter and its goals before selecting
+practice. Added five interviews, yielding **2 Easy, 2 Medium and 4 Hard**.
+The original q22/q26/q47 retain their wording, answers, difficulty and solutions;
+only their specific written-assessment rubrics replace generic ones. All 102
+preceding questions match the previous commit apart from those three rubrics,
+and all 43 preceding public coding records remain exactly unchanged.
+
+Easy practice derives a six-flip upper tail and inverts a specified inclusive
+known-variance test, retaining its actual 95.45% coverage. Medium practice spends
+an exact discrete 5% error budget using independent boundary randomization and
+proves simple-model power optimality by an exchange argument. The new Hard tasks
+prove a likelihood-ratio crossing bound through bounded stopped increments and
+increasing crossing events, and derive all three branches of interval coverage
+after a significance filter. Follow-ups distinguish predictable alternatives
+from current-observation selection, extend to a conditional composite null, and
+restore selected-sample coverage through independent replication or inversion
+of a truncated-normal conditional pivot. Full hints, derivations and specific
+rubrics accompany the original questions. Written self-assessment is not an
+automated proof certificate.
+
+The coding list has exactly one exercise per difficulty:
+
+- Easy: invert a known-variance test with integer comparisons, inclusive
+  boundaries and repeated candidate means; near-boundary large values expose
+  an incorrect floating shortcut.
+- Medium: calculate exact fixed-endpoint null size and alternative power from
+  integer binomial recurrences, including zero flips, impossible rejection,
+  certain rejection and degenerate alternatives.
+- Hard: count only surviving prefixes to calculate first-crossing size/power
+  and expected flips actually taken. Looks share observations. Contracts fix
+  their timing, cumulative counts, endpoint inclusion and maximum horizon;
+  finite-horizon calibration does not claim unlimited-horizon validity.
+
+Rational results are canonical decimal-string pairs, rather than rounded
+browser numbers. Bounds, empty inputs, mutation rules, scalar complexity and
+additional integer bit costs are explicit. All copied official cases stay
+within the debugger's size limit.
+
+Twelve independent tests in `tests/test_inference_practice.py` check:
+
+- Exhaustive six-flip records, actual size and power, exact randomized boundary
+  mass and likelihood-ratio ordering; test/interval duality and width scaling.
+- Finite binary records for stopped likelihood-ratio expectations, predictable
+  adaptation and a current-flip counterexample. The written infinite-horizon
+  claim uses the event limit; finite enumeration alone does not prove it.
+- Selected-interval coverage against independent numerical integration of the
+  normal density, all branches and their boundaries; conditional-pivot
+  quantiles, 95% conditional mass and independent-replication factorization.
+- Exact rational-statistic Easy checks on 250 seeded inputs, a difference-one
+  large-integer boundary and the maximum 100,000 candidate bound.
+- Fixed-endpoint probabilities against independent combination formulas and
+  complete small binary records, rather than the production integer recurrence.
+- Sequential size/cost against both exhaustive ordered records and a backward
+  conditional-probability recursion using `Fraction`. All official expected
+  results, 120 seeded procedures and the maximum 120-flip case agree.
+- One-look equivalence, impossible/empty looks, alternative probability
+  reparameterization, input preservation, exact JSON round trips, actual judge
+  execution and rejection of always/never-reject and floating shortcuts.
+
+All **115 Python tests** and **23 frontend suites** pass, including strict local
+KaTeX parsing and current/legacy journey bookmarks. All **31 expanded coding
+references** pass the actual judge. Inventory: 25 lessons / 107 interviews /
+46 codes; researcher route: 19 checks / 98 distinct questions / 46 codes.
+Thirteen topics meet the contract; twelve remain pending.
+
+The crossing principle was cross-checked with
+[Ramdas's CMU notes on Ville's inequality](https://www.stat.cmu.edu/~aramdas/martingales18/L13-Ville%27s.pdf).
+The conditional-pivot principle was cross-checked with
+[Tibshirani et al.'s exact post-selection inference paper](https://www.stat.berkeley.edu/~ryantibs/papers/lassoinf.pdf).
+These support standard mathematical principles; the six-flip examples,
+scalar significance-filter task, coding specifications and implementations are
+original. The bounded-stop proof avoids asserting an expectation identity at an
+unbounded stopping time without its required conditions.
+
+The IAB backend was unavailable. Chrome verified lesson → interview list →
+coding list, freely chosen 2/2/4 questions and one code in each group. After
+explicit launcher entry and visible **Test preview** verification, the Hard
+reference passed **13/13** complete server cases. Copying submission case 13,
+with hundreds of decimal digits in exact rational components, preserved its
+string values. The copied case plus two examples passed **3/3** debug checks;
+the UI explicitly reported debugging only and completion unchanged.
+
+The Hard selected-interval proof and follow-up were checked at a 390px viewport:
+zero math-render errors and no page-width overflow (document scroll width
+375px, available viewport 390px). The piecewise formula was visually inspected
+inside its 289px solution block. Viewport override was reset, and the review
+tab returned to the personal inference coding list showing **0/3**. Personal
+question, coding, lesson, draft and trainer groups match this batch's fresh
+pre-edit baseline. No personal assessment was awarded, reset or recovered.
+The local server was restarted after the generated bank changed.
+
+- [Inference interview list, personal workspace](inference-question-list-20261012.png).
+- [Inference coding list, personal workspace](inference-coding-list-20261012.png).
+- [Narrow selected-interval proof, test preview](inference-proof-narrow-20261012.png).
+
+These checks verify the specified cases and navigation; they do not certify
+employer difficulty, learning outcomes, physical touch or screen-reader use.
+Next: researcher l13–l18 and trader l19–l24, followed by the final site-wide
+preservation/navigation audit. The full goal remains active.
