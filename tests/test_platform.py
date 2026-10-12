@@ -24,7 +24,8 @@ class JudgeTests(unittest.TestCase):
             ('c01','def solve(values,target):\n    return len(set(values))'),
             ('c05','def solve(values,window):\n    return [sum(values[max(0,i-window+1):i+1])/window for i in range(len(values))]'),
             ('c09','def solve(intervals,validation):\n    return [i for i,(a,b) in enumerate(intervals) if b < validation[0] or a > validation[1]]'),
-            ('c11','def solve(positions,returns,cost):\n    p=[a*b for a,b in zip(positions,returns)]\n    return [p,sum(p)]')]:
+            ('c11','def solve(positions,returns,cost):\n    p=[a*b for a,b in zip(positions,returns)]\n    return [p,sum(p)]'),
+            ('c15','import math\ndef solve(k,n,p): return k*math.log(p)+(n-k)*math.log(1-p)')]:
             result=run(id,code)
             self.assertLess(result.get('passed',0),result.get('total',1),id)
     def test_error_stdout_and_import_handling(self):
@@ -57,7 +58,7 @@ class ContentTests(unittest.TestCase):
         cls.bank=json.loads((server.ROOT/'static/content.json').read_text())
     def test_link_integrity_and_quiz_contract(self):
         qids={q['id'] for q in self.bank['questions']}; lids={l['id'] for l in self.bank['lessons']}; cids={t['id'] for t in TASKS}
-        self.assertEqual(len(qids),48);self.assertEqual(len(lids),24);self.assertEqual(len(cids),14)
+        self.assertEqual(len(qids),51);self.assertEqual(len(lids),25);self.assertEqual(len(cids),15)
         for q in self.bank['questions']:
             self.assertIn(q['lesson'],lids)
             self.assertIn(q['difficulty'],['Easy','Medium','Hard'])

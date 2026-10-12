@@ -88,6 +88,21 @@ task('c14','Brier score and calibration bins','Easy','Statistics',
      'def solve(probabilities, outcomes, bins):\n    groups = [[] for _ in range(bins)]\n    for p, y in zip(probabilities, outcomes):\n        groups[min(int(p * bins), bins - 1)].append((p, y))\n    return {"brier": sum((p-y)**2 for p,y in zip(probabilities,outcomes)) / len(probabilities) if probabilities else None,\n            "bins": [[len(g), sum(p for p,y in g)/len(g), sum(y for p,y in g)/len(g)] if g else [0,None,None] for g in groups]}',
      'Handle p=1 as an explicit boundary. Brier is a proper score, while bin summaries are noisy diagnostics whose interpretation depends on counts.')
 
+# Large exposure counts make loss of tiny log(1-p) contributions observable.
+from math import log, log1p
+task('c15','A likelihood that does not underflow','Medium','Likelihood',
+     'Return the natural log-likelihood of one specified ordered iid Bernoulli record, summarized by successes and trials, at candidate p. Inputs satisfy integer trials >= 1, integer 0 <= successes <= trials and 0 < p < 1. Omit the binomial coefficient: we observed the ordered record, not only its count. Do not form the likelihood product, simulate or round. Counts may be as large as 10^18 and p as small as 10^(-20). Preserve small log(1-p) contributions with math.log1p. All required answers are finite.',
+     'def solve(successes, trials, p):',
+     [{'args':[7,10,.5],'expected':10*log(.5)}],
+     [{'args':[0,10,.2],'expected':10*log1p(-.2)},
+      {'args':[10,10,.2],'expected':10*log(.2)},
+      {'args':[700,1000,.7],'expected':700*log(.7)+300*log1p(-.7)},
+      {'args':[0,10**18,1e-20],'expected':-.01},
+      {'args':[1,10**18,1e-20],'expected':log(1e-20)+(10**18-1)*log1p(-1e-20)},
+      {'args':[3,4,.9999999999],'expected':3*log(.9999999999)+log1p(-.9999999999)}],
+     'import math\ndef solve(successes, trials, p):\n    return successes * math.log(p) + (trials - successes) * math.log1p(-p)',
+     'Logarithms turn the independent product into a sum. math.log1p(-p) computes log(1-p) without first rounding 1-p to 1 for tiny p. Zero successes and all-success records need no special case because both logarithms are finite on the specified open parameter domain. O(1) time and space. A log-likelihood is not a posterior probability.')
+
 if __name__ == '__main__':
     import json
     from pathlib import Path

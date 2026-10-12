@@ -18,9 +18,9 @@ Visit <http://127.0.0.1:8768/>. This is a local website; opening `static/index.h
 
 ## Included
 
-- 48 original interview problems: numerical answers and written reasoning, graduated hints, worked solutions, harder follow-ups, scratchpads, and revision scheduling.
-- 24 lessons: 8 foundation, 10 researcher, 6 trader. All 24 modules have learning goals, seven teaching sections, explicit assumptions and worked examples. Understanding checks determine completion. Exercises are linked to each lesson.
-- 14 Python exercises with actual local execution, sample runs, full test submissions, persistent drafts, and optional editorials.
+- 51 original interview problems: numerical answers and written reasoning, graduated hints, worked solutions, harder follow-ups, scratchpads, and revision scheduling.
+- 25 lessons: 8 foundation, 11 researcher, 6 trader. Modules have topic-specific illustrated explanations, learning goals, explicit assumptions and worked examples. Understanding checks determine completion. Exercises are linked to each lesson.
+- 15 Python exercises with actual local execution, sample runs, full test submissions, persistent drafts, and optional editorials.
 - 5 generated trainers: mental arithmetic, fraction conversions, probability, sequence patterns, and conditional dice pricing. Difficulty levels, timed rounds, accuracy, pace, latency, and mistake review.
 - Honest progress: unaided numeric checks, self-assessed written answers, reviewed solutions, passed coding suites, and passed lesson checks are distinguished.
 
@@ -107,6 +107,7 @@ node tests/test_panels.cjs
 node tests/test_reading.cjs
 node tests/test_sample_space.cjs
 node tests/test_course_textbook.cjs
+node tests/test_likelihood.cjs
 node tests/test_recovery.cjs
 node tests/test_sync.cjs
 node tests/test_trainers.cjs

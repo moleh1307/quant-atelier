@@ -1,5 +1,8 @@
 # Course redesign: completed curriculum pass
 
+**2026-10-12 researcher expansion:** l25, “Let the data compare the models”, adds likelihood and maximum likelihood immediately after l09, retaining all existing IDs and assessment meanings. The module develops probability/density versus likelihood/posterior, Bernoulli optimization and endpoints, parameter-dependent uniform support, normal fitting and variance denominators, dependence/selection, and exponential exposure with right censoring. It has a relative-likelihood explorer, a support figure and predictive reasoning pauses; its form follows the topic. Linked original practice: q49–q51 and numerical-stability exercise c15. Inventory is now 25 lessons / 51 problems / 15 Python exercises. This closes the first missing topic identified in [the interview research](research/QUANT_INTERVIEW_RESEARCH_2026-10-12.md), not the entire coverage gap. Verification: [latest record](evidence/likelihood-20261012.md).
+
+
 As of 2026-10-09. User goal: apply the approved authored textbook direction to **every course page**. All 24 pages now have authored textbook bodies and the documented checks are complete. Read LESSON_AUTHORING_GUIDE.md and project AGENTS.md first. Do not equate rendered coverage or tests with a completed editorial/browser review.
 
 Current personal disk baseline for this work: SHA256 `4ce97ea1a2d99502d027259b90a8b1518ce65fc2443578c85318993cb0a85716`. Recheck live state before later work; do not reset data to match this historical baseline.

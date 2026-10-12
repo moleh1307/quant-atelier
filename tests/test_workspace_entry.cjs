@@ -33,8 +33,8 @@ async function boot(url,session={},blocked=false){
     assert.equal(result.qa,false,'A URL alone never opens preview');
     assert.equal(new URLSearchParams(result.context.location.search).has('qa'),false);
     assert.equal(result.context.location.hash,hash,'Destination survives cleanup');
-    assert.match(result.app.innerHTML,/0 \/ 39 interview problems solved/);
-    assert.match(result.app.innerHTML,/0 \/ 14 Python exercises passed/);
+    assert.match(result.app.innerHTML,/0 \/ 42 interview problems solved/);
+    assert.match(result.app.innerHTML,/0 \/ 15 Python exercises passed/);
     assert.doesNotMatch(result.app.innerHTML,/Test preview|Test problems:/);
     assert.equal(JSON.parse(result.record).drafts.c01,'my original draft');
     assert.ok(result.requests.some(r=>r.url==='/api/progress'),'Ordinary state uses personal disk backup');
@@ -56,7 +56,7 @@ async function boot(url,session={},blocked=false){
   const authorized=await boot(url,session);
   assert.equal(authorized.qa,true);
   assert.equal(session[key],undefined,'Entry is consumed before loading study state');
-  assert.match(authorized.app.innerHTML,/Test problems: 2 \/ 39/);
+  assert.match(authorized.app.innerHTML,/Test problems: 2 \/ 42/);
   assert.ok(!authorized.requests.some(r=>r.url==='/api/progress'),'Explicit preview never reads or writes personal disk');
   let stopped=false;
   authorized.events.pageshow[0]({persisted:true,stopImmediatePropagation(){stopped=true;}});
@@ -66,7 +66,7 @@ async function boot(url,session={},blocked=false){
   assert.equal(authorized.context.location.hash,hash);
   const reopened=await boot(url,session);
   assert.equal(reopened.qa,false,'Reload or restored tab defaults back to personal');
-  assert.match(reopened.app.innerHTML,/0 \/ 39 interview problems solved/);
+  assert.match(reopened.app.innerHTML,/0 \/ 42 interview problems solved/);
   assert.equal(JSON.stringify(storage),before,'Neither workspace record or draft is replaced');
   const index=fs.readFileSync('static/index.html','utf8');
   assert.ok(index.indexOf('/workspace-entry.js')<index.indexOf('/app.js'),'Workspace is resolved before the app reads storage');

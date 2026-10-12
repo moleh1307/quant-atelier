@@ -25,7 +25,7 @@ for(const path of ['researcher','trader']){
 }
 // Progress filters distinguish true completions, draft work and editorial provenance.
 run("state=fresh();route=['questions'];filters={...emptyFilters(),status:'pending'};state.questions.q01={solved:true};state.questions.q21={selfSolved:true};state.questions.q05={reviewed:true};");
-assert.equal(run('filtered(content.questions).length'),46);assert.ok(run("filtered(content.questions).some(q=>q.id==='q05')"));
+assert.equal(run('filtered(content.questions).length'),49);assert.ok(run("filtered(content.questions).some(q=>q.id==='q05')"));
 run("filters.status='self-solved';");assert.deepEqual(JSON.parse(run('JSON.stringify(filtered(content.questions).map(q=>q.id))')),['q21']);
 run("filters.status='reviewed';");assert.equal(run('filtered(content.questions)[0].id'),'q05');
 run("state.coding.c01={accepted:true,acceptedAssisted:false,assisted:true};state.coding.c02={accepted:true,acceptedAssisted:true};state.drafts.c03='def solve(values): return []';state.coding.c04={assisted:true};filters={...emptyFilters(),status:'passed'};route=['coding'];");
@@ -39,6 +39,6 @@ els['#page']={contains:()=>false,addEventListener:(event,fn)=>handlers[event]=fn
 const before=run('JSON.stringify(state)');run('bindPage()');
 (async()=>{
  await handlers.click({target:{closest:()=>({dataset:{action:'reset-filters'},focus(){}})}});
- assert.equal(els['#search'].value,'');assert.equal(els['#status'].value,'all');assert.equal(els['#difficulty'].value,'all');assert.equal(context.focused,'search');assert.equal(els['#result-count'].textContent,48);assert.equal(els['#reset-filters'].disabled,true);assert.equal(run('JSON.stringify(state)'),before);
+ assert.equal(els['#search'].value,'');assert.equal(els['#status'].value,'all');assert.equal(els['#difficulty'].value,'all');assert.equal(context.focused,'search');assert.equal(els['#result-count'].textContent,51);assert.equal(els['#reset-filters'].disabled,true);assert.equal(run('JSON.stringify(state)'),before);
  console.log('Core activity resumption, separate checks/practice, both branches, completed routes, optional drills, progress filters, editorial provenance and non-destructive reset passed.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

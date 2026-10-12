@@ -11,7 +11,7 @@ vm.runInContext("content=bank;coding=codeBank;route=['paths'];state=fresh();",co
 const run=s=>vm.runInContext(s,context);
 assert.equal(run('preferredPath()'),'researcher');
 assert.equal(run('previewNotice()'),'','Personal pages never show the test banner');
-assert.equal(run('journeyLessons().length'),18);
+assert.equal(run('journeyLessons().length'),19);
 assert.equal(run("journeyLessons('trader').length"),14);
 assert.equal(run('nextLesson().id'),'l01');
 run("state.lessons.l01={passed:true};state.questions.q01={reviewed:true};");
@@ -33,7 +33,7 @@ assert.equal(run('nextLesson().id'),'l19');
 assert.match(run('paths()'),/Every lesson check passed/);
 const expectedCode=new Set(bank.lessons.filter(l=>l.path!=='trader').flatMap(l=>l.coding));
 assert.equal(run("routeEvidence(journeyLessons('researcher')).codingTotal"),expectedCode.size,'Shared coding links count once');
-assert.equal(run("routeEvidence(journeyLessons('researcher')).checked"),18);
+assert.equal(run("routeEvidence(journeyLessons('researcher')).checked"),19);
 run("state.trainers=[{type:'math',finished:false,attempts:1},{type:'math',finished:true,attempts:1},{type:'fractions',finished:true,attempts:1},{type:'pricing',finished:true,attempts:1},{type:'math',finished:true,attempts:0}];");
 assert.equal(run("lessonEvidence(content.lessons.find(l=>l.id==='l06')).sessions"),2,'Only relevant finished rounds count');
 assert.match(run("lessonDetail(content.lessons.find(l=>l.id==='l06'))"),/Fluency drills/);
@@ -42,7 +42,7 @@ assert.match(run("lessonNavigation(content.lessons.find(l=>l.id==='l24'))"),/Con
 for(const branch of ['researcher','trader']){
  context.branch=branch;run("route=['paths',branch];");
  const html=run('paths()');
- assert.equal((html.match(/class="roadmap-step /g)||[]).length,branch==='researcher'?18:14);
+ assert.equal((html.match(/class="roadmap-step /g)||[]).length,branch==='researcher'?19:14);
  for(const lesson of bank.lessons.filter(l=>l.path==='shared'||l.path===branch))assert.ok(html.includes('id="step-'+lesson.id+'"'));
 }
 console.log('Roadmap sequence, grading provenance, completion, drill evidence and unique exercise counts passed.');
