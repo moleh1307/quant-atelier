@@ -2701,5 +2701,164 @@
     ],
     "solution": "from itertools import combinations\nfrom bisect import bisect_left\nfrom math import gcd\ndef solve(features, assignment):\n    n,m = len(features),len(features[0])\n    k = n//2\n    totals = [sum(row[j] for row in features) for j in range(m)]\n    observed = [abs(2*sum(features[i][j] for i in range(n) if assignment[i])-totals[j])\n                for j in range(m)]\n    maxima = []\n    for chosen in combinations(range(n),k):\n        maxima.append(max(abs(2*sum(features[i][j] for i in chosen)-totals[j])\n                          for j in range(m)))\n    maxima.sort()\n    count = len(maxima)\n    def pair(a,b):\n        d = gcd(a,b)\n        return [str(a//d),str(b//d)]\n    def tail(d):\n        return pair(count-bisect_left(maxima,d),count)\n    return {\"statistics\":[pair(d,k) for d in observed],\n            \"adjusted\":[tail(d) for d in observed],\n            \"global_p\":tail(max(observed))}",
     "explanation": "With k=n/2, total column sum T and group-one sum S, the mean difference is (2S\u2212T)/k. Keep absolute integer numerators D=|2S\u2212T|; the common positive denominator k cancels in every comparison. Enumerate balanced index subsets, compute the JOINT maximum D for each, sort those maxima once, and use a lower-bound search to count values\u2265each observed numerator. Reduce counts/C and observed D/k exactly by gcd. Equal rows still have distinct indices and must not be deduplicated.\n\nUnder the stated conditional uniform assignment, the observed global statistic is one uniformly chosen member of this finite null multiset. Its inclusive upper-tail rank has a super-uniform p-value: ties can make it conservative. Rejecting any column when its maximum-adjusted tail is\u2264alpha is the same event as the global p-value\u2264alpha, because the largest observed statistic has the smallest tail. This proves global-null family calibration, not unrestricted partial-null strong control. Joint reassignment retains correlations; independent column shuffles destroy the declared joint null. A copied or sign-reversed column does not change an absolute-statistic maximum. Every exhaustive tail includes at least the observed assignment, so p-values cannot be zero. No randomized-sampling adjustment belongs in this exact calculation."
+  },
+  {
+    "id": "c_l16_easy",
+    "title": "Count paired forecast improvements",
+    "difficulty": "Easy",
+    "topic": "Research design",
+    "path": "researcher",
+    "prompt": "actual, model and baseline are equal-length lists of binary integers \\(\\frac{0}{1}\\) on the SAME target records. They may be empty and have at most 100000 entries. Return [model_correct,baseline_correct,model_only_correct,baseline_only_correct], where the last two count disagreements in correctness on each paired record. Preserve all inputs. Use \\(O(n)\\) time and O(1) auxiliary space. Do not discard records on which both forecasts are wrong; do not divide by n or turn accuracy into payoff. This audits a declared paired comparison; it cannot certify that timestamps, information availability or baseline construction were fair.",
+    "starter": "def solve(actual, model, baseline):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            0,
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "expected": [
+          2,
+          2,
+          1,
+          1
+        ]
+      },
+      {
+        "args": [
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "expected": [
+          3,
+          1,
+          2,
+          0
+        ]
+      }
+    ],
+    "solution": "def solve(actual, model, baseline):\n    model_correct = baseline_correct = model_only = baseline_only = 0\n    for y,m,b in zip(actual,model,baseline):\n        mc,bc = m == y,b == y\n        model_correct += mc\n        baseline_correct += bc\n        model_only += mc and not bc\n        baseline_only += bc and not mc\n    return [model_correct,baseline_correct,model_only,baseline_only]",
+    "explanation": "For each paired record compute two correctness booleans, increment their separate totals and increment the appropriate one-sided correctness count. Records where both agree in correctness contribute neither disagreement. The difference in total correct counts must equal model-only minus baseline-only counts. Equal marginal accuracies do not mean identical predictions, and disagreement counts support a paired analysis that marginal totals alone cannot reconstruct. No distributional or economic conclusion is manufactured by counting."
+  },
+  {
+    "id": "c_l16_hard",
+    "title": "Bound a fixed payoff under a changed regime mix",
+    "difficulty": "Hard",
+    "topic": "Research design",
+    "path": "researcher",
+    "prompt": "counts and payoffs are equal-length lists for n declared market states, 1\u2264n\u226420000. Counts are integers in [0,10^9], with positive total W; payoffs are integer NET ticks in [\u221210^9,10^9] for a FIXED rule in each state. Baseline probability is p_i=counts_i/W. A zero-count state is still in the declared uncertainty support and can receive future mass; it is not proved impossible. Payoffs are supplied fixed quantities, not estimated conditional means whose error this task would quantify. budget=[a,b] with 0\u2264a\u2264b\u226410^9, b\u22651 specifies epsilon=a/b; it need not be reduced.\n\nAmong ALL real probability vectors q on these n states with \\(\\tfrac12\\sum_i|q_i-p_i|\\leq\\epsilon\\), minimize \\(\\sum_i q_i g_i\\), where g_i is the stated net payoff. Return {\"worst_mean\": [signed_numerator_text,positive_denominator_text], \"used_tv\": [numerator_text,denominator_text]}. Both pairs must be exact reduced decimal STRINGS; zero is [\"0\",\"1\"]. used_tv is the SMALLEST total-variation distance among distributions attaining that minimum, not necessarily the full budget. Preserve all three inputs. Aim for O(n log n) comparisons, \\(O(n)\\) auxiliary storage and exact integer arithmetic, with integer bit/gcd costs additional. Do not enumerate all q or use floats.\n\nThis computes a sharp finite-support composition sensitivity bound. It keeps the policy and conditional payoffs fixed, allowing only the declared regime probabilities to change. It neither selects profitable trades after seeing outcomes nor includes unseen payoff changes, unvalidated fills, estimation uncertainty or states outside this declared support. A positive bound under these assumptions is not a certified live edge.",
+    "starter": "def solve(counts, payoffs, budget):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            -1
+          ],
+          [
+            1,
+            4
+          ]
+        ],
+        "expected": {
+          "worst_mean": [
+            "0",
+            "1"
+          ],
+          "used_tv": [
+            "1",
+            "4"
+          ]
+        }
+      },
+      {
+        "args": [
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            -1
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        "expected": {
+          "worst_mean": [
+            "-1",
+            "1"
+          ],
+          "used_tv": [
+            "1",
+            "2"
+          ]
+        }
+      },
+      {
+        "args": [
+          [
+            1,
+            1,
+            8
+          ],
+          [
+            10,
+            5,
+            0
+          ],
+          [
+            1,
+            5
+          ]
+        ],
+        "expected": {
+          "worst_mean": [
+            "0",
+            "1"
+          ],
+          "used_tv": [
+            "1",
+            "5"
+          ]
+        }
+      }
+    ],
+    "solution": "from math import gcd\ndef solve(counts, payoffs, budget):\n    a,b = budget\n    total = sum(counts)\n    denominator = total*b\n    remaining = total*a\n    minimum = min(payoffs)\n    numerator = b*sum(c*g for c,g in zip(counts,payoffs))\n    used = 0\n    for i in sorted(range(len(counts)),key=lambda i:payoffs[i],reverse=True):\n        gap = payoffs[i]-minimum\n        if not remaining or not gap:\n            break\n        moved = min(remaining,counts[i]*b)\n        numerator -= moved*gap\n        remaining -= moved\n        used += moved\n    def pair(n,d):\n        divisor = gcd(n,d)\n        return [str(n//divisor),str(d//divisor)]\n    return {\"worst_mean\":pair(numerator,denominator),\n            \"used_tv\":pair(used,denominator)}",
+    "explanation": "Total variation is the amount of probability mass removed from some states and added to others. Any removed unit can improve the objective most by being placed in a state with MINIMUM payoff. Removing mass from a higher-payoff donor is always at least as useful as removing it from a lower-payoff donor: exchange a small donor amount while leaving the receiving minimum state fixed. Thus drain the highest-payoff states first until the budget is exhausted or every positive-payoff-gap state has been emptied. Equal-minimum states need no transfers; once all mass is on minima, spending more distance cannot improve the objective and would violate the minimal-used-distance requirement.\n\nFor exact arithmetic choose D=Wb. Each original state has count_i\u00b7b mass units, and the allowed transfer has W\u00b7a units. The baseline expectation numerator is b times sum(count_i\u00b7g_i). Transfer h units from payoff g to the minimum g_min, subtracting h(g\u2212g_min) from that numerator. Only original nonminimum mass is ever drained, so capacities are respected. At most min(epsilon,1\u2212P(baseline minimum states)) mass is used; this is the least distance that can attain the minimum. Sort indices by descending payoff, skipping zero capacity and zero gaps, and reduce the final mean and used-unit fractions by gcd.\n\nSharpness follows from constructing these transfers. For the lower bound, decompose any admissible q\u2212p into removed/added masses of equal total h\u2264epsilon. Added payoff is at least h\u00b7g_min; removed mass from each donor cannot exceed its original p_i. The largest possible reduction therefore solves exactly the bounded donor allocation above. This proves a global bound over continuous distributions, not merely over a grid. The often used expression baseline_mean\u2212epsilon(max payoff\u2212min payoff) is only a bound and can be unattainable when the maximum-payoff state has insufficient mass."
   }
 ]
