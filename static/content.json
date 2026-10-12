@@ -549,9 +549,9 @@
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Give valid success counts and nonzero denominators with treatment ahead in both groups.",
+        "Compute the pooled reversal and identify the different population weights.",
+        "Explain why adjustment needs a causal argument, including collider and unmeasured-confounding risks."
       ]
     },
     {
@@ -649,9 +649,9 @@
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Define the p-value under a specified null, statistic and extremeness rule.",
+        "Distinguish the probability of extreme data under the null from a posterior hypothesis probability.",
+        "Identify prior model probabilities and alternative likelihoods, and explain why a large p-value need not establish equivalence."
       ]
     },
     {
@@ -1176,9 +1176,9 @@
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Identify the union of rejection events induced by repeated inspection and data-dependent stopping.",
+        "Give a precommitted fixed-sample procedure and a justified sequential alternative without assuming independent looks.",
+        "Explain why optional-stopping identities need conditions and why appropriately calibrated stopping can be valid."
       ]
     },
     {
@@ -2581,6 +2581,137 @@
         "Prove positive definiteness for slope-only ridge on nonempty data and positivity after deletion for \\(n\\geq2\\).",
         "Keep penalty and preprocessing fixed and separate deletion identities from an independent model-selection evaluation."
       ]
+    },
+    {
+      "id": "q_l12_e1",
+      "title": "An exact count is not its tail",
+      "topic": "Inference",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 6,
+      "prompt": "Before observing data, you specify SIX independent coin flips, null head probability \\(\\frac{1}{2}\\), and a one-sided alternative favoring MORE heads. You observe five heads. The test statistic K is the total head count. What is the one-sided p-value \\(P_{H_0}(K\\geq5)\\)? Do not change the endpoint or choose the direction after observing the flips.",
+      "answer": 0.109375,
+      "hints": [
+        "Under the null each six-flip ordered record has probability \\(\\frac{1}{64}\\).",
+        "Include both five and six heads, not only the exact observed count."
+      ],
+      "solution": "There are six ordered records with five heads and one with six, so the tail probability is (6+1)/64=\\(\\frac{7}{64}\\)≈0.109375. The exact-count probability \\(\\frac{6}{64}\\) omits a still more extreme outcome. This probability describes the specified statistic under the fair-coin model; it is not the probability the coin is fair after observing the record.",
+      "followup": "Using this pre-specified p-value, reject when p≤0.05. Which head counts reject? What is the ACTUAL type-I error, and what is the power if the true iid head probability is \\(\\frac{3}{4}\\)?",
+      "followSolution": "Five heads has p>0.05, while six has \\(p=1\\)/64≤0.05. Thus rejection is exactly K=6, with actual null error \\(\\frac{1}{64}\\)≈1.56%, not exactly 5%. Under head probability \\(\\frac{3}{4}\\) its power is \\((3/4)^6=729/4096\\), about 17.8%. The discrete test conserves more error budget than its nominal upper bound and has modest power against this alternative. A nonrejection does not establish fairness.",
+      "lesson": "l12",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Count the complete upper tail and obtain \\(\\frac{7}{64}\\).",
+        "Identify the six-head rejection region and its actual null size \\(\\frac{1}{64}\\).",
+        "Compute alternative power and distinguish null error, posterior probability and lack of detection."
+      ]
+    },
+    {
+      "id": "q_l12_e2",
+      "title": "An interval is a set of unrejected means",
+      "topic": "Inference",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 6,
+      "prompt": "You observe a sample mean 1.5 from n=36 iid Gaussian observations with unknown mean µ and KNOWN standard deviation \\(\\sigma\\)=6. The sample size is fixed in advance. For a candidate mean m, the pre-specified two-sided test does NOT reject when \\(|\\sqrt n(\\bar X-m)/\\sigma|\\leq2\\), including equality. What is the largest candidate mean not rejected by this rule? The cutoff two is given; do not relabel its coverage as exactly 95%.",
+      "answer": 3.5,
+      "hints": [
+        "The standard error of the sample mean is \\(\\sigma\\)/√n.",
+        "Invert the same inequality with respect to the candidate mean."
+      ],
+      "solution": "The standard error is \\(\\frac{6}{6}\\)=1, so nonrejection means |1.5−m|≤2. Its closed set is [−0.5,3.5], with largest candidate 3.5. Before sampling, this interval procedure has exact coverage \\(P(|Z|\\leq2)=2\\Phi(2)-1\\), about 95.45%, where Z is standard normal and Φ is its CDF. A quantile chosen for exactly 95% coverage would be slightly smaller than two. Inverting the specified test preserves its actual boundary and probability convention.",
+      "followup": "Keeping known \\(\\sigma\\) and the cutoff fixed, how large must n be to halve the interval width? After seeing one interval, does its frequentist coverage assign that probability to this fixed µ?",
+      "followSolution": "Width is \\(4\\sigma/\\sqrt n\\), so n must quadruple from 36 to 144 to halve it. Coverage describes the random interval across repetitions with fixed µ, not a posterior probability for µ after seeing its endpoints. Under the given normal model a larger n narrows the interval while retaining the same pivot coverage. Unknown \\(\\sigma\\) or dependent observations would require a different justification, rather than substituting them silently.",
+      "lesson": "l12",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Use standard error one and correctly invert the inclusive test.",
+        "Give the interval [−0.5,3.5] and its actual pivot coverage.",
+        "Derive n=144 for half width and distinguish repeated-sample coverage from a posterior claim."
+      ]
+    },
+    {
+      "id": "q_l12_m1",
+      "title": "Spend a discrete error budget without rounding",
+      "topic": "Inference",
+      "difficulty": "Medium",
+      "path": "researcher",
+      "minutes": 16,
+      "prompt": "In SIX independent flips, test null head probability \\(\\frac{1}{2}\\) against the specified simple alternative \\(\\frac{3}{4}\\). You want null rejection probability EXACTLY α=\\(\\frac{1}{20}\\). Use the following pre-specified randomized rule: reject at K=6; at K=5 reject if an independent U∼\\(\\operatorname{Uniform}(0,1)\\) is at most γ; never reject for K≤4. Choose γ∈[0,1] and calculate the rule’s power at head probability \\(\\frac{3}{4}\\). Explain why this extra randomization differs from deciding a test after seeing favorable data.",
+      "answer": null,
+      "hints": [
+        "The six-head null mass is \\(\\frac{1}{64}\\) and the five-head null mass is \\(\\frac{6}{64}\\).",
+        "Set the weighted rejection mass equal to \\(\\frac{1}{20}\\).",
+        "Compute the five-head and six-head masses again under the alternative."
+      ],
+      "solution": "Exact size requires \\((1+6\\gamma)/64=1/20\\), hence γ=\\(\\frac{11}{30}\\). An independent, pre-specified random draw spends only the missing part of the boundary mass. Under probability \\(\\frac{3}{4}\\) the masses at six and five heads are respectively \\(\\frac{729}{4096}\\) and \\(\\frac{1458}{4096}\\). Therefore power is\n\n\\[\\frac{729}{4096}+\\frac{11}{30}\\frac{1458}{4096}=\\frac{3159}{10240}\\approx0.3085.\\]\n\nWithout boundary randomization, rejecting only at six had size \\(\\frac{1}{64}\\) and power \\(\\frac{729}{4096}\\). The new rule is calibrated over both the sampling and the independent randomization. It does not use the outcome to invent a direction, endpoint or significance threshold. Its exact 5% error remains a null-model repeated-procedure statement, not a posterior probability.",
+      "followup": "For this simple null/alternative, explain why an upper-tail rule with at most one randomized boundary maximizes power among rules of the same null size. Would choosing U after looking at the record retain the argument?",
+      "followSolution": "Every ordered six-flip record with k heads has likelihood ratio \\((3/2)^k(1/2)^{6-k}\\), increasing by a factor three per added head. For fixed null rejection mass, moving a small amount of rejection probability from a lower-ratio record to a higher-ratio record strictly increases alternative rejection probability. Filling highest ratios first therefore yields the six-head region and just enough of the tied five-head region; additional randomization among equal-ratio records does not change power. This exchange argument uses fully specified models and pre-specified rejection probabilities. Picking a favorable U after observing the record changes those probabilities and need not preserve size.",
+      "lesson": "l12",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Solve for γ=\\(\\frac{11}{30}\\) using both null masses.",
+        "Compute power \\(\\frac{3159}{10240}\\) from the alternative masses and the independent randomized boundary.",
+        "Justify upper-tail optimality by increasing likelihood ratios and a fixed-size exchange argument.",
+        "Keep randomization independent and pre-specified, rather than treating a data-chosen rule as the calibrated one."
+      ]
+    },
+    {
+      "id": "q_l12_h1",
+      "title": "Evidence can survive every inspection",
+      "topic": "Inference",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 30,
+      "prompt": "Under H₀, coin flips are iid with head probability \\(\\frac{1}{2}\\). Let Hₜ count heads after t flips and define \\(M_t=3^{H_t}/2^t\\), with M₀=1. This is the likelihood ratio for a FIXED iid alternative with head probability \\(\\frac{3}{4}\\). A researcher may inspect after every flip and rejects at the first t with Mₜ≥20.\n\nProve that the probability of EVER rejecting under H₀ is at most \\(\\frac{1}{20}\\). Establish the conditional expectation property, prove a bound for a finite horizon N using a bounded stopped process, then justify passage to an unlimited horizon. Do not assert an unbounded optional-stopping equality without conditions.",
+      "answer": null,
+      "hints": [
+        "A head multiplies M by \\(\\frac{3}{2}\\) and a tail multiplies it by \\(\\frac{1}{2}\\).",
+        "Stop at the first crossing or at a fixed finite horizon, whichever comes first.",
+        "A nonnegative stopped value contributes at least twenty on the crossing event; then increase the horizon."
+      ],
+      "solution": "Given the history through t, the next multiplier has null mean \\((3/2+1/2)/2=1\\). Thus M is a nonnegative martingale with finite values at each fixed time and \\(E_0\\)[Mₜ]=1. Let τ be its first threshold crossing, with τ=∞ if none. For T=τ∧N, write\n\n\\[M_T=M_0+\\sum_{t=1}^{N}\\mathbf1\\{\\tau\\geq t\\}(M_t-M_{t-1}).\\]\n\nThe indicator is determined before flip t. Its product with the martingale increment has expectation zero; the finite sum is integrable. Therefore \\(E_0\\)[M_T]=1. On {τ≤N}, M_T≥20; off that event it remains nonnegative. Hence \\(1\\geq20P_0(\\tau\\leq N)\\). The crossing events increase with N, so probability continuity gives \\(P_0(\\tau<\\infty)\\leq1/20\\). No claim that \\(E_0\\)[Mτ]=1 at an unbounded stopping time was needed. Inspection is allowed because THIS process and boundary control the whole crossing event, not because repeated ordinary p-values are automatically calibrated.",
+      "followup": "Does the same fixed process control error if the null merely requires the next head probability, conditional on the past, to be at most \\(\\frac{1}{2}\\)? Separately, under the fair null, what if at each flip you choose an alternative probability qₜ and use multiplier 2qₜ on a head or 2(1−qₜ) on a tail? Contrast choosing qₜ using PAST flips with choosing qₜ after seeing the CURRENT flip.",
+      "followSolution": "If the conditional head probability pₜ≤\\(\\frac{1}{2}\\), the fixed multiplier has conditional mean \\(\\frac{1}{2}\\)+pₜ≤1. M is then a nonnegative supermartingale. The same finite stopped-increment argument gives E[M_T]≤1 and the same ever-crossing bound without iid flips.\n\nUnder the fair null, a qₜ∈[0,1] determined from past flips still has conditional multiplier mean qₜ+(1−qₜ)=1; the betting rule may adapt predictably. Choosing qₜ from the current outcome breaks that property. If qₜ=1 after a head and zero after a tail, the selected multiplier is ALWAYS two. The process becomes 2ᵗ and crosses twenty after five flips with null probability one. A fitted alternative chosen using the same observation is not automatically a valid evidence increment. Independence of future flips or the stated conditional-null restriction, the information available before each multiplier, and nonnegativity are substantive assumptions.",
+      "lesson": "l12",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Establish the conditional martingale property for the fixed likelihood ratio.",
+        "Prove the finite-horizon bound from predictable stopped increments and nonnegativity.",
+        "Pass to an unlimited horizon through increasing crossing events, without an unjustified expectation identity.",
+        "Handle the conditional composite null and distinguish predictable adaptation from the current-flip counterexample."
+      ]
+    },
+    {
+      "id": "q_l12_h2",
+      "title": "A significance filter changes interval coverage",
+      "topic": "Inference",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 30,
+      "prompt": "One observation X has distribution N(µ,1), where µ is a fixed unknown real number. Write Φ for the standard-normal CDF, α=0.05, and c=Φ⁻¹(1−α/2). The ordinary interval I(X)=[X−c,X+c] has unconditional coverage 1−α. You REPORT it only when the pre-specified positive-significance filter S={X>c} passes.\n\nDerive \\(P_\\mu(\\mu\\in I(X)\\mid S)\\) as an explicit piecewise function of µ, including µ≤0, 0<µ<2c and µ≥2c. Explain the zero-mean case and why the original unconditional guarantee is not a conditional guarantee for reported intervals. Do not turn selection into a prior probability for µ.",
+      "answer": null,
+      "hints": [
+        "Coverage requires µ−c≤X≤µ+c; intersect this event with X>c.",
+        "Under fixed µ, standardize the intersection endpoints and divide by the probability of selection.",
+        "Check whether the upper coverage endpoint reaches the selection threshold before applying a CDF difference."
+      ],
+      "solution": "Selection has probability 1−Φ(c−µ)>0 for every finite µ. The intersection is empty if µ≤0, because every reported interval has strictly positive lower endpoint. For µ>0 its lower observation endpoint is max(c,µ−c) and its upper endpoint is µ+c. Standardizing gives upper endpoint c and lower endpoint max(c−µ,−c). Consequently\n\n\\[C(\\mu)=\\begin{cases}0,&\\mu\\leq0,\\\\\\displaystyle\\frac{\\Phi(c)-\\Phi(c-\\mu)}{1-\\Phi(c-\\mu)},&0<\\mu<2c,\\\\\\displaystyle\\frac{1-\\alpha}{1-\\Phi(c-\\mu)},&\\mu\\geq2c.\\end{cases}\\]\n\nAt µ=0, NONE of the reported intervals contains zero, although 95% of intervals over all samples do. At µ=c the conditional coverage is 1−α; at µ=2c it is \\((1-\\alpha)/(1-\\alpha/2)=38/39\\), about 97.44%, and it approaches 95% as µ tends to positive infinity. Conditioning changes the sample distribution and can decrease or increase coverage. The reported subset is not a repeated unselected sample from the original normal law.",
+      "followup": "Give two ways to restore 95% coverage CONDITIONAL on reporting: first using an independent replication Y∼N(µ,1), and second by inverting a conditional pivot from the selected X itself. Derive the pivot and its coverage argument, rather than merely saying “adjust for selection.”",
+      "followSolution": "If Y is independent of X at every fixed µ, report [Y−c,Y+c] when X>c. Its coverage event is independent of the selection event, so its conditional coverage remains 95%; the same X cannot play the independent-replication role.\n\nAlternatively, for x>c define the truncated-normal CDF\n\n\\[F_\\mu^S(x)=\\frac{\\Phi(x-\\mu)-\\Phi(c-\\mu)}{1-\\Phi(c-\\mu)}.\\]\n\nConditional on S, the continuous probability-integral transform makes Fµˢ(X) uniform on (0,1) for each fixed µ. The confidence SET \\(\\{m:\\alpha/2\\leq F_m^S(x)\\leq1-\\alpha/2\\}\\) therefore covers the true µ with conditional probability 1−α. This inversion uses the actual selection rule and its truncated sampling law, not a posterior distribution. Its endpoints generally differ from x±c and can be very wide near the selection threshold. A more complex data-dependent reporting rule would require conditioning on that actual rule, not importing this particular formula.",
+      "lesson": "l12",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Intersect the coverage and reporting events before standardizing.",
+        "Derive all three coverage branches and the zero-mean failure, including boundary consistency.",
+        "Separate unconditional coverage, conditional selected-sample coverage and a posterior interpretation.",
+        "Justify independent replication and the truncated-CDF confidence-set inversion with its conditional uniform pivot."
+      ]
     }
   ],
   "lessons": [
@@ -3535,16 +3666,25 @@
       "questions": [
         "q22",
         "q26",
-        "q47"
+        "q47",
+        "q_l12_e1",
+        "q_l12_e2",
+        "q_l12_m1",
+        "q_l12_h1",
+        "q_l12_h2"
       ],
-      "coding": [],
+      "coding": [
+        "c_l12_easy",
+        "c_l12_medium",
+        "c_l12_hard"
+      ],
       "objectives": [
         "Interpret p-values and confidence intervals correctly.",
         "Identify the sampling procedure behind an error-rate claim.",
         "Explain optional stopping and reversals after pooling."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "Yes",
         "No; posterior inference needs priors and likelihoods",

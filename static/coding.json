@@ -1786,5 +1786,190 @@
     ],
     "solution": "from math import gcd\ndef solve(features, targets, ridge):\n    n = len(targets)\n    if n == 0:\n        return []\n    if n == 1:\n        return [None]\n    width = len(features[0]) + 1\n    matrix = [[0] * width for _ in range(width)]\n    rhs = [0] * width\n    for features_i, target in zip(features, targets):\n        row = [1] + features_i\n        for j in range(width):\n            rhs[j] += row[j] * target\n            for k in range(width):\n                matrix[j][k] += row[j] * row[k]\n    for j in range(1, width):\n        matrix[j][j] += ridge\n    rows = [matrix[j] + [int(j == k) for k in range(width)] for j in range(width)]\n    previous = 1\n    for column in range(width):\n        pivot = rows[column][column]\n        for i in range(width):\n            if i == column:\n                continue\n            factor = rows[i][column]\n            for j in range(2 * width):\n                if j != column:\n                    rows[i][j] = (pivot * rows[i][j] - factor * rows[column][j]) // previous\n            rows[i][column] = 0\n        previous = pivot\n    determinant = rows[0][0]\n    adjugate = [row[width:] for row in rows]\n    coefficients = [sum(a * b for a, b in zip(row, rhs)) for row in adjugate]\n    result = []\n    for features_i, target in zip(features, targets):\n        row = [1] + features_i\n        fitted = sum(a * b for a, b in zip(row, coefficients))\n        leverage = sum(row[j] * adjugate[j][k] * row[k] for j in range(width) for k in range(width))\n        numerator = determinant * target - fitted\n        denominator = determinant - leverage\n        divisor = gcd(abs(numerator), denominator)\n        result.append([str(numerator // divisor), str(denominator // divisor)])\n    return result",
     "explanation": "Augment each feature row to x\u1d62=(1,f\u1d62\u1d40)\u1d40. Let P=diag(0,\u03bb,\u2026,\u03bb), M=\\(\\Sigma\\)x\u1d62x\u1d62\u1d40+P and g=\\(\\Sigma\\)x\u1d62y\u1d62. M is positive definite on nonempty data: nonzero slopes pay a positive penalty, and a pure nonzero intercept has positive data loss. For \\(n\\geq2\\) this remains true after any deletion, including duplicate features.\n\nThe deleted equations subtract x\u1d62x\u1d62\u1d40 and x\u1d62y\u1d62. If \u03b2=M\u207b\u00b9g and h\u1d62=x\u1d62\u1d40M\u207b\u00b9x\u1d62, substituting \\(\\beta^{(-i)}=\\beta-M^{-1}x_i r_i/(1-h_i)\\) gives the exact deleted fit. Its error is r\u1d62/(1\u2212h\u1d62). The positive deleted determinant implies 1\u2212h\u1d62>0; subtracting floating numbers near one can nevertheless destroy its value.\n\nWork with integer determinant D and adjugate A, so M\u207b\u00b9=A/D. The requested residual is\n\n\\[\\frac{D y_i-x_i^T A g}{D-x_i^T A x_i}.\\]\n\nCompute D and A once by fraction-free Gauss\u2013Jordan elimination on [M|I]. At pivot c, with p=current pivot and q=previous pivot (initially one), update each nonpivot row entry j\u2260c by (p\u00b7entry\u2212row[c]\u00b7pivot_row[j])/q, then zero its pivot column. Leave the pivot row untouched during that step. Determinant identities make every division exact; positive leading principal minors ensure nonzero pivots for this M. At termination the left block is D\u00b7I and the right block is A. This is exact integer elimination, not a tolerance-based inverse. Multiply A by g once, compute each quadratic leverage numerator in O((d+1)\u00b2), and reduce its positive-denominator rational by gcd.\n\nFor intercept-only data the formula reduces to (n y\u1d62\u2212\\(\\Sigma\\)y)/(\\(n-1\\)), a useful independent check. With one remaining row the fitted slopes are zero and its intercept is that row\u2019s target, even if full-data leverage was extremely close to one. n=1 instead leaves no remaining intercept information and returns None. Fixing \u03bb and feature coordinates is part of the contract; the algebra removes the row\u2019s fit contribution, but does not undo preprocessing or tuning that used it. Reading all rows for sufficient statistics and again for errors uses O(n(d+1)\u00b2+(d+1)\u00b3) scalar work and O((d+1)\u00b2) auxiliary state; exact integer and gcd bit costs are separate."
+  },
+  {
+    "id": "c_l12_easy",
+    "title": "Invert a known-variance test exactly",
+    "difficulty": "Easy",
+    "topic": "Inference",
+    "path": "researcher",
+    "prompt": "An iid Gaussian sample has a FIXED size n\u22651, unknown mean and KNOWN positive variance sigma_squared. sample_sum is its observed sum. For each integer candidate mean m in means, return whether the pre-specified symmetric test does NOT reject: \\((\\bar X-m)^2/(\\sigma^2/n)\\leq\\text{critical\\_squared}\\), including equality. Return booleans in original order; repeated candidates remain repeated. This inverts the stated test, rather than assigning a posterior probability or assuming its supplied cutoff means exactly 95% coverage.\n\nAll inputs are integers. 1\u2264n\u226410^9, 1\u2264sigma_squared\u226410^18, 0\u2264critical_squared\u226410^6, |sample_sum|\u226410^18, and means has at most 100000 entries with |m|\u226410^9. Use O(len(means)) exact integer comparisons and O(1) integer accumulators beyond the returned list. Do not mutate means, round the sample mean, take square roots or use a floating tolerance. Integer bit costs are additional.",
+    "starter": "def solve(sample_sum, n, sigma_squared, critical_squared, means):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          54,
+          36,
+          36,
+          4,
+          [
+            -1,
+            0,
+            1,
+            3,
+            4
+          ]
+        ],
+        "expected": [
+          false,
+          true,
+          true,
+          true,
+          false
+        ]
+      },
+      {
+        "args": [
+          0,
+          9,
+          36,
+          4,
+          [
+            -4,
+            4,
+            5
+          ]
+        ],
+        "expected": [
+          true,
+          true,
+          false
+        ]
+      }
+    ],
+    "solution": "def solve(sample_sum, n, sigma_squared, critical_squared, means):\n    bound = critical_squared * n * sigma_squared\n    return [(sample_sum - n * m) ** 2 <= bound for m in means]",
+    "explanation": "Write \\(\\bar X=\\text{sample\\_sum}/n\\). Multiplying the nonrejection inequality by the positive n\u00b2 gives \\((\\text{sample\\_sum}-nm)^2\\leq\\text{critical\\_squared}\\,n\\sigma^2\\). Compare these integers directly for every candidate. Squaring is legitimate because the given statistic is two-sided; equality is retained. Even a zero cutoff or a mean that is not an integer needs no special approximation. The normal known-variance assumptions justify the statistical procedure, while this function performs its exact algebraic inversion. A floating conversion near a huge boundary can lose a difference of one and misclassify a candidate."
+  },
+  {
+    "id": "c_l12_medium",
+    "title": "Compute fixed-endpoint size and power",
+    "difficulty": "Medium",
+    "topic": "Inference",
+    "path": "researcher",
+    "prompt": "A pre-specified experiment flips an iid coin EXACTLY n times and rejects when its total heads K\u2265threshold. Under H\u2080 the head probability is \\(\\frac{1}{2}\\); under the specified alternative it is head_numerator/head_denominator. Compute the ACTUAL null rejection probability (size) and alternative rejection probability (power). No early inspection, boundary randomization or data-chosen direction is part of this rule.\n\nInputs are integers: 0\u2264n\u2264200, 0\u2264threshold\u2264n+1, 1\u2264head_denominator\u22641000 and 0\u2264head_numerator\u2264head_denominator. Fractions need not be supplied reduced. At n=0 the only count is zero; threshold zero rejects and threshold one never rejects. Return {\"size\":[numerator_text,denominator_text],\"power\":[numerator_text,denominator_text]} with exact reduced rational pairs of canonical decimal STRINGS, nonnegative numerators, positive denominators and zero [\"0\",\"1\"]. Do not return floats or numeric pairs.\n\nUse \\(O(n)\\) scalar recurrence iterations and a constant number of integer accumulators, with initial integer exponentiation and integer/gcd bit costs additional. Enumerating 2^n ordered records is too slow. No external probability package is needed.",
+    "starter": "def solve(n, threshold, head_numerator, head_denominator):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          6,
+          6,
+          3,
+          4
+        ],
+        "expected": {
+          "size": [
+            "1",
+            "64"
+          ],
+          "power": [
+            "729",
+            "4096"
+          ]
+        }
+      },
+      {
+        "args": [
+          6,
+          5,
+          3,
+          4
+        ],
+        "expected": {
+          "size": [
+            "7",
+            "64"
+          ],
+          "power": [
+            "2187",
+            "4096"
+          ]
+        }
+      }
+    ],
+    "solution": "from math import gcd\ndef solve(n, threshold, head_numerator, head_denominator):\n    a = head_numerator\n    b = head_denominator - a\n    coefficient = 1\n    weight = b ** n\n    size_mass = 0\n    power_mass = 0\n    for k in range(n + 1):\n        if k >= threshold:\n            size_mass += coefficient\n            power_mass += coefficient * weight\n        if k < n:\n            coefficient = coefficient * (n - k) // (k + 1)\n            if b:\n                weight = weight * a // b\n    if b == 0:\n        power_mass = head_denominator ** n if n >= threshold else 0\n    def pair(numerator, denominator):\n        divisor = gcd(numerator, denominator)\n        return [str(numerator // divisor), str(denominator // divisor)]\n    return {\"size\": pair(size_mass, 2 ** n), \"power\": pair(power_mass, head_denominator ** n)}",
+    "explanation": "The null tail is \\(\\sum_{k\\geq h}\\binom nk/2^n\\); the alternative tail is \\(\\sum_{k\\geq h}\\binom nk a^k(d-a)^{n-k}/d^n\\). Generate binomial coefficients by \\(\\binom n{k+1}=\\binom nk(n-k)/(k+1)\\). When b=d\u2212a>0, start the alternative weight at b\u207f and update w\u2190wa/b before the next count; the division is exact because the current weight contains a remaining b factor. At a=0 it correctly becomes zero after count zero. At b=0 only K=n has positive mass, so handle that deterministic alternative directly; n=0 still has mass one at K=0. Sum only counts at or above the inclusive threshold, reduce each rational by gcd and encode its integers as strings. A nominal significance label does not determine these actual probabilities. This task calibrates one fixed endpoint, not the union over repeated looks; the Hard task counts that different event."
+  },
+  {
+    "id": "c_l12_hard",
+    "title": "Calibrate dependent inspections and stopping cost",
+    "difficulty": "Hard",
+    "topic": "Inference",
+    "path": "researcher",
+    "prompt": "The maximum experiment length horizon is an integer 0\u2264horizon\u2264120. The pre-specified looks list contains [time,head_threshold] pairs at STRICTLY increasing distinct times 1\u2026horizon, with 0\u2264head_threshold\u2264time+1. Heads count CUMULATIVELY from the first flip. At a listed time, reject and STOP if the cumulative count is at least its threshold, including equality. Otherwise continue. There is no early acceptance; if no rejection occurs, take all horizon flips. Empty looks means no rejection, and horizon zero requires empty looks and takes zero flips.\n\nUnder H\u2080 flips are iid Bernoulli(\\(\\frac{1}{2}\\)); under the specified alternative they are iid Bernoulli(head_numerator/head_denominator), with integer denominator 1\u20261000 and numerator 0\u2026denominator. Calculate the probability of EVER rejecting by the horizon under each model, and the expected number of flips ACTUALLY TAKEN under each. Looks share observations and are not independent. Thresholds are supplied, not chosen by this function. Finite-horizon calibration alone does not establish unlimited-horizon validity.\n\nReturn a dictionary with keys \"size\", \"power\", \"null_flips\", \"alternative_flips\". Each value is an exact reduced rational pair of canonical decimal STRINGS [numerator_text,denominator_text], with nonnegative numerator, positive denominator and zero [\"0\",\"1\"]. No floats, numeric pairs, simulation, mutation of looks or enumeration of all binary records. Use O(horizon\u00b2+len(looks)) scalar iterations and O(horizon) integer slots beyond outputs; integer power/gcd/bit costs are additional. Track which prefixes have NOT already rejected, then remove first-crossing paths before propagating them.",
+    "starter": "def solve(horizon, looks, head_numerator, head_denominator):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          3,
+          [
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          3,
+          4
+        ],
+        "expected": {
+          "size": [
+            "5",
+            "8"
+          ],
+          "power": [
+            "57",
+            "64"
+          ],
+          "null_flips": [
+            "2",
+            "1"
+          ],
+          "alternative_flips": [
+            "3",
+            "2"
+          ]
+        }
+      },
+      {
+        "args": [
+          4,
+          [
+            [
+              2,
+              2
+            ],
+            [
+              4,
+              3
+            ]
+          ],
+          1,
+          2
+        ],
+        "expected": {
+          "size": [
+            "3",
+            "8"
+          ],
+          "power": [
+            "3",
+            "8"
+          ],
+          "null_flips": [
+            "7",
+            "2"
+          ],
+          "alternative_flips": [
+            "7",
+            "2"
+          ]
+        }
+      }
+    ],
+    "solution": "from math import gcd\ndef solve(horizon, looks, head_numerator, head_denominator):\n    n = horizon\n    a, d = head_numerator, head_denominator\n    b = d - a\n    bounds = dict(looks)\n    a_powers, b_powers, d_powers, two_powers = [1], [1], [1], [1]\n    for _ in range(n):\n        a_powers.append(a_powers[-1] * a)\n        b_powers.append(b_powers[-1] * b)\n        d_powers.append(d_powers[-1] * d)\n        two_powers.append(two_powers[-1] * 2)\n    alive = [1]\n    size_mass = power_mass = null_cost = alternative_cost = 0\n    for t in range(1, n + 1):\n        null_cost += sum(alive) * two_powers[n - t + 1]\n        alternative_cost += sum(count * a_powers[k] * b_powers[t - 1 - k] for k, count in enumerate(alive)) * d_powers[n - t + 1]\n        next_alive = [0] * (t + 1)\n        for k, count in enumerate(alive):\n            next_alive[k] += count\n            next_alive[k + 1] += count\n        if t in bounds:\n            for k in range(bounds[t], t + 1):\n                count = next_alive[k]\n                size_mass += count * two_powers[n - t]\n                power_mass += count * a_powers[k] * b_powers[t - k] * d_powers[n - t]\n                next_alive[k] = 0\n        alive = next_alive\n    def pair(numerator, denominator):\n        divisor = gcd(numerator, denominator)\n        return [str(numerator // divisor), str(denominator // divisor)]\n    return {\"size\": pair(size_mass, two_powers[n]),\n            \"power\": pair(power_mass, d_powers[n]),\n            \"null_flips\": pair(null_cost, two_powers[n]),\n            \"alternative_flips\": pair(alternative_cost, d_powers[n])}",
+    "explanation": "Let alive[k] count length-(t\u22121) ordered prefixes with k heads that did NOT reject at an earlier look. Each extends once by a tail to k and once by a head to k+1. At a scheduled time t, any resulting count at or above the threshold is a FIRST rejection; record its probability and zero it before the next extension. Do not propagate stopped paths and count them twice. Paths with the same cumulative count have the same probability under either iid model, so these counts are sufficient.\n\nFor null probability, a length-t rejected prefix has mass count/2\u1d57. Put every contribution over the common denominator 2\u1d3a by multiplying its numerator by 2\u1d3a\u207b\u1d57. Under alternative a/d, the prefix mass is count\u00b7a\u1d4f(d\u2212a)\u1d57\u207b\u1d4f/d\u1d57; multiply its numerator by d\u1d3a\u207b\u1d57 to use denominator d\u1d3a. Summing these disjoint FIRST-hit masses gives size and power, with no independence assumption between looks. A threshold t+1 never rejects; zero rejects all still-alive paths at that time.\n\nFor stopping time T\u2264N, \\(E[T]=\\sum_{t=1}^N P(T\\geq t)\\). Before taking flip t, this event is exactly survival through t\u22121, whose null probability is \\(\\Sigma\\)alive/2\u1d57\u207b\u00b9 and whose alternative probability weights each alive count by a\u1d4f(d\u2212a)\u1d57\u207b\u00b9\u207b\u1d4f/d\u1d57\u207b\u00b9. Accumulate them over the same final denominators. Nonrejecting paths contribute every flip through N, so no terminal-cost correction is needed. Precompute integer powers once; all zero-probability branches work using the empty-product convention 0\u2070=1. At N=0 rejection masses and costs are zero. Reduce all four rationals by gcd and preserve their digits as strings. State propagation and probability weighting each cost O(t) per step, giving O(N\u00b2+len(looks)) scalar work and O(N) integer slots, plus integer bit/power/gcd costs. This computes the actual supplied finite procedure; it does not itself choose calibrated boundaries or certify an infinite continuation."
   }
 ]
