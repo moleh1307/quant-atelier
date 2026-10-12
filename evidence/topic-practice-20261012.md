@@ -1502,3 +1502,121 @@ actual-market profitability or physical touch/screen-reader coverage. Inventory:
 **25 lessons /143 interviews /64 codes**; **21 topics complete**, **l21–l24 remain**,
 then the full navigation/preservation audit and removal of the pending-topic
 exception. The full goal remains active.
+
+
+## Eighteenth batch — continuation value and log growth, 2026-10-13
+
+Read the actual l21 authored lesson in `static/lesson-continuation-growth.js`
+and its learning goals before selecting the practice. New source
+`topic_practice/continuation_growth.py` adds **five interviews and three coding
+exercises**. With preserved q13/q37, l21 has **two Easy, two Medium and three Hard
+interviews**, and exactly one code per difficulty. The only changes to the
+previous 143 interview records are the specific rubrics for q13/q37; their
+prompts, answers, difficulty, hints, worked reasoning and follow-ups remain
+unchanged. All **64 prior public coding records are exact matches**. No legacy
+slot is removed in this topic.
+
+The Easy questions distinguish an observed payment from a remaining option,
+charge fees only on continuation, and compound fractions of CURRENT wealth
+instead of constant-dollar stakes. Follow-ups distinguish a realised bad outcome
+from a bad expected-value decision and show when a history-dependent fraction
+makes win/loss order matter. Medium works backward through ordered optional
+fee schedules: [1,0] gives threshold **13/4**, value **33/8**; [0,1] gives
+threshold **23/6**, value **53/12**. Equal raw means need not imply equal option
+values. These are exact finite cash objectives, with no unstated financing or
+capital constraint.
+
+One new Hard question separates Bayesian model probabilities from an ambiguity
+set. Equal prior weights on p=0.55/0.65 give a one-round predictive p=0.6 and
+log-optimal fraction 0.2; worst-case p in the interval instead gives 0.1. Its
+two-round extension derives the posterior predictive probabilities **29/48**
+and **19/32**, and fractions **5/24** and **3/16**. The argument explicitly
+assumes outcomes are observed regardless of stake and future information and
+feasibility do not depend on the first fraction. It proves the myopic separation
+under those conditions without claiming unconditional iid outcomes or universal
+shrinking for parameter uncertainty. The second Hard question adds a rare
+net return −9. The binary fraction 0.2 is outside the positive-wealth domain;
+strict concavity and quadratic **75f²−24f+1** give the admissible root
+**(12−√69)/75**. The ambiguity follow-up locates the adverse catastrophe
+probability and derives **(37−√1144)/225**. All new questions have explicit
+assumptions, purposeful hints, worked derivations, substantive changed-condition
+follow-ups and specific assessment obligations. Numeric acceptance does not
+certify an unwritten proof.
+
+Coding progresses through exact one-option choice, exact backward induction with
+an ordered fee schedule, and bounded worst-model log optimisation. Easy/Medium
+return reduced fractions as canonical decimal strings. Costs are paid only on
+used options; ties keep. Medium's maximum-horizon public sample retains value
+**4652001187058965190221/4656612873077392578125** and continuation threshold
+**930169653110871668649/931322574615478515625**. Hard treats rows as a MODEL SET,
+skips unreachable outcomes, covers the union of reachable wealth multipliers,
+uses log1p/accurate summation, and handles zero/nonpositive-mean models, caps and
+a nondifferentiable active-model crossing. Probabilities are normalised once
+per row. Its crossing sample peaks at about **0.0754724606**, where one model's
+curve rises and the other falls; neither averaging models nor optimising each
+separately gives the requested objective. Inputs, exact-format rules, feasible
+bounds and arithmetic/bit-complexity limits are stated.
+
+Final automated checks: **222 Python tests**, **23 frontend suites**, and all
+**52 expanded reference solutions** through the actual complete judge pass.
+The twelve new tests use independent exact or high-precision evidence:
+
+- Full draw-path fee ledgers and wealth paths; posterior/tower calculations and
+  persistent-parameter dependence.
+- Three hundred seeded exact one-choice distributions and eighty small complete
+  stopping-policy enumerations, rather than reference-generated expectations.
+- Maximum horizon/support, negative payments, duplicate/zero-weight states,
+  equality rules, reduced strings, scaling and unchanged input lists.
+- Exact tail-polynomial coefficients, 75-digit Decimal root/objective checks,
+  twenty seeded multi-model comparisons against active-curve slope bisection,
+  and an 80-digit polynomial crossing check with opposing slope signs.
+- Every official Easy/Medium expected-output copy remains lossless and within
+  the existing debugging limits. No fixture or runner limit was weakened.
+
+Native in-app browser checks used explicit `/test-preview.html#destination`
+entry and verified the **Test preview** notice before grading or inspecting
+solutions. The numeric wealth answer **375/4** was accepted. Hard was freely
+selected before Easy/Medium; full submissions passed **10/10**, **7/7** and
+**10/10**, respectively. Both exact public large samples survived the actual
+expected-output textbox and copied debugging case; each sample-plus-copy run
+passed **4/4**, labelled debugging only, with completion unchanged. Lesson
+continuation opens the interview list, question continuation opens the coding
+list, and details return to their own lists without sequential gating. These
+live grading/copy checks preceded the final prose-only spacing/notation polish;
+judge contracts and references were unchanged, and final automated checks passed
+after that polish.
+
+The final narrow proof review used a **390px viewport /375px document**. Page
+client and scroll widths match, with zero KaTeX errors. Main objective, derivative
+and root displays have matching width/scroll width **289px**; the robust follow-up
+root is **255px**. The Bayesian display is **289px**. The final prose defines
+conditional growth, per-outcome probability/return and distinct win/loss
+probabilities before use; a shorthand slash between probabilities was replaced
+with words so automatic math formatting cannot turn them into an unintended
+ratio. No console errors were observed. Four screenshots were visually inspected.
+Viewport override was reset; the final loaded personal interview list has
+**0/7 interviews and 0/3 coding**, with no preview notice. These are this topic's
+counts; they do not imply existing global work was erased or zero.
+
+A durable ignored personal-study baseline was captured BEFORE this batch's edits.
+Final whole-file bytes and the five groups (questions, coding, lessons, drafts,
+trainers) match that baseline. No personal grade, reset or replacement was
+performed. Reloading preview returned to personal, and later solution inspection
+explicitly re-entered the launcher. Recovery-copy notices seen in development
+preview were not imported into personal practice.
+
+- [Continuation interviews, personal workspace](continuation-personal-question-list-20261013.png).
+- [Continuation coding list, personal workspace](continuation-personal-coding-list-20261013.png).
+- [Bayesian posterior extension, isolated narrow preview](continuation-bayes-proof-narrow-20261013.png).
+- [Rare-loss ambiguity extension, isolated narrow preview](continuation-tail-proof-narrow-20261013.png).
+
+Primary context consulted: [Sun and Boyd, Distributional Robust Kelly Gambling,
+including finite model sets and the worst-model objective](https://web.stanford.edu/~boyd/papers/pdf/robust_kelly.pdf).
+New finite examples, proofs, wording and code are original. No commercial-bank
+copying, employer provenance or employer-calibrated difficulty is claimed.
+Verification establishes these declared models and observed navigation, not
+learner mastery or a real-market policy. Inventory: **25 lessons /148 interviews
+/67 codes**. Researcher route: **19 checks /124 questions /56 codes**; trader:
+**14 checks /74 questions /34 codes**. **22 topics complete**; **l22–l24 remain**,
+then the full navigation/preservation audit and removal of the pending-topic
+exception. The full goal remains active.
