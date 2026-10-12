@@ -2860,5 +2860,157 @@
     ],
     "solution": "from math import gcd\ndef solve(counts, payoffs, budget):\n    a,b = budget\n    total = sum(counts)\n    denominator = total*b\n    remaining = total*a\n    minimum = min(payoffs)\n    numerator = b*sum(c*g for c,g in zip(counts,payoffs))\n    used = 0\n    for i in sorted(range(len(counts)),key=lambda i:payoffs[i],reverse=True):\n        gap = payoffs[i]-minimum\n        if not remaining or not gap:\n            break\n        moved = min(remaining,counts[i]*b)\n        numerator -= moved*gap\n        remaining -= moved\n        used += moved\n    def pair(n,d):\n        divisor = gcd(n,d)\n        return [str(n//divisor),str(d//divisor)]\n    return {\"worst_mean\":pair(numerator,denominator),\n            \"used_tv\":pair(used,denominator)}",
     "explanation": "Total variation is the amount of probability mass removed from some states and added to others. Any removed unit can improve the objective most by being placed in a state with MINIMUM payoff. Removing mass from a higher-payoff donor is always at least as useful as removing it from a lower-payoff donor: exchange a small donor amount while leaving the receiving minimum state fixed. Thus drain the highest-payoff states first until the budget is exhausted or every positive-payoff-gap state has been emptied. Equal-minimum states need no transfers; once all mass is on minima, spending more distance cannot improve the objective and would violate the minimal-used-distance requirement.\n\nFor exact arithmetic choose D=Wb. Each original state has count_i\u00b7b mass units, and the allowed transfer has W\u00b7a units. The baseline expectation numerator is b times sum(count_i\u00b7g_i). Transfer h units from payoff g to the minimum g_min, subtracting h(g\u2212g_min) from that numerator. Only original nonminimum mass is ever drained, so capacities are respected. At most min(epsilon,1\u2212P(baseline minimum states)) mass is used; this is the least distance that can attain the minimum. Sort indices by descending payoff, skipping zero capacity and zero gaps, and reduce the final mean and used-unit fractions by gcd.\n\nSharpness follows from constructing these transfers. For the lower bound, decompose any admissible q\u2212p into removed/added masses of equal total h\u2264epsilon. Added payoff is at least h\u00b7g_min; removed mass from each donor cannot exceed its original p_i. The largest possible reduction therefore solves exactly the bounded donor allocation above. This proves a global bound over continuous distributions, not merely over a grid. The often used expression baseline_mean\u2212epsilon(max payoff\u2212min payoff) is only a bound and can be unattainable when the maximum-payoff state has insufficient mass."
+  },
+  {
+    "id": "c_l17_easy",
+    "title": "Estimate uncertainty from independent pair averages",
+    "difficulty": "Easy",
+    "topic": "Simulation",
+    "path": "researcher",
+    "prompt": "pairs is a list of [left_output,right_output] from independently drawn pairs; dependence WITHIN each pair is allowed. Both entries are integers in [\u221210^9,10^9], and there are at most 100000 pairs. For A_i=(left_i+right_i)/2, return [mean(A),estimated_standard_error_of_mean]. With \\(n\\geq2\\) use \\(\\sqrt{\\sum_i(A_i-\\bar A)^2/[n(n-1)]}\\); one pair returns [its average,None], and empty input returns [None,None]. Defined outputs are ordinary finite floats. Preserve the input. Use \\(O(n)\\) time and O(1) auxiliary accumulators, with integer arithmetic bit costs additional. Large offsets with small variation are allowed: do not lose variation by subtracting rounded floating second moments. Pair totals are integers and may be accumulated exactly before converting the final result. The formula audits the declared independent-pair design, not model correctness or rare-event coverage.",
+    "starter": "def solve(pairs):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ]
+          ]
+        ],
+        "expected": [
+          2.0,
+          1.0
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        ],
+        "expected": [
+          1.0,
+          0.0
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              7,
+              -2
+            ]
+          ]
+        ],
+        "expected": [
+          2.5,
+          null
+        ]
+      }
+    ],
+    "solution": "from math import sqrt\ndef solve(pairs):\n    n = len(pairs)\n    if not n:\n        return [None,None]\n    total = squares = 0\n    for left,right in pairs:\n        z = left+right\n        total += z\n        squares += z*z\n    mean = total/(2*n)\n    if n == 1:\n        return [mean,None]\n    variance_of_mean = (n*squares-total*total)/(4*n*n*(n-1))\n    return [mean,sqrt(variance_of_mean)]",
+    "explanation": "Use z_i=left_i+right_i, so A_i=z_i/2. Accumulate the INTEGER sum S and square sum Q. For \\(n\\geq2\\) the exact variance numerator nQ\u2212S\u00b2 is nonnegative, and\n\n\\[\\widehat{\\mathrm{SE}}^2=\\frac{nQ-S^2}{4n^2(n-1)}.\\]\n\nConvert only the final mean S/(2n) and nonnegative variance ratio to floats. This algebra avoids catastrophic cancellation from large floating second moments. The denominator counts n independently drawn pairs, not 2n dependent component outputs. A singleton has a defined mean but insufficient units for this sample-variance estimate; an empty run has neither. One linear scan and integer accumulators leave the source list unchanged."
+  },
+  {
+    "id": "c_l17_hard",
+    "title": "Allocate a fixed simulation budget exactly",
+    "difficulty": "Hard",
+    "topic": "Simulation",
+    "path": "researcher",
+    "prompt": "weights and variances are equal-length lists for k simulation strata, 1\u2264k\u226420000. Weights are integers in [0,10^9] with positive total W; population weights are p_h=weights_h/W. Variances are KNOWN nonnegative integer within-stratum output variances, at most 10^9. Each draw costs one budget unit. Draws are independent both within and across strata, sampled WITH replacement. Before main sampling choose integer n_h\u22651 in EVERY declared stratum, even a zero-weight or zero-variance stratum, with sum(n_h)=budget. budget is an integer k\u2264budget\u2264200000. The stratified estimator is the sum of p_h times that stratum\u2019s sample mean, with variance \\(\\sum_h p_h^2\\sigma_h^2/n_h\\).\n\nFind a globally minimum-variance allocation. Among all optima choose the LEXICOGRAPHICALLY LARGEST allocation in original stratum order (at the first differing index, prefer the larger count). Return {\"allocation\": [integer counts in input order], \"variance\": [exact_reduced_numerator_text,positive_denominator_text]}. The variance pair uses canonical decimal STRINGS; zero is [\"0\",\"1\"]. Preserve all inputs. Aim for O(k+(budget\u2212k)log(k+1)) exact comparisons plus \\(O(k)\\) rational-accumulation steps, and \\(O(k)\\) storage. Integer multiplication/gcd bit costs are additional. Do not rescan every stratum for every extra draw or round a continuous allocation. Nearly equal marginal gains can differ by one at sizes beyond floating precision.\n\nPrerequisite: a binary priority heap. The variance DROP from increasing n to n+1 in stratum h is \\(p_h^2\\sigma_h^2/[n(n+1)]\\). Explain why choosing by current marginal drop is globally valid under this equal-cost, fixed-variance contract. Allocations chosen from changing estimated variances, unequal costs, dependent draws or a finite population without replacement require a different analysis.",
+    "starter": "def solve(weights, variances, budget):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          5
+        ],
+        "expected": {
+          "allocation": [
+            2,
+            3
+          ],
+          "variance": [
+            "11",
+            "54"
+          ]
+        }
+      },
+      {
+        "args": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          3
+        ],
+        "expected": {
+          "allocation": [
+            2,
+            1
+          ],
+          "variance": [
+            "3",
+            "8"
+          ]
+        }
+      },
+      {
+        "args": [
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            9,
+            0,
+            4
+          ],
+          5
+        ],
+        "expected": {
+          "allocation": [
+            1,
+            1,
+            3
+          ],
+          "variance": [
+            "4",
+            "27"
+          ]
+        }
+      }
+    ],
+    "solution": "from math import gcd\ndef solve(weights, variances, budget):\n    k = len(weights)\n    gains = [w*w*v for w,v in zip(weights,variances)]\n    counts = [1]*k\n    denominators = [2]*k\n    heap = list(range(k))\n    def better(i,j):\n        left = gains[i]*denominators[j]\n        right = gains[j]*denominators[i]\n        return left > right or (left == right and i < j)\n    def sift(position):\n        item = heap[position]\n        while 2*position+1 < k:\n            child = 2*position+1\n            if child+1 < k and better(heap[child+1],heap[child]):\n                child += 1\n            if not better(heap[child],item):\n                break\n            heap[position] = heap[child]\n            position = child\n        heap[position] = item\n    for position in range(k//2-1,-1,-1):\n        sift(position)\n    for _ in range(budget-k):\n        chosen = heap[0]\n        counts[chosen] += 1\n        denominators[chosen] = counts[chosen]*(counts[chosen]+1)\n        sift(0)\n    numerator,denominator = 0,1\n    for a,n in zip(gains,counts):\n        common = gcd(denominator,n)\n        numerator = numerator*(n//common)+a*(denominator//common)\n        denominator *= n//common\n        reduce = gcd(numerator,denominator)\n        numerator //= reduce\n        denominator //= reduce\n    denominator *= sum(weights)**2\n    reduce = gcd(numerator,denominator)\n    return {\"allocation\":counts,\n            \"variance\":[str(numerator//reduce),str(denominator//reduce)]}",
+    "explanation": "Let a_h=weights_h\u00b2\u00b7variances_h. The common W\u00b2 cancels from comparisons. Start with one sample per stratum. Each stratum offers a decreasing stream of gains a_h/[n(n+1)] for successive extra samples. Maximizing total variance reduction chooses the largest budget\u2212k gains across these streams. Such a selection is prefix-feasible: every gain\u2019s preceding gain in its stratum is at least as large. A priority heap of the next available gain therefore yields a GLOBAL optimum, not just a locally good step.\n\nAt a positive threshold each nonzero stream is strictly decreasing, so it can have at most one tied threshold gain. Award those tied draws to smaller original indices to obtain the lexicographically largest optimum. If all a_h are zero, every allocation is optimal and all extras go to index zero. Zero-benefit strata otherwise keep their required single draw. The reference compares gains by exact cross multiplication and stores only stratum indices and current counts. Updating the root decreases its priority, so one downward heap repair is enough; no unsupported custom comparator class is needed in the restricted runner. Building the heap bottom-up is \\(O(k)\\).\n\nFinally sum exact rationals a_h/n_h, divide by W\u00b2 and reduce. Use gcd while accumulating so denominators do not grow by unnecessary repeated factors. The reference performs \\(O(k)\\) rational updates; their bit cost depends on the resulting denominators. The continuous solution\u2019s proportionality to p_h\u00b7sigma_h is useful intuition, but its rounding need not select the best integer allocation or honor mandatory counts and exact ties. Known population variances and fixed counts support the stated estimator variance; the arithmetic does not certify a pilot estimate of those variances."
   }
 ]
