@@ -1,0 +1,460 @@
+[
+  {
+    "id": "c01",
+    "title": "Count pairs with a target sum",
+    "difficulty": "Easy",
+    "topic": "Algorithms",
+    "path": "shared",
+    "prompt": "Given a list of integers and a target, return the number of index pairs i < j whose values sum to target. Repeated values count as distinct observations. Aim for \\(O(n)\\) expected time. Do not modify the input.",
+    "starter": "def solve(values, target):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            1,
+            2,
+            2,
+            3
+          ],
+          4
+        ],
+        "expected": 2
+      }
+    ],
+    "solution": "def solve(values, target):\n    seen = {}\n    count = 0\n    for value in values:\n        count += seen.get(target - value, 0)\n        seen[value] = seen.get(value, 0) + 1\n    return count",
+    "explanation": "Count matches against previously seen values before inserting the current value. This prevents pairing an observation with itself and counts duplicates correctly. \\(O(n)\\) expected time, \\(O(n)\\) space."
+  },
+  {
+    "id": "c02",
+    "title": "Expected maximum of discrete draws",
+    "difficulty": "Medium",
+    "topic": "Probability",
+    "path": "shared",
+    "prompt": "Given a list of [value, probability] pairs (distinct values, nonnegative probabilities summing to one) and an integer draws >= 1, return the expected maximum of that many iid draws. Values may be negative and input order is arbitrary. Compute from the discrete CDF; do not simulate.",
+    "starter": "def solve(distribution, draws):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              1,
+              0.5
+            ],
+            [
+              3,
+              0.5
+            ]
+          ],
+          2
+        ],
+        "expected": 2.5
+      }
+    ],
+    "solution": "def solve(distribution, draws):\n    cumulative = previous = total = 0.0\n    for value, probability in sorted(distribution):\n        cumulative += probability\n        current = cumulative ** draws\n        total += value * (current - previous)\n        previous = current\n    return total",
+    "explanation": "P(max <= v)=F(v)^draws. Differences of consecutive CDF values give the probability mass at v. Sort the support first. O(m log m) time."
+  },
+  {
+    "id": "c03",
+    "title": "Expected wait for consecutive heads",
+    "difficulty": "Medium",
+    "topic": "Recurrences",
+    "path": "shared",
+    "prompt": "Return the expected number of flips to obtain k consecutive heads, where k >= 1 and 0 < p <= 1 is the head probability. Include all flips up to completion. Handle \\(p=1\\) explicitly. Derive from trailing-head states rather than treating overlapping blocks as independent.",
+    "starter": "def solve(k, p):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          3,
+          0.5
+        ],
+        "expected": 14
+      }
+    ],
+    "solution": "def solve(k, p):\n    return sum(p ** (-i) for i in range(1, k + 1))",
+    "explanation": "The recurrence solution is the sum \\(p^{-1}+\\cdots+p^{-k}\\), equivalent to \\(\\frac{1-p^k}{(1-p)p^k}\\) for \\(p<1\\). The sum also handles \\(p=1\\) without a singularity."
+  },
+  {
+    "id": "c04",
+    "title": "Streaming mean and sample variance",
+    "difficulty": "Medium",
+    "topic": "Statistics",
+    "path": "shared",
+    "prompt": "Return [mean, sample_variance] using Welford\u2019s one-pass update. For an empty list return [None, None]; for one value return [value, None]. Use the n-1 denominator and do not round. Handle large offsets stably.",
+    "starter": "def solve(values):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "expected": [
+          2,
+          1
+        ]
+      }
+    ],
+    "solution": "def solve(values):\n    n = 0\n    mean = m2 = 0.0\n    for value in values:\n        n += 1\n        delta = value - mean\n        mean += delta / n\n        m2 += delta * (value - mean)\n    if n == 0:\n        return [None, None]\n    return [mean, m2 / (n - 1) if n > 1 else None]",
+    "explanation": "Updating centred differences avoids subtracting two enormous nearly equal sums. \\(O(n)\\) time, O(1) auxiliary space."
+  },
+  {
+    "id": "c05",
+    "title": "Lagged rolling mean",
+    "difficulty": "Medium",
+    "topic": "Time-aware data",
+    "path": "shared",
+    "prompt": "For each index i, return the mean of the previous window observations values[i-window:i], excluding the current value. Return None until a full previous window exists. window >= 1. Aim for \\(O(n)\\) time.",
+    "starter": "def solve(values, window):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            2,
+            4,
+            8,
+            10
+          ],
+          2
+        ],
+        "expected": [
+          null,
+          null,
+          3,
+          6
+        ]
+      }
+    ],
+    "solution": "def solve(values, window):\n    result = []\n    total = 0.0\n    for i, value in enumerate(values):\n        result.append(total / window if i >= window else None)\n        total += value\n        if i >= window:\n            total -= values[i - window]\n    return result",
+    "explanation": "Emit the window value before adding the current observation. Then remove the oldest value for the next iteration. The chronology is the key invariant."
+  },
+  {
+    "id": "c06",
+    "title": "Join by availability time",
+    "difficulty": "Medium",
+    "topic": "Time-aware data",
+    "path": "shared",
+    "prompt": "Events are [available_at, value] pairs sorted by availability, not economic-event time. Decisions are sorted timestamps. At each decision return the latest event value with available_at <= decision, or None. For tied event timestamps, later input wins. Aim for O(events + decisions) time.",
+    "starter": "def solve(events, decisions):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              2,
+              10
+            ],
+            [
+              5,
+              20
+            ]
+          ],
+          [
+            1,
+            2,
+            4,
+            5
+          ]
+        ],
+        "expected": [
+          null,
+          10,
+          10,
+          20
+        ]
+      }
+    ],
+    "solution": "def solve(events, decisions):\n    j = 0\n    latest = None\n    result = []\n    for timestamp in decisions:\n        while j < len(events) and events[j][0] <= timestamp:\n            latest = events[j][1]\n            j += 1\n        result.append(latest)\n    return result",
+    "explanation": "A forward pointer consumes every eligible event, including all ties. Never use a future release just because its economic timestamp precedes the decision."
+  },
+  {
+    "id": "c07",
+    "title": "OLS with an intercept",
+    "difficulty": "Medium",
+    "topic": "Regression",
+    "path": "researcher",
+    "prompt": "Given equally sized x and y lists, return [intercept, slope] for ordinary least squares with an intercept. Return None for fewer than two observations or constant x. Do not use external numerical libraries.",
+    "starter": "def solve(x, y):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            3,
+            5,
+            7
+          ]
+        ],
+        "expected": [
+          1,
+          2
+        ]
+      }
+    ],
+    "solution": "def solve(x, y):\n    if len(x) < 2:\n        return None\n    mx, my = sum(x) / len(x), sum(y) / len(y)\n    denominator = sum((v - mx) ** 2 for v in x)\n    if denominator == 0:\n        return None\n    slope = sum((a - mx) * (b - my) for a, b in zip(x, y)) / denominator\n    return [my - slope * mx, slope]",
+    "explanation": "Centre both variables and divide cross-deviation by x\u2019s squared deviation. The intercept restores the means. Degenerate predictors cannot identify a unique slope."
+  },
+  {
+    "id": "c08",
+    "title": "Sample autocorrelation",
+    "difficulty": "Medium",
+    "topic": "Time series",
+    "path": "researcher",
+    "prompt": "Given values and lag >= 1, return sum((x[i]-mean)*(x[i-lag]-mean), i=lag..n-1) / sum((x[i]-mean)^2, i=0..n-1). This explicitly uses the full-series mean and denominator. Return None if n <= lag or variance is zero.",
+    "starter": "def solve(values, lag):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ],
+          1
+        ],
+        "expected": 0
+      }
+    ],
+    "solution": "def solve(values, lag):\n    if len(values) <= lag:\n        return None\n    mean = sum(values) / len(values)\n    d = [v - mean for v in values]\n    denominator = sum(v * v for v in d)\n    if denominator == 0:\n        return None\n    return sum(d[i] * d[i-lag] for i in range(lag, len(d))) / denominator",
+    "explanation": "Different libraries normalise differently. Implement the stated estimator rather than importing an unspecified convention. \\(O(n)\\) time."
+  },
+  {
+    "id": "c09",
+    "title": "Purge overlapping target intervals",
+    "difficulty": "Medium",
+    "topic": "Validation",
+    "path": "researcher",
+    "prompt": "Each training label is a half-open interval [start, end) with start < end. Return original indices whose intervals DO NOT overlap the half-open validation interval [vstart, vend). Touching endpoints do not overlap. Preserve input order. This tests interval purging only, not a complete deployment validation scheme.",
+    "starter": "def solve(intervals, validation):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              0,
+              3
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              5,
+              7
+            ]
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        "expected": [
+          0,
+          2
+        ]
+      }
+    ],
+    "solution": "def solve(intervals, validation):\n    start, end = validation\n    return [i for i, (a, b) in enumerate(intervals) if b <= start or a >= end]",
+    "explanation": "Overlap is a < validation_end and b > validation_start. Negate it carefully for half-open boundaries. Chronological train selection is a separate requirement."
+  },
+  {
+    "id": "c10",
+    "title": "Expanding walk-forward folds",
+    "difficulty": "Medium",
+    "topic": "Validation",
+    "path": "researcher",
+    "prompt": "Return [[train_indices, test_indices], ...] for n chronologically ordered rows. First training block has initial rows. Leave gap unused rows before each test block of width step. Advance the training endpoint by step each fold. Include a final partial test block; stop when test start >= n. Inputs n >= 0, initial >= 1, step >= 1, gap >= 0.",
+    "starter": "def solve(n, initial, step, gap):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          8,
+          3,
+          2,
+          1
+        ],
+        "expected": [
+          [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          [
+            [
+              0,
+              1,
+              2,
+              3,
+              4
+            ],
+            [
+              6,
+              7
+            ]
+          ]
+        ]
+      }
+    ],
+    "solution": "def solve(n, initial, step, gap):\n    result = []\n    end = initial\n    while end + gap < n:\n        result.append([list(range(end)), list(range(end + gap, min(n, end + gap + step)))])\n        end += step\n    return result",
+    "explanation": "The training endpoint expands; the gap sits between it and the test start. Time gaps alone do not guarantee purging for variable-length labels."
+  },
+  {
+    "id": "c11",
+    "title": "Lag a decision and charge turnover",
+    "difficulty": "Medium",
+    "topic": "Execution",
+    "path": "researcher",
+    "prompt": "positions[i] is decided after return[i] is observed and takes effect for return[i+1]. Begin flat. For each period subtract cost * abs(new_held_position - previous_held_position). Return [period_net_pnl, total_net_pnl]. No terminal liquidation charge. Lists have equal length; returns are simple signed unit returns, positions unit exposures.",
+    "starter": "def solve(positions, returns, cost):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            1,
+            0,
+            -1
+          ],
+          [
+            0.1,
+            0.2,
+            0.3
+          ],
+          0.01
+        ],
+        "expected": [
+          [
+            0,
+            0.19,
+            -0.01
+          ],
+          0.18
+        ]
+      }
+    ],
+    "solution": "def solve(positions, returns, cost):\n    pnl = []\n    held = 0\n    for i, value in enumerate(returns):\n        new_held = positions[i-1] if i else 0\n        pnl.append(new_held * value - cost * abs(new_held - held))\n        held = new_held\n    return [pnl, sum(pnl)]",
+    "explanation": "Lag the exposure before multiplying by the return. A direction reversal from +1 to -1 incurs two units of turnover. Specify liquidation and execution assumptions rather than silently inventing them."
+  },
+  {
+    "id": "c12",
+    "title": "A fixed control variate estimator",
+    "difficulty": "Medium",
+    "topic": "Simulation",
+    "path": "researcher",
+    "prompt": "Given paired samples x and y, a known population mean mu_y and a coefficient beta fixed BEFORE sampling, return [estimate, standard_error] for \\(z_i=x_i-\\beta(y_i-\\mu_y)\\). Use sample variance of z and \\(\\sqrt{\\frac{\\operatorname{var}}n}\\). Return [None,None] for empty data; one pair returns [estimate,None].",
+    "starter": "def solve(x, y, mu_y, beta):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            2,
+            4,
+            6
+          ],
+          [
+            1,
+            2,
+            3
+          ],
+          2,
+          2
+        ],
+        "expected": [
+          4,
+          0
+        ]
+      }
+    ],
+    "solution": "import math\ndef solve(x, y, mu_y, beta):\n    z = [a - beta * (b - mu_y) for a, b in zip(x, y)]\n    n = len(z)\n    if not n:\n        return [None, None]\n    mean = sum(z) / n\n    if n == 1:\n        return [mean, None]\n    variance = sum((v - mean) ** 2 for v in z) / (n - 1)\n    return [mean, math.sqrt(variance / n)]",
+    "explanation": "A fixed coefficient preserves unbiasedness when mu_y is correct. Estimate uncertainty from the adjusted samples, not the raw x values. Independently pilot-fitted beta avoids same-sample fitting concerns."
+  },
+  {
+    "id": "c13",
+    "title": "Sliding-window maximum",
+    "difficulty": "Hard",
+    "topic": "Algorithms",
+    "path": "researcher",
+    "prompt": "Return the maximum in each full contiguous window of width k, k >= 1. Return [] if k exceeds n. Aim for \\(O(n)\\) total time and \\(O(k)\\) auxiliary space using a monotone deque. Do not sort or scan each window.",
+    "starter": "def solve(values, k):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            1,
+            3,
+            -1,
+            -3,
+            5,
+            3,
+            6,
+            7
+          ],
+          3
+        ],
+        "expected": [
+          3,
+          3,
+          5,
+          5,
+          6,
+          7
+        ]
+      }
+    ],
+    "solution": "from collections import deque\ndef solve(values, k):\n    queue = deque()\n    result = []\n    for i, value in enumerate(values):\n        while queue and queue[0] <= i - k:\n            queue.popleft()\n        while queue and values[queue[-1]] <= value:\n            queue.pop()\n        queue.append(i)\n        if i >= k - 1:\n            result.append(values[queue[0]])\n    return result",
+    "explanation": "Store indices in decreasing value order. Evict expired indices and discard dominated ones. Each index is inserted and removed at most once. The large case discourages window scans, but a pass is not a formal complexity proof."
+  },
+  {
+    "id": "c14",
+    "title": "Brier score and calibration bins",
+    "difficulty": "Easy",
+    "topic": "Statistics",
+    "path": "researcher",
+    "prompt": "Given probabilities in [0,1], binary outcomes, and bins >= 1, return {\"brier\": score, \"bins\": [[count, mean_forecast, observed_rate], ...]}. Equal-width bins are \\(\\left[\\frac{j}{\\text{bins}},\\frac{j+1}{\\text{bins}}\\right)\\), with probability 1 in the final bin. Empty bins have [0,None,None]. Empty input has brier None.",
+    "starter": "def solve(probabilities, outcomes, bins):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            0,
+            0.5,
+            1
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          2
+        ],
+        "expected": {
+          "brier": 0.08333333333333333,
+          "bins": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              0.75,
+              1
+            ]
+          ]
+        }
+      }
+    ],
+    "solution": "def solve(probabilities, outcomes, bins):\n    groups = [[] for _ in range(bins)]\n    for p, y in zip(probabilities, outcomes):\n        groups[min(int(p * bins), bins - 1)].append((p, y))\n    return {\"brier\": sum((p-y)**2 for p,y in zip(probabilities,outcomes)) / len(probabilities) if probabilities else None,\n            \"bins\": [[len(g), sum(p for p,y in g)/len(g), sum(y for p,y in g)/len(g)] if g else [0,None,None] for g in groups]}",
+    "explanation": "Handle \\(p=1\\) as an explicit boundary. Brier is a proper score, while bin summaries are noisy diagnostics whose interpretation depends on counts."
+  }
+]

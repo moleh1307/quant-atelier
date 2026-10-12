@@ -1,0 +1,11 @@
+__pycache__/
+data/
+*.pyc
+editor/node_modules/
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+# Local verification exports may contain drafts or workspace records.
+evidence/*.json

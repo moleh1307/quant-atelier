@@ -1,0 +1,48 @@
+'use strict';
+// Check grading provenance, branch sequence and distinct exercise accounting.
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const bank=JSON.parse(fs.readFileSync('static/content.json','utf8'));
+const codeBank=JSON.parse(fs.readFileSync('static/coding.json','utf8'));
+const context={URLSearchParams,location:{search:'',hash:'#paths'},document:{querySelector:()=>null},console,Math,Date,setTimeout,clearTimeout};
+vm.createContext(require('./workspace-fixture.cjs')(context));
+vm.runInContext(fs.readFileSync('static/app.js','utf8').replace(/init\(\);\s*$/,''),context);
+context.bank=bank;context.codeBank=codeBank;
+vm.runInContext("content=bank;coding=codeBank;route=['paths'];state=fresh();",context);
+const run=s=>vm.runInContext(s,context);
+assert.equal(run('preferredPath()'),'researcher');
+assert.equal(run('previewNotice()'),'','Personal pages never show the test banner');
+assert.equal(run('journeyLessons().length'),18);
+assert.equal(run("journeyLessons('trader').length"),14);
+assert.equal(run('nextLesson().id'),'l01');
+run("state.lessons.l01={passed:true};state.questions.q01={reviewed:true};");
+assert.equal(run('nextLesson().id'),'l02');
+assert.equal(run('lessonEvidence(content.lessons[0]).numeric'),0,'Review must never count as unaided solving');
+assert.equal(run('lessonEvidence(content.lessons[0]).reviewed'),1);
+run("state.questions.q05={selfSolved:true};state.coding.c01={accepted:true,assisted:true};");
+assert.equal(run('lessonEvidence(content.lessons[0]).self'),1);
+assert.equal(run('lessonEvidence(content.lessons[0]).assisted'),1);
+assert.match(run('roadmapPractice(content.lessons[0])'),/Self-assessed/);
+assert.match(run('roadmapPractice(content.lessons[0])'),/Passed with editorial/);
+run("state.preferences.path='trader';content.lessons.filter(l=>l.path==='shared').forEach(l=>state.lessons[l.id]={passed:true});");
+assert.equal(run('nextLesson().id'),'l19','Shared checks lead to the saved branch');
+run("route=['paths','researcher'];");
+assert.equal(run('selectedPath()'),'researcher','An explicit route selects its branch');
+run("journeyLessons('researcher').forEach(l=>state.lessons[l.id]={passed:true});");
+assert.equal(run("nextLesson('researcher')"),null,'Completion must not resume an unrelated branch');
+assert.equal(run('nextLesson().id'),'l19');
+assert.match(run('paths()'),/Every lesson check passed/);
+const expectedCode=new Set(bank.lessons.filter(l=>l.path!=='trader').flatMap(l=>l.coding));
+assert.equal(run("routeEvidence(journeyLessons('researcher')).codingTotal"),expectedCode.size,'Shared coding links count once');
+assert.equal(run("routeEvidence(journeyLessons('researcher')).checked"),18);
+run("state.trainers=[{type:'math',finished:false,attempts:1},{type:'math',finished:true,attempts:1},{type:'fractions',finished:true,attempts:1},{type:'pricing',finished:true,attempts:1},{type:'math',finished:true,attempts:0}];");
+assert.equal(run("lessonEvidence(content.lessons.find(l=>l.id==='l06')).sessions"),2,'Only relevant finished rounds count');
+assert.match(run("lessonDetail(content.lessons.find(l=>l.id==='l06'))"),/Fluency drills/);
+assert.match(run("lessonNavigation(content.lessons.find(l=>l.id==='l08'))"),/#courses\/l19/);
+assert.match(run("lessonNavigation(content.lessons.find(l=>l.id==='l24'))"),/Continue this module/,'The final lesson still leads to its own practice');
+for(const branch of ['researcher','trader']){
+ context.branch=branch;run("route=['paths',branch];");
+ const html=run('paths()');
+ assert.equal((html.match(/class="roadmap-step /g)||[]).length,branch==='researcher'?18:14);
+ for(const lesson of bank.lessons.filter(l=>l.path==='shared'||l.path===branch))assert.ok(html.includes('id="step-'+lesson.id+'"'));
+}
+console.log('Roadmap sequence, grading provenance, completion, drill evidence and unique exercise counts passed.');

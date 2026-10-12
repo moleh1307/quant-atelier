@@ -1,0 +1,48 @@
+'use strict';
+(()=>{
+ const R=QuantCourseLessons,{math:m,equation:e,paragraph:p,pause,figure:f,python}=R,t=String.raw;
+ const varianceSource=`def moments(values):
+    n, mean, m2 = 0, 0.0, 0.0
+    for x in values:
+        n += 1
+        delta = x - mean       # old mean
+        mean += delta / n
+        m2 += delta * (x-mean)  # new mean
+    if n == 0:
+        return None, None, None
+    descriptive = m2 / n
+    sample = m2 / (n-1) if n > 1 else None
+    return mean, descriptive, sample`;
+ const maximumSource=`from collections import deque
+
+def maxima(values, k):
+    if k < 1:
+        raise ValueError("k must be positive")
+    candidates, result = deque(), []
+    for i, x in enumerate(values):
+        while candidates and candidates[0] <= i-k:
+            candidates.popleft()
+        while candidates and values[candidates[-1]] <= x:
+            candidates.pop()
+        candidates.append(i)
+        if i >= k-1:
+            result.append(values[candidates[0]])
+    return result`;
+ function moments(values){let n=0,mean=0,m2=0;for(const x of values){n++;const delta=x-mean;mean+=delta/n;m2+=delta*(x-mean);}return {n,mean:n?mean:null,m2,descriptive:n?m2/n:null,sample:n>1?m2/(n-1):null};}
+ function trace(values,k){const q=[],out=[];for(let i=0;i<values.length;i++){const expired=[],dominated=[];while(q.length&&q[0]<=i-k)expired.push(q.shift());while(q.length&&values[q.at(-1)]<=values[i])dominated.push(q.pop());q.push(i);out.push({i,expired,dominated,candidates:[...q],maximum:i>=k-1?values[q[0]]:null});}return out;}
+ const rows=trace([4,2,5,1],2);
+ const traceFigure=()=>f(`<table class="course-joint-table"><caption>Window width 2 · indices begin at 0</caption><thead><tr><th scope="col">Arrival</th><th scope="col">Removed index</th><th scope="col">Candidates after update</th><th scope="col">Maximum</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><th scope="row">${i}: ${[4,2,5,1][i]}</th><td>${[r.expired.length?r.expired.join(', ')+' expired':'',r.dominated.length?r.dominated.join(', ')+' dominated':''].filter(Boolean).join('; ')||'—'}</td><td>${r.candidates.map(j=>j+': '+[4,2,5,1][j]).join(' · ')}</td><td>${r.maximum??'Not full'}</td></tr>`).join('')}</tbody></table>`,`Each candidate is shown as index: value. At index 2, index 0 expires before index 1 is dominated by the new value 5. Those are different reasons to remove a candidate, even though both prevent it from becoming a future maximum.`);
+ R.register('l18',{
+ opening:R.opening('What information can you discard without changing a future answer?',`A research notebook repeatedly asks for means, variability, windows and the last available record. A good algorithm keeps just enough state to answer its precise question. Derive that state before choosing a data structure.`),
+ sections:[
+ ['Begin with a contract and an invariant',p(`For a sequence ${m(t`x_0,\ldots,x_{n-1}`)}, a current-inclusive window of width k contains indices ${m(t`i-k+1,\ldots,i`)}. The linked rolling-mean exercise instead uses the previous k values and excludes i. A fast solution to one contract can be a wrong solution to the other.`)+p(`Specify positive integer window sizes, incomplete windows, missing values and tie conventions. In this chapter values are finite numbers, with no missing entries. The streaming moments function returns three missing results for an empty sequence, descriptive variance zero for one value, and no sample-variance estimate until two values exist.`)+p(`An <strong>invariant</strong> describes what the state means after every update. Prove it initially, prove one update preserves it, then show it implies the returned answer. Complexity is a separate argument about how much work those updates require. Keep sorting costs and output storage separate from auxiliary memory.`)],
+ ['Update variability without subtracting two huge totals',p(`The identity ${m(t`n^{-1}\sum_i x_i^2-\bar x^2`)} is correct in exact arithmetic. But for observations near a huge common offset, it subtracts nearly equal large numbers. Rounding can overwhelm the small variance we wanted. Instead maintain count n, mean ${m(t`m_n`)} and ${m(t`M_{2,n}=\sum_{i=1}^n(x_i-m_n)^2`)}.`)+p(`Suppose n values have already arrived and the next is x. Write ${m(t`\delta=x-m_n`)}. The mean shifts by ${m(t`\delta/(n+1)`)}. Every old residual therefore shifts by that same amount. Because the old residuals sum to zero, the cross terms disappear when their squares are expanded:`)+e(t`\sum_{i=1}^n(x_i-m_{n+1})^2=M_{2,n}+n\left(\frac{\delta}{n+1}\right)^2.`)+p(`The new observation has residual ${m(t`x-m_{n+1}=n\delta/(n+1)`)}. Adding its square leaves ${m(t`n\delta^2/(n+1)`)} in total. This produces the update`)+e(t`m_{n+1}=m_n+\frac{\delta}{n+1},`)+e(t`M_{2,n+1}=M_{2,n}+\delta(x-m_{n+1}).`)+p(`The first factor uses the <strong>old mean</strong>; the second uses the <strong>new mean</strong>. For the first value, initialise n and M₂ to zero; the new mean becomes x and the squared-deviation increment is zero. The code increments n before dividing, so its n denotes the new count:`)+python(varianceSource)+p(`Dividing M₂ by n describes these observed values. Dividing by n−1 estimates an iid population variance without bias when n ≥ 2 and the second moment exists. Welford's update improves many cancellation problems but cannot recover information lost when the input numbers themselves were rounded, nor make overflowing or nonfinite arithmetic valid.`)],
+ ['Discard a maximum candidate only with a reason',p(`For a complete window we need its largest value. A plain queue retains every value but still requires searching each window. A monotone deque retains only <span class="atlas-event">candidates that can still win</span>: increasing indices and strictly decreasing values, under the most-recent tie rule used here.`)+p(`If an old candidate j has value no greater than a new value at index i, it cannot become necessary again. Any future window containing j also contains i, because i is newer; i has at least as large a value and expires later. Remove j from the back. This is a dominance proof, not a guess that small values are unimportant.`)+p(`Remove expired indices from the front independently. For the current window, indices ${m(t`j\leq i-k`)} are too old. Append i after the removals. The front now has the largest surviving value. Follow [4, 2, 5, 1] at width two:`)+traceFigure()+pause('Why keep indices rather than only values?',p(`Indices reveal expiry and distinguish equal-valued observations with different ages. Removing back values ≤ the new value keeps the newest equal maximum. If a task returns the earliest maximum index, remove only strictly smaller values instead. A correct value-only answer can conceal a different tie contract.`))],
+ ['Bound total work rather than every individual update',p(`One arrival can remove many back candidates. Yet each index enters once and leaves at most once, either by expiry or dominance. At most n insertions and n removals occur across the whole sequence, giving ${m(t`O(n)`)} total deque work. This is <strong>amortised</strong> time: an occasional costly update is paid for by candidates that cannot be removed again.`)+python(maximumSource)+p(`The code's contract is integer k ≥ 1; it returns one maximum for each full current-inclusive window, or [] if there is none. The deque stores at most k indices, so auxiliary space is ${m(t`O(k)`)}. The result list separately uses ${m(t`O(\max(n-k+1,0))`)} storage. Python's <a href="https://docs.python.org/3/library/collections.html#collections.deque" target="_blank" rel="noopener noreferrer">deque</a> supplies approximately constant-time operations at both ends. A list's front removal shifts elements and does not support this cost argument.`)],
+ ['Carry the same discipline into time-aware joins',p(`For sorted decision times and feature availability times, a pointer can move forward until the next feature is no longer eligible. Its invariant is that every eligible feature has been considered and the selected record is the most recent eligible one. Decide whether “available exactly now” is usable before writing ≤ or <.`)+p(`Repeated timestamps need a stable secondary order or explicit aggregation rule. No eligible record means the contract's missing result. Sort unsorted inputs first and include that cost; a linear scan after sorting is not a linear-time claim for the entire pipeline. The timing lesson already explains why availability, rather than event time alone, is the relevant boundary.`)+p(`Use a slow reference to test meaning: direct centred variance for small sequences, a scan of every full window, and an exhaustive eligible-record search. Test increasing, decreasing and tied values; k = 1; k > n; one observation; constant values; a large common offset; delayed records and exact timestamp ties. Structural checks should verify candidate index order, value order and eligibility, not just the final output.`)]
+ ],
+ exampleTitle:'Audit the old and new mean in one update',
+ example:p(`After [2, 4], the state is n = 2, mean = 3 and M₂ = 2. For x = 6, the old-mean deviation is 3 and the new mean is 4. The increment is ${m(t`3(6-4)=6`)}, giving M₂ = 8. Direct residuals about four are −2, 0 and 2; their squared sum is also eight.`)+e(t`v_{\mathrm{descriptive}}=\frac83,\qquad s^2=\frac8{3-1}=4.`)+p(`The two denominators answer different questions. If the update mistakenly uses the old mean in both factors, it adds nine instead of six and breaks the invariant immediately. This small example tests the derivation; the linked exercises ask you to preserve comparable contracts while implementing your own code.`),
+ models:{moments,trace,varianceSource,maximumSource}
+ });
+})();
