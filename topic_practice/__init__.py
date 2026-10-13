@@ -87,6 +87,8 @@ def add_questions(add, questions):
     finance_questions(add, questions)
     from .calibration import add_questions as calibration_questions
     calibration_questions(add, questions)
+    from .original_review import review_original_questions
+    review_original_questions(questions)
 
 
 def add_coding(add, tasks):
@@ -138,6 +140,21 @@ def add_coding(add, tasks):
     calibration_coding(add, tasks)
 
 
+def validate_coding(tasks):
+    """Reject incomplete exercise scaffolds in either public-bank build."""
+    for task in tasks:
+        for key in ('prompt', 'starter', 'solution', 'explanation'):
+            if not isinstance(task.get(key), str) or not task[key].strip():
+                raise ValueError(f"Exercise {task['id']} needs authored {key}")
+        for key in ('samples', 'tests'):
+            cases = task.get(key)
+            if not isinstance(cases, list) or not cases:
+                raise ValueError(f"Exercise {task['id']} needs visible and hidden cases")
+            if any(not isinstance(case, dict) or not isinstance(case.get('args'), list)
+                   or 'expected' not in case for case in cases):
+                raise ValueError(f"Exercise {task['id']} needs complete case arguments and expectations")
+
+
 def attach_and_validate(lessons, questions, tasks):
     """Require honest coverage before a topic can be declared complete."""
     lesson_ids = [l['id'] for l in lessons]
@@ -150,6 +167,21 @@ def attach_and_validate(lessons, questions, tasks):
     c_by_id = {c['id']: c for c in tasks}
     if len(q_by_id) != len(questions) or len(c_by_id) != len(tasks):
         raise ValueError('Practice IDs must be unique and permanent.')
+    validate_coding(tasks)
+    for q in questions:
+        if q['lesson'] not in registered:
+            raise ValueError(f"Question {q['id']} needs a registered topic owner")
+        fields = ('prompt', 'solution', 'followup', 'followSolution')
+        if any(not isinstance(q.get(key), str) or not q[key].strip() for key in fields):
+            raise ValueError(f"Question {q['id']} needs an authored prompt, solution and follow-up")
+        hints = q.get('hints')
+        if not isinstance(hints, list) or len(hints) < 2 or any(not isinstance(hint, str) or not hint.strip() for hint in hints):
+            raise ValueError(f"Question {q['id']} needs at least two meaningful hints")
+        rubric = q.get('rubric')
+        if not isinstance(rubric, list) or len(rubric) < 2 or any(not isinstance(item, str) or not item.strip() for item in rubric):
+            raise ValueError(f"Question {q['id']} needs specific assessment obligations")
+        if 'State the assumptions and the object you are computing.' in q['rubric']:
+            raise ValueError(f"Question {q['id']} retains the generic assessment placeholder")
     for l in lessons:
         # Original shared links are retained; new questions name their owner.
         extra = [q['id'] for q in questions if q['lesson'] == l['id'] and q['id'] not in l['questions']]

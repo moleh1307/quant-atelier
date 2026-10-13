@@ -206,8 +206,15 @@ DISPLAY = {
      'E[count]=ΣP(I_i=1)', 'E[N]=Σ_(k≥1)P(N≥k)', 'E[X]=∫₀∞P(X>x)dx',
      'Var(X̄)=n^(−2)Σ_iΣ_j Cov(X_i,X_j)', 'XᵀXβ=Xᵀy',
      'ΔV≈delta ΔS+½ gamma (ΔS)²+theta Δt'}
-PATTERN = re.compile('|'.join(re.escape(x) for x in sorted(FORMULAS, key=len, reverse=True))
-                     + r'|(?<![\w:.])\d+(?:\.\d+)?/\d+(?:\.\d+)?(?![\w/])')
+def formula_pattern(source):
+    # A reviewed equality ending in a number must match that WHOLE number.
+    # Otherwise T=1 consumes the start of T=10, and p=1 consumes p=1/4.
+    suffix = r'(?![\w/]|\.\d)' if source[-1].isdigit() else ''
+    return re.escape(source) + suffix
+
+
+PATTERN = re.compile('|'.join(formula_pattern(x) for x in sorted(FORMULAS, key=len, reverse=True))
+                     + r'|(?<![\w:.])\d+(?:\.\d+)?/\d+(?:\.\d+)?(?![\w/]|\.\d)')
 EXPLICIT = re.compile(r'(\\\(.*?\\\)|\\\[.*?\\\])', re.S)
 
 def math_text(text):

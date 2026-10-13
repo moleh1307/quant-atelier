@@ -1,0 +1,2367 @@
+{
+  "reviewedPages": 66,
+  "topics": 25,
+  "personalMode": true,
+  "pages": [
+    {
+      "destination": {
+        "id": "l01",
+        "title": "Count the right sample space",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q01/journey/researcher/l01",
+              "#questions/q05/journey/researcher/l01"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q_l01_m1/journey/researcher/l01",
+              "#questions/q_l01_m2/journey/researcher/l01"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l01_h1/journey/researcher/l01",
+              "#questions/q_l01_h2/journey/researcher/l01"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l01",
+        "title": "Interview questions",
+        "topic": "Count the right sample space"
+      }
+    },
+    {
+      "destination": {
+        "id": "l01",
+        "title": "Count the right sample space",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c01/journey/researcher/l01"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l01_medium/journey/researcher/l01"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l01_hard/journey/researcher/l01"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l01",
+        "title": "Coding exercises",
+        "topic": "Count the right sample space"
+      }
+    },
+    {
+      "destination": {
+        "id": "l01",
+        "title": "Count the right sample space",
+        "path": "trader",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q01/journey/trader/l01",
+              "#questions/q05/journey/trader/l01"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q_l01_m1/journey/trader/l01",
+              "#questions/q_l01_m2/journey/trader/l01"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l01_h1/journey/trader/l01",
+              "#questions/q_l01_h2/journey/trader/l01"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l01",
+        "title": "Interview questions",
+        "topic": "Count the right sample space"
+      }
+    },
+    {
+      "destination": {
+        "id": "l01",
+        "title": "Count the right sample space",
+        "path": "trader",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c01/journey/trader/l01"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l01_medium/journey/trader/l01"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l01_hard/journey/trader/l01"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l01",
+        "title": "Coding exercises",
+        "topic": "Count the right sample space"
+      }
+    },
+    {
+      "destination": {
+        "id": "l02",
+        "title": "Condition, then normalise",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q02/journey/researcher/l02",
+              "#questions/q_l02_e1/journey/researcher/l02"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q03/journey/researcher/l02",
+              "#questions/q_l02_m1/journey/researcher/l02"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l02_h1/journey/researcher/l02",
+              "#questions/q_l02_h2/journey/researcher/l02"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l02",
+        "title": "Interview questions",
+        "topic": "Condition, then normalise"
+      }
+    },
+    {
+      "destination": {
+        "id": "l02",
+        "title": "Condition, then normalise",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l02_easy/journey/researcher/l02"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l02_medium/journey/researcher/l02"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l02_hard/journey/researcher/l02"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l02",
+        "title": "Coding exercises",
+        "topic": "Condition, then normalise"
+      }
+    },
+    {
+      "destination": {
+        "id": "l02",
+        "title": "Condition, then normalise",
+        "path": "trader",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q02/journey/trader/l02",
+              "#questions/q_l02_e1/journey/trader/l02"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q03/journey/trader/l02",
+              "#questions/q_l02_m1/journey/trader/l02"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l02_h1/journey/trader/l02",
+              "#questions/q_l02_h2/journey/trader/l02"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l02",
+        "title": "Interview questions",
+        "topic": "Condition, then normalise"
+      }
+    },
+    {
+      "destination": {
+        "id": "l02",
+        "title": "Condition, then normalise",
+        "path": "trader",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l02_easy/journey/trader/l02"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l02_medium/journey/trader/l02"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l02_hard/journey/trader/l02"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l02",
+        "title": "Coding exercises",
+        "topic": "Condition, then normalise"
+      }
+    },
+    {
+      "destination": {
+        "id": "l03",
+        "title": "Expectation without independence",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l03_e1/journey/researcher/l03",
+              "#questions/q_l03_e2/journey/researcher/l03"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q06/journey/researcher/l03",
+              "#questions/q07/journey/researcher/l03"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l03_h1/journey/researcher/l03",
+              "#questions/q_l03_h2/journey/researcher/l03"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l03",
+        "title": "Interview questions",
+        "topic": "Expectation without independence"
+      }
+    },
+    {
+      "destination": {
+        "id": "l03",
+        "title": "Expectation without independence",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l03_easy/journey/researcher/l03"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c02/journey/researcher/l03"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l03_hard/journey/researcher/l03"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l03",
+        "title": "Coding exercises",
+        "topic": "Expectation without independence"
+      }
+    },
+    {
+      "destination": {
+        "id": "l03",
+        "title": "Expectation without independence",
+        "path": "trader",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l03_e1/journey/trader/l03",
+              "#questions/q_l03_e2/journey/trader/l03"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q06/journey/trader/l03",
+              "#questions/q07/journey/trader/l03"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l03_h1/journey/trader/l03",
+              "#questions/q_l03_h2/journey/trader/l03"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l03",
+        "title": "Interview questions",
+        "topic": "Expectation without independence"
+      }
+    },
+    {
+      "destination": {
+        "id": "l03",
+        "title": "Expectation without independence",
+        "path": "trader",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l03_easy/journey/trader/l03"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c02/journey/trader/l03"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l03_hard/journey/trader/l03"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l03",
+        "title": "Coding exercises",
+        "topic": "Expectation without independence"
+      }
+    },
+    {
+      "destination": {
+        "id": "l04",
+        "title": "Distributions as usable models",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q15/journey/researcher/l04",
+              "#questions/q_l04_e1/journey/researcher/l04"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q08/journey/researcher/l04",
+              "#questions/q16/journey/researcher/l04"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q14/journey/researcher/l04",
+              "#questions/q_l04_h1/journey/researcher/l04"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l04",
+        "title": "Interview questions",
+        "topic": "Distributions as usable models"
+      }
+    },
+    {
+      "destination": {
+        "id": "l04",
+        "title": "Distributions as usable models",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l04_easy/journey/researcher/l04"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l04_medium/journey/researcher/l04"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l04_hard/journey/researcher/l04"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l04",
+        "title": "Coding exercises",
+        "topic": "Distributions as usable models"
+      }
+    },
+    {
+      "destination": {
+        "id": "l04",
+        "title": "Distributions as usable models",
+        "path": "trader",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q15/journey/trader/l04",
+              "#questions/q_l04_e1/journey/trader/l04"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q08/journey/trader/l04",
+              "#questions/q16/journey/trader/l04"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q14/journey/trader/l04",
+              "#questions/q_l04_h1/journey/trader/l04"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l04",
+        "title": "Interview questions",
+        "topic": "Distributions as usable models"
+      }
+    },
+    {
+      "destination": {
+        "id": "l04",
+        "title": "Distributions as usable models",
+        "path": "trader",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l04_easy/journey/trader/l04"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l04_medium/journey/trader/l04"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l04_hard/journey/trader/l04"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l04",
+        "title": "Coding exercises",
+        "topic": "Distributions as usable models"
+      }
+    },
+    {
+      "destination": {
+        "id": "l05",
+        "title": "A state is a sufficient memory",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l05_e1/journey/researcher/l05",
+              "#questions/q_l05_e2/journey/researcher/l05"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q09/journey/researcher/l05",
+              "#questions/q10/journey/researcher/l05"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q11/journey/researcher/l05",
+              "#questions/q12/journey/researcher/l05",
+              "#questions/q_l05_h1/journey/researcher/l05",
+              "#questions/q_l05_h2/journey/researcher/l05"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l05",
+        "title": "Interview questions",
+        "topic": "A state is a sufficient memory"
+      }
+    },
+    {
+      "destination": {
+        "id": "l05",
+        "title": "A state is a sufficient memory",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l05_easy/journey/researcher/l05"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c03/journey/researcher/l05"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l05_hard/journey/researcher/l05"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l05",
+        "title": "Coding exercises",
+        "topic": "A state is a sufficient memory"
+      }
+    },
+    {
+      "destination": {
+        "id": "l05",
+        "title": "A state is a sufficient memory",
+        "path": "trader",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l05_e1/journey/trader/l05",
+              "#questions/q_l05_e2/journey/trader/l05"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q09/journey/trader/l05",
+              "#questions/q10/journey/trader/l05"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q11/journey/trader/l05",
+              "#questions/q12/journey/trader/l05",
+              "#questions/q_l05_h1/journey/trader/l05",
+              "#questions/q_l05_h2/journey/trader/l05"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l05",
+        "title": "Interview questions",
+        "topic": "A state is a sufficient memory"
+      }
+    },
+    {
+      "destination": {
+        "id": "l05",
+        "title": "A state is a sufficient memory",
+        "path": "trader",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l05_easy/journey/trader/l05"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c03/journey/trader/l05"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l05_hard/journey/trader/l05"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l05",
+        "title": "Coding exercises",
+        "topic": "A state is a sufficient memory"
+      }
+    },
+    {
+      "destination": {
+        "id": "l06",
+        "title": "Arithmetic with a method",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l06_e1/journey/researcher/l06",
+              "#questions/q_l06_e2/journey/researcher/l06"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q_l06_m1/journey/researcher/l06",
+              "#questions/q_l06_m2/journey/researcher/l06"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l06_h1/journey/researcher/l06",
+              "#questions/q_l06_h2/journey/researcher/l06"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l06",
+        "title": "Interview questions",
+        "topic": "Arithmetic with a method"
+      }
+    },
+    {
+      "destination": {
+        "id": "l06",
+        "title": "Arithmetic with a method",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l06_easy/journey/researcher/l06"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l06_medium/journey/researcher/l06"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l06_hard/journey/researcher/l06"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l06",
+        "title": "Coding exercises",
+        "topic": "Arithmetic with a method"
+      }
+    },
+    {
+      "destination": {
+        "id": "l06",
+        "title": "Arithmetic with a method",
+        "path": "trader",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l06_e1/journey/trader/l06",
+              "#questions/q_l06_e2/journey/trader/l06"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q_l06_m1/journey/trader/l06",
+              "#questions/q_l06_m2/journey/trader/l06"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l06_h1/journey/trader/l06",
+              "#questions/q_l06_h2/journey/trader/l06"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l06",
+        "title": "Interview questions",
+        "topic": "Arithmetic with a method"
+      }
+    },
+    {
+      "destination": {
+        "id": "l06",
+        "title": "Arithmetic with a method",
+        "path": "trader",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l06_easy/journey/trader/l06"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l06_medium/journey/trader/l06"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l06_hard/journey/trader/l06"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l06",
+        "title": "Coding exercises",
+        "topic": "Arithmetic with a method"
+      }
+    },
+    {
+      "destination": {
+        "id": "l07",
+        "title": "Variance remembers dependence",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q45/journey/researcher/l07",
+              "#questions/q_l07_e1/journey/researcher/l07"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q17/journey/researcher/l07",
+              "#questions/q_l07_m1/journey/researcher/l07"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l07_h1/journey/researcher/l07",
+              "#questions/q_l07_h2/journey/researcher/l07"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l07",
+        "title": "Interview questions",
+        "topic": "Variance remembers dependence"
+      }
+    },
+    {
+      "destination": {
+        "id": "l07",
+        "title": "Variance remembers dependence",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l07_easy/journey/researcher/l07"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c04/journey/researcher/l07"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l07_hard/journey/researcher/l07"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l07",
+        "title": "Coding exercises",
+        "topic": "Variance remembers dependence"
+      }
+    },
+    {
+      "destination": {
+        "id": "l07",
+        "title": "Variance remembers dependence",
+        "path": "trader",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q45/journey/trader/l07",
+              "#questions/q_l07_e1/journey/trader/l07"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q17/journey/trader/l07",
+              "#questions/q_l07_m1/journey/trader/l07"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l07_h1/journey/trader/l07",
+              "#questions/q_l07_h2/journey/trader/l07"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l07",
+        "title": "Interview questions",
+        "topic": "Variance remembers dependence"
+      }
+    },
+    {
+      "destination": {
+        "id": "l07",
+        "title": "Variance remembers dependence",
+        "path": "trader",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l07_easy/journey/trader/l07"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c04/journey/trader/l07"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l07_hard/journey/trader/l07"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l07",
+        "title": "Coding exercises",
+        "topic": "Variance remembers dependence"
+      }
+    },
+    {
+      "destination": {
+        "id": "l08",
+        "title": "Write data code that respects time",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l08_e1/journey/researcher/l08",
+              "#questions/q_l08_e2/journey/researcher/l08"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q44/journey/researcher/l08",
+              "#questions/q_l08_m1/journey/researcher/l08"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l08_h1/journey/researcher/l08",
+              "#questions/q_l08_h2/journey/researcher/l08"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l08",
+        "title": "Interview questions",
+        "topic": "Write data code that respects time"
+      }
+    },
+    {
+      "destination": {
+        "id": "l08",
+        "title": "Write data code that respects time",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l08_easy/journey/researcher/l08"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c06/journey/researcher/l08"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l08_hard/journey/researcher/l08"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l08",
+        "title": "Coding exercises",
+        "topic": "Write data code that respects time"
+      }
+    },
+    {
+      "destination": {
+        "id": "l08",
+        "title": "Write data code that respects time",
+        "path": "trader",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l08_e1/journey/trader/l08",
+              "#questions/q_l08_e2/journey/trader/l08"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q44/journey/trader/l08",
+              "#questions/q_l08_m1/journey/trader/l08"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l08_h1/journey/trader/l08",
+              "#questions/q_l08_h2/journey/trader/l08"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l08",
+        "title": "Interview questions",
+        "topic": "Write data code that respects time"
+      }
+    },
+    {
+      "destination": {
+        "id": "l08",
+        "title": "Write data code that respects time",
+        "path": "trader",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l08_easy/journey/trader/l08"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c06/journey/trader/l08"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l08_hard/journey/trader/l08"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l08",
+        "title": "Coding exercises",
+        "topic": "Write data code that respects time"
+      }
+    },
+    {
+      "destination": {
+        "id": "l09",
+        "title": "Estimators, bias and uncertainty",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q46/journey/researcher/l09",
+              "#questions/q_l09_e1/journey/researcher/l09"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q23/journey/researcher/l09",
+              "#questions/q24/journey/researcher/l09"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l09_h1/journey/researcher/l09",
+              "#questions/q_l09_h2/journey/researcher/l09"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l09",
+        "title": "Interview questions",
+        "topic": "Estimators, bias and uncertainty"
+      }
+    },
+    {
+      "destination": {
+        "id": "l09",
+        "title": "Estimators, bias and uncertainty",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l09_easy/journey/researcher/l09"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c04/journey/researcher/l09"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l09_hard/journey/researcher/l09"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l09",
+        "title": "Coding exercises",
+        "topic": "Estimators, bias and uncertainty"
+      }
+    },
+    {
+      "destination": {
+        "id": "l25",
+        "title": "Let the data compare the models",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l25_e1/journey/researcher/l25",
+              "#questions/q_l25_e2/journey/researcher/l25"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q49/journey/researcher/l25",
+              "#questions/q_l25_m1/journey/researcher/l25"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q50/journey/researcher/l25",
+              "#questions/q51/journey/researcher/l25",
+              "#questions/q_l25_h1/journey/researcher/l25",
+              "#questions/q_l25_h2/journey/researcher/l25"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l25",
+        "title": "Interview questions",
+        "topic": "Let the data compare the models"
+      }
+    },
+    {
+      "destination": {
+        "id": "l25",
+        "title": "Let the data compare the models",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l25_easy/journey/researcher/l25"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c15/journey/researcher/l25"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l25_hard/journey/researcher/l25"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l25",
+        "title": "Coding exercises",
+        "topic": "Let the data compare the models"
+      }
+    },
+    {
+      "destination": {
+        "id": "l10",
+        "title": "Covariance is a matrix constraint",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l10_e1/journey/researcher/l10",
+              "#questions/q_l10_e2/journey/researcher/l10"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q29/journey/researcher/l10",
+              "#questions/q_l10_m1/journey/researcher/l10"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q20/journey/researcher/l10",
+              "#questions/q_l10_h1/journey/researcher/l10",
+              "#questions/q_l10_h2/journey/researcher/l10"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l10",
+        "title": "Interview questions",
+        "topic": "Covariance is a matrix constraint"
+      }
+    },
+    {
+      "destination": {
+        "id": "l10",
+        "title": "Covariance is a matrix constraint",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l10_easy/journey/researcher/l10"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l10_medium/journey/researcher/l10"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l10_hard/journey/researcher/l10"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l10",
+        "title": "Coding exercises",
+        "topic": "Covariance is a matrix constraint"
+      }
+    },
+    {
+      "destination": {
+        "id": "l11",
+        "title": "Regression as projection",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l11_e1/journey/researcher/l11",
+              "#questions/q_l11_e2/journey/researcher/l11"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q21/journey/researcher/l11",
+              "#questions/q_l11_m1/journey/researcher/l11"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q19/journey/researcher/l11",
+              "#questions/q30/journey/researcher/l11",
+              "#questions/q_l11_h1/journey/researcher/l11",
+              "#questions/q_l11_h2/journey/researcher/l11"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l11",
+        "title": "Interview questions",
+        "topic": "Regression as projection"
+      }
+    },
+    {
+      "destination": {
+        "id": "l11",
+        "title": "Regression as projection",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l11_easy/journey/researcher/l11"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c07/journey/researcher/l11"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l11_hard/journey/researcher/l11"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l11",
+        "title": "Coding exercises",
+        "topic": "Regression as projection"
+      }
+    },
+    {
+      "destination": {
+        "id": "l12",
+        "title": "Inference is a procedure",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l12_e1/journey/researcher/l12",
+              "#questions/q_l12_e2/journey/researcher/l12"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q26/journey/researcher/l12",
+              "#questions/q_l12_m1/journey/researcher/l12"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q22/journey/researcher/l12",
+              "#questions/q47/journey/researcher/l12",
+              "#questions/q_l12_h1/journey/researcher/l12",
+              "#questions/q_l12_h2/journey/researcher/l12"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l12",
+        "title": "Interview questions",
+        "topic": "Inference is a procedure"
+      }
+    },
+    {
+      "destination": {
+        "id": "l12",
+        "title": "Inference is a procedure",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l12_easy/journey/researcher/l12"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l12_medium/journey/researcher/l12"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l12_hard/journey/researcher/l12"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l12",
+        "title": "Coding exercises",
+        "topic": "Inference is a procedure"
+      }
+    },
+    {
+      "destination": {
+        "id": "l13",
+        "title": "Dependent returns and effective sample size",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l13_e1/journey/researcher/l13",
+              "#questions/q_l13_e2/journey/researcher/l13"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q_l13_m1/journey/researcher/l13",
+              "#questions/q_l13_m2/journey/researcher/l13"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q18/journey/researcher/l13",
+              "#questions/q31/journey/researcher/l13",
+              "#questions/q_l13_h1/journey/researcher/l13",
+              "#questions/q_l13_h2/journey/researcher/l13"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l13",
+        "title": "Interview questions",
+        "topic": "Dependent returns and effective sample size"
+      }
+    },
+    {
+      "destination": {
+        "id": "l13",
+        "title": "Dependent returns and effective sample size",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l13_easy/journey/researcher/l13"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c08/journey/researcher/l13"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l13_hard/journey/researcher/l13"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l13",
+        "title": "Coding exercises",
+        "topic": "Dependent returns and effective sample size"
+      }
+    },
+    {
+      "destination": {
+        "id": "l14",
+        "title": "Validation must imitate deployment",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l14_e1/journey/researcher/l14",
+              "#questions/q_l14_e2/journey/researcher/l14"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q28/journey/researcher/l14",
+              "#questions/q_l14_m1/journey/researcher/l14"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q27/journey/researcher/l14",
+              "#questions/q_l14_h1/journey/researcher/l14"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l14",
+        "title": "Interview questions",
+        "topic": "Validation must imitate deployment"
+      }
+    },
+    {
+      "destination": {
+        "id": "l14",
+        "title": "Validation must imitate deployment",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l14_easy/journey/researcher/l14"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c09/journey/researcher/l14"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l14_hard/journey/researcher/l14"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l14",
+        "title": "Coding exercises",
+        "topic": "Validation must imitate deployment"
+      }
+    },
+    {
+      "destination": {
+        "id": "l15",
+        "title": "Search size belongs in the result",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l15_e1/journey/researcher/l15",
+              "#questions/q_l15_e2/journey/researcher/l15"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q04/journey/researcher/l15",
+              "#questions/q25/journey/researcher/l15"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q32/journey/researcher/l15",
+              "#questions/q_l15_h1/journey/researcher/l15"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l15",
+        "title": "Interview questions",
+        "topic": "Search size belongs in the result"
+      }
+    },
+    {
+      "destination": {
+        "id": "l15",
+        "title": "Search size belongs in the result",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l15_easy/journey/researcher/l15"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l15_medium/journey/researcher/l15"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l15_hard/journey/researcher/l15"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l15",
+        "title": "Coding exercises",
+        "topic": "Search size belongs in the result"
+      }
+    },
+    {
+      "destination": {
+        "id": "l16",
+        "title": "Defend a research result",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l16_e1/journey/researcher/l16",
+              "#questions/q_l16_e2/journey/researcher/l16"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q34/journey/researcher/l16",
+              "#questions/q_l16_m1/journey/researcher/l16"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q33/journey/researcher/l16",
+              "#questions/q_l16_h1/journey/researcher/l16"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l16",
+        "title": "Interview questions",
+        "topic": "Defend a research result"
+      }
+    },
+    {
+      "destination": {
+        "id": "l16",
+        "title": "Defend a research result",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l16_easy/journey/researcher/l16"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c11/journey/researcher/l16"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l16_hard/journey/researcher/l16"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l16",
+        "title": "Coding exercises",
+        "topic": "Defend a research result"
+      }
+    },
+    {
+      "destination": {
+        "id": "l17",
+        "title": "Monte Carlo with variance reduction",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l17_e1/journey/researcher/l17",
+              "#questions/q_l17_e2/journey/researcher/l17"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q_l17_m1/journey/researcher/l17",
+              "#questions/q_l17_m2/journey/researcher/l17"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q43/journey/researcher/l17",
+              "#questions/q48/journey/researcher/l17"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l17",
+        "title": "Interview questions",
+        "topic": "Monte Carlo with variance reduction"
+      }
+    },
+    {
+      "destination": {
+        "id": "l17",
+        "title": "Monte Carlo with variance reduction",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l17_easy/journey/researcher/l17"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c12/journey/researcher/l17"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l17_hard/journey/researcher/l17"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l17",
+        "title": "Coding exercises",
+        "topic": "Monte Carlo with variance reduction"
+      }
+    },
+    {
+      "destination": {
+        "id": "l18",
+        "title": "Algorithms for a research notebook",
+        "path": "researcher",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l18_e1/journey/researcher/l18",
+              "#questions/q_l18_e2/journey/researcher/l18"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q44/journey/researcher/l18",
+              "#questions/q_l18_m1/journey/researcher/l18"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l18_h1/journey/researcher/l18",
+              "#questions/q_l18_h2/journey/researcher/l18"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l18",
+        "title": "Interview questions",
+        "topic": "Algorithms for a research notebook"
+      }
+    },
+    {
+      "destination": {
+        "id": "l18",
+        "title": "Algorithms for a research notebook",
+        "path": "researcher",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l18_easy/journey/researcher/l18"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c05/journey/researcher/l18"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c13/journey/researcher/l18"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/researcher/step-l18",
+        "title": "Coding exercises",
+        "topic": "Algorithms for a research notebook"
+      }
+    },
+    {
+      "destination": {
+        "id": "l19",
+        "title": "Fair value before a trade",
+        "path": "trader",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q35/journey/trader/l19",
+              "#questions/q_l19_e2/journey/trader/l19"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q_l19_m1/journey/trader/l19",
+              "#questions/q_l19_m2/journey/trader/l19"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l19_h1/journey/trader/l19",
+              "#questions/q_l19_h2/journey/trader/l19"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l19",
+        "title": "Interview questions",
+        "topic": "Fair value before a trade"
+      }
+    },
+    {
+      "destination": {
+        "id": "l19",
+        "title": "Fair value before a trade",
+        "path": "trader",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l19_easy/journey/trader/l19"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l19_medium/journey/trader/l19"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l19_hard/journey/trader/l19"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l19",
+        "title": "Coding exercises",
+        "topic": "Fair value before a trade"
+      }
+    },
+    {
+      "destination": {
+        "id": "l20",
+        "title": "Order flow is information",
+        "path": "trader",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l20_e1/journey/trader/l20",
+              "#questions/q_l20_e2/journey/trader/l20"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q_l20_m1/journey/trader/l20",
+              "#questions/q_l20_m2/journey/trader/l20"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q36/journey/trader/l20",
+              "#questions/q42/journey/trader/l20",
+              "#questions/q_l20_h1/journey/trader/l20"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l20",
+        "title": "Interview questions",
+        "topic": "Order flow is information"
+      }
+    },
+    {
+      "destination": {
+        "id": "l20",
+        "title": "Order flow is information",
+        "path": "trader",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l20_easy/journey/trader/l20"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l20_medium/journey/trader/l20"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l20_hard/journey/trader/l20"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l20",
+        "title": "Coding exercises",
+        "topic": "Order flow is information"
+      }
+    },
+    {
+      "destination": {
+        "id": "l21",
+        "title": "Continuation value and log growth",
+        "path": "trader",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l21_e1/journey/trader/l21",
+              "#questions/q_l21_e2/journey/trader/l21"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q13/journey/trader/l21",
+              "#questions/q_l21_m1/journey/trader/l21"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q37/journey/trader/l21",
+              "#questions/q_l21_h1/journey/trader/l21",
+              "#questions/q_l21_h2/journey/trader/l21"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l21",
+        "title": "Interview questions",
+        "topic": "Continuation value and log growth"
+      }
+    },
+    {
+      "destination": {
+        "id": "l21",
+        "title": "Continuation value and log growth",
+        "path": "trader",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l21_easy/journey/trader/l21"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l21_medium/journey/trader/l21"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l21_hard/journey/trader/l21"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l21",
+        "title": "Coding exercises",
+        "topic": "Continuation value and log growth"
+      }
+    },
+    {
+      "destination": {
+        "id": "l22",
+        "title": "Risk lives in joint exposures",
+        "path": "trader",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l22_e1/journey/trader/l22",
+              "#questions/q_l22_e2/journey/trader/l22"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q38/journey/trader/l22",
+              "#questions/q_l22_m1/journey/trader/l22"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l22_h1/journey/trader/l22",
+              "#questions/q_l22_h2/journey/trader/l22"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l22",
+        "title": "Interview questions",
+        "topic": "Risk lives in joint exposures"
+      }
+    },
+    {
+      "destination": {
+        "id": "l22",
+        "title": "Risk lives in joint exposures",
+        "path": "trader",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l22_easy/journey/trader/l22"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l22_medium/journey/trader/l22"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l22_hard/journey/trader/l22"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l22",
+        "title": "Coding exercises",
+        "topic": "Risk lives in joint exposures"
+      }
+    },
+    {
+      "destination": {
+        "id": "l23",
+        "title": "The small mathematical-finance core",
+        "path": "trader",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l23_e1/journey/trader/l23",
+              "#questions/q_l23_e2/journey/trader/l23"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q39/journey/trader/l23",
+              "#questions/q40/journey/trader/l23",
+              "#questions/q_l23_m1/journey/trader/l23"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q_l23_h1/journey/trader/l23",
+              "#questions/q_l23_h2/journey/trader/l23"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l23",
+        "title": "Interview questions",
+        "topic": "The small mathematical-finance core"
+      }
+    },
+    {
+      "destination": {
+        "id": "l23",
+        "title": "The small mathematical-finance core",
+        "path": "trader",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c_l23_easy/journey/trader/l23"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l23_medium/journey/trader/l23"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l23_hard/journey/trader/l23"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l23",
+        "title": "Coding exercises",
+        "topic": "The small mathematical-finance core"
+      }
+    },
+    {
+      "destination": {
+        "id": "l24",
+        "title": "Strategic inference and calibration",
+        "path": "trader",
+        "kind": "question-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#questions/q_l24_e1/journey/trader/l24",
+              "#questions/q_l24_e2/journey/trader/l24"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#questions/q_l24_m1/journey/trader/l24",
+              "#questions/q_l24_m2/journey/trader/l24"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#questions/q41/journey/trader/l24",
+              "#questions/q_l24_h1/journey/trader/l24",
+              "#questions/q_l24_h2/journey/trader/l24"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l24",
+        "title": "Interview questions",
+        "topic": "Strategic inference and calibration"
+      }
+    },
+    {
+      "destination": {
+        "id": "l24",
+        "title": "Strategic inference and calibration",
+        "path": "trader",
+        "kind": "coding-list"
+      },
+      "pageAudit": {
+        "levels": [
+          {
+            "links": [
+              "#coding/c14/journey/trader/l24"
+            ],
+            "name": "Easy"
+          },
+          {
+            "links": [
+              "#coding/c_l24_medium/journey/trader/l24"
+            ],
+            "name": "Medium"
+          },
+          {
+            "links": [
+              "#coding/c_l24_hard/journey/trader/l24"
+            ],
+            "name": "Hard"
+          }
+        ],
+        "preview": false,
+        "roadmap": "#paths/trader/step-l24",
+        "title": "Coding exercises",
+        "topic": "Strategic inference and calibration"
+      }
+    }
+  ]
+}

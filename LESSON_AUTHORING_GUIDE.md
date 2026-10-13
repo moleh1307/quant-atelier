@@ -220,6 +220,12 @@ Keep the removed routine “PRIVATE · LOCAL / Saved locally” and “MELIH / P
 
 Author math explicitly with inline `\(...\)` and display `\[...\]` delimiters. Use proper fractions, binomial coefficients, subscripts, superscripts, vectors and matrices. Do not show `(n2)` as a substitute for a binomial coefficient or leave formulas as plain-text approximations when real notation is available.
 
+Write summation with explicit `\sum`, distinct from a covariance matrix `\Sigma`.
+The legacy Unicode converter cannot infer that distinction from a bare Σ. Check
+numerals and fractions in their complete surrounding sentence: a typesetting rule
+must not turn T=10 into a rendered T=1 followed by a stray zero. Literal output
+syntax belongs in a monospace representation, not an automatically converted ratio.
+
 Introduce notation in prose. Clarify overloaded symbols such as vertical bars when first needed. Use display equations for derivations or relationships that need attention, and inline notation for small terms within a sentence.
 
 JavaScript strings must preserve TeX backslashes. In an ordinary JS string or template literal, `\\frac` produces the required `\frac`. A single `\dfrac` can silently lose its backslash through string escaping; strict parsing and inspection must catch this. Python raw strings have different escaping rules. Test the actual rendered string, not the source's appearance alone.

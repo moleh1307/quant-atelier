@@ -20,9 +20,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Count the twenty-five no-six ordered outcomes and obtain \\(\\frac{11}{36}\\).",
+        "Identify the double-six outcome counted twice by addition.",
+        "Use the independent n-dice complement and strict threshold to obtain thirteen."
       ]
     },
     {
@@ -32,7 +32,7 @@
       "difficulty": "Easy",
       "path": "shared",
       "minutes": 4,
-      "prompt": "Two fair dice have sum 8. Given this information, what is the probability that their values are equal?",
+      "prompt": "Two independent fair dice have sum 8. Given this information, what is the probability that their values are equal?",
       "answer": 0.2,
       "hints": [
         "List ordered pairs with sum 8.",
@@ -45,9 +45,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "List all five ordered sum-eight outcomes and justify equal conditional weights.",
+        "Obtain double probability one fifth without counting unordered records uniformly.",
+        "Use symmetry and the fixed sum to obtain conditional mean four."
       ]
     },
     {
@@ -65,14 +65,14 @@
       ],
       "solution": "The always-heads branch contributes \\(\\frac{1}{2}\\) to the probability of heads. The fair branch contributes \\(\\frac{1}{4}\\). Normalising gives \\(\\frac{1/2}{3/4}=\\frac23\\). The posterior is not the prior \\(\\frac{1}{2}\\).",
       "followup": "After k consecutive heads, derive the posterior.",
-      "followSolution": "It is \\(\\frac{1}{1+2^{-k}}\\). One tail rules out the always-heads coin entirely.",
+      "followSolution": "Keep the SAME chosen coin for all k flips, conditionally independent given its identity. The always-heads branch has joint mass one half; the fair branch has mass \\((1/2)2^{-k}\\). Normalising gives\n\n\\[P(\\mathrm{always\\ heads}\\mid k\\ \\mathrm{heads})=\\frac{1}{1+2^{-k}}.\\]\n\nAt k=0 this recovers the equal prior; as k grows it tends to one without reaching certainty at any finite k. A tail rules out the always-heads coin under this exact model. Choosing a fresh coin before EACH flip would define a different inference problem.",
       "lesson": "l02",
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Weight each coin’s head likelihood by its equal prior probability.",
+        "Normalise the joint masses one half and one quarter to obtain two thirds.",
+        "Derive the repeated-head posterior under a fixed coin and conditional independent flips."
       ]
     },
     {
@@ -115,14 +115,14 @@
       ],
       "solution": "There are 24 mixed-colour pairs out of 45 possible pairs, giving \\(\\frac{8}{15}\\). Alternatively sum \\(\\frac6{10}\\frac49+\\frac4{10}\\frac69\\). Replacement would change the second denominator.",
       "followup": "Generalise to r red and b blue.",
-      "followSolution": "The probability is \\(\\frac{2rb}{(r+b)(r+b-1)}\\).",
+      "followSolution": "Assume r,b are nonnegative integer counts and r+b≥2, with uniform physical sampling without replacement. Ordered mixed paths have probabilities \\(r/(r+b)\\) times \\(b/(r+b-1)\\), and the reverse product with r and b exchanged. Their sum is\n\n\\[\\frac{2rb}{(r+b)(r+b-1)}.\\]\n\nIt is zero if either colour is absent. Independent draws WITH replacement instead give \\(2rb/(r+b)^2\\). The record count and its denominator must follow the sampling procedure.",
       "lesson": "l01",
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Count uniform physical pairs, with twenty-four mixed pairs out of forty-five.",
+        "Obtain \\(\\frac{8}{15}\\) or the equivalent two ordered colour paths.",
+        "Derive the general formula with at least two balls and distinguish replacement."
       ]
     },
     {
@@ -132,7 +132,7 @@
       "difficulty": "Medium",
       "path": "shared",
       "minutes": 6,
-      "prompt": "Flip a fair coin 20 times. Count adjacent HH pairs, allowing overlaps (HHH contains two pairs). What is the expected count?",
+      "prompt": "Make 20 independent flips of a fair coin. Count adjacent HH pairs, allowing overlaps (HHH contains two pairs). What is the expected count?",
       "answer": 4.75,
       "hints": [
         "Create an indicator for each adjacent position.",
@@ -145,9 +145,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Use nineteen overlapping-pair indicators, each with mean one quarter.",
+        "Obtain \\(\\frac{19}{4}\\) without assuming indicator independence.",
+        "Include adjacent covariance twice in the variance sum and handle short sequences."
       ]
     },
     {
@@ -170,9 +170,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Derive the maximum CDF from two independent die crossings.",
+        "Difference the CDF and sum to obtain \\(\\frac{161}{36}\\).",
+        "Use the pointwise maximum-plus-minimum identity to obtain \\(\\frac{91}{36}\\)."
       ]
     },
     {
@@ -190,14 +190,14 @@
       ],
       "solution": "For a nonnegative variable, \\(\\mathbb E[M]=\\int P(M>x)\\,dx\\). Here \\(\\int_0^1(1-x)^3\\,dx=\\frac14\\). In general the minimum of n independent \\(\\operatorname{Uniform}(0,1)\\) values has mean \\(\\frac{1}{n+1}\\).",
       "followup": "Find \\(\\mathbb E[\\max]\\) and its CDF.",
-      "followSolution": "\\(P(\\max\\leq x)=x^3\\) on [0,1], and \\(\\mathbb E[\\max]=\\frac34\\).",
+      "followSolution": "For the maximum M, all three independent draws must be at most x. Thus its CDF is zero for x<0, \\(x^3\\) for \\(0\\leq x\\leq1\\) and one for x>1. The nonnegative tail identity gives\n\n\\[E[M]=\\int_0^1(1-x^3)\\,dx=\\frac34.\\]\n\nThe minimum CDF is \\(1-(1-x)^3\\) on the same support, not x³. Reflecting each uniform draw around one also maps the maximum to one minus the minimum, checking that the two expectations sum to one.",
       "lesson": "l04",
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Derive minimum survival (1−x)³ on the stated unit support.",
+        "Integrate survival to obtain one quarter.",
+        "Derive the maximum CDF, including its support boundaries, and mean three quarters."
       ]
     },
     {
@@ -220,9 +220,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Describe the four discovery stages and their success probabilities.",
+        "Count the successful draw in each geometric wait and obtain \\(\\frac{25}{3}\\).",
+        "Derive the harmonic-sum generalisation without replacing unequal probabilities by their average."
       ]
     },
     {
@@ -232,7 +232,7 @@
       "difficulty": "Medium",
       "path": "shared",
       "minutes": 7,
-      "prompt": "Flip a fair coin until the consecutive pattern HT appears. What is the expected number of flips?",
+      "prompt": "Make independent flips of a fair coin until the consecutive pattern HT appears. What is the expected number of flips?",
       "answer": 4,
       "hints": [
         "Track whether the latest flip was H.",
@@ -245,9 +245,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Define empty and trailing-head states and both first-step recurrences.",
+        "Explain the head self-loop and derive expectation four.",
+        "Change the reset transition for HH and obtain expectation six."
       ]
     },
     {
@@ -257,7 +257,7 @@
       "difficulty": "Hard",
       "path": "shared",
       "minutes": 12,
-      "prompt": "Flip a fair coin until HHH first appears. Find the expected total number of flips, including the final three.",
+      "prompt": "Make independent flips of a fair coin until HHH first appears. Find the expected total number of flips, including the final three.",
       "answer": 14,
       "hints": [
         "Use states with 0, 1 and 2 trailing heads.",
@@ -266,14 +266,14 @@
       ],
       "solution": "The stated recurrences give \\(E_1=E_0-2\\) and \\(E_2=1+\\frac{E_0}{2}\\). Substitution yields \\(E_0-2=1+\\frac{1+1.5E_0}{2}\\), so \\(E_0=14\\). The shortcut \\(\\frac1{P(HHH)}=8\\) treats overlapping trials as disjoint independent attempts.",
       "followup": "Generalise to k heads with head probability p.",
-      "followSolution": "The expected wait is \\(\\frac{1-p^k}{(1-p)p^k}\\) for \\(0<p<1\\). At \\(p=1\\) it is k by continuity.",
+      "followSolution": "Let k≥1 and let E_j be the expected additional flips from j trailing heads, with E_k=0. With independent flips of head probability \\(0<p<1\\), every nonterminal state satisfies\n\n\\[E_j=1+pE_{j+1}+(1-p)E_0.\\]\n\nUnroll from j=0 through the k states:\n\n\\[E_0=\\left(\\sum_{j=0}^{k-1}p^j\\right)[1+(1-p)E_0].\\]\n\nSince \\((1-p)\\sum_{j=0}^{k-1}p^j=1-p^k\\), moving the \\(E_0\\) term to the left yields\n\n\\[E_0=\\frac{1-p^k}{(1-p)p^k}.\\]\n\nThe mean is finite: every independent disjoint block of k flips has probability p^k of being all heads, so the true stopping time is bounded above by k times a geometric block count. This validates the expectation equations; overlapping windows themselves are not independent trials. At \\(p=1\\) the wait is exactly k, matching the continuous limit. At p=0 the target never occurs and the expected wait is infinite.",
       "lesson": "l05",
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Define trailing-head states and terminal expectation zero.",
+        "Derive expectation fourteen from first-step equations, including every final flip.",
+        "Derive the k-head formula and its p=0/\\(p=1\\) boundaries without treating overlapping windows as trials."
       ]
     },
     {
@@ -290,16 +290,16 @@
         "Use boundary conditions \\(t_0=t_{12}=0\\).",
         "Try a quadratic in i."
       ],
-      "solution": "The solution is \\(t_i=i(12-i)\\): its second discrete difference is −2 and it is zero at the boundaries. Hence \\(t_5=35\\). The finite interval ensures finite expected exit time.",
+      "solution": "Write t_i for expected additional steps from integer i. The boundaries are absorbing, so t₀=t₁₂=0. For an interior state, one step is taken before the remaining wait:\n\n\\[t_i=1+\\tfrac12t_{i-1}+\\tfrac12t_{i+1}.\\]\n\nFinite expectation is justified independently. From any interior state, twelve consecutive downward moves would hit zero within twelve steps and have probability at least 2⁻¹². Conditional on any surviving history, a new twelve-step block has at least this exit chance. Hence the block survival tail is bounded by a geometric tail, giving finite expected exit time.\n\nRearrange the recurrence to \\(t_{i+1}-2t_i+t_{i-1}=-2\\). Its general quadratic solution is \\(t_i=-i^2+ai+b\\); the two boundaries force b=0 and a=12. Therefore \\(t_i=i(12-i)\\) and t₅=35. Uniqueness follows because the difference of two solutions has zero second difference and zero boundary values, so is the zero affine function. A distance-to-nearest-boundary shortcut misses the repeated backtracking.",
       "followup": "What is the probability of hitting 12 first?",
-      "followSolution": "Solve \\(p_i=\\frac{p_{i-1}+p_{i+1}}2\\) with \\(p_0=0,\\quad p_{12}=1\\). The answer is \\(\\frac{i}{12}\\), hence \\(\\frac{5}{12}\\).",
+      "followSolution": "Let p_i be the probability of hitting twelve before zero. First-step conditioning now gives \\(p_i=(p_{i-1}+p_{i+1})/2\\), with p₀=0 and p₁₂=1. There is NO added one-step time cost in this probability equation. Zero second difference makes p_i affine; the boundaries give p_i=\\(\\frac{i}{12}\\). Starting at five gives \\(\\frac{5}{12}\\). This is the chance of one exit side, not the expected elapsed time.",
       "lesson": "l05",
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Specify absorbing boundaries and the expected-time difference equation.",
+        "Justify finite expected exit time and derive i(12−i), giving thirty-five.",
+        "Solve the distinct harmonic hitting-probability equation to obtain five twelfths."
       ]
     },
     {
@@ -341,16 +341,16 @@
         "Order the cuts \\(U<V\\); the three pieces are \\(U,\\ V-U,\\ 1-V\\).",
         "Measure the valid region inside \\(0<U<V<1\\)."
       ],
-      "solution": "The valid conditions are \\(U<\\frac12\\), \\(V>\\frac12\\) and \\(V-U<\\frac12\\). Their region is a triangle of area \\(\\frac{1}{8}\\) inside the ordered-cut triangle of area \\(\\frac{1}{2}\\). The ratio is \\(\\frac{1}{4}\\). Equality boundaries have probability zero.",
-      "followup": "Does sequentially choosing a piece uniformly and cutting it uniformly give the same answer?",
-      "followSolution": "No. It defines a different distribution over length triples. Specify the cutting procedure before using a geometric uniformity argument.",
+      "solution": "Write U for the smaller cut location and V for the larger. Ordering two independent uniform cuts gives density TWO on the triangle \\(0<U<V<1\\): each ordered pair comes from two equally dense original orders, except a zero-probability diagonal. The piece lengths are U, V−U and 1−V. With total length one, the strict triangle inequalities are equivalent to every piece being less than one half. Thus\n\n\\[U<\\tfrac12,\\quad V>\\tfrac12,\\quad V<U+\\tfrac12.\\]\n\nFor a fixed U in (0,\\(\\frac{1}{2}\\)), valid V runs from \\(\\frac{1}{2}\\) to U+\\(\\frac{1}{2}\\), an interval of length U. The valid region’s area is\n\n\\[\\int_0^{1/2}U\\,dU=\\frac18.\\]\n\nMultiply by ordered density two, or divide by total ordered-region area one half, to obtain probability one quarter. Strict equality boundaries have probability zero under this continuous procedure. Counting three possible piece positions uniformly would not define their joint length distribution.",
+      "followup": "Instead, make one uniform cut on the unit stick; choose one of the resulting TWO pieces with equal probability, independently of its length; cut that chosen piece at a uniform location within it. Is the triangle probability still one quarter? Derive it for this explicitly stated procedure.",
+      "followSolution": "Let the first left-piece length be u, uniform on (0,1). If u>\\(\\frac{1}{2}\\), only choosing the left (longer) piece can succeed, because leaving it uncut violates the triangle condition. That choice has probability one half. Given it, the new cut coordinate z must satisfy u−\\(\\frac{1}{2}\\)<z<\\(\\frac{1}{2}\\) inside (0,u). Its success probability is (1−u)/u. If u<\\(\\frac{1}{2}\\), choosing the right piece instead gives the symmetric condition and probability u/(1−u). Therefore\n\n\\[\\begin{aligned}P(\\mathrm{triangle})&=2\\cdot\\frac12\\int_{1/2}^1\\frac{1-u}{u}\\,du\\\\&=\\log 2-\\frac12\\\\&\\approx0.193147.\\end{aligned}\\]\n\nThe equal choice between pieces is NOT equal choice between physical locations on the whole stick: a shorter piece concentrates the conditional cut density more strongly. The new cuts therefore are not two independent uniform locations. This comparison changes the sampling measure, not the strict geometric triangle criterion.",
       "lesson": "l04",
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Order the two independent uniform cut locations and retain the correct density.",
+        "Translate strict triangle inequalities into a region of area one eighth and probability one quarter.",
+        "Derive the explicitly different sequential-cut probability log(2)−\\(\\frac{1}{2}\\) and explain its weighting."
       ]
     },
     {
@@ -373,9 +373,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Apply memorylessness to the remaining time, whose mean is two minutes.",
+        "Add the three elapsed minutes to obtain total expectation five.",
+        "Use a four-minute conditional survival interval to obtain exp(−2)."
       ]
     },
     {
@@ -398,9 +398,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Integrate the rate-three density times the independent rate-two survival.",
+        "Obtain winning probability three fifths and first-ring rate five.",
+        "Factor the joint winner/time density and identify constant rates as an essential assumption."
       ]
     },
     {
@@ -418,14 +418,14 @@
       ],
       "solution": "\\[\\operatorname{Var}(\\bar X)=\\frac{n+n(n-1)\\rho}{n^2}=\\rho+\\frac{1-\\rho}{n}=0.109.\\] The independence shortcut gives 0.01 and misses the common component.",
       "followup": "What happens as n grows?",
-      "followSolution": "The variance tends to \\(\\rho=0.1\\); averaging does not eliminate the common shock. Equicorrelation must also satisfy \\(\\rho\\geq-\\frac1{n-1}\\).",
+      "followSolution": "For fixed nonnegative equicorrelation \\(\\rho\\), the mean variance is \\(\\rho+(1-\\rho)/n\\), tending to \\(\\rho\\). At \\(\\rho=0.1\\) it therefore tends to 0.1, not zero. A representation \\(X_i=\\mu_i+\\sqrt{\\rho}Z+\\sqrt{1-\\rho}\\,\\varepsilon_i\\), using mutually independent unit-variance centered variables, shows the common shock that averaging retains.\n\nFor a fixed dimension \\(n\\geq2\\), the unit-variance equicorrelation matrix has eigenvalue 1+(\\(n-1\\))\\(\\rho\\) on the all-ones direction and 1−\\(\\rho\\) on directions perpendicular to it. Nonnegative variance in every direction requires\n\n\\[-\\frac{1}{n-1}\\leq\\rho\\leq1.\\]\n\nA fixed negative \\(\\rho\\) cannot satisfy this condition for arbitrarily large n. The limit with fixed \\(\\rho\\) is meaningful only along feasible covariance models; the positive common-factor representation above does not apply to negative \\(\\rho\\).",
       "lesson": "l07",
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Include all ordered off-diagonal covariances in the mean variance.",
+        "Obtain 0.109 and explain why independent averaging would give a different result.",
+        "Take the fixed-correlation limit and derive feasible equicorrelation bounds."
       ]
     },
     {
@@ -441,7 +441,7 @@
         "The autocorrelation at lag k is \\(\\rho^k\\).",
         "The variance inflation factor is \\(1+2\\sum_{k=1}^\\infty\\rho^k=\\frac{1+\\rho}{1-\\rho}\\)."
       ],
-      "solution": "The approximation gives \\(\\frac{100\\times0.2}{1.8}=\\frac{100}{9}\\approx11.11\\). This is an asymptotic mean-estimation comparison, not a universal effective sample size for every estimator.",
+      "solution": "For the usual stationary AR(1) covariance structure, \\(\\gamma_h=\\gamma_0\\rho^h\\). Expanding all covariance pairs in the sample mean gives\n\n\\[\\operatorname{Var}(\\bar X_n)=\\frac{\\gamma_0}{n}\\left[1+2\\sum_{h=1}^{n-1}(1-h/n)\\rho^h\\right].\\]\n\nAt fixed \\(|\\rho|<1\\) and growing n, the bracket tends to the convergent geometric-sum factor \\(1+2\\rho/(1-\\rho)=(1+\\rho)/(1-\\rho)\\). Matching this asymptotic variance to γ₀/\\(n_{\\mathrm{eff}}\\) gives\n\n\\[n_{eff}\\approx\\frac{n(1-\\rho)}{1+\\rho}.\\]\n\nFor \\(n=100\\) and \\(\\rho=0.8\\) this is \\(\\frac{100}{9}\\)≈11.11. This is the requested fixed-correlation large-sample approximation for the MEAN, not the exact finite-window value or an independent-sample representation for every statistic. Keeping the lag taper answers the separate finite-n follow-up.",
       "followup": "Write the exact finite-n variance factor.",
       "followSolution": "\\[\\frac{\\operatorname{Var}(\\bar X)}{\\gamma_0/n}=1+2\\sum_{k=1}^{n-1}\\left(1-\\frac{k}{n}\\right)\\rho^k.\\] The taper matters in short samples or near unit roots.",
       "lesson": "l13",
@@ -460,7 +460,7 @@
       "difficulty": "Hard",
       "path": "researcher",
       "minutes": 12,
-      "prompt": "Let \\(Y=2X+\\varepsilon\\). You observe \\(W=X+u\\). X,u,ε are mutually independent, centred, with \\(\\operatorname{Var}(X)=1\\) and \\(\\operatorname{Var}(u)=3\\). What is the population OLS slope of Y on W with an intercept?",
+      "prompt": "Let \\(Y=2X+\\varepsilon\\). You observe \\(W=X+u\\). X,u,ε are mutually independent, centred, with finite second moments, with \\(\\operatorname{Var}(X)=1\\) and \\(\\operatorname{Var}(u)=3\\). What is the population OLS slope of Y on W with an intercept?",
       "answer": 0.5,
       "hints": [
         "The slope is \\(\\frac{\\operatorname{Cov}(W,Y)}{\\operatorname{Var}(W)}\\).",
@@ -492,7 +492,7 @@
         "Let \\[a=\\operatorname{Corr}(X,Y),\\quad b=\\operatorname{Corr}(Y,Z),\\quad c=\\operatorname{Corr}(X,Z).\\]",
         "The determinant gives \\((c-ab)^2\\leq(1-a^2)(1-b^2)\\)."
       ],
-      "solution": "The allowed interval is \\(ab\\pm\\sqrt{(1-a^2)(1-b^2)}\\). Here it is \\(0.64\\pm0.36\\), so \\(c\\geq0.28\\). Pairwise bounds \\([-1,1]\\) alone are insufficient. At the boundary the matrix is singular, and the bound is attainable.",
+      "solution": "Write \\[a=\\operatorname{Corr}(X,Y),\\quad b=\\operatorname{Corr}(Y,Z),\\quad c=\\operatorname{Corr}(X,Z).\\] Standardisation gives unit variances. Remove the shared Y projection: residuals X−aY and Z−bY have variances 1−a² and 1−b² and covariance c−ab. Cauchy–Schwarz therefore requires\n\n\\[(c-ab)^2\\leq(1-a^2)(1-b^2).\\]\n\nHere a=b=0.8, so the residual standard deviations are both 0.6 and c must lie in [0.64−0.36,0.64+0.36]=[0.28,1]. The smallest feasible value is 0.28. It is ATTAINED by giving the two residuals opposite signs of the same standardised random variable independent of Y, as constructed in the follow-up. Thus this is a sharp bound, not just a necessary pairwise condition. At the lower endpoint the joint covariance is singular.",
       "followup": "Construct variables attaining the minimum.",
       "followSolution": "Take independent standardised Y,U and set \\(X=0.8Y+0.6U\\), \\(Z=0.8Y-0.6U\\). Then \\(\\operatorname{Corr}(X,Z)=0.64-0.36=0.28\\).",
       "lesson": "l10",
@@ -569,14 +569,14 @@
       ],
       "solution": "The maximum has CDF \\(\\left(\\frac m\\theta\\right)^n\\) on \\([0,\\theta]\\) and mean \\(\\frac{n\\theta}{n+1}\\). The unbiased estimator is \\(\\frac{(n+1)\\max}{n}\\). At \\(n=4,\\quad\\max=8\\) it equals 10. The maximum itself is the MLE but is biased down.",
       "followup": "Is unbiasedness alone enough to choose an estimator?",
-      "followSolution": "No. Compare mean squared error, variance, stability and loss function. An unbiased estimator can have higher risk than a biased one.",
+      "followSolution": "Unbiasedness describes mean error, not squared-error risk. In the declared iid uniform model, write M for the sample maximum; its second moment is \\(E[M^2]=n\\theta^2/(n+2)\\). For estimates cM, completing the quadratic squared-error risk gives the minimum at c=(n+2)/(n+1), with risk \\(\\theta\\)²/(n+1)². The unbiased choice c=\\(\\frac{n+1}{n}\\) has risk \\(\\theta\\)²/[n(n+2)], which is larger. At \\(n=4\\) those risks are \\(\\theta\\)²/25 and \\(\\theta\\)²/24; the corresponding estimates at M=8 are 9.6 and ten. This compares a specified estimator family under squared loss, not every possible loss or sampling model. The numeric question still asks the UNBIASED estimate ten.",
       "lesson": "l09",
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Derive the maximum distribution and its expectation under iid uniform sampling.",
+        "Use the factor five fourths to obtain estimate ten.",
+        "Compare squared-error risks rather than assuming unbiasedness alone is decisive."
       ]
     },
     {
@@ -914,15 +914,15 @@
       "difficulty": "Hard",
       "path": "trader",
       "minutes": 12,
-      "prompt": "A repeated independent bet wins even money with probability 0.6. You stake fraction f of wealth each time. What f maximises expected log wealth growth?",
+      "prompt": "A repeated independent bet wins even money with probability 0.6. Before each round you stake a fixed fraction 0≤f<1 of current positive wealth. A win multiplies wealth by 1+f and a loss by 1−f; there are no fees or other outcomes. What f maximises expected natural-log wealth growth? Derive and justify the global optimum under this stated toy objective.",
       "answer": 0.2,
       "hints": [
         "Maximise \\(0.6\\log(1+f)+0.4\\log(1-f)\\).",
         "Set the derivative to zero."
       ],
-      "solution": "The derivative is \\(\\frac{0.6}{1+f}-\\frac{0.4}{1-f}\\). Setting it to zero gives \\(f=0.2\\). The optimum depends on accurate probabilities and the repeated log-utility objective; it is not a universally appropriate real-money stake.",
+      "solution": "For fixed initial positive wealth W, its log contributes a constant. The one-round expected log multiplier is\n\n\\[g(f)=0.6\\log(1+f)+0.4\\log(1-f).\\]\n\nThe derivative is \\(0.6/(1+f)-0.4/(1-f)\\), which vanishes at \\(f=0.2\\). Its second derivative is\n\n\\[g''(f)=-\\frac{0.6}{(1+f)^2}-\\frac{0.4}{(1-f)^2}<0.\\]\n\nStrict concavity proves the unique global maximum on 0≤f<1; g(0)=0 and g(f) tends to minus infinity as f approaches one. Expected total log growth over a fixed number of independent rounds is that round count times g(f), so the same fraction optimises the declared repeated objective. The optimum is conditional on this specified probability, payoff and loss model.",
       "followup": "How does uncertainty in p change the decision?",
-      "followSolution": "Plug-in Kelly can overbet. Shrinking probabilities toward \\(\\frac{1}{2}\\) or using a fraction of the estimated stake reduces sensitivity; dependence and tail losses require a different model.",
+      "followSolution": "First specify what uncertainty means and which objective judges the decision. For ONE round, if p itself has a prior distribution and the objective averages expected log utility over that prior, linearity gives \\(E[p]\\log(1+f)+(1-E[p])\\log(1-f)\\). When E[p]<1, the nonnegative optimum is max(0,2E[p]−1); uncertainty alone does not force a smaller fraction than the same mean would give. If E[p]=1, growth increases up to the excluded boundary f=1, so there is only a supremum on the stated domain. For an ambiguity SET p∈[p_low,p_high] and a worst-case objective, every fixed positive f has growth increasing in p, so the least-favourable probability is p_low and the optimum is max(0,2p_low−1), assuming the interval lies strictly below one. Those two interpretations can produce different answers. Estimation error, dynamic learning, constraints and additional loss outcomes need their own model; merely saying “uncertainty” does not establish a universal fractional rule. The linked Hard practice develops these distinctions.",
       "lesson": "l21",
       "tolerance": 1e-06,
       "type": "numeric",
@@ -1111,7 +1111,7 @@
     },
     {
       "id": "q45",
-      "title": "The denominator is part of the answer",
+      "title": "Scaling squares; translation disappears",
       "topic": "Statistics",
       "difficulty": "Easy",
       "path": "shared",
@@ -1129,9 +1129,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Square the scale factor and remove the translation from variance.",
+        "Obtain variance thirty-six and distinguish the standard-deviation change.",
+        "Use positive variance to derive correlation minus one after negative scaling."
       ]
     },
     {
@@ -1141,7 +1141,7 @@
       "difficulty": "Easy",
       "path": "shared",
       "minutes": 5,
-      "prompt": "A Bernoulli success probability p has a \\(\\operatorname{Beta}(2,2)\\) prior. Observe 3 successes and 1 failure. What is the posterior mean of p?",
+      "prompt": "A Bernoulli success probability p has a \\(\\operatorname{Beta}(2,2)\\) prior. Conditional on a common fixed p, observe four independent trials with 3 successes and 1 failure. What is the posterior mean of p?",
       "answer": 0.625,
       "hints": [
         "Add successes and failures to the Beta parameters.",
@@ -1154,9 +1154,9 @@
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Use a common Bernoulli parameter and its stated Beta prior.",
+        "Derive posterior \\(\\operatorname{Beta}(5,3)\\) and mean five eighths.",
+        "Integrate the next success probability over the posterior rather than replacing it by the empirical rate."
       ]
     },
     {
@@ -2180,12 +2180,12 @@
       "answer": null,
       "hints": [
         "Compute the bias and variance separately; use \\((1-2p)^2=1-4p(1-p)\\).",
-        "The endpoint risks and the \\(p=1\\)/2 risk must agree to flatten this quadratic.",
+        "The endpoint risks and the p=\\(\\frac{1}{2}\\) risk must agree to flatten this quadratic.",
         "For any competing rule, its worst risk is at least its average risk under your chosen prior. Which rule minimises that average?"
       ],
       "solution": "The bias is \\(a(1-2p)/(n+2a)\\), and the variance is \\(np(1-p)/(n+2a)^2\\). Thus\n\n\\[R_p(\\delta_a)=\\frac{a^2+(n-4a^2)p(1-p)}{(n+2a)^2}.\\]\n\nChoose \\(a_* = \\sqrt n/2\\). Then the coefficient of p(1−p) vanishes and the risk is the constant \\(r_*=1/[4(\\sqrt n+1)^2]\\), including at p=0 and \\(p=1\\). Constant risk supplies an attainable upper bound on the minimax value, but an inferior rule could also have constant risk.\n\nFor a lower bound assign p the proper \\(\\operatorname{Beta}(a_*,a_*)\\) prior. After count \\(K=k\\), its posterior is \\(\\operatorname{Beta}(k+a_*,n-k+a_*)\\), whose mean is \\(\\delta_{a_*}(k)\\). For any proposed output d, expand its posterior squared error as \\(E[(d-p)^2\\mid K=k]=\\operatorname{Var}(p\\mid K=k)+(d-E[p\\mid K=k])^2\\). The posterior mean minimises this for every k, hence minimises average risk under this prior. Its average risk equals \\(r_*\\), since its fixed-p risk is constant. For any other rule g,\n\n\\[\\sup_{p\\in[0,1]}R_p(g)\\ \\geq\\ \\int_0^1R_p(g)\\,d\\pi(p)\\ \\geq\\ r_*.\\]\n\nOur rule attains \\(r_*\\), proving global minimax optimality for the specified observation and loss. Independent randomisation cannot improve the lower bound: conditional on K, randomising the output adds nonnegative variance to the same decomposition. This is a frequentist worst-case claim established using a prior as a proof device, not a claim that the unknown p was actually sampled from that prior.",
       "followup": "For \\(a=1\\) (a uniform Beta prior), give the worst-case risk for arbitrary n and identify exactly when that rule equals the minimax rule. Why is a fixed amount of shrinkage not universally optimal?",
-      "followSolution": "The risk is \\([1+(n-4)p(1-p)]/(n+2)^2\\). For n<4, its largest value is \\(1/(n+2)^2\\), attained at p=0 or 1; for n>4 it is \\(n/[4(n+2)^2]\\), attained at \\(p=1\\)/2. At \\(n=4\\) it is constant \\(\\frac{1}{36}\\), and \\(a_*=1\\), so the uniform-prior rule is exactly minimax. For other n its worst risk is strictly larger than \\(r_*\\). Changing the parameter interval or the loss changes this balance; the proof used the full [0,1] interval and squared error.",
+      "followSolution": "The risk is \\([1+(n-4)p(1-p)]/(n+2)^2\\). For n<4, its largest value is \\(1/(n+2)^2\\), attained at p=0 or 1; for n>4 it is \\(n/[4(n+2)^2]\\), attained at p=\\(\\frac{1}{2}\\). At \\(n=4\\) it is constant \\(\\frac{1}{36}\\), and \\(a_*=1\\), so the uniform-prior rule is exactly minimax. For other n its worst risk is strictly larger than \\(r_*\\). Changing the parameter interval or the loss changes this balance; the proof used the full [0,1] interval and squared error.",
       "lesson": "l09",
       "tolerance": 1e-06,
       "type": "written",
@@ -2600,7 +2600,7 @@
       ],
       "solution": "There are six ordered records with five heads and one with six, so the tail probability is (6+1)/64=\\(\\frac{7}{64}\\)≈0.109375. The exact-count probability \\(\\frac{6}{64}\\) omits a still more extreme outcome. This probability describes the specified statistic under the fair-coin model; it is not the probability the coin is fair after observing the record.",
       "followup": "Using this pre-specified p-value, reject when p≤0.05. Which head counts reject? What is the ACTUAL type-I error, and what is the power if the true iid head probability is \\(\\frac{3}{4}\\)?",
-      "followSolution": "Five heads has p>0.05, while six has \\(p=1\\)/64≤0.05. Thus rejection is exactly K=6, with actual null error \\(\\frac{1}{64}\\)≈1.56%, not exactly 5%. Under head probability \\(\\frac{3}{4}\\) its power is \\((3/4)^6=729/4096\\), about 17.8%. The discrete test conserves more error budget than its nominal upper bound and has modest power against this alternative. A nonrejection does not establish fairness.",
+      "followSolution": "Five heads has p>0.05, while six has p=\\(\\frac{1}{64}\\)≤0.05. Thus rejection is exactly K=6, with actual null error \\(\\frac{1}{64}\\)≈1.56%, not exactly 5%. Under head probability \\(\\frac{3}{4}\\) its power is \\((3/4)^6=729/4096\\), about 17.8%. The discrete test conserves more error budget than its nominal upper bound and has modest power against this alternative. A nonrejection does not establish fairness.",
       "lesson": "l12",
       "tolerance": 1e-06,
       "type": "numeric",
@@ -2756,7 +2756,7 @@
       ],
       "solution": "Two steps give Xₜ₊₂=2+(\\(\\frac{1}{4}\\))(Xₜ−2)+(\\(\\frac{1}{2}\\))εₜ₊₁+εₜ₊₂. The conditional mean is 4 and the forecast error is (\\(\\frac{1}{2}\\))εₜ₊₁+εₜ₊₂. Its conditional variance and mean-squared error are 3(\\(\\frac{1}{4}\\)+1)=\\(\\frac{15}{4}\\). A zero-mean independent innovation assumption justifies this conditional mean without normality. The stationary marginal variance is 3/(1−\\(\\frac{1}{4}\\))=4, slightly larger than this finite-horizon uncertainty.",
       "followup": "Derive the h-step forecast and error variance for h≥1. Are the one-step and two-step forecast errors independent? Can this variance alone justify an exact Gaussian prediction interval?",
-      "followSolution": "The forecast is 2+(\\(\\frac{1}{2}\\))^h(Xₜ−2), and its error variance is 3\\(\\Sigma\\)_{j=0}^{h−1}(\\(\\frac{1}{4}\\))^j=4(1−4^(−h)), approaching four. The one-step error εₜ₊₁ and two-step error share that innovation; their covariance is \\(\\frac{3}{2}\\), so they are not independent. Finite variance alone does not specify their distribution or justify exact normal quantiles. A Gaussian innovation assumption would make these weighted errors jointly Gaussian.",
+      "followSolution": "The forecast is 2+(\\(\\frac{1}{2}\\))^h(Xₜ−2), and its error variance is \\(3\\sum_{j=0}^{h-1}(1/4)^j=4(1-4^{-h})\\), approaching four. The one-step error εₜ₊₁ and two-step error share that innovation; their covariance is \\(\\frac{3}{2}\\), so they are not independent. Finite variance alone does not specify their distribution or justify exact normal quantiles. A Gaussian innovation assumption would make these weighted errors jointly Gaussian.",
       "lesson": "l13",
       "tolerance": 1e-06,
       "type": "numeric",
@@ -2773,7 +2773,7 @@
       "difficulty": "Medium",
       "path": "researcher",
       "minutes": 18,
-      "prompt": "Let εₜ be iid standard Gaussian over all integer times and Xₜ=εₜεₜ₋₁. You may use E[ε²]=1 and E[ε⁴]=3. Show that X has mean zero, variance one and ZERO autocovariance at every nonzero lag, yet adjacent X values are dependent. Then derive the EXACT variance of n⁻¹\\(\\Sigma\\)_{t=1}^n Xₜ² for n≥1. Is the iid shortcut for that risk estimator valid?",
+      "prompt": "Let εₜ be iid standard Gaussian over all integer times and Xₜ=εₜεₜ₋₁. You may use E[ε²]=1 and E[ε⁴]=3. Show that X has mean zero, variance one and ZERO autocovariance at every nonzero lag, yet adjacent X values are dependent. Define \\(Y_t=X_t^2\\), then derive the EXACT variance of \\(\\bar Y_n=n^{-1}\\sum_{t=1}^nY_t\\) for n≥1. Is the iid shortcut for that risk estimator valid?",
       "answer": null,
       "hints": [
         "The lag-one product contains two independent factors with mean zero.",
@@ -2800,16 +2800,16 @@
       "difficulty": "Medium",
       "path": "researcher",
       "minutes": 20,
-      "prompt": "One-period returns rₜ are iid with mean µ and positive variance \\(\\sigma^2\\). Define k-period SUM labels Yₜ=\\(\\Sigma\\)_{j=0}^{k−1}rₜ₊ⱼ for a fixed positive integer k. Observe Y₁,…,Yₙ, with n≥k, and estimate the one-period mean by \\(\\hat\\mu\\)=(nk)⁻¹\\(\\Sigma\\)Yₜ. Derive the label autocovariances and EXACT variance of \\(\\hat\\mu\\). Explain why treating the n labels as independent fails even when the underlying returns are iid. These are sums, not compounded returns.",
+      "prompt": "One-period returns rₜ are iid with mean µ and positive variance \\(\\sigma^2\\). Define k-period SUM labels \\(Y_t=\\sum_{j=0}^{k-1}r_{t+j}\\) for a fixed positive integer k. Observe Y₁,…,Yₙ, with n≥k, and estimate the one-period mean by \\(\\hat\\mu=(nk)^{-1}\\sum_{t=1}^nY_t\\). Derive the label autocovariances and EXACT variance of \\(\\hat\\mu\\). Explain why treating the n labels as independent fails even when the underlying returns are iid. These are sums, not compounded returns.",
       "answer": null,
       "hints": [
         "Covariance comes only from underlying returns shared by two labels.",
         "At lag h<k, exactly k−h returns overlap.",
         "Use the finite pair count n−h, then divide by (nk)²."
       ],
-      "solution": "\\(\\mathbb E[Y]\\)=kµ and \\(\\gamma_0\\)=\\(k\\sigma^2\\). For 1≤h<k, the shared returns give \\(\\gamma_h\\)=(k−h)\\(\\sigma^2\\); at h≥k the blocks are disjoint and independent. Thus\n\n\\[\\operatorname{Var}\\!\\left(\\sum_{t=1}^nY_t\\right)=\\sigma^2\\left[nk+2\\sum_{h=1}^{k-1}(n-h)(k-h)\\right]=\\sigma^2\\left[nk^2-\\frac{k(k^2-1)}3\\right].\\]\n\nDividing by n²k² gives Var(\\(\\hat\\mu\\))=\\(\\sigma^2\\)[1/n−(k²−1)/(3n²k)]. The independent-label shortcut \\(\\sigma^2\\)/(nk) omits the reused observations. For fixed k and large n the actual variance is approximately \\(\\frac{\\sigma^2}{n}\\), about k times the shortcut. This persistence arises from label construction, not necessarily an economically predictable daily-return process. The n≥k condition matters for the displayed polynomial; shorter samples require truncating at min(\\(n-1\\),k−1).",
+      "solution": "\\(\\mathbb E[Y]\\)=kµ and \\(\\gamma_0\\)=\\(k\\sigma^2\\). For 1≤h<k, the shared returns give \\(\\gamma_h\\)=(k−h)\\(\\sigma^2\\); at h≥k the blocks are disjoint and independent. Thus\n\n\\[\\operatorname{Var}\\!\\left(\\sum_{t=1}^nY_t\\right)=\\sigma^2\\left[nk+2\\sum_{h=1}^{k-1}(n-h)(k-h)\\right]=\\sigma^2\\left[nk^2-\\frac{k(k^2-1)}3\\right].\\]\n\nDividing by n²k² gives Var(\\(\\hat\\mu\\))=\\(\\sigma^2\\)[1/n−(k²−1)/(3n²k)]. The independent-label shortcut \\(\\sigma\\)²/(nk) omits the reused observations. For fixed k and large n the actual variance is approximately \\(\\frac{\\sigma^2}{n}\\), about k times the shortcut. This persistence arises from label construction, not necessarily an economically predictable daily-return process. The n≥k condition matters for the displayed polynomial; shorter samples require truncating at min(\\(n-1\\),k−1).",
       "followup": "Use only labels starting at 1,1+k,1+2k,… within 1…n. What variance results? If all n+k−1 underlying returns are available, can their direct mean improve on the overlapping-label estimator?",
-      "followSolution": "There are m=1+floor((\\(n-1\\))/k) disjoint labels. Their mean divided by k has variance \\(\\sigma^2\\)/(mk). The direct mean of all n+k−1 iid underlying returns has variance \\(\\sigma^2\\)/(n+k−1). The overlapping estimator instead gives each underlying return a weight proportional to its multiplicity: smaller near the endpoints, larger inside. All weights sum to one, so Cauchy–Schwarz gives \\(\\Sigma\\)w²≥1/(n+k−1). Thus the direct equal-weight mean has no larger variance, with equality precisely when these multiplicities are uniform (including k=1). For n≥k>1 they are unequal. Overlapping labels create repeated use, not extra independent information.",
+      "followSolution": "There are m=1+floor((\\(n-1\\))/k) disjoint labels. Their mean divided by k has variance \\(\\sigma\\)²/(mk). The direct mean of all n+k−1 iid underlying returns has variance \\(\\sigma\\)²/(n+k−1). The overlapping estimator instead gives each underlying return a weight proportional to its multiplicity: smaller near the endpoints, larger inside. All weights sum to one, so Cauchy–Schwarz gives \\(\\sum_i w_i^2\\geq1/(n+k-1)\\). Thus the direct equal-weight mean has no larger variance, with equality precisely when these multiplicities are uniform (including k=1). For n≥k>1 they are unequal. Overlapping labels create repeated use, not extra independent information.",
       "lesson": "l13",
       "tolerance": 1e-06,
       "type": "written",
@@ -2827,7 +2827,7 @@
       "difficulty": "Hard",
       "path": "researcher",
       "minutes": 30,
-      "prompt": "Observe \\(n\\geq2\\) consecutive values of a weakly stationary process with unknown constant mean µ and KNOWN covariance \\(\\Sigma_{ij}=\\gamma_0\\rho^{|i-j|}\\), where \\(\\gamma_0\\)>0 and −1<\\(\\rho\\)<1. Among estimators \\(\\hat\\mu\\)=\\(\\Sigma\\)wᵢXᵢ with deterministic weights summing to one, derive the unique minimum-variance weights and variance. Give explicit endpoint and interior weights, rather than only citing a generalized least-squares formula. Justify the covariance inverse or verify the vector it needs. Gaussianity is NOT assumed.",
+      "prompt": "Observe \\(n\\geq2\\) consecutive values of a weakly stationary process with unknown constant mean µ and KNOWN covariance \\(\\Sigma_{ij}=\\gamma_0\\rho^{|i-j|}\\), where \\(\\gamma_0\\)>0 and −1<\\(\\rho\\)<1. Among estimators \\(\\hat\\mu=\\sum_iw_iX_i\\) with deterministic weights summing to one, derive the unique minimum-variance weights and variance. Give explicit endpoint and interior weights, rather than only citing a generalized least-squares formula. Justify the covariance inverse or verify the vector it needs. Gaussianity is NOT assumed.",
       "answer": null,
       "hints": [
         "Minimize \\(w^{\\mathsf T}\\Sigma w\\) with the sum constraint, or separate any weights from a proposed optimum.",
@@ -2836,7 +2836,7 @@
       ],
       "solution": "Let \\(R_{ij}=\\rho^{|i-j|}\\) and let B be the stated tridiagonal matrix before division by 1−\\(\\rho\\)². Multiplying a row of B by column j of R cancels the geometric terms off the diagonal; its diagonal is 1−\\(\\rho\\)². Hence R⁻¹=B/(1−\\(\\rho\\)²). It is positive definite: \\(x^\\top Bx=(1-\\rho^2)x_1^2+\\sum_{i=2}^n(x_i-\\rho x_{i-1})^2>0\\) for x≠0. Its row sums divided by 1−\\(\\rho\\)² are 1/(1+\\(\\rho\\)) at both endpoints and (1−\\(\\rho\\))/(1+\\(\\rho\\)) inside. Write D=n−(n−2)\\(\\rho\\)=2+(n−2)(1−\\(\\rho\\)). Then\n\n\\[w_1=w_n=\\frac1D,\\qquad w_i=\\frac{1-\\rho}D\\ (2\\leq i\\leq n-1),\\qquad\\operatorname{Var}(\\hat\\mu)=\\frac{\\gamma_0(1+\\rho)}D.\\]\n\nThe weights sum to one and are positive. For \\(w^*=\\Sigma^{-1}\\mathbf1/(\\mathbf1^\\top\\Sigma^{-1}\\mathbf1)\\), \\(\\Sigma w^*\\) is a constant times 1. Any other unbiased weights w*+v have \\(\\mathbf1^\\top v=0\\); the cross term vanishes and their variance is \\(\\operatorname{Var}(\\hat\\mu_{w^*})+v^\\top\\Sigma v\\), strictly larger unless v=0. This proves uniqueness among deterministic linear unbiased estimates without normality. For n=2 both weights are one half; for n>2 positive correlation gives endpoints more weight than interior observations.",
       "followup": "Compare n=3, \\(\\rho\\)=\\(\\frac{1}{2}\\), \\(\\gamma_0\\)=4 with the arithmetic mean. Then someone estimates weights from the same sample and claims that weights summing to one still guarantee unbiasedness. Give an explicit counterexample under iid N(µ,1) data.",
-      "followSolution": "Here D=\\(\\frac{5}{2}\\); weights are (\\(\\frac{2}{5}\\),\\(\\frac{1}{5}\\),\\(\\frac{2}{5}\\)) and variance is \\(\\frac{12}{5}\\), below arithmetic variance \\(\\frac{22}{9}\\). The gain concerns mean estimation with known covariance; it is not a universal sampling policy. For random same-sample weights, \\(\\Sigma\\)wᵢ=1 only gives \\(\\hat\\mu\\)=µ+\\(\\Sigma\\)wᵢ(Xᵢ−µ); the last term need not have mean zero. With three iid Gaussian observations, choose weights (1,0,0) if X₁≥X₃ and (0,0,1) otherwise. The estimate is max(X₁,X₃)= (X₁+X₃+|X₁−X₃|)/2 and has mean µ+1/√π, because X₁−X₃∼N(0,2). The sum constraint alone therefore does not preserve unbiasedness after data-dependent selection.",
+      "followSolution": "Here D=\\(\\frac{5}{2}\\); weights are (\\(\\frac{2}{5}\\),\\(\\frac{1}{5}\\),\\(\\frac{2}{5}\\)) and variance is \\(\\frac{12}{5}\\), below arithmetic variance \\(\\frac{22}{9}\\). The gain concerns mean estimation with known covariance; it is not a universal sampling policy. For random same-sample weights, \\(\\sum_i w_i=1\\) only gives \\(\\hat\\mu=\\mu+\\sum_iw_i(X_i-\\mu)\\); the last term need not have mean zero. With three iid Gaussian observations, choose weights (1,0,0) if X₁≥X₃ and (0,0,1) otherwise. The estimate is max(X₁,X₃)= (X₁+X₃+|X₁−X₃|)/2 and has mean µ+1/√π, because X₁−X₃∼N(0,2). The sum constraint alone therefore does not preserve unbiasedness after data-dependent selection.",
       "lesson": "l13",
       "tolerance": 1e-06,
       "type": "written",
@@ -2857,11 +2857,11 @@
       "prompt": "For EACH n, take a stationary Gaussian AR(1) sample of n observations with common mean µ, marginal variance \\(\\gamma_0\\)>0 FIXED across n, and \\(\\rho_n=e^{-c/n}\\) for fixed c>0. Its innovation variance is \\(\\gamma_0(1-\\rho_n^2)\\), and its initial distribution is stationary. Derive the limit of \\(\\operatorname{Var}(\\bar X_n)/\\gamma_0\\) and of the exact mean-estimation effective count \\(\\gamma_0/\\operatorname{Var}(\\bar X_n)\\). Compare with substituting \\(\\rho_n\\) into the usual fixed-\\(\\rho\\) asymptotic count \\(\\frac{n(1-\\rho)}{1+\\rho}\\). Is \\(\\bar X_n\\) a consistent estimator here? State which assumptions differ from a single fixed-\\(\\rho\\) model.",
       "answer": null,
       "hints": [
-        "Start with n⁻²\\(\\Sigma\\)ᵢ\\(\\Sigma\\)ⱼ exp(−c|i−j|/n), not an infinite-lag shortcut.",
+        "Start with \\(n^{-2}\\sum_{i=1}^n\\sum_{j=1}^n e^{-c|i-j|/n}\\), not an infinite-lag shortcut.",
         "Treat the double sum as a Riemann integral on the unit square.",
         "The integral equals 2∫₀¹(1−u)exp(−cu)du."
       ],
-      "solution": "The sample changes its persistence with n while retaining its marginal noise scale. The continuous kernel gives the Riemann-sum limit\n\n\\[\\begin{aligned}g(c)&=\\int_0^1\\!\\int_0^1 e^{-c|s-t|}\\,ds\\,dt\\\\&=2\\int_0^1(1-u)e^{-cu}\\,du\\\\&=\\frac{2(c-1+e^{-c})}{c^2}>0.\\end{aligned}\\]\n\nThus \\(\\operatorname{Var}(\\bar X_n)\\)→\\(\\gamma_0\\)g(c) and \\(n_{\\mathrm{eff}}\\)→1/g(c), a finite number. In contrast, the substituted fixed-\\(\\rho\\) formula tends to c/2 and is not valid uniformly in this changing model. At c=1 the exact limit is e/2≈1.359, whereas that shortcut is \\(\\frac{1}{2}\\). As c→0, g(c)→1 and the true count tends to one; it does not tend to zero. Each centered sample mean is Gaussian, so its positive limiting variance implies nonvanishing probabilities of fixed estimation errors, not consistency. Variance alone would not establish this probability conclusion for arbitrary non-Gaussian triangular arrays; Gaussianity supplies it here. Absolute lag summability for each n does not supply a uniform fixed-model limit.",
+      "solution": "The sample changes its persistence with n while retaining its marginal noise scale. The continuous kernel gives the Riemann-sum limit\n\n\\[\\begin{aligned}g(c)&=\\int_0^1\\!\\int_0^1 e^{-c|s-t|}\\,ds\\,dt\\\\&=2\\int_0^1(1-u)e^{-cu}\\,du\\\\&=\\frac{2(c-1+e^{-c})}{c^2}>0.\\end{aligned}\\]\n\nThus \\(\\operatorname{Var}(\\bar X_n)\\)→γ₀g(c) and \\(n_{\\mathrm{eff}}\\)→1/g(c), a finite number. In contrast, the substituted fixed-\\(\\rho\\) formula tends to c/2 and is not valid uniformly in this changing model. At c=1 the exact limit is e/2≈1.359, whereas that shortcut is \\(\\frac{1}{2}\\). As c→0, g(c)→1 and the true count tends to one; it does not tend to zero. Each centered sample mean is Gaussian, so its positive limiting variance implies nonvanishing probabilities of fixed estimation errors, not consistency. Variance alone would not establish this probability conclusion for arbitrary non-Gaussian triangular arrays; Gaussianity supplies it here. Absolute lag summability for each n does not supply a uniform fixed-model limit.",
       "followup": "Keep \\(\\rho_n\\) and innovation variance \\(\\gamma_0(1-\\rho_n^2)\\), but initialize X₀=µ deterministically instead of stationarily. Derive the changed covariance kernel and mean-variance limit. Separately, what if stationary initialization is retained but innovation variance τ²>0 is fixed across n?",
       "followSolution": "For deterministic initialization, \\(X_i-\\mu=\\sum_{j=1}^i\\rho_n^{i-j}\\epsilon_j\\). Summing shared innovation covariances gives \\(\\gamma_0(\\rho_n^{|i-j|}-\\rho_n^{i+j})\\); it is no longer weakly stationary. The mean-variance ratio tends to\n\n\\[g(c)-\\left(\\frac{1-e^{-c}}c\\right)^2.\\]\n\nThis subtracts the random stationary initial component that the deterministic experiment removed. Its c→0 limit is zero, contrasting with g(c)→1; using the stationary formula for a zero-start simulation changes the experiment. This ratio is to the original stationary scale \\(\\gamma_0\\), not a common marginal variance in the nonstationary sample. If instead τ² is fixed with stationary initialization, the marginal variance \\(\\gamma_{0,n}=\\tau^2/(1-\\rho_n^2)\\) grows like τ²n/(2c). Consequently \\(\\operatorname{Var}(\\bar X_n)\\) grows like \\(\\tau^2 n(c-1+e^{-c})/c^3\\). Specify the initialization and which variance scale is fixed before interpreting persistence.",
       "lesson": "l13",
@@ -2881,7 +2881,7 @@
       "difficulty": "Easy",
       "path": "researcher",
       "minutes": 6,
-      "prompt": "Each row below is [original decision time, feature receipt time, label receipt time]: [[0,0,3],[2,3,5],[4,4,9],[7,7,10],[8,8,12],[9,11,10]]. At fit time \\(T=1\\)0 all receipts stamped at most 10 have arrived. A training row must have a decision strictly before T, a feature received no later than its ORIGINAL decision, and a label received no later than T. Each label uses future outcomes after its decision; its receipt includes any publication delay. How many rows qualify? Having a feature now does not mean it was usable at the original decision.",
+      "prompt": "Each row below is [original decision time, feature receipt time, label receipt time]: [[0,0,3],[2,3,5],[4,4,9],[7,7,10],[8,8,12],[9,11,10]]. At fit time T=10 all receipts stamped at most 10 have arrived. A training row must have a decision strictly before T, a feature received no later than its ORIGINAL decision, and a label received no later than T. Each label uses future outcomes after its decision; its receipt includes any publication delay. How many rows qualify? Having a feature now does not mean it was usable at the original decision.",
       "answer": 3,
       "hints": [
         "Apply the feature boundary at the original decision, not the later fit time.",
@@ -3126,7 +3126,7 @@
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "Calculate \\(\\frac{0.83}{0.795}\\) and \\(\\frac{0.934}{0.951}\\), with differences +0.035 and −0.017.",
+        "Calculate model versus baseline accuracy 0.83 versus 0.795, then 0.934 versus 0.951, with differences +0.035 and −0.017.",
         "Derive w=\\(\\frac{10}{13}\\) and distinguish aggregate mixture from within-state changes.",
         "Identify causal regime definitions, support and conditional uncertainty as evidence obligations.",
         "Explain why marginal accuracy differences cannot recover paired disagreement counts or profit."
@@ -3223,7 +3223,7 @@
         "Invert the zero-hit probability at alpha, and check the event on which the interval misses the true p.",
         "Take logarithms carefully: log(0.999) is negative."
       ],
-      "solution": "Solve (1−u_n)^n=alpha, giving\n\n\\[u_n=1-\\alpha^{1/n}.\\]\n\nIf p≤u_n, the reported interval always covers p. If p>u_n, the only possible miss is K=0, with probability (1−p)^n<alpha. Thus unconditional coverage is at least 95 percent at every p. Equality p=u_n is covered because the interval is closed. The statement concerns repetitions of the fixed-n procedure, not a 95-percent posterior probability after seeing zero.\n\nFor \\(n=100\\)0, u_n is approximately 0.00299125. The requirement u_n≤0.001 is equivalent to n≥log(0.05)/log(0.999), approximately 2994.234. Hence the smallest integer count is 2995. A zero sample variance reflects no observed variation in that finite sample; it does not rule out unobserved rare losses. Monte Carlo error, rare-event support and model error remain separate.",
+      "solution": "Solve (1−u_n)^n=alpha, giving\n\n\\[u_n=1-\\alpha^{1/n}.\\]\n\nIf p≤u_n, the reported interval always covers p. If p>u_n, the only possible miss is K=0, with probability (1−p)^n<alpha. Thus unconditional coverage is at least 95 percent at every p. Equality p=u_n is covered because the interval is closed. The statement concerns repetitions of the fixed-n procedure, not a 95-percent posterior probability after seeing zero.\n\nFor n=1000, u_n is approximately 0.00299125. The requirement u_n≤0.001 is equivalent to n≥log(0.05)/log(0.999), approximately 2994.234. Hence the smallest integer count is 2995. A zero sample variance reflects no observed variation in that finite sample; it does not rule out unobserved rare losses. Monte Carlo error, rare-event support and model error remain separate.",
       "followup": "Instead inspect independent blocks of 2995 trials repeatedly until the FIRST all-zero block appears, then report the same upper bound. For a fixed p strictly between 0.001 and one, what is the chance that this procedure eventually reports an interval missing p? Would relabeling these dependent/adaptively selected trials as a fixed run repair coverage?",
       "followSolution": "Each independent block is all-zero with positive probability (1−p)^2995. The probability of never seeing such a block after M blocks is [1−(1−p)^2995]^M, which tends to zero. Eventually an all-zero block appears almost surely, and its reported upper bound is below p. The eventual miscoverage probability is therefore one. A fixed sample count and one pre-specified inspection were part of the original coverage proof. Optional repetition/selection changes the reporting procedure; an appropriate sequential bound or a pre-specified error budget would require a new proof. Mere relabeling cannot make selected evidence fixed or independent.",
       "lesson": "l17",
@@ -3320,7 +3320,7 @@
       "difficulty": "Medium",
       "path": "researcher",
       "minutes": 21,
-      "prompt": "Two DISJOINT batches contain finite real observations. Each is summarised by count n, arithmetic mean m and CENTRED sum M2=\\(\\Sigma\\)(x−m)², with no variance denominator applied. Derive a constant-arithmetic-work merge of two nonempty summaries that equals recomputing these three summaries on the concatenated data in exact arithmetic. Evaluate it for batch A=[0,2] and batch B=[8,10,12]. Include an empty-batch identity, the descriptive/sample variance conventions and whether exact associativity implies bit-for-bit floating associativity.",
+      "prompt": "Two DISJOINT batches contain finite real observations. Each is summarised by count n, arithmetic mean m and CENTRED sum \\(M_2=\\sum_i(x_i-m)^2\\), with no variance denominator applied. Derive a constant-arithmetic-work merge of two nonempty summaries that equals recomputing these three summaries on the concatenated data in exact arithmetic. Evaluate it for batch A=[0,2] and batch B=[8,10,12]. Include an empty-batch identity, the descriptive/sample variance conventions and whether exact associativity implies bit-for-bit floating associativity.",
       "answer": null,
       "hints": [
         "The combined mean is weighted by batch counts, not by number of batches.",
@@ -3518,8 +3518,8 @@
         "A buy is hurt by the LOWEST conditional mean, a sale by the HIGHEST.",
         "To rule out randomisation, look for one allowed model that hurts both trading actions simultaneously."
       ],
-      "solution": "For any fixed allowed p, P(H)=(1+2p)/4 is positive, and\n\n\\[m(p)=E[V\\mid H,p]=\\frac{36p}{1+2p}.\\]\n\nIts derivative is 36/(1+2p)²>0. Endpoints give m(\\(\\frac{1}{4}\\))=6 and m(\\(\\frac{3}{4}\\))=\\(\\frac{54}{5}\\), so the conditional value interval is [6,10.8]. Net buy edge is m−\\(\\frac{37}{4}\\), with worst case 6−\\(\\frac{37}{4}\\)=−\\(\\frac{13}{4}\\). Sell edge is \\(\\frac{31}{4}\\)−m, with worst case \\(\\frac{31}{4}\\)−\\(\\frac{54}{5}\\)=−\\(\\frac{61}{20}\\). Abstention has worst-case profit zero and is optimal among deterministic actions.\n\nOne must not simply mix the TWO DIFFERENT worst-case endpoints to assess a randomised policy: one model governs its average payoff. At the allowed \\(p=1\\)/2, m=9, buy edge is −\\(\\frac{1}{4}\\) and sell edge −\\(\\frac{5}{4}\\). Any mixture with positive trading probability has negative conditional expected profit in this single model; its worst case is therefore negative. Pure abstention attains zero. This common adverse model proves that randomisation cannot strictly improve the minimax value.",
-      "followup": "Change the interpretation: before any signal, a hidden model is \\(p=1\\)/4 or p=\\(\\frac{3}{4}\\) with equal probability, then V and H are drawn from that model. Compute the model probabilities AFTER H and the mixture E[V|H]. Why is the average of the two posterior values with equal weights incorrect? Does this new answer remove the original ambiguity?",
+      "solution": "For any fixed allowed p, P(H)=(1+2p)/4 is positive, and\n\n\\[m(p)=E[V\\mid H,p]=\\frac{36p}{1+2p}.\\]\n\nIts derivative is 36/(1+2p)²>0. Endpoints give m(\\(\\frac{1}{4}\\))=6 and m(\\(\\frac{3}{4}\\))=\\(\\frac{54}{5}\\), so the conditional value interval is [6,10.8]. Net buy edge is m−\\(\\frac{37}{4}\\), with worst case 6−\\(\\frac{37}{4}\\)=−\\(\\frac{13}{4}\\). Sell edge is \\(\\frac{31}{4}\\)−m, with worst case \\(\\frac{31}{4}\\)−\\(\\frac{54}{5}\\)=−\\(\\frac{61}{20}\\). Abstention has worst-case profit zero and is optimal among deterministic actions.\n\nOne must not simply mix the TWO DIFFERENT worst-case endpoints to assess a randomised policy: one model governs its average payoff. At the allowed p=\\(\\frac{1}{2}\\), m=9, buy edge is −\\(\\frac{1}{4}\\) and sell edge −\\(\\frac{5}{4}\\). Any mixture with positive trading probability has negative conditional expected profit in this single model; its worst case is therefore negative. Pure abstention attains zero. This common adverse model proves that randomisation cannot strictly improve the minimax value.",
+      "followup": "Change the interpretation: before any signal, a hidden model is p=\\(\\frac{1}{4}\\) or p=\\(\\frac{3}{4}\\) with equal probability, then V and H are drawn from that model. Compute the model probabilities AFTER H and the mixture E[V|H]. Why is the average of the two posterior values with equal weights incorrect? Does this new answer remove the original ambiguity?",
       "followSolution": "The signal probabilities under the low/high models are \\(\\frac{3}{8}\\) and \\(\\frac{5}{8}\\). With equal PRIOR model weights, posterior model weights become \\(\\frac{3}{8}\\) and \\(\\frac{5}{8}\\) (their normalising signal probability is \\(\\frac{1}{2}\\)). Thus mixture value is (\\(\\frac{3}{8}\\))6+(\\(\\frac{5}{8}\\))(\\(\\frac{54}{5}\\))=9, also obtained by first marginalising to prior high probability \\(\\frac{1}{2}\\) and then applying Bayes. The naive equal average of posterior values is \\(\\frac{42}{5}\\)=8.4; it failed to update model weights after observing H. This hierarchy is an additional modelling choice with assigned model probabilities. It does not turn the earlier set-valued uncertainty into an empirical fact or change its minimax answer. Within-model conditioning, across-model mixing and worst-case optimisation are three distinct operations.",
       "lesson": "l19",
       "tolerance": 1e-06,
@@ -3527,7 +3527,7 @@
       "rubric": [
         "Derive and normalise m(p), prove monotonicity and obtain interval [6,\\(\\frac{54}{5}\\)].",
         "Compute worst-case buy −\\(\\frac{13}{4}\\), sell −\\(\\frac{61}{20}\\) and choose abstention.",
-        "Rule out randomisation using one allowed \\(p=1\\)/2, rather than mixing incompatible adverse models.",
+        "Rule out randomisation using one allowed p=\\(\\frac{1}{2}\\), rather than mixing incompatible adverse models.",
         "Update hierarchical model weights to \\(\\frac{3}{8}\\) and \\(\\frac{5}{8}\\) and compute mixture value nine.",
         "Explain why equal posterior averaging gives 8.4 and why a model mixture differs from a prior set."
       ]
@@ -3861,14 +3861,14 @@
         "The portfolio factor loading stays one.",
         "Only the independent or uncorrelated residual part scales down with the number of names."
       ],
-      "solution": "The average is F+(1/n)\\(\\Sigma\\) εᵢ. Its variance is 1+4/n, so 4/n≤0.1 requires n≥40. At \\(n=4\\)0 variance equals 1.1; n=39 fails. The single-name variance five cannot simply be divided by n because every name contains the SAME factor. Mutually uncorrelated residuals suffice; independence is not required.",
+      "solution": "The average is \\(F+n^{-1}\\sum_{i=1}^n\\varepsilon_i\\). Its variance is 1+4/n, so 4/n≤0.1 requires n≥40. At n=40 variance equals 1.1; n=39 fails. The single-name variance five cannot simply be divided by n because every name contains the SAME factor. Mutually uncorrelated residuals suffice; independence is not required.",
       "followup": "Instead every distinct residual pair has correlation 0.05, while residual variances remain four and all residuals stay uncorrelated with F. Derive the variance for general n and decide whether ANY finite n can achieve 1.1. Give a coherent construction for these residuals, rather than assuming arbitrary pairwise stress numbers form a valid matrix.",
       "followSolution": "Each residual pair now has covariance 0.2. The average residual variance is 4/n+0.2(\\(n-1\\))/n=0.2+3.8/n. Total variance is 1.2+3.8/n, exceeding 1.2 for every finite n; the target 1.1 is impossible. A coherent construction is εᵢ=√0.2·G+√3.8·Zᵢ, where G and all Zᵢ are centred, variance one, mutually uncorrelated and uncorrelated with F. The common residual component creates another nondiversifying exposure. A common correlation assumption should be checked collectively, not merely cell by cell.",
       "lesson": "l22",
       "tolerance": 1e-06,
       "type": "numeric",
       "rubric": [
-        "Derive the factor floor and residual term 1+4/n; identify \\(n=4\\)0 with the boundary.",
+        "Derive the factor floor and residual term 1+4/n; identify n=40 with the boundary.",
         "Include all residual cross terms under the changed model.",
         "Prove the unattainable target and exhibit a valid shared-residual construction."
       ]

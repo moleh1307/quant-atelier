@@ -110,6 +110,8 @@ if __name__ == '__main__':
     import json
     from pathlib import Path
     from math_markup import math_text
+    from topic_practice import validate_coding
+    validate_coding(TASKS)
     public = [{k:math_text(v) if k in {'prompt','explanation'} else v for k,v in t.items() if k != 'tests'} for t in TASKS]
     Path(__file__).parent.joinpath('static/coding.json').write_text(json.dumps(public,indent=2))
     print(f'{len(TASKS)} coding exercises')
