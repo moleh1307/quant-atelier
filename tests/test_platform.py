@@ -62,8 +62,8 @@ class ContentTests(unittest.TestCase):
         self.assertTrue({f'c{i:02d}' for i in range(1,16)} <= cids)
         self.assertEqual(len(qids),len(self.bank['questions']))
         self.assertEqual(len(cids),len(TASKS))
-        from topic_practice import COMPLETE_TOPICS, PENDING_TOPICS
-        self.assertEqual(lids,set(COMPLETE_TOPICS+PENDING_TOPICS))
+        from topic_practice import COMPLETE_TOPICS
+        self.assertEqual(lids,set(COMPLETE_TOPICS))
         for q in self.bank['questions']:
             self.assertIn(q['lesson'],lids)
             self.assertIn(q['difficulty'],['Easy','Medium','Hard'])

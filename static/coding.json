@@ -550,7 +550,7 @@
     "difficulty": "Hard",
     "topic": "Counting",
     "path": "shared",
-    "prompt": "n distinct notebooks must be assigned bijectively to n researchers. allowed[i][j] is 1 if researcher i may receive notebook j, otherwise 0. Return the exact integer number of permitted assignments. allowed is a square \\(\\frac{0}{1}\\) matrix with 0 <= n <= 15. For n=0 there is one empty assignment. Each notebook is used once; rows can have no permitted assignment, and individually nonempty rows do not guarantee a joint assignment exists. Aim for O(n * 2^n) time and O(2^n) space; enumerating all permutations is too slow. Do not mutate allowed.",
+    "prompt": "n distinct notebooks must be assigned bijectively to n researchers. allowed[i][j] is 1 if researcher i may receive notebook j, otherwise 0. Return the exact integer number of permitted assignments. allowed is a square matrix of zeros and ones with 0 <= n <= 15. For n=0 there is one empty assignment. Each notebook is used once; rows can have no permitted assignment, and individually nonempty rows do not guarantee a joint assignment exists. Aim for O(n * 2^n) time and O(2^n) space; enumerating all permutations is too slow. Do not mutate allowed.",
     "starter": "def solve(allowed):\n    # Write your implementation here.\n    pass\n",
     "samples": [
       {
@@ -2708,7 +2708,7 @@
     "difficulty": "Easy",
     "topic": "Research design",
     "path": "researcher",
-    "prompt": "actual, model and baseline are equal-length lists of binary integers \\(\\frac{0}{1}\\) on the SAME target records. They may be empty and have at most 100000 entries. Return [model_correct,baseline_correct,model_only_correct,baseline_only_correct], where the last two count disagreements in correctness on each paired record. Preserve all inputs. Use \\(O(n)\\) time and O(1) auxiliary space. Do not discard records on which both forecasts are wrong; do not divide by n or turn accuracy into payoff. This audits a declared paired comparison; it cannot certify that timestamps, information availability or baseline construction were fair.",
+    "prompt": "actual, model and baseline are equal-length lists of binary integers, each zero or one on the SAME target records. They may be empty and have at most 100000 entries. Return [model_correct,baseline_correct,model_only_correct,baseline_only_correct], where the last two count disagreements in correctness on each paired record. Preserve all inputs. Use \\(O(n)\\) time and O(1) auxiliary space. Do not discard records on which both forecasts are wrong; do not divide by n or turn accuracy into payoff. This audits a declared paired comparison; it cannot certify that timestamps, information availability or baseline construction were fair.",
     "starter": "def solve(actual, model, baseline):\n    # Write your implementation here.\n    pass\n",
     "samples": [
       {
@@ -4642,5 +4642,197 @@
     ],
     "solution": "from bisect import bisect_left\nfrom math import gcd\n\ndef rational(num,den):\n    divisor = gcd(abs(num),den)\n    return [str(num//divisor),str(den//divisor)]\n\ndef solve(max_price, spot_numerator, price_denominator, strikes, call_numerators, queries):\n    d = price_denominator\n    if spot_numerator > d*max_price:\n        return {'feasible':False,'bounds':None}\n    x = [0]+strikes+[max_price]\n    y = [spot_numerator]+call_numerators+[0]\n    slopes = [(y[i+1]-y[i],x[i+1]-x[i]) for i in range(len(x)-1)]\n    previous_num,previous_den = -d,1\n    for num,den in slopes:\n        if num > 0 or num*previous_den < previous_num*den:\n            return {'feasible':False,'bounds':None}\n        previous_num,previous_den = num,den\n    answer = []\n    for k in queries:\n        right = bisect_left(x,k)\n        if x[right] == k:\n            fixed = rational(y[right],d)\n            answer.append([fixed[:],fixed[:]])\n            continue\n        left = right-1\n        ln,ld = slopes[left-1] if left else (-d,1)\n        rn,rd = slopes[right] if right < len(x)-1 else (0,1)\n        low_left = y[left]*ld+ln*(k-x[left])\n        low_right = y[right]*rd-rn*(x[right]-k)\n        if low_left*rd >= low_right*ld:\n            lower = rational(low_left,d*ld)\n        else:\n            lower = rational(low_right,d*rd)\n        upper = rational(y[left]*(x[right]-k)+y[right]*(k-x[left]),d*(x[right]-x[left]))\n        answer.append([lower,upper])\n    return {'feasible':True,'bounds':answer}",
     "explanation": "Add the known endpoint quotes C(0)=S\u2080 and C(M)=0. A bounded nonnegative expectation gives a continuous convex decreasing call curve, with strike slope between \u22121 and zero. In scaled numerators, adjacent secant slopes must therefore be nondecreasing, between \u2212D and zero. Check every secant by integer cross multiplication, including the first/last bounds and S\u2080\u2264M. These are also SUFFICIENT: linearly join the quotes, extend slope \u22121 left of zero and zero right of M, and put probability mass equal to each nonnegative slope jump divided by D at its knot. The jumps sum to one; the resulting call expectations equal the curve and its mean is C(0).\n\nFor a query K strictly between adjacent knots a,b with prices A,B, the largest feasible price is their chord. A new price cannot fall below the line through A with the PREVIOUS secant slope, or the line through B with the NEXT secant slope. Use synthetic boundary slopes \u22121 and zero where those neighbouring intervals do not exist. Thus\n\n\\[\\begin{aligned}L&=\\max\\{A+s_L(K-a),\\\\&\\qquad B-s_R(b-K)\\},\\end{aligned}\\]\n\n\\[\\begin{aligned}U&=\\frac{A(b-K)}{b-a}\\\\&\\quad+\\frac{B(K-a)}{b-a}.\\end{aligned}\\]\n\nAny inserted price in [L,U] maintains all adjacent slope inequalities; the SAME slope-jump construction yields a matching measure on the augmented knots. This proves sharpness over continuous terminal support, not merely a fixed grid or numerical sample. Equality/zero mass is allowed by this task\u2019s class. Each query is bounded separately: its extremising measure need not attain every OTHER query bound simultaneously. Binary-search the interval, calculate the two lower candidate rationals and the chord with integer products, compare exactly, and reduce each pair. For the first example at strike one hundred, both supporting lines give twenty while the chord gives thirty-five. Merely interpolating the old quotes would select one admissible price, not establish a unique implied price. No probability forecast, Black\u2013Scholes parameter or extra empirical regularity was supplied."
+  },
+  {
+    "id": "c_l24_medium",
+    "title": "Decompose a weighted Brier score without rounding",
+    "difficulty": "Medium",
+    "topic": "Strategic inference and calibration",
+    "path": "trader",
+    "prompt": "probabilities, outcomes and weights are equal-length lists, with 1\u2264n\u226450000. Forecast ticks p are integers in [0,D], where scale D is an integer in [1,10^9]; the actual forecast is p/D. Outcomes are zero or one. Weights are integers in [0,10^9], with positive total W; they represent evaluation mass, not necessarily independent repetitions. There are at most FIFTY distinct forecast ticks. Group records by EXACTLY IDENTICAL forecast ticks, discarding zero-weight groups. For group \\(g\\), define weighted mass \\(N_g\\), weighted success mass \\(S_g\\), forecast \\(f_g=p_g/D\\) and rate \\(r_g=S_g/N_g\\); define global rate \\(r=\\sum_i w_i y_i/W\\). Return a dict with these four exact quantities:\n\n\\[\\begin{aligned}\\mathrm{score}&=\\sum_i w_i(f_i-y_i)^2/W,\\\\\\mathrm{reliability}&=\\sum_g N_g(f_g-r_g)^2/W,\\\\\\mathrm{resolution}&=\\sum_g N_g(r_g-r)^2/W,\\\\\\mathrm{uncertainty}&=r(1-r).\\end{aligned}\\]\n\nEach value must be ONE reduced fraction STRING \"numerator/denominator\", with canonical decimal integers and a positive denominator; zero is \"\\(\\texttt{0/1}\\)\". Preserve all inputs. Use O(n+g) arithmetic operations and O(g) group state, g\u226450; integer bit/gcd costs are additional. Do not use floats, merge nearby forecasts into coarse bins, or treat small empirical reliability as proof of population calibration. The identity score=uncertainty\u2212resolution+reliability must hold for this exact grouping.",
+    "starter": "def solve(probabilities, outcomes, weights, scale):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            1,
+            1,
+            1,
+            1,
+            3,
+            3,
+            3,
+            3
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          4
+        ],
+        "expected": {
+          "score": "3/16",
+          "reliability": "0/1",
+          "resolution": "1/16",
+          "uncertainty": "1/4"
+        }
+      },
+      {
+        "args": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          2
+        ],
+        "expected": {
+          "score": "1/4",
+          "reliability": "0/1",
+          "resolution": "0/1",
+          "uncertainty": "1/4"
+        }
+      },
+      {
+        "args": [
+          [
+            1,
+            999999999
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1000000000,
+            999999999
+          ],
+          1000000000
+        ],
+        "expected": {
+          "score": "999999998000000001/1000000000000000000",
+          "reliability": "999999998000000001/1000000000000000000",
+          "resolution": "999999999000000000/3999999996000000001",
+          "uncertainty": "999999999000000000/3999999996000000001"
+        }
+      }
+    ],
+    "solution": "from math import gcd\n\ndef ratio(num, den):\n    g = gcd(abs(num), den)\n    return str(num//g) + '/' + str(den//g)\n\ndef solve(probabilities, outcomes, weights, scale):\n    groups = {}\n    total = successes = squares = paired = 0\n    for p,y,w in zip(probabilities,outcomes,weights):\n        if not w:\n            continue\n        n,s = groups.get(p,(0,0))\n        groups[p] = (n+w,s+w*y)\n        total += w\n        successes += w*y\n        squares += w*p*p\n        paired += w*p*y\n    tnum,tden = 0,1\n    for n,s in groups.values():\n        tnum,tden = tnum*n+s*s*tden,tden*n\n        g = gcd(tnum,tden)\n        tnum,tden = tnum//g,tden//g\n    d = scale\n    base = squares-2*d*paired\n    return {'score':ratio(base+d*d*successes,total*d*d),\n            'reliability':ratio(base*tden+d*d*tnum,total*d*d*tden),\n            'resolution':ratio(tnum*total-successes*successes*tden,tden*total*total),\n            'uncertainty':ratio(successes*(total-successes),total*total)}",
+    "explanation": "The grouping is part of the mathematics. Let A=\\(\\Sigma\\)w_i p_i\u00b2, B=\\(\\Sigma\\)w_i p_i y_i, S=\\(\\Sigma\\)w_i y_i and W=\\(\\Sigma\\)w_i. Aggregate each exact forecast level into (N_g,S_g), then form the rational T=\\(\\Sigma\\)_g S_g\u00b2/N_g. Direct loss is (A\u22122DB+D\u00b2S)/(WD\u00b2). Expanding the group squares gives reliability (A\u22122DB)/(WD\u00b2)+T/W; resolution is T/W\u2212S\u00b2/W\u00b2; uncertainty is S/W\u2212S\u00b2/W\u00b2. Their signed combination cancels T and S\u00b2/W\u00b2 to recover direct score. Within a group, y\u00b2=y and the forecast is constant; a coarse bin with different forecasts would lose terms, just as in the paired-record interview problem. Reduce the sum T after every addition using gcd, and reduce each returned fraction. Zero weights carry no evaluation mass. In sample one the two exact rates equal their forecasts, giving reliability zero and resolution \\(\\frac{1}{16}\\). This is a finite weighted identity; empirical rates and resolution can overfit without validating future forecasts."
+  },
+  {
+    "id": "c_l24_hard",
+    "title": "Choose a bid using the value\u2013rival joint law",
+    "difficulty": "Hard",
+    "topic": "Strategic inference and calibration",
+    "path": "trader",
+    "prompt": "states contains 1\u2264n\u226420000 rows [net_value, highest_rival_bid, weight]. These describe a discrete JOINT law already conditional on your observed information: value V is an integer in [\u221210^9,10^9], highest rival bid H is an integer in [0,10^9], and weight is an integer in [0,10^9], with positive total W. Negative V represents a net terminal value after liabilities. cap is an integer in [0,10^9]. Choose an INTEGER bid b\u2208[0,cap]. You win only when b>H; ties LOSE. On a win, gain is V\u2212b; otherwise zero. Rival laws stay fixed when choosing b; no independence or equilibrium is assumed. Maximise expected gain, breaking ties by the SMALLEST bid. Return {\"bid\":b,\"gain\":fraction_text,\"win_probability\":fraction_text,\"win_value\":fraction_text_or_None}. The latter is E[V|winning at the SELECTED bid], or None for zero winning mass. Every fraction is a reduced canonical decimal STRING \"numerator/positive_denominator\"; zero is \"\\(\\texttt{0/1}\\)\". Preserve the input. Use O(n log n) comparisons/arithmetic and \\(O(n)\\) auxiliary storage or better, with integer bit/gcd costs additional; do not scan every bid through cap. Evaluate duplicate rival thresholds as one complete group. A fixed conditional winning value cannot be used unchanged to optimise all actions.",
+    "starter": "def solve(states, cap):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              0,
+              0,
+              48
+            ],
+            [
+              0,
+              20,
+              27
+            ],
+            [
+              100,
+              0,
+              4
+            ],
+            [
+              100,
+              20,
+              21
+            ]
+          ],
+          21
+        ],
+        "expected": {
+          "bid": 21,
+          "gain": "4/1",
+          "win_probability": "1/1",
+          "win_value": "25/1"
+        }
+      },
+      {
+        "args": [
+          [
+            [
+              100,
+              0,
+              1
+            ],
+            [
+              200,
+              100,
+              1
+            ]
+          ],
+          200
+        ],
+        "expected": {
+          "bid": 1,
+          "gain": "99/2",
+          "win_probability": "1/2",
+          "win_value": "100/1"
+        }
+      },
+      {
+        "args": [
+          [
+            [
+              0,
+              0,
+              1000000000
+            ],
+            [
+              1000000000,
+              0,
+              999999999
+            ]
+          ],
+          1
+        ],
+        "expected": {
+          "bid": 1,
+          "gain": "999999997000000001/1999999999",
+          "win_probability": "1/1",
+          "win_value": "999999999000000000/1999999999"
+        }
+      }
+    ],
+    "solution": "from math import gcd\n\ndef ratio(num,den):\n    g = gcd(abs(num),den)\n    return str(num//g) + '/' + str(den//g)\n\ndef solve(states, cap):\n    total = sum(w for v,h,w in states)\n    ordered = sorted(states,key=lambda row:row[1])\n    mass = value_sum = best_gain = best_bid = 0\n    best_mass = best_value = 0\n    i = 0\n    while i < len(ordered):\n        threshold = ordered[i][1]\n        if threshold >= cap:\n            break\n        while i < len(ordered) and ordered[i][1] == threshold:\n            v,h,w = ordered[i]\n            mass += w\n            value_sum += w*v\n            i += 1\n        bid = threshold+1\n        gain = value_sum-bid*mass\n        if gain > best_gain:\n            best_bid,best_gain = bid,gain\n            best_mass,best_value = mass,value_sum\n    return {'bid':best_bid,'gain':ratio(best_gain,total),\n            'win_probability':ratio(best_mass,total),\n            'win_value':ratio(best_value,best_mass) if best_mass else None}",
+    "explanation": "Start with bid zero, which wins no states because H is nonnegative and ties lose. Its gain is zero. The winning set changes only at b=H+1. Between two consecutive such INTEGER breakpoints, winning mass and weighted value stay fixed, while subtracting b times positive winning mass makes gain decrease. Therefore only zero and distinct thresholds H+1\u2264cap can be optimal; extra zero-mass thresholds do not invalidate this reasoning. Sort by H and add EVERY row sharing a threshold before evaluating its candidate. Maintain cumulative mass M and weighted value A. Candidate gain numerator is A\u2212bM over the common denominator W, so compare integers without rounding. Process bids ascending and update only on strictly greater gain to retain the smallest bid on ties. Remember the chosen M and A for win probability M/W and value A/M; use None when M=0. The conditional mean can be much higher than the selected bid and changes at each new winning set. In sample one, admitting all four states at bid twenty-one beats the narrow low-threshold subset; cap twenty instead makes that admission impossible. Summaries that keep only marginal means of V and H cannot replace their joint pairing. This is risk-neutral optimisation under a declared fixed law, not an inferred auction equilibrium."
   }
 ]

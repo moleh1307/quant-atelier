@@ -42,8 +42,6 @@ def matchings(points):
 class TopicPracticeTests(unittest.TestCase):
     def test_contract_and_future_topic_guard(self):
         for l in BANK['lessons']:
-            if l['id'] not in COMPLETE_TOPICS:
-                continue
             self.assertTrue(l['practiceExpanded'])
             qs = Counter(QUESTIONS[id]['difficulty'] for id in l['questions'])
             cs = Counter(CODES[id]['difficulty'] for id in l['coding'])

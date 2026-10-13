@@ -1877,3 +1877,70 @@ navigation, not learner mastery or live execution/risk certification. Inventory:
 /56 codes**; trader **14 checks /84 questions /40 codes**. **24 topics complete**;
 **l24 remains**, then the full navigation/record preservation/semantic-math
 audit and removal of the pending-topic exception. Full goal remains active.
+
+
+## Twenty-first batch: strategic inference and calibration (2026-10-13)
+
+Authored `topic_practice/calibration.py` against the actual l24 body and objectives.
+Six new interviews plus retained q41 give two Easy, two Medium and three Hard.
+They distinguish expected proper loss from realised luck, squared versus absolute
+log error, lost pairing in coarse calibration bins, fixed-bid selection, action-dependent
+auction optimisation and calibrated information refinement. Every new question has
+explicit assumptions, hints, worked reasoning, a substantive follow-up and specific
+assessment obligations. q41 retains its complete grading meaning; only its rubric changes.
+
+Retained c14 is unchanged in every public/source field and still belongs to current l24
+and additional l18 practice. New Medium code decomposes weighted Brier loss using
+IDENTICAL forecast levels; Hard optimises an integer first-price bid under a specified
+JOINT value/rival law, with ties losing and smallest-bid tie breaking. Both use reduced
+fraction strings, including large public results. Zero-weight groups carry no mass;
+no-win conditional value is None. Auctions are specified inference/best-response models,
+not equilibrium or employer-calibration claims. Source context for proper scores:
+[Gneiting and Raftery (2007)](https://sites.stat.washington.edu/people/raftery/Research/PDF/Gneiting2007jasa.pdf).
+The questions, examples, derivations and implementations are original.
+
+Removed the unfinished-topic publishing exception: every registered lesson must meet
+all difficulty counts. Negative checks reject both an unregistered future lesson and a
+registered one lacking interview or coding coverage. Coverage-removal checks exercise
+all 25 lessons and all three interview levels. Two pre-existing new coding prompts now
+say zeros/ones instead of ambiguous binary slashes. The coding-detail note follows each
+exercise’s output contract instead of universally describing float tolerance. Stable IDs,
+references, samples, hidden tests and acceptance semantics of prior tasks are preserved.
+
+Verification:
+- 251 Python tests and all 23 frontend suites pass. Navigation fixtures now expect the
+  retained c14 pass to fill one of THREE l24 slots; it still fills no l18 current slot.
+- Eight new tests check 450 direct Fraction score definitions, 650 auction joint laws
+  against every integer action, 150 finite population refinement tables, independent
+  realised/expected losses, covariance pairing, log-loss optima, winning posteriors and
+  continuous auction objectives. Limits, mutation, canonical formatting, weight scaling,
+  shuffled rows, duplicate thresholds and ALL official-copy payloads are checked.
+- All 60 expanded coding reference solutions pass the actual judge. A float-valued
+  wrong implementation fails the string-output contract. All 3044 generated/authored
+  math spans parse strictly; source course-body checks remain intact.
+- Preferred Atlas IAB connection was unavailable; native IAB controls were reused.
+  Explicit launcher entry and visible Test preview notice preceded all grading/reveals.
+  Hard was freely selected before Easy/Medium: Hard10/10, Medium8/8, retained Easy4/4.
+  Both large third public cases survive the actual expected textbox and official copy,
+  each giving debug4/4 with completion unchanged. Fractional numeric answer 1/16 is
+  accepted in preview. Both Hard worked proofs/follow-ups and the Medium editorial
+  were inspected. No written self-assessment was awarded merely for viewing proofs.
+- At a 390px override (375px document content width), auction/refinement displays and
+  score-component definitions fit their local reading widths; no document overflow or
+  KaTeX errors. Final score contract has proper mathematical subscripts and literal
+  monospace zero-fraction syntax. Normal viewport restored.
+- Final tab is PERSONAL `#question-list/l24/journey/trader/l24`:0/7 and0/3, no preview
+  notice. All953 actual saved personal bytes and questions/coding/lessons/drafts/trainers
+  match the durable ignored PRE-EDIT calibration baseline. New-topic zeros do not imply
+  the learner’s existing global work is zero; no personal reset was performed.
+
+Screenshots: [personal list](calibration-personal-question-list.png),
+[auction proof](calibration-auction-proof-narrow.png),
+[refinement proof](calibration-refinement-proof-narrow.png),
+[score contract](calibration-score-contract-narrow.png).
+
+All 25 banks are now authored to the contract, with164 interviews/75 codes.
+Researcher19/124/56 and trader14/90/42 are unique checks/questions/current-code counts.
+The goal remains ACTIVE: a final whole-bank quality, semantic math, navigation and
+preservation audit is still required. These passing checks are not independent teaching
+outcome or employer interview-readiness certification.

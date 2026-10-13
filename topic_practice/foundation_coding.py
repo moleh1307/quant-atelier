@@ -43,7 +43,7 @@ def add_foundation_coding(add, tasks):
 
     derangement_15 = sum((-1)**j * math.factorial(15)//math.factorial(j) for j in range(16))
     exercise('l01', 'Hard', 'Count constrained notebook assignments',
-        'n distinct notebooks must be assigned bijectively to n researchers. allowed[i][j] is 1 if researcher i may receive notebook j, otherwise 0. Return the exact integer number of permitted assignments. allowed is a square 0/1 matrix with 0 <= n <= 15. For n=0 there is one empty assignment. Each notebook is used once; rows can have no permitted assignment, and individually nonempty rows do not guarantee a joint assignment exists. Aim for O(n * 2^n) time and O(2^n) space; enumerating all permutations is too slow. Do not mutate allowed.',
+        'n distinct notebooks must be assigned bijectively to n researchers. allowed[i][j] is 1 if researcher i may receive notebook j, otherwise 0. Return the exact integer number of permitted assignments. allowed is a square matrix of zeros and ones with 0 <= n <= 15. For n=0 there is one empty assignment. Each notebook is used once; rows can have no permitted assignment, and individually nonempty rows do not guarantee a joint assignment exists. Aim for O(n * 2^n) time and O(2^n) space; enumerating all permutations is too slow. Do not mutate allowed.',
         'def solve(allowed):',
         [{'args': [[[1,1,0], [0,1,1], [1,0,1]]], 'expected': 2}],
         [{'args': [[]], 'expected': 1},
