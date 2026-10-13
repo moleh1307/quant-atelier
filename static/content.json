@@ -1027,9 +1027,10 @@
       "tolerance": 1e-06,
       "type": "written",
       "rubric": [
-        "State the assumptions and the object you are computing.",
-        "Show the decisive derivation or counterexample.",
-        "Explain why the tempting shortcut fails."
+        "Explain how winning can select an optimistic noise realization despite an unbiased estimate before selection.",
+        "Condition value on both the observed signal and the winning event, with an explicit information model.",
+        "Separate value inference from an optimal bid, which also depends on payment rules and rival strategies.",
+        "Distinguish common-value inference from a known private consumption value."
       ]
     },
     {
@@ -4056,6 +4057,161 @@
         "Include initial/interior/final costs to obtain 0.116 and minus 3.8.",
         "Show both refinement directions and separate the constructed quadratic identity from a general local approximation."
       ]
+    },
+    {
+      "id": "q_l24_e1",
+      "title": "One success does not reward the best probability",
+      "topic": "Strategic inference and calibration",
+      "difficulty": "Easy",
+      "path": "trader",
+      "minutes": 8,
+      "prompt": "Under your fixed pre-outcome information, a binary outcome Y has success probability \\(\\frac{3}{4}\\). You report p before Y occurs, and receive Brier LOSS \\((p-Y)^2\\), with lower loss better. Your report cannot affect the outcome. What is the EXCESS EXPECTED loss of reporting \\(p=1\\) rather than p=\\(\\frac{3}{4}\\)? Average over both outcomes; this asks a difference, not either individual loss.",
+      "answer": 0.0625,
+      "hints": [
+        "Compute each report’s loss on success and failure, then weight them by \\(\\frac{3}{4}\\) and \\(\\frac{1}{4}\\).",
+        "For true probability q, expected loss is (p−q)²+q(1−q)."
+      ],
+      "solution": "Honest reporting has expected loss (\\(\\frac{3}{4}\\))(\\(\\frac{1}{4}\\))²+(\\(\\frac{1}{4}\\))(\\(\\frac{3}{4}\\))²=\\(\\frac{3}{16}\\). Reporting one has zero loss on success but loss one on failure, so its expectation is \\(\\frac{1}{4}\\). The excess is \\(\\frac{1}{16}\\). More generally, for fixed true probability q,\n\n\\[E[(p-Y)^2]=(p-q)^2+q(1-q).\\]\n\nThe irreducible term is the same for both reports; certainty adds avoidable expected error. This argument uses a probability under the specified information, not a success rate estimated after seeing this outcome.",
+      "followup": "A success occurs and the report one receives loss zero. Does that contradict the comparison? Calculate the realised differences on success and failure and recover the expected excess.",
+      "followSolution": "On success, loss(one)−loss(honest)=−\\(\\frac{1}{16}\\). On failure it is 1−\\(\\frac{9}{16}\\)=\\(\\frac{7}{16}\\). Their weighted mean is (\\(\\frac{3}{4}\\))(−\\(\\frac{1}{16}\\))+(\\(\\frac{1}{4}\\))(\\(\\frac{7}{16}\\))=\\(\\frac{1}{16}\\). A worse probability can be luckier on a single realisation. Neither a success nor a failure alone certifies long-run calibration.",
+      "lesson": "l24",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Obtain the expected losses \\(\\frac{3}{16}\\) and \\(\\frac{1}{4}\\) and their difference \\(\\frac{1}{16}\\).",
+        "Keep the forecast information fixed and average over both binary outcomes.",
+        "Explain the realised reversal and recover the expectation without treating one event as calibration evidence."
+      ]
+    },
+    {
+      "id": "q_l24_e2",
+      "title": "The error units determine the best point estimate",
+      "topic": "Strategic inference and calibration",
+      "difficulty": "Easy",
+      "path": "trader",
+      "minutes": 10,
+      "prompt": "A positive target Y equals four or sixteen, each with probability one half under your current information. Choose a single estimate x>0 before observing Y. Your objective is to minimise EXPECTED SQUARED log-ratio loss [log(x/Y)]², using natural logs. What is the unique minimising x? Explain why this differs from minimising squared error in the original quantity.",
+      "answer": 8,
+      "hints": [
+        "Write z=log(x); the objective becomes squared error for the random variable log(Y).",
+        "The mean of the two log values is the log of their geometric mean."
+      ],
+      "solution": "Let z=log(x). Completing the square gives\n\n\\[E[(z-\\log Y)^2]=(z-E[\\log Y])^2+\\operatorname{Var}(\\log Y).\\]\n\nHere E[log Y]=3 log 2, so x=8 is unique because log is one-to-one on the positive domain. Both possible log errors have magnitude log 2, giving minimum squared loss (log 2)². Ordinary squared error instead selects \\(\\mathbb E[Y]\\)=10. Its minimum is thirty-six, whereas choosing eight gives original-unit squared error forty. The scoring rule, not a universal idea of an accurate estimate, determines which answer is optimal.",
+      "followup": "Replace SQUARED log-ratio loss by ABSOLUTE log-ratio loss. Is eight still the unique optimum? Also describe what happens when both the target and estimate are converted to units one hundred times larger, or when the target can be zero.",
+      "followSolution": "Absolute error in log space is minimised by any median. For these two equally likely log values, every z between log 4 and log 16 is a median; thus EVERY x in [4,16] minimises the absolute log loss, with value log 2. Eight remains optimal but is no longer unique. Multiplying both x and Y by one hundred leaves x/Y and both log losses unchanged. A zero target makes this log-ratio objective undefined; adding an arbitrary offset changes the task rather than extending the same loss.",
+      "lesson": "l24",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Transform to log space and derive the unique squared-loss estimate eight.",
+        "Compare with the original-unit squared-loss optimum ten and its losses.",
+        "Derive the whole absolute-log-loss optimum interval and respect the positive domain and unit conversion."
+      ]
+    },
+    {
+      "id": "q_l24_m1",
+      "title": "A perfect-looking bin can hide opposite forecasts",
+      "topic": "Strategic inference and calibration",
+      "difficulty": "Medium",
+      "path": "trader",
+      "minutes": 20,
+      "prompt": "Two pre-outcome forecasts are p₁=0.1 and p₂=0.9. Dataset A pairs them with outcomes (0,1); dataset B pairs them with outcomes (1,0). A diagnostic puts both records in ONE coarse bin. Compare the bin count, mean forecast, observed rate and direct mean Brier loss for the two datasets. Can the three bin summaries reconstruct the loss? Derive the missing relationship using empirical variances and covariance with divisor TWO.",
+      "answer": null,
+      "hints": [
+        "The summaries forget which outcome was paired with which forecast.",
+        "Expand the mean of (p−y)² around the two empirical means.",
+        "The covariance term changes sign although both marginal lists stay the same."
+      ],
+      "solution": "Both bins have count two, mean forecast one half and observed rate one half. Their average forecast-minus-outcome gap is zero. But A has loss 0.01 on each record, while B has loss 0.81 on each record. Let empirical means be \\(\\bar p,\\bar y\\), and use divisor n in empirical variances and covariance. Expanding centred records yields\n\n\\[\\begin{aligned}\\overline{(p-y)^2}&=(\\bar p-\\bar y)^2\\\\&\\quad+\\operatorname{Var}_{emp}(p)\\\\&\\quad+\\operatorname{Var}_{emp}(y)\\\\&\\quad-2\\operatorname{Cov}_{emp}(p,y).\\end{aligned}\\]\n\nHere the forecast variance is 0.16 and outcome variance 0.25. Covariance is +0.2 in A and −0.2 in B, giving 0.01 and 0.81 respectively. Coarse bin averages erase this pairing term. A zero bin gap therefore neither determines Brier loss nor proves population calibration.",
+      "followup": "Suppose the two outcomes are independent Bernoulli variables with TRUE success probabilities 0.1 and 0.9. What are the probabilities of the two observed datasets? Would the bad score in B prove the model probabilities wrong? Would splitting into one-record bins establish long-run calibration?",
+      "followSolution": "A has probability (1−0.1)·0.9=0.81, while B has probability 0.1·(1−0.9)=0.01. Other outcome pairs account for the remaining 0.18. B is unusual but possible under the correct probabilities. Singleton bins expose their individual observed discrepancies, yet a binary outcome is not its underlying probability. Preserve matched forecasts, outcome timestamps and an evaluation protocol; use adequate counts and uncertainty rather than proclaiming calibration from this tiny sample. The probability calculation needs the explicitly added independence assumption; the empirical covariance identity does not.",
+      "lesson": "l24",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Calculate equal bin summaries but Brier losses 0.01 and 0.81.",
+        "Derive the centred identity with divisor n and the correct covariance signs.",
+        "Distinguish lost pairing, a realised score and population calibration; obtain event probabilities under the added independent model."
+      ]
+    },
+    {
+      "id": "q_l24_m2",
+      "title": "Winning reweights the value behind your signal",
+      "topic": "Strategic inference and calibration",
+      "difficulty": "Medium",
+      "path": "trader",
+      "minutes": 23,
+      "prompt": "After observing your own signal, common asset value V is one hundred with probability \\(\\frac{1}{4}\\) and zero otherwise. You have ALREADY fixed a first-price bid of ten. Conditional on V AND your current information, two rival bids are independent. Each rival bids below ten with probability 0.8 if V=0 and 0.4 if V=100. You win precisely when both rival bids are below ten, pay ten on winning and pay nothing otherwise. What is E[V | your information, winning]? This is inference at the fixed bid, not an equilibrium bid calculation.",
+      "answer": 7.6923076923076925,
+      "hints": [
+        "Square each conditional crossing probability before applying Bayes.",
+        "The prior weights already include your signal; do not use that signal a second time."
+      ],
+      "solution": "The winning likelihoods are \\(\\frac{16}{25}\\) and \\(\\frac{4}{25}\\). Multiplying by the signal-conditioned prior gives low-value-and-win mass \\(\\frac{12}{25}\\) and high-value-and-win mass \\(\\frac{1}{25}\\). Total winning probability is \\(\\frac{13}{25}\\), so the conditional high-value probability is \\(\\frac{1}{13}\\) and conditional value is \\(\\frac{100}{13}\\). Conditional expected net gain is \\(\\frac{100}{13}\\)−10=−\\(\\frac{30}{13}\\). Ex-ante gain under your present information is (\\(\\frac{13}{25}\\))(−\\(\\frac{30}{13}\\))=−\\(\\frac{6}{5}\\). The signal-only mean twenty-five is insufficient: subtracting ten from it ignores the value-dependent event on which you pay.",
+      "followup": "Use one rival instead, then m conditionally independent rivals with the same crossing probabilities. Derive the winning posterior. Could you optimise your bid by using this posterior unchanged at every bid?",
+      "followSolution": "With one rival, joint winning masses are \\(\\frac{3}{5}\\) and \\(\\frac{1}{10}\\); win probability is \\(\\frac{7}{10}\\), conditional high-value probability \\(\\frac{1}{7}\\), conditional value \\(\\frac{100}{7}\\) and ex-ante gain three. For m rivals,\n\n\\[P(V=100\\mid\\mathrm{Win})=\\frac{1}{1+3\\cdot2^m}.\\]\n\nIts mean is one hundred times that probability. These crossing probabilities are stipulated AT BID TEN. Changing the bid changes the rival crossing events, requiring their laws at the new threshold. No calculation here establishes a best response or equilibrium. Without conditional independence, multiplying crossing probabilities is unjustified.",
+      "lesson": "l24",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Use both rival likelihoods and the signal-conditioned prior exactly once.",
+        "Obtain conditional value \\(\\frac{100}{13}\\), win probability \\(\\frac{13}{25}\\) and expected net gain −\\(\\frac{6}{5}\\).",
+        "Derive the one-rival and m-rival changes, identifying the independence and fixed-bid boundaries."
+      ]
+    },
+    {
+      "id": "q_l24_h1",
+      "title": "Optimise the bid and the selection event together",
+      "topic": "Strategic inference and calibration",
+      "difficulty": "Hard",
+      "path": "trader",
+      "minutes": 38,
+      "prompt": "A risk-neutral bidder’s current information assigns common value V=100 or V=200 equal probability. There are two rivals, whose bids are conditionally independent given V. If V=100, each bid is uniform on [0,100]; if V=200, each is uniform on [100,200]. These rival laws are fixed and exogenous: no equilibrium is asserted. Choose a real first-price bid b in [0,200], win if it exceeds BOTH rival bids, pay b only on winning and receive V then. Otherwise gain is zero. Ties have probability zero, and there are no other costs. Derive expected gain over the WHOLE allowed interval and prove its global maximising bid. Compare that bid with the conditional value on winning.",
+      "answer": null,
+      "hints": [
+        "For b below one hundred, a win is possible only in the low-value state.",
+        "For b above one hundred, low-value wins are certain but incur a negative margin.",
+        "Compare the maxima of both pieces and all boundaries, not just a stationary point."
+      ],
+      "solution": "For 0≤b≤100, two independent uniform crossings give\n\n\\[G(b)=\\tfrac12(100-b)(b/100)^2.\\]\n\nIts derivative is \\(b(200-3b)/20000\\), positive up to \\(\\frac{200}{3}\\) and negative thereafter; boundaries give zero. The interior maximum is therefore at b=\\(\\frac{200}{3}\\) with gain \\(\\frac{200}{27}\\). For 100≤b≤200 write x=(b−100)/100, so x∈[0,1]. The low state always wins and the high state wins with probability x². Hence\n\n\\[G(b)=50[-x+(1-x)x^2].\\]\n\nFor x>0, (1−x)x²<x, so this entire piece is negative; at x=0 it is zero. The low-piece optimum is the global unique maximum. At that bid, winning reveals V=100, with total win probability \\(\\frac{2}{9}\\). Conditional margin is \\(\\frac{100}{3}\\), whose product with \\(\\frac{2}{9}\\) gives \\(\\frac{200}{27}\\). Conditional value ONE HUNDRED is not the optimal bid: raising the bid trades margin against win probability. Bidding the unconditional mean 150 wins with probability \\(\\frac{5}{8}\\), gives winning mean value 120 and expected gain −\\(\\frac{75}{4}\\).",
+      "followup": "Replace the two rivals by m≥1 conditionally independent rivals with the same state-dependent uniform laws. Find the global optimum and maximum gain. Explain which parts would need reconsideration for a second-price auction or endogenous rival strategies.",
+      "followSolution": "The low piece is G(b)=50(1−z)z^m with z=b/100. Its derivative changes sign at z=m/(m+1), yielding\n\n\\[b^*=\\frac{100m}{m+1},\\qquad G(b^*)=\\frac{50m^m}{(m+1)^{m+1}}.\\]\n\nThe upper piece is 50[−x+(1−x)x^m], negative for x>0 because x^m≤x and 1−x<1. Boundaries do not improve the positive interior gain. Within the upper piece the winning high-state probability is x^m/(1+x^m), so the winning value itself changes with the action. Second-price payments depend on the highest rival bid, not your b, altering the margin objective. If rival strategies respond to you, the fixed crossing laws need a strategic model; the present optimum is a best response to specified exogenous laws.",
+      "lesson": "l24",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive both expected-gain pieces using conditional joint crossings and first-price payments.",
+        "Prove global optimality at \\(\\frac{200}{3}\\) including boundaries and the negative upper piece.",
+        "Calculate gain \\(\\frac{200}{27}\\) and distinguish the optimum from conditional value and the raw mean.",
+        "Derive the m-rival formula and state precisely what changes with payment rules or strategic responses."
+      ]
+    },
+    {
+      "id": "q_l24_h2",
+      "title": "Can new information improve an already calibrated forecast?",
+      "topic": "Strategic inference and calibration",
+      "difficulty": "Hard",
+      "path": "trader",
+      "minutes": 35,
+      "prompt": "Let Y be binary, P∈[0,1] a probability report, and G another feature. Both P and G are available BEFORE Y occurs. Under a fixed population joint law define \\(R=E[Y\\mid P]\\) and \\(T=E[Y\\mid P,G]\\); use the exact conditional expectations, not fitted estimates. Prove that R and T are each calibrated and derive the changes in expected Brier loss from P to R and from R to T. Does calibration of P alone rule out a strict improvement from G? State when each improvement is strict.",
+      "answer": null,
+      "hints": [
+        "For any information set, subtract its conditional mean and make the cross term vanish.",
+        "R is a function of P, whereas T uses the larger information set.",
+        "Apply the tower property to show calibration even when multiple information states produce the same report."
+      ],
+      "solution": "Because \\(E[Y-R\\mid P]=0\\), expanding squared loss around R gives\n\n\\[E[(P-Y)^2]-E[(R-Y)^2]=E[(P-R)^2].\\]\n\nLikewise R and T are measurable under the enlarged information (P,G), and \\(E[Y-T\\mid P,G]=0\\), so\n\n\\[E[(R-Y)^2]-E[(T-Y)^2]=E[(T-R)^2].\\]\n\nThe right sides are nonnegative and strictly positive precisely when the corresponding forecasts differ with positive probability. Tower conditioning gives E[Y|R]=E[E[Y|P]|R]=R and E[Y|T]=E[E[Y|P,G]|T]=T. If P is calibrated then R=P almost surely, but T can still vary within a fixed P. For example, two equally likely regimes have conditional success probabilities \\(\\frac{1}{4}\\) and \\(\\frac{3}{4}\\) while P=\\(\\frac{1}{2}\\) in both. P is calibrated globally and has expected loss \\(\\frac{1}{4}\\); the regime-informed T has expected loss \\(\\frac{3}{16}\\), improving by \\(\\frac{1}{16}\\). No independence across successive evaluation records is needed for these population identities; pre-outcome availability and the declared joint law are essential.",
+      "followup": "A developer estimates T from the same finite dataset used to evaluate it and obtains smaller empirical loss. Does your proof certify future improvement? What if G actually contains the eventual outcome? Specify a valid comparison protocol.",
+      "followSolution": "The proof concerns exact population conditional means. A fitted estimate can have approximation and estimation error; minimising in-sample residuals can reward overfitting. A feature containing the eventual outcome would make T=Y and give zero retrospective error, but is unavailable for a forecast. Define the feature timestamp and baseline in advance, fit transformations/recalibration only on training data, then evaluate paired pre-outcome forecasts on untouched data with a split appropriate to dependence and deployment time. Report both losses and uncertainty. Finite bin frequencies can help diagnose reliability but neither equal the population means by definition nor guarantee out-of-sample improvement.",
+      "lesson": "l24",
+      "tolerance": 1e-06,
+      "type": "written",
+      "rubric": [
+        "Derive both squared-loss differences through conditional cross-term cancellation.",
+        "Prove calibration using tower conditioning and state the positive-probability strictness criteria.",
+        "Construct the calibrated constant/report-with-regime counterexample and compute its losses.",
+        "Separate exact conditional means from fitted in-sample estimates and exclude post-outcome information."
+      ]
     }
   ],
   "lessons": [
@@ -5909,10 +6065,18 @@
       "correct": 1,
       "explanation": "Winning carries information about the relative extremeness of your estimate.",
       "questions": [
-        "q41"
+        "q41",
+        "q_l24_e1",
+        "q_l24_e2",
+        "q_l24_m1",
+        "q_l24_m2",
+        "q_l24_h1",
+        "q_l24_h2"
       ],
       "coding": [
-        "c14"
+        "c14",
+        "c_l24_medium",
+        "c_l24_hard"
       ],
       "objectives": [
         "Explain the information in winning a common-value auction.",
@@ -5920,7 +6084,7 @@
         "Choose meaningful error measures for positive quantities."
       ],
       "trainers": [],
-      "practiceExpanded": false,
+      "practiceExpanded": true,
       "optionLabels": [
         "Bid your unconditional mean",
         "Condition value on your signal and winning",

@@ -94,7 +94,7 @@ assert.match(run("topicPracticePage('coding')"),/#coding\/c_l18_easy\//);
 assert.equal(run('state.drafts.c14'),'old calibration draft');
 run("route=['coding','c14','journey','trader','l24'];");
 assert.equal(run('moduleContext().additional'),undefined);
-assert.equal(run('moduleStageEvidence(content.lessons.find(l=>l.id===\'l24\'),"Implement")'),'1/1');
+assert.equal(run('moduleStageEvidence(content.lessons.find(l=>l.id===\'l24\'),"Implement")'),'1/3');
 run("route=['coding','c05','journey','researcher','l18'];");
 assert.equal(run('moduleContext().lesson.id'),'l18');
 assert.equal(run('moduleContext().additional'),undefined,'Another module may still own that current exercise');

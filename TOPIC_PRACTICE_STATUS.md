@@ -24,9 +24,8 @@ Students choose questions within the lists; no forced Q1 → Q2 → code chain.
 - No AI coaching, suggested solutions in the editor, firm-attribution padding or
   copied commercial interview-bank content.
 - All new topics must be registered explicitly. `topic_practice/__init__.py` checks
-  complete-topic difficulty coverage at build time. During this expansion, the
-  exact unfinished set is `PENDING_TOPICS`; remove that exception when all are done.
-  A future unregistered lesson fails the build.
+  every registered topic’s difficulty coverage at build time, without an unfinished-bank exception.
+  A future unregistered lesson fails the build; registering one does not bypass coverage.
 
 ## Current implementation
 
@@ -56,33 +55,28 @@ Students choose questions within the lists; no forced Q1 → Q2 → code chain.
 | l21 continuation/log growth | 7 interviews; 3 coding | Verified | Automated + live grading/exact debug copies/narrow Bayesian and tail proofs |
 | l22 joint exposures/risk | 6 interviews; 3 coding | Verified | Automated + live grading/exact debug copies/narrow crash and hedge proofs |
 | l23 mathematical finance | 7 interviews; 3 coding | Verified | Automated + live grading/three public exact debug copies/narrow pricing and cash-ledger proofs |
-| l24 trader | Pending | Pending | Pending |
+| l24 strategic inference/calibration | 7 interviews; 3 coding | Verified | Automated + live Hard-first grading/exact public debug copies/narrow proofs |
 
 Sources: `topic_practice/foundation_questions.py`, `foundation_coding.py`,
-`distributions.py`, `stopping.py`, `arithmetic.py`, `variance.py`, `data_time.py`, `estimation.py`, `likelihood.py`, `covariance.py`, `regression.py`, `inference.py`, `time_series.py`, `validation.py`, `search.py`, `research_defence.py`, `monte_carlo.py`, `algorithms.py`, `fair_value.py`, `order_flow.py`, `continuation_growth.py`, `joint_risk.py`, `finance_core.py`, the existing banks, and
+`distributions.py`, `stopping.py`, `arithmetic.py`, `variance.py`, `data_time.py`, `estimation.py`, `likelihood.py`, `covariance.py`, `regression.py`, `inference.py`, `time_series.py`, `validation.py`, `search.py`, `research_defence.py`, `monte_carlo.py`, `algorithms.py`, `fair_value.py`, `order_flow.py`, `continuation_growth.py`, `joint_risk.py`, `finance_core.py`, `calibration.py`, the existing banks, and
 `tests/test_topic_practice.py`, `test_distribution_stopping_practice.py`, and
 `test_arithmetic_variance_practice.py`, `test_data_time_practice.py`, and
-`test_estimation_practice.py`, and `test_likelihood_practice.py`, and `test_covariance_practice.py`, and `test_regression_practice.py`, and `test_inference_practice.py`, and `test_time_series_practice.py`, and `test_validation_practice.py`, and `test_search_practice.py`, and `test_research_defence_practice.py`, and `test_monte_carlo_practice.py`, and `test_algorithms_practice.py`, and `test_fair_value_practice.py`, and `test_order_flow_practice.py`, and `test_continuation_growth_practice.py`, and `test_joint_risk_practice.py`, and `test_finance_core_practice.py`. Generated assets are
+`test_estimation_practice.py`, and `test_likelihood_practice.py`, and `test_covariance_practice.py`, and `test_regression_practice.py`, and `test_inference_practice.py`, and `test_time_series_practice.py`, and `test_validation_practice.py`, and `test_search_practice.py`, and `test_research_defence_practice.py`, and `test_monte_carlo_practice.py`, and `test_algorithms_practice.py`, and `test_fair_value_practice.py`, and `test_order_flow_practice.py`, and `test_continuation_growth_practice.py`, and `test_joint_risk_practice.py`, and `test_finance_core_practice.py`, and `test_calibration_practice.py`. Generated assets are
 `static/content.json` and `static/coding.json`; rebuild their Python sources.
 
-The two list destinations and nonsequential journey handoffs are implemented
-across the site. Existing pending topics expose their current linked practice;
-their banks do not yet satisfy the approved difficulty contract. The eight foundation
-topics and researcher estimation l09, likelihood l25, covariance l10, regression l11, inference l12, time series l13, validation l14, search l15, research defence l16, Monte Carlo l17 and algorithms l18 plus trader fair value l19, order flow l20, continuation/log growth l21, joint exposures/risk l22 and mathematical finance l23 do. Current inventory: 25 lessons, 158 interview questions, 73 coding
-exercises. Researcher route: 19 checks, 124 distinct questions, 56 current codes.
+The two list destinations and nonsequential journey handoffs are implemented across the site.
+All 25 existing topic banks meet the approved difficulty contract. Current inventory:
+25 lessons, 164 interview questions, 75 coding exercises. Researcher route:
+19 checks, 124 distinct questions, 56 current codes. Trader route:
+14 checks, 90 distinct questions, 42 current codes. Shared links count once per route.
 
-Trader route: 14 checks, 84 distinct questions, 40 current codes.
+Next: perform the final ALL-topic semantic-math, quality, navigation and preservation audit.
+The full goal remains active until that audit and its commit/push evidence are complete.
+Individual topic verification and passing counts do not substitute for this final review.
 
-Next: author trader l24 strategic inference/calibration, preserving c14 and its legacy contexts.
-Finish live checks of the remaining topic lists and representative exercises.
-Inspect each lesson’s
-actual learning goals and authored explanation before selecting its problems.
-The full goal remains active until all 25 topics, future-topic validation,
-navigation, preservation checks and commit/push evidence are complete.
-
-As of 2026-10-13, all 23 frontend suites and 243 Python tests pass. Independent
+As of 2026-10-13, all 23 frontend suites and 251 Python tests pass. Independent
 enumeration, exact moments and rational state equations check the completed topics' delicate
-mathematical answers and coding references; all fifty-eight expanded reference solutions
-also pass the actual judge. Existing grading meaning and IDs are preserved; q44, q24, q49–q51, q20/q29 and q19/q21/q30 and q22/q26/q47 and q18/q31 and q27/q28 and q04/q25/q32 and q33/q34 and q43/q48 and q35 and q36/q42 and q13/q37 and q38 and q39/q40 now have topic-specific
+mathematical answers and coding references; all sixty expanded reference solutions
+also pass the actual judge. Existing grading meaning and IDs are preserved; q44, q24, q49–q51, q20/q29 and q19/q21/q30 and q22/q26/q47 and q18/q31 and q27/q28 and q04/q25/q32 and q33/q34 and q43/q48 and q35 and q36/q42 and q13/q37 and q38 and q39/q40 and q41 now have topic-specific
 assessment criteria in place of their generic rubrics. q27 also clarifies overlap wording without changing its assessment meaning. q25 now states its intended exact rejection probability; q32 distinguishes identical copies from a genuine search. q48 explicitly includes finite second moments and handles a constant target without undefined correlation, preserving its assessment meaning. Existing saved study records are retained. Batch-specific preservation evidence and baseline availability limits are documented in verification.
 See [verification](evidence/topic-practice-20261012.md) for scope and limitations.
