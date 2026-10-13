@@ -2297,6 +2297,298 @@
       ]
     },
     {
+      "id": "q_l30_e1",
+      "title": "The mean belongs inside the leaf",
+      "topic": "Nonlinear machine learning",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 8,
+      "prompt": "A regression tree is restricted to the split x≤2. Its equally weighted training records (x,y) are (0,0),(1,2),(3,4),(4,8). Each leaf minimizes the SUM of squared training errors with a constant prediction. What is the total residual sum of squares after fitting both leaves?",
+      "answer": 10,
+      "hints": [
+        "Differentiate the squared loss within each leaf.",
+        "Compute errors around two different leaf means, not the overall mean."
+      ],
+      "solution": "The left mean is one and the right mean is six. Left errors contribute 1+1=2; right errors contribute 4+4=8, totaling 10. The parent mean is \\(\\frac{7}{2}\\) and parent RSS is 35, so this split gains 25. This calculation chooses leaf values for a supplied split; it does not establish future performance.",
+      "followup": "What prediction does this fitted tree give at x=100, and what does that tell you about extrapolation?",
+      "followSolution": "It gives six: the query is in the right leaf. The ordinary constant-leaf tree extends its region value, not a learned slope. If the real response keeps increasing outside training support, this is a consequential inductive assumption.",
+      "lesson": "l30",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Derive the two constants from the loss.",
+        "Keep total RSS distinct from MSE.",
+        "Explain constant-leaf extrapolation."
+      ]
+    },
+    {
+      "id": "q_l30_e2",
+      "title": "Nonlinear features still have a linear solve",
+      "topic": "Nonlinear machine learning",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 8,
+      "prompt": "Use the feature map \\(\\phi(x)=(x,x^2)\\), with NO intercept. Training points are x=−1 and x=1 with responses both one. Minimize \\(\\frac1{2n}\\sum_i(y_i-\\phi(x_i)^Tb)^2+\\frac\\lambda2\\|b\\|^2\\), n=2 and lambda=1. What is the fitted prediction at x=2?",
+      "answer": 2,
+      "hints": [
+        "The two feature columns are orthogonal on the training points.",
+        "The averaged Gram is the identity; the cross-product vector is (0,1)."
+      ],
+      "solution": "The slope vector is (0,\\(\\frac{1}{2}\\)), since (I+I)b=(0,1). The prediction at two is 0*2+(\\(\\frac{1}{2}\\))*4=2. The map is nonlinear in x but the fitting problem is a convex quadratic in b. Shrinkage changes the coefficient, not the fact that x² extrapolates quadratically.",
+      "followup": "Compute the same result using the kernel k(x,z)=xz+x²z².",
+      "followSolution": "K=diag(2,2). The average-loss convention gives alpha=(K+n*lambda*I) inverse y=(\\(\\frac{1}{4}\\),\\(\\frac{1}{4}\\)). The query kernel row is (2,6), giving prediction two. Using K+lambda*I would incorrectly give \\(\\frac{8}{3}\\).",
+      "lesson": "l30",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Introduce the fixed map and intercept convention.",
+        "Use the average-loss normal equation.",
+        "Distinguish nonlinear input behavior from coefficient optimization."
+      ]
+    },
+    {
+      "id": "q_l30_m1",
+      "title": "A forest has a variance floor",
+      "topic": "Nonlinear machine learning",
+      "difficulty": "Medium",
+      "path": "researcher",
+      "minutes": 16,
+      "prompt": "At one fixed input, consider B=20 RANDOM fitted tree predictions, each with variance 9 and each distinct pair with covariance \\(\\frac{9}{4}\\). Their mean prediction across fitting randomness has bias one relative to the true conditional response mean. Fresh response noise, independent of all fitting randomness at this input, has variance two. What is the expected squared prediction error of the unweighted forest average on this fresh response?",
+      "answer": 5.5875,
+      "hints": [
+        "Expand the variance of a sum into B diagonal and B(B−1) off-diagonal terms.",
+        "Bias is not divided by B. Include fresh noise separately."
+      ],
+      "solution": "The average variance is [20*9+20*19*(\\(\\frac{9}{4}\\))]/20²=\\(\\frac{207}{80}\\). Add squared bias one and fresh noise two to get \\(\\frac{447}{80}\\)=5.5875. Pairwise correlation is \\(\\frac{1}{4}\\). In general the variance is sigma²[rho+(1−rho)/B], so increasing B leaves a limit \\(\\frac{9}{4}\\) rather than zero under this covariance model.",
+      "followup": "Can this positive correlation always be interpreted as correlation conditional on the observed training data?",
+      "followSolution": "No. Independently randomized trees can be conditionally independent given the dataset but share variability when datasets are also random. The expectation/covariance law must be stated. Random-feature selection can change both strength and correlation; it is not a guarantee of improved risk.",
+      "lesson": "l30",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Specify the source of randomness.",
+        "Count covariance contributions.",
+        "Preserve bias and fresh noise."
+      ]
+    },
+    {
+      "id": "q_l30_m2",
+      "title": "A Newton leaf corrects logits",
+      "topic": "Nonlinear machine learning",
+      "difficulty": "Medium",
+      "path": "researcher",
+      "minutes": 16,
+      "prompt": "Four binary training labels (1,1,1,0) currently have logits all zero. Add ONE constant logit correction v to their shared leaf. Use the second-order Taylor surrogate of SUMMED logistic loss plus lambda*v²/2, with lambda=1. Return the minimizing FULL Newton correction v, before any shrinkage. This is not a leaf probability or an exact logistic optimizer.",
+      "answer": 0.5,
+      "hints": [
+        "At zero each probability is \\(\\frac{1}{2}\\) and each curvature is \\(\\frac{1}{4}\\).",
+        "Sum gradients p−y and curvatures before adding lambda."
+      ],
+      "solution": "G=sum(p−y)=−1, H=sum(p(1−p))=1. The surrogate variable part is Gv+(H+lambda)v²/2, minimized at v=−G/(H+lambda)=\\(\\frac{1}{2}\\). With learning rate eta=\\(\\frac{1}{5}\\), the actual logit addition is \\(\\frac{1}{10}\\) and the resulting probability is sigmoid(\\(\\frac{1}{10}\\)), about 0.52498. Neither v nor eta*v is itself a probability.",
+      "followup": "Find the exact unpenalized constant-logit optimum for these labels. Does an all-one leaf have a finite such optimum?",
+      "followSolution": "For the mixed leaf, sigmoid(v)=\\(\\frac{3}{4}\\) so v=log(3). For an all-one leaf the unpenalized infimum occurs at v→infinity; there is no finite optimum. The Newton surrogate and the exact loss must not be confused, especially at near-zero curvature.",
+      "lesson": "l30",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Differentiate the loss with respect to logits.",
+        "Use summed normalization and the supplied penalty.",
+        "Separate surrogate optimum, shrinkage and exact loss."
+      ]
+    },
+    {
+      "id": "q_l30_h1",
+      "title": "A kernel coefficient is not a feature coefficient",
+      "topic": "Nonlinear machine learning",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 35,
+      "prompt": "Let training feature vectors be phi1=phi2=(1,0), with responses y=(1,−1). Minimize \\(\\frac12\\sum_i(y_i-\\phi_i^Tw)^2+\\frac12\\|w\\|^2\\) with no intercept. Let K be their Gram matrix and write w=sum(alpha_i*phi_i). A canonical kernel solve uses alpha=(K+I) inverse y. Derive alpha, the fitted feature vector, the RKHS penalty alphaᵀK alpha, training RSS, and prediction at a query with feature vector (2,0). Characterize all alpha giving the same optimal feature vector. Then suppose someone instead minimizes ||y−K alpha||²/2+||alpha||²/2. Explain why this is a DIFFERENT penalty in general; compute its two training predictions when the response is changed to y=(1,1).",
+      "answer": null,
+      "hints": [
+        "Resolve response vectors into the sum direction (1,1) and contrast direction (1,−1).",
+        "The Gram is all ones: its nullspace destroys coefficient identifiability but not the fitted feature vector.",
+        "Ridge on feature weights penalizes alphaᵀK alpha, not alphaᵀalpha."
+      ],
+      "solution": "K has eigenvalues two and zero. Canonical alpha=(1,−1); w=(0,0), penalty zero, RSS two and query prediction zero. Every alpha=(t,−t) represents the same optimum. The positive-lambda canonical solve selects a coefficient representation; it does not make that representation uniquely required by the RKHS objective when K is singular. For y=(1,1), correct feature ridge yields w=(\\(\\frac{2}{3}\\),0), training predictions both \\(\\frac{2}{3}\\). Coefficient ridge instead solves (K²+I)alpha=Ky, yielding alpha=(\\(\\frac{2}{5}\\),\\(\\frac{2}{5}\\)), predictions both \\(\\frac{4}{5}\\). Along an eigenvalue d>0, correct fitted shrinkage is d/(d+lambda), while coefficient ridge gives d²/(d²+lambda). These are different geometries. The nullspace responses cannot be fitted by either representation.",
+      "followup": "If the feature-weight loss is AVERAGED over n observations, what canonical matrix changes, and what is unique when lambda>0?",
+      "followSolution": "Use K+n*lambda*I. The penalized feature weight is unique because the feature objective is strictly convex; fitted predictions are unique. Alpha representations can still differ by ker(K). A finite-data Gram being PSD is necessary, but a proposed kernel must be PSD on every finite input collection to define a valid feature inner product.",
+      "lesson": "l30",
+      "tolerance": 1e-06,
+      "type": "structured",
+      "rubric": [
+        "Derive the span reduction and eigen-directions.",
+        "Distinguish representation nonuniqueness from prediction uniqueness.",
+        "Compare feature-norm and coefficient-norm penalties.",
+        "Preserve the average/sum convention."
+      ],
+      "assessmentVersion": "objective-v1",
+      "checks": [
+        {
+          "type": "numeric",
+          "prompt": "What is the training RSS with responses (1,−1)?",
+          "answer": 2,
+          "tolerance": 1e-06,
+          "explanation": "Both fitted values are zero.",
+          "id": "part1"
+        },
+        {
+          "type": "numeric",
+          "prompt": "What is alphaᵀK alpha for canonical alpha and responses (1,−1)?",
+          "answer": 0,
+          "tolerance": 1e-06,
+          "explanation": "The response contrast is in ker(K).",
+          "id": "part2"
+        },
+        {
+          "type": "numeric",
+          "prompt": "With y=(1,1), what is either training prediction under the INCORRECT coefficient L2 penalty?",
+          "answer": 0.8,
+          "tolerance": 1e-06,
+          "explanation": "K² has eigenvalue four along the sum direction.",
+          "id": "part3"
+        },
+        {
+          "type": "select",
+          "prompt": "Select all valid conclusions.",
+          "options": [
+            {
+              "correct": true,
+              "text": "A positive feature-weight L2 penalty gives a unique feature weight, even though singular K allows different alpha representations.",
+              "explanation": "The feature objective is strictly convex; the representation map can have a nullspace.",
+              "id": "choice2",
+              "label": "A positive feature-weight L2 penalty gives a unique feature weight, even though singular K allows different alpha representations."
+            },
+            {
+              "correct": true,
+              "text": "Every alpha=(t,−t) represents the optimal feature vector for responses (1,−1).",
+              "explanation": "Their feature sum is zero.",
+              "id": "choice1",
+              "label": "Every alpha=(t,−t) represents the optimal feature vector for responses (1,−1)."
+            },
+            {
+              "correct": true,
+              "text": "Averaging the feature data loss gives the canonical matrix K+n*lambda*I.",
+              "explanation": "Multiplying the average objective by n scales its penalty.",
+              "id": "choice4",
+              "label": "Averaging the feature data loss gives the canonical matrix K+n*lambda*I."
+            },
+            {
+              "correct": false,
+              "text": "Penalizing alphaᵀalpha is the same RKHS norm penalty for every Gram matrix.",
+              "explanation": "Feature norm is alphaᵀK alpha.",
+              "id": "choice3",
+              "label": "Penalizing alphaᵀalpha is the same RKHS norm penalty for every Gram matrix."
+            },
+            {
+              "correct": false,
+              "text": "Positive lambda implies the singular feature map itself becomes injective.",
+              "explanation": "It makes K+lambda*I invertible, not K or the feature map.",
+              "id": "choice5",
+              "label": "Positive lambda implies the singular feature map itself becomes injective."
+            }
+          ],
+          "id": "part4"
+        }
+      ]
+    },
+    {
+      "id": "q_l30_h2",
+      "title": "When greedy learning cannot see the interaction",
+      "topic": "Nonlinear machine learning",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 35,
+      "prompt": "Let X1,X2 be independent uniform signs in {−1,1}, and Y=X1*X2 with NO response noise. First use the four corner points with equal training weights. Derive the best affine squared-loss predictor and its MSE. Show the gain of either root axis split, and construct an exact depth-two axis tree. Prove that any finite additive ensemble of one-feature stumps has mixed corner difference zero and cannot reproduce Y. Then change ONLY the TRAINING distribution to independent signs with P(X1=1)=\\(\\frac{3}{4}\\) and P(X2=1)=\\(\\frac{1}{2}\\), keeping Y=X1*X2. Derive the training RSS-per-unit-weight gain from splitting on X2. Fit its population optimal stump, then compute its MSE on the ORIGINAL uniform deployment distribution. Explain why this apparent training gain does not remove the representational limitation.",
+      "answer": null,
+      "hints": [
+        "Under uniform signs, Y is orthogonal to 1, X1 and X2.",
+        "For an additive f, f(1,1)−f(1,−1)−f(−1,1)+f(−1,−1)=0.",
+        "Under changed training weights E[X1]=\\(\\frac{1}{2}\\); condition on X2, then evaluate under the ORIGINAL law."
+      ],
+      "solution": "The affine optimum is zero, MSE one. Either root split leaves conditional response mean zero; its gain is zero. Split on X1 then on X2 in each child and assign their products for a perfect depth-two fit. Additive one-variable functions have mixed difference zero, but Y has mixed difference four; no finite sum of stumps fits it. Under shifted training weights E[Y|X2]=(\\(\\frac{1}{2}\\))X2. Parent mean is zero; conditional-mean variance is \\(\\frac{1}{4}\\), so the split gains \\(\\frac{1}{4}\\) and training MSE is \\(\\frac{3}{4}\\). Deployment MSE of (\\(\\frac{1}{2}\\))X2 is E[(X1−\\(\\frac{1}{2}\\))²]=\\(\\frac{5}{4}\\). On uniform corners, Y is orthogonal to the entire additive subspace, so the minimum additive MSE remains one: more stumps cannot solve the structural gap. A positive-gain-only greedy tree stops on the balanced case despite a depth-two solution; allowing a zero-gain first split is an optimization policy, not proof that all future splits help.",
+      "followup": "Does an additive logistic MODEL have no interactions in its probabilities?",
+      "followSolution": "Additive logits imply zero mixed difference on the logit scale, not generally on the probability scale: the sigmoid is nonlinear. State the scale when saying additive or interaction. In this regression problem the prediction scale is the squared-loss response itself.",
+      "lesson": "l30",
+      "tolerance": 1e-06,
+      "type": "structured",
+      "rubric": [
+        "Prove orthogonality and the mixed-difference obstruction.",
+        "Separate representability from greedy discovery.",
+        "Compute the shifted-law gain and the original-law risk.",
+        "State the scale on which additivity holds."
+      ],
+      "assessmentVersion": "objective-v1",
+      "checks": [
+        {
+          "type": "numeric",
+          "prompt": "What is the root-split squared-error gain on uniformly weighted corners?",
+          "answer": 0,
+          "tolerance": 1e-06,
+          "explanation": "Each child still has mean zero.",
+          "id": "part1"
+        },
+        {
+          "type": "numeric",
+          "prompt": "What is the X2 split gain under the changed training distribution?",
+          "answer": 0.25,
+          "tolerance": 1e-06,
+          "explanation": "The conditional mean is X2/2.",
+          "id": "part2"
+        },
+        {
+          "type": "numeric",
+          "prompt": "What is its stump MSE on ORIGINAL uniform deployment?",
+          "answer": 1.25,
+          "tolerance": 1e-06,
+          "explanation": "Average (X1−\\(\\frac{1}{2}\\))² under uniform signs.",
+          "id": "part3"
+        },
+        {
+          "type": "select",
+          "prompt": "Select all valid claims.",
+          "options": [
+            {
+              "correct": false,
+              "text": "The changed training law guarantees that its positive-gain stump improves uniform deployment risk.",
+              "explanation": "Its deployment MSE is \\(\\frac{5}{4}\\), exceeding the constant-zero risk one.",
+              "id": "choice4",
+              "label": "The changed training law guarantees that its positive-gain stump improves uniform deployment risk."
+            },
+            {
+              "correct": true,
+              "text": "A greedy tree refusing zero-gain splits can stop before a useful interaction is exposed.",
+              "explanation": "Both initial gains vanish.",
+              "id": "choice3",
+              "label": "A greedy tree refusing zero-gain splits can stop before a useful interaction is exposed."
+            },
+            {
+              "correct": true,
+              "text": "Additivity must identify a scale, such as response or logit.",
+              "explanation": "An additive logit can become nonadditive after sigmoid.",
+              "id": "choice5",
+              "label": "Additivity must identify a scale, such as response or logit."
+            },
+            {
+              "correct": true,
+              "text": "A depth-two axis-aligned tree can fit the balanced four-corner target exactly.",
+              "explanation": "The second split exposes the conditional relationship.",
+              "id": "choice1",
+              "label": "A depth-two axis-aligned tree can fit the balanced four-corner target exactly."
+            },
+            {
+              "correct": false,
+              "text": "Enough one-feature regression stumps can exactly fit these four corner responses.",
+              "explanation": "Every additive ensemble has mixed difference zero; the target has four.",
+              "id": "choice2",
+              "label": "Enough one-feature regression stumps can exactly fit these four corner responses."
+            }
+          ],
+          "id": "part4"
+        }
+      ]
+    },
+    {
       "id": "q_l29_e1",
       "title": "Averaging changes the penalty convention",
       "topic": "Statistical learning",
@@ -10121,6 +10413,72 @@
         "Keep the numerical penalty parameter unchanged.",
         "Divide the penalty parameter by the number of training observations.",
         "Choose it using the final test labels."
+      ]
+    },
+    {
+      "id": "l30",
+      "title": "Give the model a way to bend",
+      "topic": "Nonlinear machine learning",
+      "path": "researcher",
+      "minutes": 75,
+      "intro": "Follow an interaction that a straight line cannot express. Derive feature maps, kernel fits, tree partitions and ensemble updates, then ask what their flexibility actually buys on new data.",
+      "sections": [
+        {
+          "title": "An interaction is a representation problem",
+          "text": "Four corner observations expose a missing product feature. Additive effects and interactions are different assumptions."
+        },
+        {
+          "title": "Fit in feature space; predict in input space",
+          "text": "A fixed feature map makes a nonlinear predictor linear in its coefficients. With average half-loss and ridge, kernel coefficients satisfy \\((K+n\\lambda I)\\alpha=y\\)."
+        },
+        {
+          "title": "A tree learns regions rather than a slope",
+          "text": "Within a squared-loss leaf, predict its response mean. Splits reduce residual sums of squares; greedy search can miss pure interactions."
+        },
+        {
+          "title": "Averaging and correcting are different operations",
+          "text": "Forest averaging reduces the variable component shared imperfectly across trees. Boosting fits negative loss gradients stage by stage."
+        },
+        {
+          "title": "Evaluate the whole nonlinear procedure",
+          "text": "Representation, preprocessing, depth, bandwidth, stopping and calibration belong inside eligible training boundaries. Flexibility cannot repair leakage."
+        }
+      ],
+      "example": "For feature corners (−1,−1),(−1,1),(1,−1),(1,1) and targets (1,−1,−1,1), every affine least-squares predictor is zero. The product feature x1*x2 fits all four exactly. Every root axis split has zero squared-error gain, but a depth-two tree can fit perfectly. No sum of single-feature stumps can represent this interaction exactly.",
+      "check": "On the four equally weighted corner records with target x1*x2, every one-feature root split has zero training squared-error gain. What follows?",
+      "options": [
+        "A greedy tree that refuses zero-gain splits stops, even though a depth-two tree can fit perfectly.",
+        "No axis-aligned tree can represent the target.",
+        "Enough additive one-feature stumps must eventually fit the four targets exactly.",
+        "The target has no predictable structure."
+      ],
+      "correct": 0,
+      "explanation": "A first split leaves each child with one +1 and one −1 response. A second-coordinate split within each child separates them, but a strictly positive-gain stopping rule never reaches that stage. Additive stumps retain a zero mixed difference.",
+      "questions": [
+        "q_l30_e1",
+        "q_l30_e2",
+        "q_l30_m1",
+        "q_l30_m2",
+        "q_l30_h1",
+        "q_l30_h2"
+      ],
+      "coding": [
+        "c_l30_easy",
+        "c_l30_medium",
+        "c_l30_hard"
+      ],
+      "objectives": [
+        "Distinguish nonlinear inputs, coefficient linearity and learned representations.",
+        "Derive tree gains, ensemble variance, kernel normalization and loss-specific boosting steps.",
+        "Diagnose interaction barriers, extrapolation, validation leakage and probability/decision mismatches."
+      ],
+      "trainers": [],
+      "practiceExpanded": true,
+      "optionLabels": [
+        "A greedy tree that refuses zero-gain splits stops, even though a depth-two tree can fit perfectly.",
+        "No axis-aligned tree can represent the target.",
+        "Enough additive one-feature stumps must eventually fit the four targets exactly.",
+        "The target has no predictable structure."
       ]
     },
     {

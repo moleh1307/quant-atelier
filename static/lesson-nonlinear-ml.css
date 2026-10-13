@@ -1,0 +1,17 @@
+/* Representation colors refer to signed responses and residual corrections. */
+.nonlinear-corners svg,.nonlinear-forest svg{display:block;width:100%;height:auto;margin:18px auto;max-width:640px;overflow:visible}
+.nonlinear-corners svg text,.nonlinear-forest svg text{font-family:Geist,sans-serif;font-size:14px;fill:#5f6b54}
+.nonlinear-axis{fill:none;stroke:#c9cbbd;stroke-width:1.5}
+.nonlinear-dot{fill:#e9e5dc;stroke:#7c8572;stroke-width:2;transition:fill 280ms ease,stroke 280ms ease}
+.nonlinear-dot.is-positive{fill:#e8f0e1;stroke:#526b35}.nonlinear-dot.is-negative{fill:#f4dfd3;stroke:#b83b1b}
+.nonlinear-corners svg .nonlinear-value{font-size:23px;font-weight:600;fill:#30372f}
+.nonlinear-partition{stroke:#35616b;stroke-width:2;stroke-dasharray:5 5;transition:opacity 280ms ease}
+.nonlinear-controls{flex-wrap:wrap;justify-content:center}.nonlinear-controls button{white-space:normal}
+.nonlinear-result{font-family:Geist,sans-serif;font-size:15px;text-align:center;line-height:1.7;color:#5f6b54}.nonlinear-result strong{color:#30372f}
+.nonlinear-corners>p{font-size:16px;text-align:center;max-width:540px;margin:14px auto 0}
+.nonlinear-curve{fill:none;stroke:#35616b;stroke-width:3}.nonlinear-floor{fill:none;stroke:#b83b1b;stroke-width:1.5;stroke-dasharray:5 5}.nonlinear-marker{fill:#35616b;stroke:#f5f2ed;stroke-width:2}
+.nonlinear-range{font-family:Geist,sans-serif;display:grid;grid-template-columns:1fr auto;max-width:430px;gap:12px;margin:16px auto;font-size:14px}.nonlinear-range input{grid-column:1/-1;width:100%;accent-color:#35616b}.nonlinear-range output{font-family:'Geist Mono',monospace}
+.nonlinear-table-wrap{overflow-x:auto;max-width:100%;margin:25px 0}.nonlinear-table{width:100%;border-collapse:collapse;min-width:400px;font-family:Geist,sans-serif;font-size:14px;text-align:center}.nonlinear-table th,.nonlinear-table td{padding:12px 7px;border-bottom:1px solid #e1ddd2}.nonlinear-table th{font-weight:500;color:#5f6b54}.nonlinear-table caption{text-align:left;font-family:Georgia,serif;font-size:16px;margin-bottom:12px}.nonlinear-correction{color:#b83b1b;font-weight:600}
+@media(max-width:600px){.nonlinear-controls button{font-size:12px;padding:8px 9px}.nonlinear-corners svg text,.nonlinear-forest svg text{font-size:24px}.nonlinear-result{font-size:14px}.nonlinear-range{margin-left:8px;margin-right:8px}}
+@media(max-width:600px){.nonlinear-corners svg .nonlinear-value{font-size:28px}}
+@media(prefers-reduced-motion:reduce){.nonlinear-dot,.nonlinear-partition{transition:none}}

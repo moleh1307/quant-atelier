@@ -48,6 +48,7 @@ Students choose questions within the lists; no forced Q1 → Q2 → code chain.
 | l25 likelihood | 8 interviews; 3 coding | Verified | Automated + live grading/narrow mixture proof |
 | l10 covariance | 7 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
 | l11 regression | 8 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
+| l30 nonlinear ML | 6 interviews; 3 coding | Exact residual/deleted-rational-refit oracles, XOR/shift proofs and maximum-dimension rank-one law | Automated + live lesson/exact-set checks, lists, Hard Submit and desktop/narrow figures |
 | l29 regularization/statistical learning | 6 interviews; 3 coding | Exact active-face/risk oracles, high-precision logistic gradients and raw-coordinate rational fold solves | Automated + live lesson/partial-Hard/exact-set checks, lists, hard Submit and desktop/mobile figures |
 | l12 inference | 8 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
 | l13 time series | 8 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
@@ -99,3 +100,5 @@ Current totals: 28 lessons, 182 automatically checked interviews and 84 library 
 ## 2026-10-13 regularization and statistical learning addition
 
 Current totals29 lessons/188 automatic interviews/87 library codes; researcher23/148/68, trader14/90/42 unchanged. Previous28 lesson/182 interview/84 code records preserved exactly. All289 Python tests and27 frontend suites passed; [current audit](evidence/STATISTICAL_LEARNING.md) records exact calculations, live checks and remaining limits. Earlier counts above remain historical.
+
+Current addition, 2026-10-13: l30 nonlinear ML complete. Inventory30 lessons/194 automatic interviews/90 codes; researcher24/154/71, trader14/90/42 unchanged. All prior29 lesson/188 interview/87 code records retained in full. Full299 Python tests and29 frontend suites passed; [audit](evidence/NONLINEAR_ML.md) records live preview isolation and scope. Earlier counts remain dated history.

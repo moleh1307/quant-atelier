@@ -479,6 +479,154 @@
     "explanation": "Logarithms turn the independent product into a sum. math.log1p(-p) computes log(1-p) without first rounding 1-p to 1 for tiny p. Zero successes and all-success records need no special case because both logarithms are finite on the specified open parameter domain. O(1) time and space. A log-likelihood is not a posterior probability."
   },
   {
+    "id": "c_l30_easy",
+    "title": "Fit the values inside supplied leaves",
+    "difficulty": "Easy",
+    "topic": "Nonlinear machine learning",
+    "path": "researcher",
+    "prompt": "ys gives finite response values, weights POSITIVE INTEGER observation weights, groups supplied integer leaf IDs and query_groups requested EXISTING leaf IDs. Fit a separate constant in each group to minimize SUMMED weighted squared error. Return [query_predictions_in_order, total_weighted_RSS]. Group IDs need not be consecutive; queries may repeat. 1\u2264n\u2264100000, 1\u2264query_count\u2264100000, |y|\u2264100, 1\u2264weight\u2264100, |group|\u2264100000. Preserve inputs; O(n+query_count) expected time and O(number_of_groups+query_count) space. This fits a supplied partition; do not train a tree or choose a split.",
+    "starter": "def solve(ys, weights, groups, query_groups):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            0,
+            2,
+            4,
+            8
+          ],
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            1
+          ]
+        ],
+        "expected": [
+          [
+            6.0,
+            1.0,
+            6.0
+          ],
+          10.0
+        ]
+      }
+    ],
+    "solution": "import math\ndef solve(ys, weights, groups, query_groups):\n    totals, sums = {}, {}\n    for y,w,g in zip(ys,weights,groups):\n        totals[g] = totals.get(g,0)+w\n        sums[g] = sums.get(g,0)+w*y\n    means = {g:sums[g]/totals[g] for g in totals}\n    rss = math.fsum(w*(y-means[g])**2 for y,w,g in zip(ys,weights,groups))\n    return [[means[g] for g in query_groups],rss]",
+    "explanation": "Differentiate each group loss: its constant is sum(w*y)/sum(w). Accumulate group statistics, then compute RSS from actual weighted residuals and map requested IDs to means. The weighting belongs in BOTH fitting and scoring. Do not divide total RSS by n or sum(weights); those would be other outputs. A supplied partition can have one leaf or a singleton leaf."
+  },
+  {
+    "id": "c_l30_medium",
+    "title": "Find a weighted regression stump without splitting ties",
+    "difficulty": "Medium",
+    "topic": "Nonlinear machine learning",
+    "path": "researcher",
+    "prompt": "xs is an integer n-by-p matrix, ys integer responses and weights positive integer observation weights. Search EVERY feature for a two-leaf split xs[i][j]\u2264threshold versus >threshold. Candidate thresholds are MIDPOINTS between adjacent DISTINCT observed feature values. Both children must contain at least min_leaf RECORDS (not total weight). Fit weighted response means and minimize total weighted RSS. Return [feature_index, threshold, left_mean, right_mean, total_RSS], or None if no valid split. Choose exact minimal RSS; exact ties choose smallest feature index then smallest threshold. Even a zero-gain split is eligible: no stopping criterion is requested. 1\u2264n\u22645000,1\u2264p\u22648, integer |x|,|y|\u2264100,1\u2264weight\u2264100,1\u2264min_leaf\u2264n. Preserve inputs. O(p*n*log(n)) time, \\(O(n)\\) auxiliary space; use sorting and prefix statistics. Compare rational scores exactly using integer cross-products, not arbitrary epsilon ties.",
+    "starter": "def solve(xs, ys, weights, min_leaf):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              0
+            ],
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ],
+          [
+            0,
+            2,
+            4,
+            8
+          ],
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          1
+        ],
+        "expected": [
+          0,
+          3.5,
+          2.0,
+          8.0,
+          8.0
+        ]
+      }
+    ],
+    "solution": "def solve(xs, ys, weights, min_leaf):\n    n,p = len(xs),len(xs[0])\n    total_w = sum(weights)\n    total_s = sum(w*y for w,y in zip(weights,ys))\n    total_q = sum(w*y*y for w,y in zip(weights,ys))\n    best = None\n    for j in range(p):\n        order = sorted(range(n),key=lambda i:xs[i][j])\n        w,s = 0,0\n        for k,i in enumerate(order[:-1],1):\n            w += weights[i]\n            s += weights[i]*ys[i]\n            a,b = xs[i][j],xs[order[k]][j]\n            if a == b or k < min_leaf or n-k < min_leaf:\n                continue\n            rw,rs = total_w-w,total_s-s\n            # RSS = numerator / denominator. Integer cross multiplication\n            # gives exact comparisons and the stated tie rule without eps.\n            numerator = total_q*w*rw-s*s*rw-rs*rs*w\n            denominator = w*rw\n            threshold = (a+b)/2\n            if best is None or numerator*best[1] < best[0]*denominator:\n                best = (numerator,denominator,j,threshold,s/w,rs/rw)\n            # Feature then threshold are visited in ascending order.\n    if best is None:\n        return None\n    num,den,j,t,left,right = best\n    return [j,t,left,right,num/den]",
+    "explanation": "Within each feature order, accumulate weight W and weighted response S. For a candidate with left/right summaries, RSS=Q\u2212SL\u00b2/WL\u2212SR\u00b2/WR, where Q=sum(w*y\u00b2). Equal feature values must remain together and record counts enforce min_leaf. Write RSS with integer numerator Q*WL*WR\u2212SL\u00b2*WR\u2212SR\u00b2*WL and denominator WL*WR, comparing scores by cross multiplication. Visit feature/threshold pairs in tie order and retain the first exact minimizer. Divide only for returned means/score. Finding a locally best root does not produce a globally best tree."
+  },
+  {
+    "id": "c_l30_hard",
+    "title": "Kernel ridge and exact leave-one-out from one factorization",
+    "difficulty": "Hard",
+    "topic": "Nonlinear machine learning",
+    "path": "researcher",
+    "prompt": "Fit the FIXED polynomial kernel k(x,z)=(1+x\u00b7z)\u00b2 using SUMMED half-squared data loss plus penalty/2 times squared feature-space norm. There is NO separately fitted intercept, centering, scaling or bandwidth tuning. xs has n training integer rows, ys their integer responses, queries m integer feature rows, and penalty>0. Return [query_prediction_list, leave_one_out_prediction_list_in_training_order, LOO_MSE]. A leave-one-out fit removes that record, but keeps the SAME summed-loss penalty and FIXED kernel. Use one Cholesky factorization of A=K+penalty*I; do not perform n smaller refits. Derive y_i\u2212alpha_i/(A inverse)_ii for LOO predictions, where alpha solves A alpha=y. Obtain inverse diagonal entries from triangular solves, without forming a numerical inverse. 2\u2264n\u226470,1\u2264p\u22646,0\u2264m\u226470, integer |x|\u22642,|y|\u226410,0.5\u2264penalty\u226410. Duplicate rows and empty queries are valid. O(n\u00b3+n\u00b2*p+m*n*p) time and O(n\u00b2+m) space; standard library only, preserve inputs. These exact deletion predictions do not certify chronological eligibility or an unbiased post-tuning test score.",
+    "starter": "def solve(xs, ys, queries, penalty):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              -1
+            ],
+            [
+              1
+            ]
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            [
+              0
+            ],
+            [
+              2
+            ]
+          ],
+          1
+        ],
+        "expected": [
+          [
+            0.4,
+            2.0
+          ],
+          [
+            0.0,
+            0.0
+          ],
+          1.0
+        ]
+      }
+    ],
+    "solution": "import math\ndef solve(xs, ys, queries, penalty):\n    n = len(xs)\n    def kernel(x,z):\n        return (1+sum(a*b for a,b in zip(x,z)))**2\n    lower = [[0.0]*n for _ in range(n)]\n    for i in range(n):\n        for j in range(i+1):\n            v = kernel(xs[i],xs[j])+(penalty if i == j else 0)\n            v -= math.fsum(lower[i][k]*lower[j][k] for k in range(j))\n            lower[i][j] = math.sqrt(v) if i == j else v/lower[j][j]\n    def forward(rhs):\n        out = [0.0]*n\n        for i in range(n):\n            out[i] = (rhs[i]-math.fsum(lower[i][j]*out[j] for j in range(i)))/lower[i][i]\n        return out\n    u = forward(ys)\n    alpha = [0.0]*n\n    for i in range(n-1,-1,-1):\n        alpha[i] = (u[i]-math.fsum(lower[j][i]*alpha[j] for j in range(i+1,n)))/lower[i][i]\n    diagonal = []\n    for i in range(n):\n        unit = [0.0]*n\n        unit[i] = 1.0\n        column = forward(unit)\n        diagonal.append(math.fsum(v*v for v in column))\n    prediction = [math.fsum(kernel(z,x)*a for x,a in zip(xs,alpha)) for z in queries]\n    loo = [y-a/d for y,a,d in zip(ys,alpha,diagonal)]\n    mse = math.fsum((y-v)**2 for y,v in zip(ys,loo))/n\n    return [prediction,loo,mse]",
+    "explanation": "A is positive definite for positive penalty even when K is singular. Factor A=LL\u1d40 and solve for alpha. Block elimination of record i gives alpha_i=(y_i\u2212k_i,minus\u1d40 A_minus inverse y_minus)/(A_ii\u2212k_i,minus\u1d40 A_minus inverse k_i,minus); the reciprocal denominator is (A inverse)_ii, yielding the deletion identity. For unit vector e_i, (A inverse)_ii=||L inverse e_i||\u00b2: solve L v=e_i and sum v\u00b2. Query prediction is k_query\u1d40alpha. This is a fixed procedure with summed penalty, so removing a row leaves the smaller principal system unchanged. If average-loss lambda were fixed instead, the regularizer would change from n*lambda to (\\(n-1\\))*lambda and this shortcut on the original matrix would not directly apply. Kernel/transform selection must remain inside outer training boundaries."
+  },
+  {
     "id": "c_l29_easy",
     "title": "Shrink or threshold an orthogonal quadratic",
     "difficulty": "Easy",
