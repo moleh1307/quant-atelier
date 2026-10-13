@@ -50,6 +50,7 @@ Students choose questions within the lists; no forced Q1 → Q2 → code chain.
 | l11 regression | 8 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
 | l12 inference | 8 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
 | l13 time series | 8 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
+| l28 resampling/bootstrap | 6 interviews; 3 coding | Exact rational/enumeration laws, interval invariance and circular covariance oracles verified | Automated + live check, partial/exact-set Hard grading, both lists, hard-code Submit and desktop/mobile figures |
 | l14 validation | 6 interviews; 3 coding | Verified | Automated + live grading/debug copy/legacy bookmark/narrow proof |
 | l15 search/multiple testing | 6 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
 | l16 research defence | 6 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
@@ -87,3 +88,8 @@ See [verification](evidence/topic-practice-20261012.md) for scope and limitation
 ## 2026-10-13 calculus and optimization addition
 
 Current totals are 27 lessons, 176 automatically checked interviews and 81 library codes. The researcher route contains 21 modules, 136 distinct interview problems and 62 current codes. Original 25 topic records and assessment contracts are unchanged. [Implementation and verification](evidence/CALCULUS_OPTIMIZATION.md) documents this addition; older dated reports remain historical.
+
+
+## 2026-10-13 resampling and bootstrap addition
+
+Current totals: 28 lessons, 182 automatically checked interviews and 84 library codes. Researcher: 22 modules / 142 distinct interviews / 65 current codes; trader unchanged at 14/90/42. The original 27 lesson, 176 interview and 81 code records are identical to the pre-addition build. All 279 Python tests and 26 frontend suites pass. Detailed source, independent mathematical calculations, browser observations and limits: [resampling audit](evidence/RESAMPLING_BOOTSTRAP.md). Earlier counts above describe dated prior audits.

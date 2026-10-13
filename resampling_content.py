@@ -1,0 +1,14 @@
+"""Original researcher chapter, after dependence and before validation."""
+LESSON=dict(id='l28',title='Resample the experiment, not the rows',topic='Resampling',path='researcher',minutes=50,
+ intro='Use the empirical distribution to approximate sampling error, separate simulation noise from statistical uncertainty, and choose a resampling unit that preserves what makes observations dependent.',
+ sections=[('Two experiments, two sources of uncertainty',r'The unknown sampling law of \(\hat\theta-\theta\) is approximated by the conditional bootstrap law of \(\hat\theta^*-\hat\theta\). More replicates reduce Monte Carlo noise, not uncertainty in the original experiment.'),
+ ('Resample physical records with replacement',r'For iid data, \(\hat F_n=n^{-1}\sum_i\delta_{x_i}\). Draw n independent indices uniformly with replacement and rerun the stated statistic. Equal observed values retain their original multiplicities.'),
+ ('Intervals require an error model',r'Percentile intervals use replicate quantiles; basic intervals reflect them around the original estimate. Neither has automatic finite-sample coverage. State the quantile convention and handle degenerate replicates.'),
+ ('Dependence changes the unit', 'Resample matched pairs together, whole independent clusters when members share shocks, or contiguous blocks for suitable stationary time series. Respect unequal cluster sizes and truncated final blocks.'),
+ ('Know when the bootstrap cannot work',r'For a continuous Uniform endpoint estimate M, ordinary bootstrap maxima never exceed M. Their centered law retains a nonvanishing atom at zero, so increasing the replicate count cannot repair inconsistency.')],
+ example=r'With observations [0,0,6], resample three physical indices uniformly with replacement. The number K of sixes is Binomial(3,1/3), so the exact bootstrap mean has values 0,2,4,6 with masses 8/27,12/27,6/27,1/27. Its conditional mean is 2 and variance 8/3.',
+ check='You double the number B of bootstrap replicates while keeping the original sample and resampling model fixed. What changes?',
+ options=['Monte Carlo approximation improves; the target conditional bootstrap distribution stays the same.', 'The original effective sample size doubles.', 'The true sampling standard error necessarily shrinks by one over square root of two.', 'Dependence and selection bias automatically disappear.'],correct=0,
+ explain='B controls how precisely simulation approximates its fixed conditional law. It does not add independent observations or validate the chosen resampling model.',
+ qs=[f'q_l28_{s}' for s in ('e1','e2','m1','m2','h1','h2')],codes=[f'c_l28_{s}' for s in ('easy','medium','hard')],
+ objectives=['Derive the empirical bootstrap law and separate its two uncertainty layers.', 'Construct and interpret bootstrap intervals with explicit conventions and limits.', 'Preserve pairs, clusters and temporal blocks; diagnose a nonregular bootstrap failure.'])

@@ -479,6 +479,119 @@
     "explanation": "Logarithms turn the independent product into a sum. math.log1p(-p) computes log(1-p) without first rounding 1-p to 1 for tiny p. Zero successes and all-success records need no special case because both logarithms are finite on the specified open parameter domain. O(1) time and space. A log-likelihood is not a posterior probability."
   },
   {
+    "id": "c_l28_easy",
+    "title": "Keep both losses on the same resampled record",
+    "difficulty": "Easy",
+    "topic": "Resampling",
+    "path": "researcher",
+    "prompt": "Each row [loss_A,loss_B] is one matched record. resamples supplies B lists of exactly n record indices (zero-based, repetitions allowed). For EACH list use the SAME indices for both columns. Return [observed_mean_A_minus_B, replicate_mean_differences_in_given_order]. Do not draw additional random numbers or modify inputs. All losses are finite with magnitude\u22641e6; 1\u2264n\u22642000, B\u22651 and total supplied indices\u2264100000. Indices are in [0,\\(n-1\\)]. O(n+Bn) time and O(B) returned space; no independently resampling the columns.",
+    "starter": "def solve(rows, resamples):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          [
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              1,
+              2,
+              1
+            ]
+          ]
+        ],
+        "expected": [
+          -0.6666666666666666,
+          [
+            -0.3333333333333333,
+            -1.0
+          ]
+        ]
+      }
+    ],
+    "solution": "import math\ndef solve(rows, resamples):\n    n = len(rows)\n    observed = math.fsum(a-b for a,b in rows)/n\n    results = [math.fsum(rows[i][0]-rows[i][1] for i in indices)/n for indices in resamples]\n    return [observed,results]",
+    "explanation": "Derive the statistic on matched differences, then apply exactly the supplied record indices. Repeated indices repeat the whole pair. This preserves empirical covariance between the columns. Summing n residuals per replicate costs O(Bn), plus \\(O(n)\\) for the original estimate. The exercise deliberately supplies randomness so outputs are reproducible and grading checks the resampling logic rather than a particular pseudorandom generator."
+  },
+  {
+    "id": "c_l28_medium",
+    "title": "Summarize bootstrap error with explicit interval rules",
+    "difficulty": "Medium",
+    "topic": "Resampling",
+    "path": "researcher",
+    "prompt": "Given original observed estimate, B\u22652 finite bootstrap replicate estimates, and 0<alpha<1, return [estimated_bias, bootstrap_standard_error, percentile_interval, basic_interval]. Bias is replicate mean minus observed. Standard error is the SAMPLE standard deviation across replicates (denominator B\u22121), NOT that deviation divided by sqrt(B). For sorted replicates v define the p quantile by h=(B\u22121)p, j=floor(h), and linear interpolation between v[j] and v[min(j+1,B\u22121)] with weight h\u2212j. Percentile endpoints use p=alpha/2 and 1\u2212alpha/2; basic endpoints reflect those endpoints around observed, in increasing order. 2\u2264B\u2264100000; all estimate magnitudes\u22641e6. Do not mutate input. O(B log B) time, O(B) space. Identical replicates return zero bias if they equal observed and zero standard error; no exact confidence-coverage claim is made.",
+    "starter": "def solve(observed, replicates, alpha):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          10,
+          [
+            7,
+            9,
+            10,
+            12,
+            15
+          ],
+          0.2
+        ],
+        "expected": [
+          0.6,
+          3.0495901363953815,
+          [
+            7.8,
+            13.8
+          ],
+          [
+            6.2,
+            12.2
+          ]
+        ]
+      }
+    ],
+    "solution": "import math\ndef solve(observed, replicates, alpha):\n    values = sorted(replicates)\n    n = len(values)\n    mean = math.fsum(values)/n\n    se = math.sqrt(math.fsum((x-mean)**2 for x in values)/(n-1))\n    def quantile(p):\n        h = (n-1)*p\n        j = int(h)\n        return values[j]+(h-j)*(values[min(j+1,n-1)]-values[j])\n    lo,hi = quantile(alpha/2),quantile(1-alpha/2)\n    return [mean-observed,se,[lo,hi],[2*observed-hi,2*observed-lo]]",
+    "explanation": "The spread of replicate estimates approximates estimator uncertainty under the chosen bootstrap model. Dividing by \u221aB instead measures the Monte Carlo error of estimating their conditional mean. A basic interval uses [2*observed\u2212upper_quantile,2*observed\u2212lower_quantile]; preserve the reflection and reversal. Explicit linear interpolation avoids library-specific quantile differences. Equal replicates define a degenerate conditional law, not proof of population certainty. Tests use independent rational interpolation/moments."
+  },
+  {
+    "id": "c_l28_hard",
+    "title": "Exact variance of a circular-block bootstrap mean",
+    "difficulty": "Hard",
+    "topic": "Resampling",
+    "path": "researcher",
+    "prompt": "Given n integer values and block_length \u2113, define this exact conditional resampling law: independently choose q=ceil(n/\u2113) start indices uniformly from 0,\u2026,\\(n-1\\). From each start s take \u2113 consecutive values values[(s+j) mod n], j=0,\u2026,\u2113\u22121. Concatenate blocks in their draw order, then TRUNCATE to exactly n values and compute their mean. Return the exact CONDITIONAL variance of that mean as a float, averaging all possible start choices analytically, not by simulation or enumerating n^q draws. 1\u2264n\u226420000, |values[i]|\u22641000, 1\u2264\u2113\u2264n. Use \\(O(n)\\) time, O(1) auxiliary space and do not mutate input. The last retained block may be shorter. \u2113=n yields zero variance, not a universally good inferential choice.",
+    "starter": "def solve(values, block_length):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            0,
+            0,
+            10,
+            10
+          ],
+          2
+        ],
+        "expected": 6.25
+      }
+    ],
+    "solution": "def solve(values, block_length):\n    n = len(values)\n    total = sum(values)\n    full = (n-1)//block_length\n    tail = n-full*block_length\n    def variance_numerator(size):\n        window = sum(values[j] for j in range(size))\n        squares = 0\n        for start in range(n):\n            squares += window*window\n            window += values[(start+size)%n]-values[start]\n        return n*squares-size*size*total*total\n    return (full*variance_numerator(block_length)+variance_numerator(tail))/(n**4)",
+    "explanation": "Let S_s(k) be a circular window sum of length k. Its expectation over a uniform start is k times the original mean. Its variance is [n*\\(\\Sigma\\)S_s(k)\u00b2\u2212k\u00b2*(\\(\\Sigma\\)values)\u00b2]/n\u00b2. The q\u22121 full retained blocks and one tail of length r=n\u2212(q\u22121)\u2113 have independent starts, so add their sum variances and divide by n\u00b2 for the final mean. Two sliding-window scans calculate the needed sums of squares in \\(O(n)\\) time and O(1) auxiliary space. Integer arithmetic keeps the nonnegative variance numerator exact until the final division. Tiny cases are checked by direct enumeration of whole resampled sequences; the large alternating case has a separate analytic oracle. Handling the truncated tail and avoiding O(n\u2113) work are the main transfer challenges."
+  },
+  {
     "id": "c_l26_easy",
     "title": "Differentiate a weighted squared loss",
     "difficulty": "Easy",

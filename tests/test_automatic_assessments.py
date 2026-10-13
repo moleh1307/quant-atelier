@@ -28,10 +28,10 @@ class AutomaticAssessmentTests(unittest.TestCase):
         self.assertAlmostEqual(c['answer'],float(expected),delta=max(1e-40,abs(float(expected))*1e-12),msg=f'{id} part {part}')
 
     def test_every_old_prompt_derivation_id_and_numeric_contract_survives(self):
-        self.assertEqual(set(QS)-set(BASE),{f'q_l{n}_{s}' for n in (26,27) for s in ('e1','e2','m1','m2','h1','h2')})
-        self.assertEqual(len(CHECKS),74)
-        self.assertEqual(sum(q['type']=='numeric' for q in QS.values()),102)
-        self.assertEqual(sum(q['type']=='structured' for q in QS.values()),74)
+        self.assertEqual(set(QS)-set(BASE),{f'q_l{n}_{s}' for n in (26,27,28) for s in ('e1','e2','m1','m2','h1','h2')})
+        self.assertEqual(len(CHECKS),76)
+        self.assertEqual(sum(q['type']=='numeric' for q in QS.values()),106)
+        self.assertEqual(sum(q['type']=='structured' for q in QS.values()),76)
         for id in BASE:
             q=QS[id]
             digest=hashlib.sha256(json.dumps({k:q[k] for k in FIELDS},sort_keys=True,ensure_ascii=False).encode()).hexdigest()

@@ -1,0 +1,31 @@
+/* l28: exact conditional laws and resampling units, within the reading system. */
+.boot-figure{max-width:700px;margin:30px 0}
+.boot-plot{display:block;width:100%;height:auto}
+.boot-plot text{font:13px var(--font-body);fill:#526047}
+.boot-plot .axis{fill:none;stroke:#929d85;stroke-width:1}
+.boot-plot .star{fill:none;stroke:#386b75;stroke-width:2.5}
+.boot-plot .truth{fill:none;stroke:#62764e;stroke-width:2.5}
+.boot-plot .estimate{fill:none;stroke:#ad452a;stroke-dasharray:5 5;stroke-width:1.5}
+.boot-controls{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;margin:22px 0 15px;font:12px/1.7 var(--font-body)}
+.boot-controls label{flex:1 1 220px;display:grid;gap:8px}
+.boot-controls input{width:100%;accent-color:#62764e}
+.boot-result{margin:16px 0;padding-top:12px;border-top:1px solid #d4d7c8;font:13px/1.8 var(--font-body);min-height:3.6em}
+.boot-result strong{font:12px var(--font-mono)}
+.boot-legend{display:flex;flex-wrap:wrap;gap:12px 22px;font:12px var(--font-body);margin:14px 0}
+.boot-legend span:before{content:'';display:inline-block;width:17px;border-top:2px solid currentColor;margin-right:7px;vertical-align:middle}
+.boot-star{color:#386b75}.boot-estimate{color:#a23f25}.boot-true{color:#536b3e}
+.boot-series-label{font:12px var(--font-body);margin:18px 0 10px;color:#526047}
+.boot-series{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px}
+.boot-tile{display:grid;justify-items:center;gap:4px;padding:12px 3px;border:1px solid #c7cbbd;background:#f1efe7;min-width:0;font:18px var(--font-mono);transition:background-color 280ms ease,border-color 280ms ease}
+.boot-tile small{font:11px var(--font-body);color:#526047}
+.boot-tile[data-tone="0"]{background:#dce8e7;border-color:#a2bdbc}
+.boot-tile[data-tone="1"]{background:#efe1d3;border-color:#c4ac91}
+.boot-tile[data-boundary="true"]{border-left:3px solid #536b59}
+.boot-block-number{min-height:16px;font:10px var(--font-mono);color:#536347}
+.boot-table{width:100%;min-width:430px;font:13px/1.7 var(--font-body);background:transparent}
+.boot-table th{font:12px var(--font-body);text-transform:none;letter-spacing:0;background:none}
+.boot-table th,.boot-table td{padding:12px 9px}
+.boot-table tbody tr:hover{background:none}
+.boot-reference{font-size:13px}
+@media(max-width:600px){.boot-plot text{font-size:23px}.boot-tile{font-size:15px;padding:10px 1px}.boot-series{gap:3px}.boot-result{min-height:5.4em}}
+@media(prefers-reduced-motion:reduce){.boot-tile{transition:none}}

@@ -568,6 +568,8 @@ SPOKEN = {
 
 from topic_practice.calculus_optimization import objective_checks
 CHECKS.update(objective_checks())
+from topic_practice.resampling import objective_checks as resampling_checks
+CHECKS.update(resampling_checks())
 
 def attach_objective_assessments(questions):
     written = {q['id'] for q in questions if q['type'] == 'written'}

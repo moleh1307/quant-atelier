@@ -485,3 +485,8 @@ Added researcher l26/l27 before estimation: detailed authored chapters, four pur
 ## GitHub issues #5 / #6 — 2026-10-13
 
 Fixed lesson 02 native-select spacing and made topic interview completion visible through row treatment, a larger marker and explicit status badges. Reviewed, historical self-assessed and stale-version work remain distinct and receive no new credit. All 25 frontend suites passed; desktop/390px browser checks and doubled-text stress checks passed. Preview-only live grading confirmed unaided versus assisted rows and unchanged counts. Personal progress bytes unchanged, temporary fixture removed, viewport reset, final browser personal. See [issue verification and screenshots](github-issues-5-6-20261013.md).
+
+
+## 2026-10-13 resampling and bootstrap
+
+Added original l28 researcher chapter after l13/before l14: two interactive figures, an endpoint CDF comparison, six automatic interviews and three codes. All 279 Python tests and26 frontend suites passed; strict math parsing and independent exact/enumeration/rational/covariance checks are recorded in [RESAMPLING_BOOTSTRAP.md](RESAMPLING_BOOTSTRAP.md). Native IAB desktop/mobile checks, explicit-preview lesson/partial-Hard/exact-set grading and live hard Submit9/9 passed. Previous27 lessons/176 interviews/81 codes were identical; fresh personal progress bytes unchanged. Same-interpreter local server restarted for imported tasks; final browser personal l28, viewport reset. Current totals28/182/84; researcher22/142/65, trader14/90/42. Public screenshots contain original explanations and isolated preview results only.
