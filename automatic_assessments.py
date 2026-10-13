@@ -329,7 +329,7 @@ add('q_l16_h1', N('In the two-context example, what is Var(Z)?', 53/3, 'E[Z²]=5
     S('Which policy-evaluation identities and requirements are valid?',
       (True, r'\(E[Z\mid X]=\pi(X)E[Y\mid X]\).', 'Known propensities and conditional action independence cancel selection.'),
       (False, 'An unrecorded payoff predictor used by the logger cannot affect unbiasedness.', 'It can violate A independent of Y conditional on recorded X.'),
-      (True, r'\(E[Z^2]=E[\pi(X)Y^2/e(X)]\), and independent mean variance is \((E[Z^2]-v^2)/n\).', 'Use A²=A and π²=π.'),
+      (True, r'\(E[Z^2]=E[\pi(X)Y^2/e(X)]\), defining the integrand as zero where the policy stays flat; independent mean variance is \((E[Z^2]-v^2)/n\).', 'Use A²=A and π²=π.'),
       (False, 'The formula identifies payoff on target contexts with e=0 from the same log.', 'Those outcomes lack observational support.')))
 add('q_l17_m1', N('What is the smallest n for which the specified upper bound is ≤0.001?', 2995, 'Ceil(log(0.05)/log(0.999))=2995.'), N('Compute u_1000.', 1-.05**.001, 'u_n=1−α^(1/n).'),
     S('Which coverage claims are valid?',
@@ -551,7 +551,7 @@ SPOKEN = {
  'q_l15_h1:2:1':'Expected selected score is theta plus sigma times square root of one minus rho divided by pi.',
  'q_l15_h1:2:3':'Variance of selected score is sigma squared times one minus one minus rho divided by pi, including both endpoints.',
  'q_l16_h1:3:1':'Expected Z conditional on X equals policy pi of X times expected Y conditional on X.',
- 'q_l16_h1:3:3':'Expected Z squared equals expected policy pi of X times Y squared divided by e of X; independent mean variance is expected Z squared minus v squared, divided by n.',
+ 'q_l16_h1:3:3':'Expected Z squared equals expected policy pi of X times Y squared divided by e of X, with the integrand zero where the policy stays flat; independent mean variance is expected Z squared minus v squared, divided by n.',
  'q_l17_m1:3:1':'u n equals one minus alpha to power one over n, and makes the zero-hit probability equal alpha.',
  'q_l18_m1:2:1':'For delta equal to batch B mean minus batch A mean, merged mean is batch A mean plus delta times batch B count divided by total count.',
  'q_l18_m1:2:3':'Merged M two is both within-batch M two sums plus delta squared times both batch counts divided by total count.',
