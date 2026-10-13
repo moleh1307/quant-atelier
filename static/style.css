@@ -557,3 +557,31 @@ input::placeholder,textarea::placeholder { color:#65715a;opacity:1; }
 
 /* Long worked mathematics must scroll inside its panel, not enlarge grid tracks. */
 .detail-layout > * { min-width: 0; }
+
+/* Objective interview checks: full reading column, compact work sidebar. */
+.objective-layout{grid-template-columns:minmax(0,2fr) minmax(250px,.8fr)}
+.objective-layout aside{position:sticky;top:90px}
+.objective-checks{margin-top:30px;padding-top:24px;border-top:1px solid #dfdbd0}
+.checkpoint-intro h2{font-size:28px;margin-bottom:8px}
+.checkpoint-intro p,.checkpoint-help{font-size:12px;line-height:1.7;color:#5f6b54}
+.objective-part{border:0;border-top:1px solid #e3e0d4;padding:20px 0 0;margin-top:28px;min-width:0}
+.objective-part legend{display:flex;align-items:baseline;gap:12px;font-size:14px;line-height:1.8;padding:0 5px 0 0;max-width:100%}
+.checkpoint-number{font:11px var(--font-mono);color:#b23b1d;flex-shrink:0}
+.checkpoint-number-input{max-width:280px;margin-top:10px}
+.checkpoint-help{margin:8px 0 10px}
+.checkpoint-choice{display:flex;gap:10px;align-items:baseline;padding:13px 12px;border:1px solid #dfdbd0;border-radius:4px;margin:7px 0;font-size:13px;line-height:1.8;cursor:pointer;transition:background .18s,border-color .18s}
+.checkpoint-choice:has(input:checked){background:#e7eadc;border-color:#929e7e}
+.checkpoint-choice:has(input:focus-visible){outline:2px solid #b23b1d;outline-offset:2px}
+.checkpoint-choice input{accent-color:#7c8a64;flex-shrink:0}
+.checkpoint-choice>span:last-child{min-width:0;overflow-wrap:anywhere}
+.choice-letter{font:11px var(--font-mono);color:#5f6b54;flex-shrink:0}
+.checkpoint-review{white-space:normal;border-top:1px solid #dfdbd0;margin-top:24px;padding-top:20px}
+.checkpoint-review h4{font-size:14px;font-family:var(--font-body);line-height:1.7;margin:22px 0 10px}
+.checkpoint-review ol{padding-left:24px}
+.checkpoint-review li{margin:12px 0}
+.checkpoint-review li p{color:#5f6b54;margin-top:4px}
+@media(max-width:1000px){.objective-layout{grid-template-columns:minmax(0,1fr)}.objective-layout aside{position:static;display:grid;grid-template-columns:1fr 1fr;gap:18px}.objective-layout .scratch{margin-top:0}}
+@media(max-width:600px){.objective-layout aside{display:block}.objective-layout .scratch{margin-top:18px}.checkpoint-choice{padding:12px 9px;gap:7px}.objective-part legend{gap:8px}}
+@media(prefers-reduced-motion:reduce){.checkpoint-choice{transition:none}}
+
+@media(max-height:700px){.objective-layout aside{position:static}}

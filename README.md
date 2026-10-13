@@ -18,11 +18,11 @@ Visit <http://127.0.0.1:8768/>. This is a local website; opening `static/index.h
 
 ## Included
 
-- 107 original interview problems: numerical answers and written reasoning, graduated hints, worked solutions, harder follow-ups, scratchpads, and revision scheduling.
+- 164 original interview problems: automatically checked numerical answers and multi-part reasoning checks, graduated hints, worked solutions, harder follow-ups, scratchpads, and revision scheduling.
 - 25 lessons: 8 foundation, 11 researcher, 6 trader. Modules have topic-specific illustrated explanations, learning goals, explicit assumptions and worked examples. Understanding checks determine completion. Exercises are linked to each lesson.
-- 46 Python exercises with actual local execution, editable debugging cases, full test submissions, persistent drafts, and optional editorials.
+- 75 Python exercises with actual local execution, editable debugging cases, full test submissions, persistent drafts, and optional editorials.
 - 5 generated trainers: mental arithmetic, fraction conversions, probability, sequence patterns, and conditional dice pricing. Difficulty levels, timed rounds, accuracy, pace, latency, and mistake review.
-- Honest progress: unaided numeric checks, self-assessed written answers, reviewed solutions, passed coding suites, and passed lesson checks are distinguished.
+- Honest progress: unaided automatic interview passes, assisted reviews, full coding-suite passes and lesson checks are distinguished. Earlier self-assessments are kept as historical records, without counting as current passes.
 
 Difficulty reflects the reasoning required within this bank, not verified equivalence to a particular firm’s hiring test. Some foundations are deliberately easy; hard exercises introduce dependence, selection, state recurrences, covariance constraints, and deployment-time validation. Public official interview guides were used only to calibrate topic coverage; the content and design assets are original.
 
@@ -101,6 +101,7 @@ Mathematical prose uses locally bundled KaTeX 0.19.0, including fonts and its MI
 python3 build_content.py
 python3 coding_bank.py
 python3 -m unittest discover -s tests -v
+node tests/test_objective_questions.cjs
 node tests/test_frontend.cjs
 node tests/test_math.cjs
 node tests/test_roadmap.cjs
@@ -126,7 +127,15 @@ Personal practice is the default, including old `?qa=1` bookmarks and restored t
 
 For browser QA, open `/test-preview.html#your-destination` (for example `/test-preview.html#paths/researcher`) and click **Enter test preview**. This supplies a short-lived, single-use entry ticket for the separate `?qa=1` workspace and disables disk progress writes. Merely viewing the development launcher grants no preview entry. Reloading, reopening or restoring a preview through Back/Forward returns to personal practice; explicitly re-enter through the launcher when testing reload recovery. Verify the **Test preview** notice before graded development actions. Test records and drafts remain in separate browser storage and are never reset by the entry guard. It still uses the actual Python runner. Tests use isolated fixtures/temporary progress directories; user progress is not changed. Screenshots and the verification record are in `evidence/`.
 
-As of 2026-10-03, all 24 modules contain learning goals, seven teaching sections, explicit assumptions and a worked example: approximately 19,300 words across the curriculum. Definitions precede the derivations; changed assumptions and common failure cases are discussed. Written interview derivations remain self-assessed. The understanding check tests one key idea per module and does not certify full mastery.
+As of 2026-10-03, all 24 modules contain learning goals, seven teaching sections, explicit assumptions and a worked example: approximately 19,300 words across the curriculum. Definitions precede the derivations; changed assumptions and common failure cases are discussed. Interview questions now use numerical or multi-part automatically checked answers; the original derivations remain available. The understanding check tests one key idea per module and does not certify full mastery.
+
+## Interview answer checks
+
+All 164 interview questions are automatically checked. The 94 existing numeric answers are unchanged. The 70 former written questions keep their original prompts, hints, worked derivations and follow-ups, and add 156 checkpoints: 81 numerical checks and 75 multiple-selection checks. Every checkpoint must match; for choices, select all valid statements with no incorrect extras. Fractions, percentages and arithmetic expressions are accepted in numerical fields.
+
+Use the scratchpad to derive the answer before checking. This checks specified numerical results and mathematical claims; it does not grade arbitrary written proofs. Wrong or partial answers earn no pass. Viewing hints, solutions, follow-up reasoning or earlier work marks the attempt as assisted; an assisted correct answer is a review. Start a fresh attempt for a closed-book revision.
+
+Answers and choices save with stable checkpoint IDs. Earlier written drafts and self-assessment records remain recoverable, but never turn into automatic passes. The converted problems require a current-format unaided pass. Numeric results, Python results, lesson checks and trainer history are preserved. The same rules apply to roadmap, library, revision, export and restore.
 
 ## Follow your roadmap
 
@@ -134,7 +143,7 @@ Open **Learning roadmap**. The eight shared modules lead into eleven researcher 
 
 The module containing the first unfinished core activity expands automatically. Overview and the roadmap resume its lesson check, interview practice or Python exercise; passing a check leaves outstanding practice visible. Optional fluency rounds remain available without blocking core completion. Open any module to see its learning goals and activities. Each lesson ends with a direct continuation into its remaining practice, a return to its exact roadmap module and an optional jump to the next module.
 
-Progress uses your existing records: lesson checks, unaided numeric solves, written self-assessments, full Python test passes and finished relevant drill rounds. Reviewed answers do not count as solves. Coding passes record whether the submitted attempt used an editorial. Reading the editorial later does not relabel an earlier unaided pass. Run and Submit are disabled together during execution, and only a successful full-suite submission earns a coding pass. A repeated exercise link counts once in route totals. Passing a lesson check advances the route while leaving its practice exercises outstanding.
+Progress uses your existing records: lesson checks, unaided automatically checked interview passes, full Python test passes and finished relevant drill rounds. Reviewed answers do not count as solves. Coding passes record whether the submitted attempt used an editorial. Reading the editorial later does not relabel an earlier unaided pass. Run and Submit are disabled together during execution, and only a successful full-suite submission earns a coding pass. A repeated exercise link counts once in route totals. Passing a lesson check advances the route while leaving its practice exercises outstanding.
 
 The roadmap uses keyboard-operable native disclosures, subtle opening motion and reduced-motion styles. Independent optional reading panels remain available. New topics and harder practice sets can be added through the same content schema.
 
@@ -142,7 +151,7 @@ The roadmap uses keyboard-operable native disclosures, subtle opening motion and
 
 Opening a lesson or practice link from the roadmap keeps that module with you. A compact sticky strip shows its title, the active Understand / Apply / Implement stage (or Fluency), and actual check/problem/code evidence. The lesson opens its **Interview question list**, followed by its **Coding exercise list**. Each list groups choices by Easy, Medium and Hard. Returning from an individual problem or exercise leads back to its list; it never forces the next numbered problem. All activities remain accessible; visiting one earns no progress.
 
-For example, module 01 flows through Count the right sample space → its interview list (choose any listed problem) → its coding list (choose an exercise). Use **Steps** to jump between module stages, or **Roadmap** to return to the exact expanded module. The menu highlights your current stage, retains assistance/self-assessment labels, closes with Escape or a click outside it, and remains scrollable on short screens.
+For example, module 01 flows through Count the right sample space → its interview list (choose any listed problem) → its coding list (choose an exercise). Use **Steps** to jump between module stages, or **Roadmap** to return to the exact expanded module. The menu highlights your current stage, retains assistance labels, closes with Escape or a click outside it, and remains scrollable on short screens.
 
 Inside a lesson, **Sections** stays beside Steps. Jump to any teaching section, the worked example or the understanding check. The selected destination receives focus and lands below the sticky controls. Its highlight follows your reading position; it is a location marker and earns no completion credit. Escape returns focus to Sections. Reading position still survives Back and reload.
 

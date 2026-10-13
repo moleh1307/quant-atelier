@@ -24,7 +24,11 @@ class FinalPracticeAuditTests(unittest.TestCase):
     def test_every_original_assessment_and_journey_is_preserved(self):
         self.assertEqual(len(BASELINE['questions']),51)
         for old in BASELINE['questions']:
-            self.assertEqual({key:QUESTIONS[old['id']][key] for key in old},old)
+            expected = dict(old)
+            if old['type']=='written':
+                expected['type']='structured'
+                self.assertEqual(QUESTIONS[old['id']]['assessmentVersion'],'objective-v1')
+            self.assertEqual({key:QUESTIONS[old['id']][key] for key in old},expected)
         current={l['id']:l for l in BANK['lessons']}
         for old in BASELINE['lessons']:
             l=current[old['id']]

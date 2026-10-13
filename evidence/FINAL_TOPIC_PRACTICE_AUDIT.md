@@ -1,5 +1,7 @@
 # Final topic-practice audit
 
+Historical audit before the user-approved written-to-automatic conversion. Current grading evidence: [automatic assessment review](AUTOMATIC_ASSESSMENT_REVIEW.md).
+
 Verified 2026-10-13. Scope: all 25 existing topics and the future-topic publishing contract.
 
 ## Requirements and current evidence

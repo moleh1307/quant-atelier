@@ -13,24 +13,24 @@ assert.equal(run('nextRouteActivity().activity.id'),'l01');
 assert.match(run('dashboard()'),/href="#question-list\/l01\/journey\/researcher\/l01"/);
 assert.match(run('dashboard()'),/Next unchecked lesson: Condition, then normalise/);
 run("state.questions.q01={solved:true};state.questions.q05={selfSolved:true};");assert.equal(run('nextRouteActivity().activity.kind'),'question-list','Two existing solves do not complete six questions');
-run("content.lessons[0].questions.forEach(id=>state.questions[id]={selfSolved:true});");assert.equal(run('nextRouteActivity().activity.kind'),'coding-list');
+run("content.lessons[0].questions.forEach(id=>state.questions[id]={solved:true,assessmentVersion:content.questions.find(q=>q.id===id).assessmentVersion});");assert.equal(run('nextRouteActivity().activity.kind'),'coding-list');
 run("state.coding.c01={accepted:true,acceptedAssisted:true};");assert.equal(run('nextRouteActivity().activity.kind'),'coding-list','One existing pass does not complete three exercises');
 run("content.lessons[0].coding.forEach(id=>state.coding[id]={accepted:true,acceptedAssisted:true});");assert.equal(run('nextRouteActivity().activity.id'),'l02','Editorial provenance is kept while all three code passes complete the list');
 // All checks passed is distinct from finishing their linked practice.
 run("journeyLessons().forEach(l=>state.lessons[l.id]={passed:true});");assert.equal(run('nextRouteActivity().activity.id'),'l02');assert.equal(run('nextRouteActivity().activity.kind'),'question-list');assert.doesNotMatch(run('dashboard()'),/Your core route is complete/);
 for(const path of ['researcher','trader']){
- context.path=path;run("state=fresh();state.preferences.path=path;journeyLessons().filter(l=>l.path==='shared').forEach(l=>{state.lessons[l.id]={passed:true};l.questions.forEach(id=>state.questions[id]={solved:true});l.coding.forEach(id=>state.coding[id]={accepted:true});});");
+ context.path=path;run("state=fresh();state.preferences.path=path;journeyLessons().filter(l=>l.path==='shared').forEach(l=>{state.lessons[l.id]={passed:true};l.questions.forEach(id=>state.questions[id]={solved:true,assessmentVersion:content.questions.find(q=>q.id===id).assessmentVersion});l.coding.forEach(id=>state.coding[id]={accepted:true});});");
  assert.equal(run('nextRouteActivity().lesson.path'),path);assert.match(run('dashboard()'),new RegExp(path==='researcher'?'Quant researcher / Understand':'Quant trader / Understand'));
- run("journeyLessons().forEach(l=>{state.lessons[l.id]={passed:true};l.questions.forEach(id=>state.questions[id]={selfSolved:true});l.coding.forEach(id=>state.coding[id]={accepted:true});});");
+ run("journeyLessons().forEach(l=>{state.lessons[l.id]={passed:true};l.questions.forEach(id=>state.questions[id]={solved:true,assessmentVersion:content.questions.find(q=>q.id===id).assessmentVersion});l.coding.forEach(id=>state.coding[id]={accepted:true});});");
  assert.equal(run('nextRouteActivity()'),null,'Optional drills do not prevent core completion');
  assert.doesNotMatch(run('dashboard()'),/code you still have to complete/);assert.match(run('dashboard()'),/Your core route is complete/);assert.doesNotMatch(run('dashboard()'),/Read lesson &amp; take check|Read lesson & take check/);
- assert.match(run('dashboard()'),/self-assessed/);run("route=['paths',path];");assert.match(run('paths()'),/Core route complete/);
+ assert.doesNotMatch(run('dashboard()'),/self-assessed/);run("route=['paths',path];");assert.match(run('paths()'),/Core route complete/);
 }
 // Progress filters distinguish true completions, draft work and editorial provenance.
 run("state=fresh();route=['questions'];filters={...emptyFilters(),status:'pending'};state.questions.q01={solved:true};state.questions.q21={selfSolved:true};state.questions.q05={reviewed:true};");
-assert.equal(run('filtered(content.questions).length'),bank.questions.length-2);assert.ok(run("filtered(content.questions).some(q=>q.id==='q05')"));
-run("filters.status='self-solved';");assert.deepEqual(JSON.parse(run('JSON.stringify(filtered(content.questions).map(q=>q.id))')),['q21']);
-run("filters.status='reviewed';");assert.equal(run('filtered(content.questions)[0].id'),'q05');
+assert.equal(run('filtered(content.questions).length'),bank.questions.length-1);assert.ok(run("filtered(content.questions).some(q=>q.id==='q05')"));
+run("filters.status='solved';");assert.deepEqual(JSON.parse(run('JSON.stringify(filtered(content.questions).map(q=>q.id))')),['q01']);
+run("filters.status='reviewed';");assert.deepEqual(JSON.parse(run('JSON.stringify(filtered(content.questions).map(q=>q.id))')),['q05','q21']);
 run("state.coding.c01={accepted:true,acceptedAssisted:false,assisted:true};state.coding.c02={accepted:true,acceptedAssisted:true};state.drafts.c03='def solve(values): return []';state.coding.c04={assisted:true};filters={...emptyFilters(),status:'passed'};route=['coding'];");
 assert.equal(run('filtered(coding)[0].id'),'c01','Later editorial reading does not relabel an unaided pass');
 run("filters.status='assisted';");assert.equal(run('filtered(coding)[0].id'),'c02');run("filters.status='practising';");assert.equal(run('filtered(coding)[0].id'),'c03');run("filters.status='reviewed';");assert.equal(run('filtered(coding)[0].id'),'c04');

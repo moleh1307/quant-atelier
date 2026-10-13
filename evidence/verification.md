@@ -474,3 +474,6 @@ See [likelihood verification](likelihood-20261012.md) for l25, q49–q51, c15, r
 ## 2026-10-12 — GitHub Python workspace issues #1–#4
 
 See [Python debugging verification](python-debug-20261012.md) for Cmd+apostrophe / Cmd+Enter, editable per-exercise cases, exact copies from results and the official picker, grading separation, 22 frontend suites / 24 Python tests, live isolated-preview and responsive checks, and unchanged personal assessment records/drafts.
+
+
+2026-10-13: all 70 formerly written interview questions converted to versioned automatic multi-part checks. Current total 164 automatically checked questions; original numeric keys and question prose retained. 261 Python tests, 24 frontend suites, all 70 live narrow pages and preview grading/reload/assistance verified. Exact scope and limitations: [automatic assessment review](AUTOMATIC_ASSESSMENT_REVIEW.md). Personal work continued concurrently and was not reset; test submissions stayed in preview.

@@ -63,14 +63,14 @@ const response=(result,ok=true)=>({ok,json:async()=>Number.isInteger(result.tota
  assert.equal(personal.run("validState({...fresh(),lessons:{l01:{passed:'false'}}})"),false);
  personal.run("content=bank;coding=codes;state.lessons.obsolete={passed:true};state.coding.obsolete={accepted:true};");
  assert.equal(personal.run('counts().lessons'),0);assert.equal(personal.run('counts().coding'),0);
- assert.match(personal.run('statGrid()'),new RegExp('/ '+bank.questions.filter(q=>q.type==='numeric').length+'</span></span><span class="muted">UNAIDED NUMERIC SOLVES'));
+ assert.match(personal.run('statGrid()'),new RegExp('/ '+bank.questions.length+'</span></span><span class="muted">UNAIDED INTERVIEW PASSES'));
  assert.match(h.run('progress()'),/cannot be imported into personal progress/);
  // The roadmap's own counters must identify preview results even when its top notice is offscreen.
  const routePreview=harness();
  routePreview.context.location.hash='#paths/researcher';
  routePreview.run("route=['paths','researcher'];state.questions.q20={solved:true};state.questions.q21={selfSolved:true};state.coding.c01={accepted:true};");
  const previewRoute=routePreview.run('paths()');
- assert.match(previewRoute,new RegExp('Test problems: 2 / '+routeQuestions+' interview problems solved'));
+ assert.match(previewRoute,new RegExp('Test problems: 1 / '+routeQuestions+' interview problems solved'));
  assert.match(previewRoute,new RegExp('Test exercises: 1 / '+routeCodes+' Python exercises passed'));
  assert.match(previewRoute,/Development results, separate from your progress/);
  assert.match(previewRoute,/href="\/#paths\/researcher">Open my personal route/);
