@@ -70,11 +70,9 @@ All 25 existing topic banks meet the approved difficulty contract. Current inven
 19 checks, 124 distinct questions, 56 current codes. Trader route:
 14 checks, 90 distinct questions, 42 current codes. Shared links count once per route.
 
-Next: perform the final ALL-topic semantic-math, quality, navigation and preservation audit.
-The full goal remains active until that audit and its commit/push evidence are complete.
-Individual topic verification and passing counts do not substitute for this final review.
+The final all-topic audit is verified: [requirements, topic quality matrix and evidence](evidence/FINAL_TOPIC_PRACTICE_AUDIT.md). All66 live list destinations match the source contract; original grading/bookmarks and actual personal work are preserved. The audit corrections and publishing checks are recorded there.
 
-As of 2026-10-13, all 23 frontend suites and 251 Python tests pass. Independent
+As of 2026-10-13, all 23 frontend suites and 255 Python tests pass. Independent
 enumeration, exact moments and rational state equations check the completed topics' delicate
 mathematical answers and coding references; all sixty expanded reference solutions
 also pass the actual judge. Existing grading meaning and IDs are preserved; q44, q24, q49–q51, q20/q29 and q19/q21/q30 and q22/q26/q47 and q18/q31 and q27/q28 and q04/q25/q32 and q33/q34 and q43/q48 and q35 and q36/q42 and q13/q37 and q38 and q39/q40 and q41 now have topic-specific

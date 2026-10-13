@@ -20,6 +20,13 @@ for(const path of ['researcher','trader'])for(const l of bank.lessons.filter(l=>
   assert.equal(run('JSON.stringify(state)'),before,'List rendering earns no progress');
  }
 }
+// The retained calibration exercise belongs to its current trader topic in the
+// library; its earlier researcher additional-practice bookmark is tested separately.
+run("filters.path='trader';");
+assert.equal(run("filtered(coding).some(c=>c.id==='c14')"),true);
+run("filters.path='researcher';");
+assert.equal(run("filtered(coding).some(c=>c.id==='c14')"),false);
+run("filters.path='all';");
 run("route=['question-list','l01','journey','researcher','l01'];state.questions.q01={solved:true};state.questions.q05={selfSolved:true};state.questions.q_l01_h1={reviewed:true};");
 assert.match(run("topicPracticePage('questions')"),/2 \/ 6 solved or self-assessed/);
 assert.match(run("topicPracticePage('questions')"),/1 self-assessed/);

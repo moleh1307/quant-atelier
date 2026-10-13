@@ -1,6 +1,7 @@
 """Authored transfer questions: probability records, conditioning, expectation.
 
-Existing q01..q51 are intentionally untouched. Every new written task has a
+Retained assessments receive separate editorial review in original_review.py.
+Every new written task has a
 specific rubric; numeric tasks also provide derivation criteria and follow-ups.
 """
 
