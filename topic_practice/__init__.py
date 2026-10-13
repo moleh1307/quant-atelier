@@ -7,9 +7,11 @@ an unregistered new lesson fails the build instead of inheriting generic tasks.
 from collections import Counter
 
 DIFFICULTIES = ('Easy', 'Medium', 'Hard')
-COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05', 'l06', 'l07', 'l08', 'l26', 'l27', 'l09', 'l25', 'l10', 'l11', 'l29', 'l30', 'l12', 'l13', 'l28', 'l14', 'l15', 'l16', 'l17', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24')
+COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05', 'l06', 'l07', 'l08', 'l26', 'l27', 'l09', 'l25', 'l10', 'l11', 'l29', 'l30', 'l12', 'l13', 'l28', 'l14', 'l15', 'l16', 'l17', 'l18', 'l31', 'l32', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24')
 
 CODING_LINKS = {
+    'l31': ['c_l31_easy', 'c_l31_medium', 'c_l31_hard'],
+    'l32': ['c_l32_easy', 'c_l32_medium', 'c_l32_hard'],
     'l30': ['c_l30_easy', 'c_l30_medium', 'c_l30_hard'],
     'l29': ['c_l29_easy', 'c_l29_medium', 'c_l29_hard'],
     'l28': ['c_l28_easy', 'c_l28_medium', 'c_l28_hard'],
@@ -46,6 +48,8 @@ LEGACY_CODING_LINKS = {'l08': ['c05'], 'l14': ['c10'], 'l18': ['c14']}
 
 
 def add_questions(add, questions):
+    from .algorithms_expansion import add_questions as algorithms_questions
+    algorithms_questions(add, questions)
     from .nonlinear_ml import add_questions as nonlinear_questions
     nonlinear_questions(add, questions)
     from .statistical_learning import add_questions as learning_questions
@@ -105,6 +109,8 @@ def add_questions(add, questions):
 
 
 def add_coding(add, tasks):
+    from .algorithms_expansion_coding import add_coding as algorithms_coding
+    algorithms_coding(add, tasks)
     from .nonlinear_ml_coding import add_coding as nonlinear_coding
     nonlinear_coding(add, tasks)
     from .statistical_learning_coding import add_coding as learning_coding

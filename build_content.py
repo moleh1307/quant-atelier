@@ -164,6 +164,13 @@ lesson(**NONLINEAR_LESSON)
 new_lesson = L.pop()
 L.insert(next(i for i, old in enumerate(L) if old['id'] == 'l29')+1, new_lesson)
 
+from algorithms_expansion_content import LESSONS as ALGORITHM_LESSONS
+for item in ALGORITHM_LESSONS:
+    lesson(**item)
+    new_lesson = L.pop()
+    after = 'l18' if item['id'] == 'l31' else 'l31'
+    L.insert(next(i for i, old in enumerate(L) if old['id'] == after)+1, new_lesson)
+
 from topic_practice import add_questions as add_topic_questions, attach_and_validate
 from coding_bank import TASKS
 add_topic_questions(q, Q)
