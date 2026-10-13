@@ -479,6 +479,306 @@
     "explanation": "Logarithms turn the independent product into a sum. math.log1p(-p) computes log(1-p) without first rounding 1-p to 1 for tiny p. Zero successes and all-success records need no special case because both logarithms are finite on the specified open parameter domain. O(1) time and space. A log-likelihood is not a posterior probability."
   },
   {
+    "id": "c_l31_easy",
+    "title": "Find both insertion boundaries",
+    "difficulty": "Easy",
+    "topic": "Search and data structures",
+    "path": "researcher",
+    "prompt": "values is a NONDECREASING integer array; queries is an arbitrary-order integer list. For each query q return [first index with value\u2265q, first index with value>q], using n for a missing boundary. Return pairs in query order. Indices are zero-based, equality occupies [lower,upper), and duplicates/empty arrays/empty queries are valid. 0\u2264n\u2264100000,0\u2264query_count\u22642000,|values_i|,|q|\u22641e9. Inputs are already sorted; do not sort or mutate them. O(query_count*log(n+1)) search work, O(query_count) output and O(1) auxiliary state per search; special empty outputs are constant work. A boundary can equal zero or n.",
+    "starter": "def solve(values, queries):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            1,
+            2,
+            2,
+            2,
+            5,
+            8,
+            8,
+            11
+          ],
+          [
+            2,
+            8,
+            3,
+            11,
+            12,
+            -1
+          ]
+        ],
+        "expected": [
+          [
+            1,
+            4
+          ],
+          [
+            5,
+            7
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            7,
+            8
+          ],
+          [
+            8,
+            8
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    ],
+    "solution": "def solve(values, queries):\n    result = []\n    for target in queries:\n        pair = []\n        for upper in [False, True]:\n            lo, hi = 0, len(values)\n            while lo < hi:\n                mid = (lo+hi)//2\n                if values[mid] < target or upper and values[mid] == target:\n                    lo = mid+1\n                else:\n                    hi = mid\n            pair.append(lo)\n        result.append(pair)\n    return result",
+    "explanation": "Maintain [lo,hi): everything before lo is strictly smaller for lower bound (or \u2264 for upper bound), everything at/after hi satisfies the desired comparison. At each midpoint keep equality on the correct side, strictly reducing the interval. Terminate at the insertion boundary, not the first equal midpoint. The two endpoints differ exactly by the number of matching records."
+  },
+  {
+    "id": "c_l31_medium",
+    "title": "Retain top-k observations with stable ties",
+    "difficulty": "Medium",
+    "topic": "Search and data structures",
+    "path": "researcher",
+    "prompt": "Read integer values in original order. Return original indices of the k BEST records, ranked by value descending then original index ascending. Equal-valued records are separate observations. k is an integer with 0\u2264k\u2264min(n,200),0\u2264n\u2264100000,|value|\u22641e9. k=0 and empty inputs return[]. Preserve inputs. Use a bounded heap of at most k keys, one stream pass and one final sort of the retained keys. O(n*log(k+1)+k*log(k+1)) comparison work, \\(O(k)\\) auxiliary and returned storage; handle k=0 directly. Do not sort the entire input to satisfy this implementation contract.",
+    "starter": "def solve(values, k):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            7,
+            2,
+            7,
+            3,
+            7,
+            4
+          ],
+          2
+        ],
+        "expected": [
+          0,
+          2
+        ]
+      }
+    ],
+    "solution": "import heapq\ndef solve(values, k):\n    if k == 0:\n        return []\n    heap = []\n    for i,value in enumerate(values):\n        key = (value,-i)\n        if len(heap) < k:\n            heapq.heappush(heap,key)\n        elif key > heap[0]:\n            heapq.heapreplace(heap,key)\n    return [-negative_index for value,negative_index in sorted(heap,reverse=True)]",
+    "explanation": "A min-heap key (value,\u2212index) makes the root the worst retained record. Push until full; then replace only for a strictly larger key. Induction shows the retained set is exactly the best min(k,seen) observations under that total order. Sort only its k records descending by heap key; convert negative indices back. Later equal values cannot displace earlier ties."
+  },
+  {
+    "id": "c_l31_hard",
+    "title": "Select sliding medians from a frequency tree",
+    "difficulty": "Hard",
+    "topic": "Search and data structures",
+    "path": "researcher",
+    "prompt": "Return TWICE the median of each complete current-inclusive window of width k, in time order. For odd k this is twice the middle value; for even k it is the sum of the two middle sorted VALUES. Duplicates count separately. values is an integer array,0\u2264n\u2264100000,|value|\u22641e9,k is a positive integer\u2264100000; k>n returns[]. This is a BATCH function: compress the distinct whole-array values in sorted order, maintain only active-window frequencies, and use a Fenwick tree with O(log(u+1)) rank selection by binary lifting, u=distinct count. Delete exactly one outgoing occurrence before selecting ranks. O(n*log(n+1)) total time including compression, O(u) auxiliary storage plus O(max(n\u2212k+1,0)) output; dictionary lookup has expected constant cost. Do not claim \\(O(k)\\) online memory. Preserve inputs and return exact Python integers; doubled answers lie within\u00b12e9. A sorted-window recomputation or linear scan over all distinct coordinates per rank does not meet this implementation contract.",
+    "starter": "def solve(values, k):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            4,
+            1,
+            4,
+            2,
+            9,
+            8
+          ],
+          4
+        ],
+        "expected": [
+          6,
+          6,
+          12
+        ]
+      }
+    ],
+    "solution": "def solve(values, k):\n    if k > len(values):\n        return []\n    vocabulary = sorted(set(values))\n    coordinates = {value:i+1 for i,value in enumerate(vocabulary)}\n    u = len(vocabulary)\n    tree = [0]*(u+1)\n    def update(j,delta):\n        while j <= u:\n            tree[j] += delta\n            j += j & -j\n    def select(rank):\n        pos, accumulated = 0,0\n        step = 1 << (u.bit_length()-1)\n        while step:\n            candidate = pos+step\n            if candidate <= u and accumulated+tree[candidate] < rank:\n                accumulated += tree[candidate]\n                pos = candidate\n            step //= 2\n        return vocabulary[pos]\n    result = []\n    for i,value in enumerate(values):\n        update(coordinates[value],1)\n        if i >= k:\n            update(coordinates[values[i-k]],-1)\n        if i >= k-1:\n            result.append(select((k+1)//2)+select((k+2)//2))\n    return result",
+    "explanation": "One-based tree[j] stores the count block ending at j of length lowbit(j). Updates touch containing blocks; rank selection consumes aligned blocks only while their accumulated count stays STRICTLY below the requested rank. Counts stay nonnegative because one active occurrence expires. Select ranks (k+1)//2 and (k+2)//2; map coordinates back to values and add them, avoiding float medians. Batch compression stores vocabulary, not just the current window."
+  },
+  {
+    "id": "c_l32_easy",
+    "title": "Compute directed hop distances",
+    "difficulty": "Easy",
+    "topic": "Graphs and dynamic programming",
+    "path": "researcher",
+    "prompt": "Vertices are0..\\(n-1\\). edges contains DIRECTED [u,v] pairs; parallel edges and self-loops are allowed. Return minimum edge counts from source to every vertex in index order, with\u22121 for unreachable vertices and zero for source. 1\u2264n\u226450000,0\u2264edge_count\u2264100000,source and endpoints are valid vertex IDs. No implicit reverse edges. Use BFS with an adjacency list and mark a vertex discovered when enqueuing it. O(n+edge_count) time and auxiliary/output space; preserve inputs.",
+    "starter": "def solve(n, edges, source):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          6,
+          [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              5,
+              4
+            ]
+          ],
+          0
+        ],
+        "expected": [
+          0,
+          1,
+          1,
+          2,
+          3,
+          -1
+        ]
+      }
+    ],
+    "solution": "from collections import deque\ndef solve(n, edges, source):\n    adjacency = [[] for _ in range(n)]\n    for u,v in edges:\n        adjacency[u].append(v)\n    distance = [-1]*n\n    distance[source] = 0\n    queue = deque([source])\n    while queue:\n        u = queue.popleft()\n        for v in adjacency[u]:\n            if distance[v] == -1:\n                distance[v] = distance[u]+1\n                queue.append(v)\n    return distance",
+    "explanation": "FIFO processes discovered vertices in nondecreasing hop layers. First discovery sets distance and enqueues once, so duplicate edges/self-loops cannot create repeated scans of a vertex. Each directed adjacency entry is scanned at most once from its reachable tail. Initialize every other distance to\u22121 and do not invent reverse reachability."
+  },
+  {
+    "id": "c_l32_medium",
+    "title": "Settle nonnegative costs with stale-entry checks",
+    "difficulty": "Medium",
+    "topic": "Graphs and dynamic programming",
+    "path": "researcher",
+    "prompt": "Vertices are0..\\(n-1\\). edges contains DIRECTED [u,v,weight] integer triples with 0\u2264weight\u22641e9. Parallel edges, zero-weight cycles and self-loops are valid. Return minimum total costs from source to every vertex in index order; unreachable vertices are None and source costs zero. 1\u2264n\u226450000,0\u2264edge_count\u2264100000,valid endpoint/source IDs. Use adjacency-list Dijkstra with a min-heap. Add entries only on strict improvements; skip popped entries whose cost is obsolete. Lazy duplicate-entry heap storage may be O(edge_count), so use O(n+edge_count) auxiliary/output space and O((n+edge_count)*log(n+edge_count+1)) work. Preserve inputs. Distances are exact integers below5e13, safely displayed as JSON numbers. Negative weights are outside this contract; do not silently treat BFS as a weighted solver.",
+    "starter": "def solve(n, edges, source):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          5,
+          [
+            [
+              0,
+              1,
+              9
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              2,
+              1,
+              1
+            ],
+            [
+              1,
+              3,
+              1
+            ],
+            [
+              2,
+              3,
+              10
+            ],
+            [
+              3,
+              4,
+              0
+            ],
+            [
+              1,
+              4,
+              7
+            ]
+          ],
+          0
+        ],
+        "expected": [
+          0,
+          2,
+          1,
+          3,
+          3
+        ]
+      }
+    ],
+    "solution": "import heapq\ndef solve(n, edges, source):\n    adjacency = [[] for _ in range(n)]\n    for u,v,w in edges:\n        adjacency[u].append((v,w))\n    distance = [None]*n\n    distance[source] = 0\n    heap = [(0,source)]\n    while heap:\n        cost,u = heapq.heappop(heap)\n        if cost != distance[u]:\n            continue\n        for v,w in adjacency[u]:\n            candidate = cost+w\n            if distance[v] is None or candidate < distance[v]:\n                distance[v] = candidate\n                heapq.heappush(heap,(candidate,v))\n    return distance",
+    "explanation": "Extract the minimum valid tentative cost. With nonnegative edges a later unsettled path cannot improve that settled distance. For each outgoing edge test cost+w against the current distance. A prior larger heap record is stale after improvement; discard it without scanning its outgoing edges again. Strict comparison prevents zero-cycle equal-distance re-enqueueing. None marks unreachable, never an arbitrary large finite distance."
+  },
+  {
+    "id": "c_l32_hard",
+    "title": "Reconstruct a canonical weighted interval schedule",
+    "difficulty": "Hard",
+    "topic": "Graphs and dynamic programming",
+    "path": "researcher",
+    "prompt": "jobs gives original-index [start,end,value] INTEGER records with start<end. Select pairwise nonoverlapping HALF-OPEN intervals; touching endpoints are compatible. Empty selection is allowed, and negative/zero values may be skipped. Sort jobs by (end,start,original_index). Let D[j] be optimal value in first j sorted records; for a take candidate use only the earlier prefix with end\u2264current start. At EVERY equality between skip and take, SKIP the current sorted record. Return [optimal_total_value, selected_original_index_list_in_chronological_order] for this exact canonical recurrence. It does not generally minimize number of jobs or lexicographic IDs as a separate objective. Duplicated intervals are distinct records; do not mutate input or return sorted positions instead of original indices. 0\u2264n\u226450000,integer|start|,|end|\u22641e6,|value|\u22641e6. O(n log(n+1)) time, \\(O(n)\\) auxiliary/output space including reconstruction. Values remain within\u00b15e10, safely represented in the UI. Use binary-searched predecessors and an iterative DP/reconstruction rather than exponential subsets or recursion depth proportional to n.",
+    "starter": "def solve(jobs):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              0,
+              3,
+              5
+            ],
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              4,
+              4
+            ],
+            [
+              3,
+              5,
+              5
+            ],
+            [
+              4,
+              6,
+              4
+            ],
+            [
+              5,
+              7,
+              4
+            ],
+            [
+              0,
+              7,
+              12
+            ]
+          ]
+        ],
+        "expected": [
+          14,
+          [
+            0,
+            3,
+            5
+          ]
+        ]
+      }
+    ],
+    "solution": "from bisect import bisect_right\ndef solve(jobs):\n    order = sorted(range(len(jobs)),key=lambda i:(jobs[i][1],jobs[i][0],i))\n    ends = [jobs[i][1] for i in order]\n    dp, predecessor, take = [0],[0]*len(jobs),[False]*len(jobs)\n    for j,i in enumerate(order):\n        start,end,value = jobs[i]\n        p = bisect_right(ends,start,0,j)\n        predecessor[j] = p\n        candidate = value+dp[p]\n        take[j] = candidate > dp[-1]\n        dp.append(candidate if take[j] else dp[-1])\n    selected = []\n    j = len(order)\n    while j:\n        if take[j-1]:\n            selected.append(order[j-1])\n            j = predecessor[j-1]\n        else:\n            j -= 1\n    selected.reverse()\n    return [dp[-1],selected]",
+    "explanation": "Sort stable identities by finishing time. For sorted position j (zero-based), bisect earlier ends only to obtain p=number of compatible prior jobs. The take value is weight+dp[p], skip is dp[j]. Record a take only when it is strictly larger; store p for reconstruction. Every feasible optimum either excludes j or includes it after a compatible prefix, proving the recurrence. Walk backward through recorded decisions and reverse the recovered original IDs. Empty/negative inputs follow dp[0]=0 without a special forced-choice policy."
+  },
+  {
     "id": "c_l30_easy",
     "title": "Fit the values inside supplied leaves",
     "difficulty": "Easy",

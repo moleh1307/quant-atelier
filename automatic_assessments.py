@@ -576,6 +576,9 @@ CHECKS.update(learning_checks())
 from topic_practice.nonlinear_ml import objective_checks as nonlinear_checks
 CHECKS.update(nonlinear_checks())
 
+from topic_practice.algorithms_expansion import objective_checks as algorithms_checks
+CHECKS.update(algorithms_checks())
+
 def attach_objective_assessments(questions):
     written = {q['id'] for q in questions if q['type'] == 'written'}
     if written != set(CHECKS):

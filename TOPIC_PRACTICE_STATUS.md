@@ -1,5 +1,8 @@
 # Topic practice expansion
 
+**Current addition, 2026-10-13:** Two connected algorithms/data-structures chapters l31/l32 follow the preserved l18. Original detailed textbooks cover boundary and feasibility proofs, hash counts, stable heaps, Fenwick rank selection, BFS/Dijkstra, topological dependencies and canonical interval DP. Twelve automatic interviews and six Python exercises meet the difficulty contract. Inventory 32 lessons / 206 interviews / 96 library codes; researcher 26 modules / 166 distinct interviews / 77 current codes; trader unchanged at 14/90/42. All previous 30/194/90 public records are identical. Full 313 Python tests and 31 frontend suites passed; live preview checks, both Hard submissions and responsive figures verified. [Evidence and limits](evidence/ALGORITHMS_DATA_STRUCTURES.md).
+
+
 User-approved contract, 2026-10-12: **lesson → topic interview list → topic coding list**.
 Every existing and future lesson needs at least two Easy, two Medium and two Hard
 interview questions, plus exactly one Easy, one Medium and one Hard coding exercise.
@@ -58,6 +61,8 @@ Students choose questions within the lists; no forced Q1 → Q2 → code chain.
 | l16 research defence | 6 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
 | l17 Monte Carlo | 6 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
 | l18 researcher algorithms | 6 interviews; 3 coding | Verified | Automated + live grading/full debug copy/legacy bookmark/narrow proofs |
+| l31 search and data structures | 6 interviews; 3 coding | Exhaustive boundaries, signed sums, stable top-k, sliding medians and rank proofs | Automated + live lesson/exact-set checks, lists, Hard Submit and narrow figures |
+| l32 graphs and dynamic programming | 6 interviews; 3 coding | Floyd–Warshall, exhaustive graphs/subsets, topological orders and canonical ties | Automated + live lesson/exact-set checks, lists, Hard Submit and desktop/narrow figures |
 | l19 fair value | 6 interviews; 3 coding | Verified | Automated + live grading/exact and large debug copies/narrow proofs |
 | l20 order flow | 7 interviews; 3 coding | Verified | Automated + live grading/public exact debug copy/narrow policy proofs |
 | l21 continuation/log growth | 7 interviews; 3 coding | Verified | Automated + live grading/exact debug copies/narrow Bayesian and tail proofs |
@@ -73,7 +78,7 @@ Sources: `topic_practice/foundation_questions.py`, `foundation_coding.py`,
 `static/content.json` and `static/coding.json`; rebuild their Python sources.
 
 The two list destinations and nonsequential journey handoffs are implemented across the site.
-All 25 existing topic banks meet the approved difficulty contract. Current inventory:
+At the original 2026-10-12 audit, all 25 topic banks met the approved difficulty contract. Inventory at that audit:
 25 lessons, 164 interview questions, 75 coding exercises. Researcher route:
 19 checks, 124 distinct questions, 56 current codes. Trader route:
 14 checks, 90 distinct questions, 42 current codes. Shared links count once per route.

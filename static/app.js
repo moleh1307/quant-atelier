@@ -584,7 +584,7 @@ const roadmapPhases={
     ['Quant fluency','Make arithmetic, dependence and temporal code reliable.',['l06','l07','l08']]],
   researcher:[['Calculus & optimization','Understand local change, then choose and verify an update.',['l26','l27']],['Statistical models','Estimate, fit and quantify what the data can tell you.',['l09','l25','l10','l11','l29','l30','l12','l13','l28']],
     ['The research process','Separate discovery from evidence you can defend.',['l14','l15','l16']],
-    ['Simulation & algorithms','Turn a mathematical argument into a tested implementation.',['l17','l18']]],
+    ['Simulation & algorithms','Turn a mathematical argument into a tested implementation.',['l17','l18','l31','l32']]],
   trader:[['Value & information','Price the payoff, then learn from the order.',['l19','l20']],
     ['Decisions & risk','Compare alternatives and understand joint exposure.',['l21','l22']],
     ['Payoffs & judgement','Reason from replication, selection and calibrated beliefs.',['l23','l24']]]
