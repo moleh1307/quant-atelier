@@ -66,14 +66,14 @@ class CalibrationPracticeTests(unittest.TestCase):
             self.assertGreaterEqual(len(QUESTIONS[id]['rubric']),3)
 
     def test_future_registration_does_not_bypass_coverage(self):
-        future = {'id':'l28','questions':[],'coding':[]}
-        with patch('topic_practice.COMPLETE_TOPICS',COMPLETE_TOPICS+('l28',)):
-            with self.assertRaisesRegex(ValueError,'l28 needs at least two'):
+        future = {'id':'l29','questions':[],'coding':[]}
+        with patch('topic_practice.COMPLETE_TOPICS',COMPLETE_TOPICS+('l29',)):
+            with self.assertRaisesRegex(ValueError,'l29 needs at least two'):
                 attach_and_validate(copy.deepcopy(BANK['lessons'])+[future],BANK['questions'],TASKS)
             future_questions = [dict(QUESTIONS['q_l24_e1'],id=f'q_future_{i}',
-                                     lesson='l28',difficulty=level)
+                                     lesson='l29',difficulty=level)
                                 for i,level in enumerate(('Easy','Easy','Medium','Medium','Hard','Hard'))]
-            with self.assertRaisesRegex(ValueError,'l28 needs exactly one coding'):
+            with self.assertRaisesRegex(ValueError,'l29 needs exactly one coding'):
                 attach_and_validate(copy.deepcopy(BANK['lessons'])+[copy.deepcopy(future)],
                                     BANK['questions']+future_questions,TASKS)
         for lesson in BANK['lessons']:

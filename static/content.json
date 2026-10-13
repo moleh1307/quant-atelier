@@ -2297,6 +2297,282 @@
       ]
     },
     {
+      "id": "q_l28_e1",
+      "title": "Which variance does the bootstrap estimate?",
+      "topic": "Resampling",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 6,
+      "prompt": "An iid dataset is [1,2,4]. Conditional on this observed dataset, draw THREE independent indices uniformly with replacement from {1,2,3} and take their observed values. Let \\(\\bar X^*\\) be their mean. Compute its exact CONDITIONAL bootstrap variance, not the variance of one resampled observation or the Monte Carlo error of a simulation average.",
+      "answer": 0.5185185185185185,
+      "hints": [
+        "First compute the variance of the three-point empirical distribution, using denominator three.",
+        "Three independent bootstrap draws make the variance of their mean one third of that variance."
+      ],
+      "solution": "The observed mean is \\(\\frac{7}{3}\\). Centered squared deviations are \\(\\frac{16}{9}\\),\\(\\frac{1}{9}\\),\\(\\frac{25}{9}\\), so the empirical variance is \\(\\frac{14}{9}\\). The draws are conditionally independent from this empirical law, giving \\(\\operatorname{Var}_*(\\bar X^*)=(14/9)/3=14/27\\). The unbiased sample variance is instead \\(\\frac{7}{3}\\), whose iid mean-variance estimate is \\(\\frac{7}{9}\\). The bootstrap conditional value is smaller by (\\(n-1\\))/n here; no extra resamples alter this exact law.",
+      "followup": "If B independent replicate means are averaged, what is the conditional variance of that simulation average?",
+      "followSolution": "It is 14/(27B). This measures simulation error when estimating the conditional mean, not the original experiment’s uncertainty. The standard deviation of the replicate means stays √(\\(\\frac{14}{27}\\)); dividing it by √B answers a different question.",
+      "lesson": "l28",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Use the empirical rather than unbiased variance.",
+        "Apply conditional independence of bootstrap draws.",
+        "Separate estimator variation from simulation-average variation."
+      ]
+    },
+    {
+      "id": "q_l28_e2",
+      "title": "Replacement leaves some records out",
+      "topic": "Resampling",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 6,
+      "prompt": "A dataset contains four physical records, labelled 1 through 4; their numerical values may coincide. A bootstrap sample draws four record indices independently and uniformly with replacement. What is the expected number of DISTINCT original record indices appearing at least once?",
+      "answer": 2.734375,
+      "hints": [
+        "Use an indicator for whether each particular record appears.",
+        "A particular record is absent only if every draw chooses one of the other three."
+      ],
+      "solution": "A record is absent with probability (\\(\\frac{3}{4}\\))^4=\\(\\frac{81}{256}\\) and present with probability \\(\\frac{175}{256}\\). Summing four presence indicators gives \\(4[1-(3/4)^4]=175/64\\). Presence indicators need not be independent for this expectation. Distinct physical indices are the object counted; deduplicating equal observed values changes the empirical sampling weights.",
+      "followup": "Generalize to n records and interpret the large-n proportion without claiming the out-of-bag records form a new independent dataset.",
+      "followSolution": "The expectation is \\(n[1-(1-1/n)^n]\\), with proportion tending to 1−e^(−1), about 0.632. A given record is out of the bootstrap sample with probability approaching e^(−1). Different replicates reuse and overlap the same original records; increasing their count does not create new independent held-out observations.",
+      "lesson": "l28",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Count distinct indices, not distinct numerical values.",
+        "Derive one record’s inclusion probability.",
+        "Use linearity without assuming independent inclusion events."
+      ]
+    },
+    {
+      "id": "q_l28_m1",
+      "title": "Reflect the error, not the estimate",
+      "topic": "Resampling",
+      "difficulty": "Medium",
+      "path": "researcher",
+      "minutes": 12,
+      "prompt": "The original estimate is \\(\\hat\\theta=10\\). Under a specified bootstrap approximation, the 2.5% and 97.5% quantiles of the CENTERED error \\(\\hat\\theta^*-\\hat\\theta\\) are −3 and 5. Construct the 95% BASIC bootstrap interval by approximating the law of \\(\\hat\\theta-\\theta\\) with those error quantiles. Report the lower endpoint. This is a construction rule, not a claim of exact coverage.",
+      "answer": 5,
+      "hints": [
+        "Write −3 ≤ original estimation error ≤ 5.",
+        "Solve both inequalities for the unknown parameter, reversing the order of the error quantiles."
+      ],
+      "solution": "Approximate the error event by −3≤10−\\(\\theta\\)≤5. Rearranging gives 5≤\\(\\theta\\)≤13. The lower endpoint is 10−5=5. Replicate estimate quantiles would instead be 7 and 15, giving percentile interval [7,15]. Both widths are eight, but their centers differ. A basic interval reflects the error law; copying its two quantiles directly as a parameter interval gets the sign and centering wrong.",
+      "followup": "The exact conditional mean of the bootstrap estimates is 11. What is the estimated bootstrap bias and corresponding bias-corrected point estimate?",
+      "followSolution": "The estimated bias is 11−10=1, and the corrected point estimate is 10−1=9. This does not prove smaller mean-squared error or repair an invalid resampling model. The interval construction, a point-bias correction and Monte Carlo precision are separate decisions.",
+      "lesson": "l28",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Center on the original estimate.",
+        "Invert the signed error bounds correctly.",
+        "Keep interval construction separate from a coverage guarantee."
+      ]
+    },
+    {
+      "id": "q_l28_m2",
+      "title": "Do not tear apart a paired comparison",
+      "topic": "Resampling",
+      "difficulty": "Medium",
+      "path": "researcher",
+      "minutes": 12,
+      "prompt": "Three independent matched records contain losses for models A and B: (1,2), (2,3), (4,5). Compare their mean losses with A minus B. In a paired bootstrap, draw three record indices with replacement and reuse each index for BOTH columns. A colleague instead bootstraps the two columns independently, with three draws in each. Compute independent-column bootstrap variance MINUS paired bootstrap variance of the mean difference, conditional on these data.",
+      "answer": 1.037037037037037,
+      "hints": [
+        "Look at the three within-record differences.",
+        "Independent column resampling deletes the empirical covariance."
+      ],
+      "solution": "Every paired difference is −1, so every paired bootstrap mean difference is −1 and its conditional variance is zero. Each column has empirical variance \\(\\frac{14}{9}\\); shifting a column by one does not change its variance. Independent resampled means each have variance \\(\\frac{14}{27}\\) and have zero covariance, giving difference variance \\(\\frac{28}{27}\\). Thus the requested gap is \\(\\frac{28}{27}\\). The independent scheme changed the joint experiment instead of merely using more randomness.",
+      "followup": "Does paired resampling always produce less variance than independent resampling? Does zero variance here prove certainty about all future model comparisons?",
+      "followSolution": "Neither. Pairing adds the covariance term: variance of A−B is Var(A)+Var(B)−2Cov(A,B). Negative covariance can make the paired variance larger. Zero conditional variance here describes the degenerate empirical distribution of observed differences; it does not establish that a population difference is always constant or that model performance is known without uncertainty.",
+      "lesson": "l28",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Preserve matched records when defining the paired law.",
+        "Compute both conditional variances and their gap.",
+        "Avoid universal covariance or future-certainty claims."
+      ]
+    },
+    {
+      "id": "q_l28_h1",
+      "title": "An endpoint that cannot be resampled",
+      "topic": "Resampling",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 25,
+      "prompt": "Let X₁,…,Xₙ be iid \\(\\operatorname{Uniform}(0,\\theta)\\), \\(\\theta\\)>0, and M=max Xᵢ. Values are distinct with probability one. Conditional on the observed sample, form an ordinary n-out-of-n empirical bootstrap maximum M*. Define \\(Z^*=n(M-M^*)/M\\). Derive its mass at zero and its limit as n grows. Compare it with the true sampling gap \\(Z=n(\\theta-M)/\\theta\\), and decide whether the bootstrap approximates that gap law consistently. Give the zero mass for \\(n=4\\) and its large-n limit; select the valid statements. Increasing simulation count B must be distinguished from increasing n.",
+      "answer": null,
+      "hints": [
+        "The unique observed maximum must be absent from every draw for M* to be strictly smaller.",
+        "The true continuous sampling maximum has no atom at the endpoint.",
+        "For fixed t≥0, derive P(Z>t) from the CDF of the uniform sample maximum."
+      ],
+      "solution": "At least one draw selects the unique maximum with probability \\(1-(1-1/n)^n\\), which is exactly P*(Z*=0). For \\(n=4\\) it is \\(\\frac{175}{256}\\); its limit is 1−e^(−1). In contrast, for 0≤t≤n the true gap has \\(P(Z>t)=(1-t/n)^n\\), tending to e^(−t). Thus Z tends to a continuous Exponential(1) law, with no atom at zero. The nonvanishing bootstrap atom already rules out consistency: a sufficiently small positive t still has at least that much bootstrap CDF mass, whereas the exponential CDF can be arbitrarily small. More B estimates the wrong conditional law more precisely. Every empirical maximum satisfies M*≤M<\\(\\theta\\) almost surely; consequently any percentile interval using only these maximum quantiles has zero coverage for \\(\\theta\\), regardless of its nominal positive confidence level.",
+      "followup": "Use the specified Uniform model to derive an exact one-sided 1−α confidence interval for \\(\\theta\\), with 0<α<1. Explain how this differs from ordinary empirical percentile bootstrapping.",
+      "followSolution": "Since P(M/\\(\\theta\\)≤u)=u^n on [0,1], the event M≥α^(1/n)\\(\\theta\\) has probability 1−α. Also M≤\\(\\theta\\) almost surely. Hence \\([M,M/\\alpha^{1/n}]\\) has exactly 1−α coverage under this model. This uses a known pivot and a justified parametric family, not an empirical sample that cannot generate unseen endpoint values. An m-out-of-n bootstrap needs a defensible statistic-specific rescaling and limit argument; simply choosing fewer draws is not a universal remedy.",
+      "lesson": "l28",
+      "tolerance": 1e-06,
+      "type": "structured",
+      "rubric": [
+        "Derive the bootstrap atom exactly and its nonzero limit.",
+        "Derive the continuous limiting sampling law with the correct scaling.",
+        "Diagnose inconsistency rather than Monte Carlo noise.",
+        "Give a model-specific interval without an unsupported universal repair."
+      ],
+      "assessmentVersion": "objective-v1",
+      "checks": [
+        {
+          "type": "numeric",
+          "prompt": "What is the conditional probability Z*=0 for \\(n=4\\)?",
+          "answer": 0.68359375,
+          "tolerance": 1e-06,
+          "explanation": "At least one of four draws must select the unique maximum.",
+          "id": "part1"
+        },
+        {
+          "type": "numeric",
+          "prompt": "What is the limiting mass at zero as n tends to infinity?",
+          "answer": 0.6321205588285577,
+          "tolerance": 1e-06,
+          "explanation": "The missing-maximum probability tends to exp of minus one.",
+          "id": "part2"
+        },
+        {
+          "type": "select",
+          "prompt": "Select every valid diagnosis or consequence.",
+          "options": [
+            {
+              "correct": true,
+              "text": "An ordinary percentile interval formed from bootstrap maxima cannot cover the true endpoint here.",
+              "explanation": "Its upper endpoint cannot exceed the observed maximum, which is below theta almost surely.",
+              "id": "choice4",
+              "label": "An ordinary percentile interval formed from bootstrap maxima cannot cover the true endpoint here."
+            },
+            {
+              "correct": false,
+              "text": "Every failure of ordinary bootstrapping is fixed merely by drawing fewer observations.",
+              "explanation": "Alternative resampling needs a statistic-specific scaling and validity argument.",
+              "id": "choice5",
+              "label": "Every failure of ordinary bootstrapping is fixed merely by drawing fewer observations."
+            },
+            {
+              "correct": false,
+              "text": "Increasing B removes the atom and makes this bootstrap consistent.",
+              "explanation": "B only approximates the same conditional law more precisely.",
+              "id": "choice3",
+              "label": "Increasing B removes the atom and makes this bootstrap consistent."
+            },
+            {
+              "correct": true,
+              "text": "The true scaled sampling gap converges to a continuous Exponential(1) law.",
+              "explanation": "Its survival probability tends to exp of minus t.",
+              "id": "choice1",
+              "label": "The true scaled sampling gap converges to a continuous Exponential(1) law."
+            },
+            {
+              "correct": true,
+              "text": "The bootstrap gap retains a nonvanishing atom at zero.",
+              "explanation": "The observed maximum is selected with limiting probability one minus exp of minus one.",
+              "id": "choice2",
+              "label": "The bootstrap gap retains a nonvanishing atom at zero."
+            }
+          ],
+          "id": "part3"
+        }
+      ]
+    },
+    {
+      "id": "q_l28_h2",
+      "title": "The cluster is the draw, the row mean is the target",
+      "topic": "Resampling",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 25,
+      "prompt": "Two observed independent clusters contain A=[0,0] and B=[10,10,10,10]. The statistic is the POOLED ROW mean, total sum divided by total retained row count. A cluster bootstrap independently draws TWO whole cluster labels with replacement, each label A or B having probability \\(\\frac{1}{2}\\), and retains every member of each selected cluster (including all members again on repeated selection). Compute the exact conditional bootstrap mean and variance of this statistic. Explain its bias relative to the observed statistic and why neither independently drawing rows nor averaging two cluster means reproduces the specified procedure. This finite two-cluster example illustrates the law; it is not a claim that two clusters suffice for reliable inference.",
+      "answer": null,
+      "hints": [
+        "Enumerate AA, AB, BA and BB before taking moments.",
+        "The denominator changes when clusters have unequal sizes.",
+        "Combine the two mixed outcomes, then compute variance around the bootstrap expectation."
+      ],
+      "solution": "The four equally likely draws give pooled means 0,\\(\\frac{20}{3}\\),\\(\\frac{20}{3}\\),10. Their expectation is \\(\\frac{35}{6}\\). Their second moment is \\(\\frac{425}{9}\\); subtracting (\\(\\frac{35}{6}\\))² gives variance \\(\\frac{475}{36}\\). The observed pooled mean is \\(\\frac{20}{3}\\), so conditional bootstrap bias is −\\(\\frac{5}{6}\\). A ratio statistic need not be conditionally unbiased. Averaging selected cluster means gives outcomes 0,5,5,10 and targets an equally weighted cluster mean instead, with expectation five. Independently drawing six individual rows from the empirical row distribution instead gives conditional mean \\(\\frac{20}{3}\\) and variance \\(\\frac{100}{27}\\); it breaks the within-cluster shared values and defines another experiment. Repeating an entire selected cluster preserves its internal configuration, but cannot manufacture more independent clusters.",
+      "followup": "Suppose the population consists of equally likely A-type and B-type clusters. Compare the population average-cluster-mean target with the limiting pooled-row-mean target over many iid sampled clusters.",
+      "followSolution": "The equally weighted cluster-mean target is (0+10)/2=5. For pooled rows, the law of large numbers gives E[cluster sum]/E[cluster size]=(0+40)/(2+4)=\\(\\frac{20}{3}\\). Larger clusters contribute more rows. Both can be legitimate targets, but they answer different questions. Cluster bootstrap consistency also needs appropriate conditions and an increasing number of independent clusters; a large row count inside only two clusters does not supply that limit.",
+      "lesson": "l28",
+      "tolerance": 1e-06,
+      "type": "structured",
+      "rubric": [
+        "Enumerate resampled cluster counts and changing row denominators.",
+        "Compute expectation, second moment, variance and bias.",
+        "Distinguish cluster-mean and row-weighted targets.",
+        "Respect the independent-cluster rather than row sample size."
+      ],
+      "assessmentVersion": "objective-v1",
+      "checks": [
+        {
+          "type": "numeric",
+          "prompt": "What is the exact conditional expectation of the pooled bootstrap mean?",
+          "answer": 5.833333333333333,
+          "tolerance": 1e-06,
+          "explanation": "Average zero, twenty thirds, twenty thirds and ten.",
+          "id": "part1"
+        },
+        {
+          "type": "numeric",
+          "prompt": "What is its exact conditional variance?",
+          "answer": 13.194444444444445,
+          "tolerance": 1e-06,
+          "explanation": "Compute the second moment and subtract the square of the bootstrap expectation.",
+          "id": "part2"
+        },
+        {
+          "type": "select",
+          "prompt": "Select every valid statement about the specified cluster procedure.",
+          "options": [
+            {
+              "correct": true,
+              "text": "The pooled-row denominator changes across replicates.",
+              "explanation": "AA has four rows, mixed draws have six, and BB has eight.",
+              "id": "choice2",
+              "label": "The pooled-row denominator changes across replicates."
+            },
+            {
+              "correct": false,
+              "text": "The bootstrap bias must be zero because the two cluster labels are sampled uniformly.",
+              "explanation": "Uniform label sampling does not commute expectation with a ratio.",
+              "id": "choice5",
+              "label": "The bootstrap bias must be zero because the two cluster labels are sampled uniformly."
+            },
+            {
+              "correct": true,
+              "text": "Repeated resampling cannot create additional independent original clusters.",
+              "explanation": "The available cluster information still comes from two observed clusters.",
+              "id": "choice4",
+              "label": "Repeated resampling cannot create additional independent original clusters."
+            },
+            {
+              "correct": false,
+              "text": "Averaging the two selected cluster means computes the same statistic for unequal sizes.",
+              "explanation": "It assigns equal cluster weights instead of weighting their row counts.",
+              "id": "choice3",
+              "label": "Averaging the two selected cluster means computes the same statistic for unequal sizes."
+            },
+            {
+              "correct": true,
+              "text": "Selecting B twice retains eight rows, all with value ten.",
+              "explanation": "Each selected cluster contributes its entire membership.",
+              "id": "choice1",
+              "label": "Selecting B twice retains eight rows, all with value ten."
+            }
+          ],
+          "id": "part3"
+        }
+      ]
+    },
+    {
       "id": "q_l26_e1",
       "title": "A derivative has an inner factor",
       "topic": "Calculus",
@@ -9646,6 +9922,72 @@
         "Too small",
         "Always exact",
         "Zero"
+      ]
+    },
+    {
+      "id": "l28",
+      "title": "Resample the experiment, not the rows",
+      "topic": "Resampling",
+      "path": "researcher",
+      "minutes": 50,
+      "intro": "Use the empirical distribution to approximate sampling error, separate simulation noise from statistical uncertainty, and choose a resampling unit that preserves what makes observations dependent.",
+      "sections": [
+        {
+          "title": "Two experiments, two sources of uncertainty",
+          "text": "The unknown sampling law of \\(\\hat\\theta-\\theta\\) is approximated by the conditional bootstrap law of \\(\\hat\\theta^*-\\hat\\theta\\). More replicates reduce Monte Carlo noise, not uncertainty in the original experiment."
+        },
+        {
+          "title": "Resample physical records with replacement",
+          "text": "For iid data, \\(\\hat F_n=n^{-1}\\sum_i\\delta_{x_i}\\). Draw n independent indices uniformly with replacement and rerun the stated statistic. Equal observed values retain their original multiplicities."
+        },
+        {
+          "title": "Intervals require an error model",
+          "text": "Percentile intervals use replicate quantiles; basic intervals reflect them around the original estimate. Neither has automatic finite-sample coverage. State the quantile convention and handle degenerate replicates."
+        },
+        {
+          "title": "Dependence changes the unit",
+          "text": "Resample matched pairs together, whole independent clusters when members share shocks, or contiguous blocks for suitable stationary time series. Respect unequal cluster sizes and truncated final blocks."
+        },
+        {
+          "title": "Know when the bootstrap cannot work",
+          "text": "For a continuous Uniform endpoint estimate M, ordinary bootstrap maxima never exceed M. Their centered law retains a nonvanishing atom at zero, so increasing the replicate count cannot repair inconsistency."
+        }
+      ],
+      "example": "With observations [0,0,6], resample three physical indices uniformly with replacement. The number K of sixes is Binomial(3,\\(\\frac{1}{3}\\)), so the exact bootstrap mean has values 0,2,4,6 with masses \\(\\frac{8}{27}\\),\\(\\frac{12}{27}\\),\\(\\frac{6}{27}\\),\\(\\frac{1}{27}\\). Its conditional mean is 2 and variance \\(\\frac{8}{3}\\).",
+      "check": "You double the number B of bootstrap replicates while keeping the original sample and resampling model fixed. What changes?",
+      "options": [
+        "Monte Carlo approximation improves; the target conditional bootstrap distribution stays the same.",
+        "The original effective sample size doubles.",
+        "The true sampling standard error necessarily shrinks by one over square root of two.",
+        "Dependence and selection bias automatically disappear."
+      ],
+      "correct": 0,
+      "explanation": "B controls how precisely simulation approximates its fixed conditional law. It does not add independent observations or validate the chosen resampling model.",
+      "questions": [
+        "q_l28_e1",
+        "q_l28_e2",
+        "q_l28_m1",
+        "q_l28_m2",
+        "q_l28_h1",
+        "q_l28_h2"
+      ],
+      "coding": [
+        "c_l28_easy",
+        "c_l28_medium",
+        "c_l28_hard"
+      ],
+      "objectives": [
+        "Derive the empirical bootstrap law and separate its two uncertainty layers.",
+        "Construct and interpret bootstrap intervals with explicit conventions and limits.",
+        "Preserve pairs, clusters and temporal blocks; diagnose a nonregular bootstrap failure."
+      ],
+      "trainers": [],
+      "practiceExpanded": true,
+      "optionLabels": [
+        "Monte Carlo approximation improves; the target conditional bootstrap distribution stays the same.",
+        "The original effective sample size doubles.",
+        "The true sampling standard error necessarily shrinks by one over square root of two.",
+        "Dependence and selection bias automatically disappear."
       ]
     },
     {
