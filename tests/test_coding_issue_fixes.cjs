@@ -1,0 +1,30 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const bank=JSON.parse(fs.readFileSync('static/content.json')),codes=JSON.parse(fs.readFileSync('static/coding.json')),events={},nodes={},tabs=[];
+function node(){return {value:'',textContent:'',innerHTML:'',checked:false,scrollTop:0,scrollLeft:0,addEventListener(type,fn){this.events??={};this.events[type]=fn;},setAttribute(k,v){this[k]=v;},focus(){}};}
+for(const key of ['#page','#code','#code-host','#editor-help','#editor-position','#runner-notice','#runner-draft-note','#runner-result','#debug-arguments','#debug-expected','#debug-enabled','#debug-feedback','#debug-included'])nodes[key]=node();
+for(const id of ['a','b']){const n=node();n.dataset={case:id};tabs.push(n);}nodes['.debug-panel']={querySelectorAll:()=>tabs};nodes['#page'].addEventListener=(type,fn)=>events[type]=fn;
+const ctx={console,URLSearchParams,Math,Date,location:{search:'',hash:''},document:{querySelector:s=>nodes[s]||null},window:{},setTimeout:()=>0,clearTimeout(){},bank,codes};vm.createContext(require('./workspace-fixture.cjs')(ctx));const run=s=>vm.runInContext(s,ctx);run(fs.readFileSync('static/app.js','utf8').replace(/init\(\);\s*$/,''));run('content=bank;coding=codes;state=fresh();route=["coding","c01"];touch=()=>{};announce=()=>{};render=()=>{throw Error("No page rerender allowed");};');
+ctx.fixture={selected:'a',cases:[{id:'a',label:'Example 1',argumentsJSON:'[[1,2],3]',expectedJSON:'1',enabled:true},{id:'b',label:'Example 2',argumentsJSON:'[[2,2],4]',expectedJSON:'1',enabled:false}]};run('state.drafts["c01-tests"]=JSON.stringify(fixture);state.drafts.c01="unchanged code";view.c01={result:{passed:1,total:1,results:[{passed:true}]},checkedCode:"old code"};');
+run('bindPage();codeEditor={sentinel:true};');const editor=run('codeEditor'),result=run('view.c01.result'),host=nodes['#code-host'],output=nodes['#runner-result'];
+const evidence=run('JSON.stringify([state.coding,state.questions,state.lessons,state.trainers])');nodes['#debug-arguments'].scrollTop=19;nodes['#debug-expected'].scrollTop=7;
+(async()=>{
+ await events.click({target:{closest:()=>({dataset:{action:'select-debug-case',case:'b'},focus(){}})}});
+ assert.equal(nodes['#debug-arguments'].value,'[[2,2],4]');assert.equal(nodes['#debug-enabled'].checked,false);assert.equal(tabs[1]['aria-pressed'],'true');assert.equal(tabs[0]['aria-pressed'],'false');assert.equal(nodes['#debug-included'].textContent,'1 included · debugging only');
+ nodes['#debug-arguments'].scrollTop=31;nodes['#debug-expected'].scrollTop=12;run('selectDebugCase(coding[0],"a")');assert.equal(nodes['#debug-arguments'].scrollTop,19);assert.equal(nodes['#debug-expected'].scrollTop,7);run('selectDebugCase(coding[0],"b")');assert.equal(nodes['#debug-arguments'].scrollTop,31);
+ for(let i=0;i<30;i++)run(`selectDebugCase(coding[0],"${i%2?'b':'a'}")`);
+ assert.equal(run('codeEditor'),editor);assert.equal(run('view.c01.result'),result);assert.equal(nodes['#code-host'],host);assert.equal(nodes['#runner-result'],output);assert.equal(run('state.drafts.c01'),'unchanged code');assert.equal(run('JSON.stringify([state.coding,state.questions,state.lessons,state.trainers])'),evidence);
+ assert.equal(run('selectDebugCase(coding[0],"missing")'),false);assert.equal(run('selectDebugCase(coding[0],"b")'),false);
+ nodes['#debug-enabled'].events.change({target:{checked:true}});assert.equal(nodes['#debug-included'].textContent,'2 included · debugging only');assert.ok(!tabs[1].textContent.includes('excluded'));
+ assert.equal(run('debugCases(coding[0]).cases[0].argumentsJSON'),ctx.fixture.cases[0].argumentsJSON);assert.equal(run('debugCases(coding[0]).cases[1].argumentsJSON'),ctx.fixture.cases[1].argumentsJSON);
+ for(const [record,label,completed] of [[{accepted:true,acceptedAssisted:false,assisted:true},'Passed · without editorial',true],[{accepted:true,acceptedAssisted:true,assisted:false},'Passed · with editorial',true],[{assisted:true},'Editorial read',false],[{},'Not started',false]]){
+  ctx.record=record;run('state=fresh();state.coding.c01=record;route=["coding-list","l01","journey","researcher","l01"];');const html=run("topicPracticePage('coding')");assert.ok(html.includes(label));assert.ok(html.includes(`data-code-state="${completed?'passed':record.assisted?'reviewed':'new'}"`));assert.ok(html.includes(completed?'1 / 3 passed':'0 / 3 passed'));assert.ok(html.includes('href="#coding/c01/journey/researcher/l01"'));assert.equal(run('state.coding.c01'),record);
+ }
+ const render=result=>{ctx.result=result;return run('runnerHTML(result,"debug")');};
+ const pass=render({passed:1,total:1,elapsedMs:1,results:[{passed:true,argumentsJSON:'[[1,2],3]',expectedJSON:'1',actual:'1'}]});assert.match(pass,/Debugging tests passed/);assert.match(pass,/data-result-state="passed"/);assert.match(pass,/completion unchanged/);assert.match(pass,/Inspect output/);assert.match(pass,/Expected: 1/);assert.doesNotMatch(pass,/Submission saved|Exercise passed/);
+ const failure=render({passed:0,total:1,elapsedMs:1,results:[{passed:false,actual:'0'}]});assert.match(failure,/Tests failed/);assert.match(failure,/result-status-badge">Failed/);
+ const error=render({passed:0,total:1,elapsedMs:1,results:[{passed:false,error:'ValueError: <script>',errorLine:3}]});assert.match(error,/Test error/);assert.match(error,/result-status-badge">Error/);assert.match(error,/Go to line 3/);assert.doesNotMatch(error,/<script>/);
+ const unchecked=render({passed:0,total:1,elapsedMs:1,results:[{passed:null,actual:'7'}]});assert.match(unchecked,/Output inspected/);assert.doesNotMatch(unchecked,/data-result-state="passed"/);
+ ctx.result={passed:1,total:1,elapsedMs:1,results:[{passed:true,actual:'1'}]};assert.match(run('runnerHTML(result,"submit")'),/Exercise passed/);assert.match(run('runnerHTML(result,"submit")'),/Submission saved/);
+ console.log('Real case-select/include handlers preserve mounted workspace and evidence; coding provenance badges and pass/fail/error/output-only result presentation passed.');
+})().catch(e=>{console.error(e);process.exitCode=1;});
