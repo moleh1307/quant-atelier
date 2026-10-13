@@ -479,6 +479,133 @@
     "explanation": "Logarithms turn the independent product into a sum. math.log1p(-p) computes log(1-p) without first rounding 1-p to 1 for tiny p. Zero successes and all-success records need no special case because both logarithms are finite on the specified open parameter domain. O(1) time and space. A log-likelihood is not a posterior probability."
   },
   {
+    "id": "c_l29_easy",
+    "title": "Shrink or threshold an orthogonal quadratic",
+    "difficulty": "Easy",
+    "topic": "Statistical learning",
+    "path": "researcher",
+    "prompt": "The objective is \\(\\frac12\\sum_j d_j b_j^2-\\sum_j z_j b_j+\\lambda_1\\sum_j|b_j|+\\frac{\\lambda_2}2\\sum_j b_j^2\\). diagonal supplies d_j and cross supplies z_j. Return the unique minimizing coefficient list in the given order. Derive the zero-coordinate condition; do not solve by a numerical search. Arrays have equal length 1\u2264p\u2264100000, finite 0.1\u2264d_j\u22641e6, |z_j|\u22641e6 and 0\u2264lambda1,lambda2\u22641e6. There is no intercept in this specified quadratic. O(p) time and O(p) returned space; do not modify inputs.",
+    "starter": "def solve(diagonal, cross, lambda1, lambda2):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0.8
+          ],
+          0.5,
+          0.5
+        ],
+        "expected": [
+          1.0,
+          0.12
+        ]
+      }
+    ],
+    "solution": "def solve(diagonal, cross, lambda1, lambda2):\n    return [(1 if z >= 0 else -1)*max(abs(z)-lambda1, 0)/(d+lambda2)\n            for d,z in zip(diagonal,cross)]",
+    "explanation": "The objective separates into coordinates. At nonzero b the derivative is (d+lambda2)b\u2212z+lambda1 sign(b); at zero, the subgradient contains zero exactly if |z|\u2264lambda1. Thus use soft threshold S(z,lambda1)/(d+lambda2). A positive d ensures uniqueness, including lambda2=0. Keep the half factors: replacing lambda1 with lambda1/2 solves another objective."
+  },
+  {
+    "id": "c_l29_medium",
+    "title": "Evaluate a regularized logistic loss and gradient",
+    "difficulty": "Medium",
+    "topic": "Statistical learning",
+    "path": "researcher",
+    "prompt": "For rows xs, labels ys in {0,1}, slope weights, intercept a and nonnegative penalty lambda, return [average_penalized_log_loss, intercept_gradient, slope_gradient_list]. The objective is \\(\\frac1n\\sum_i[\\log(1+e^{a+x_i^Tb})-y_i(a+x_i^Tb)]+\\frac\\lambda2\\|b\\|^2\\). DO NOT penalize the intercept. Compute an objective/gradient at the supplied coefficients, not an optimizer. Handle logits at \u00b11000 without overflow or log(0). Finite inputs: 1\u2264n\u226410000, 1\u2264p\u226420, n*p\u2264100000, |xs_ij|,|weights_j|,|intercept|\u22641000, 0\u2264penalty\u2264100. O(np) time; preserve inputs. Loss and gradient are ordinary Python floats.",
+    "starter": "def solve(xs, ys, weights, intercept, penalty):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              -1
+            ],
+            [
+              1
+            ]
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0
+          ],
+          0,
+          0.5
+        ],
+        "expected": [
+          0.6931471805599453,
+          0.0,
+          [
+            -0.5
+          ]
+        ]
+      }
+    ],
+    "solution": "import math\ndef solve(xs, ys, weights, intercept, penalty):\n    n, p = len(xs), len(weights)\n    losses, residuals = [], []\n    for row,y in zip(xs,ys):\n        z = intercept+math.fsum(x*w for x,w in zip(row,weights))\n        losses.append(max(z,0)-y*z+math.log1p(math.exp(-abs(z))))\n        if z >= 0:\n            probability = 1/(1+math.exp(-z))\n        else:\n            ez = math.exp(z)\n            probability = ez/(1+ez)\n        residuals.append(probability-y)\n    loss = math.fsum(losses)/n+penalty*math.fsum(w*w for w in weights)/2\n    ga = math.fsum(residuals)/n\n    gb = [math.fsum(r*row[j] for r,row in zip(residuals,xs))/n+penalty*weights[j]\n          for j in range(p)]\n    return [loss,ga,gb]",
+    "explanation": "The derivative of one loss with respect to its logit is sigmoid(z)\u2212y. Average this residual for the intercept, average residual*x for slopes, and add lambda*b only to slopes. Evaluate softplus(z)\u2212yz as max(z,0)\u2212yz+log1p(exp(\u2212abs(z))); sigmoid uses a sign-dependent exponential. This keeps both extreme tails finite. Average data loss before adding the penalty, rather than averaging the penalty n times or using a summed-loss convention."
+  },
+  {
+    "id": "c_l29_hard",
+    "title": "Tune ridge with fold-local transformations",
+    "difficulty": "Hard",
+    "topic": "Statistical learning",
+    "path": "researcher",
+    "prompt": "xs is an n-by-p integer feature matrix, ys an integer target list, folds a list of [training_indices,validation_indices], and lambdas an ordered list of POSITIVE candidates. In EACH fold compute feature means and standard deviations using ONLY its training rows, with variance denominator m (training size). A training-constant feature becomes zero for ALL rows in that fold, even if it varies in validation. Center training targets by their training mean. Fit an unpenalized intercept and ridge slopes minimizing average HALF-squared training loss plus lambda/2 times the squared standardized slopes. Predict validation targets using that same training transform and intercept. For each candidate, pool all validation squared errors and divide by the TOTAL validation appearances across folds; do not average fold MSEs equally. Return [selected_candidate_index, pooled_MSE_list_in_candidate_order]. Choose the FIRST candidate whose score is within 1e-9 of the minimum. Never use validation data for scaling, fitting or target centering. No final-test score is implied. Within a fold, unique training/validation index sets are nonempty and disjoint; training size\u22652. Indices may recur in different folds and each validation appearance contributes once. 3\u2264n\u22642000,1\u2264p\u22646,1\u2264K\u22645,1\u2264L\u226412, integer input magnitudes\u2264100,0.01\u2264lambda\u2264100. Use O(sum_f(m_f*p\u00b2+L*(p\u00b3+v_f*p))) time; do not mutate inputs or require third-party libraries. The caller supplies eligible folds; this function does not certify chronology, purging or independence.",
+    "starter": "def solve(xs, ys, folds, lambdas):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              0
+            ],
+            [
+              2
+            ],
+            [
+              4
+            ]
+          ],
+          [
+            0,
+            2,
+            4
+          ],
+          [
+            [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ]
+          ],
+          [
+            0.5,
+            1
+          ]
+        ],
+        "expected": [
+          0,
+          [
+            1.0,
+            2.25
+          ]
+        ]
+      }
+    ],
+    "solution": "import math\ndef solve(xs, ys, folds, lambdas):\n    p = len(xs[0])\n    scores = [0.0]*len(lambdas)\n    count = 0\n    for train,valid in folds:\n        n = len(train)\n        mean = [math.fsum(xs[i][j] for i in train)/n for j in range(p)]\n        ym = math.fsum(ys[i] for i in train)/n\n        scales = [math.sqrt(math.fsum((xs[i][j]-mean[j])**2 for i in train)/n) for j in range(p)]\n        standardized = [[(xs[i][j]-mean[j])/scales[j] if scales[j] else 0.0\n                         for j in range(p)] for i in train]\n        gram = [[math.fsum(row[j]*row[k] for row in standardized)/n\n                 for k in range(p)] for j in range(p)]\n        cross = [math.fsum(row[j]*(ys[i]-ym) for row,i in zip(standardized,train))/n for j in range(p)]\n        for h,lam in enumerate(lambdas):\n            lower = [[0.0]*p for _ in range(p)]\n            for j in range(p):\n                for k in range(j+1):\n                    v = gram[j][k]+(lam if j == k else 0)-math.fsum(lower[j][s]*lower[k][s] for s in range(k))\n                    lower[j][k] = math.sqrt(v) if j == k else v/lower[k][k]\n            forward = [0.0]*p\n            for j in range(p):\n                forward[j] = (cross[j]-math.fsum(lower[j][k]*forward[k] for k in range(j)))/lower[j][j]\n            beta = [0.0]*p\n            for j in range(p-1,-1,-1):\n                beta[j] = (forward[j]-math.fsum(lower[k][j]*beta[k] for k in range(j+1,p)))/lower[j][j]\n            for i in valid:\n                prediction = ym+math.fsum(beta[j]*(xs[i][j]-mean[j])/scales[j] for j in range(p) if scales[j])\n                scores[h] += (ys[i]-prediction)**2\n        count += len(valid)\n    scores = [s/count for s in scores]\n    best = min(scores)\n    chosen = next(i for i,s in enumerate(scores) if s <= best+1e-9)\n    return [chosen,scores]",
+    "explanation": "Fit preprocessing once per fold. Training centering and an unpenalized intercept give a=mean(y_train) in standardized coordinates. Build G=Z\u1d40Z/m and c=Z\u1d40(y\u2212mean_y)/m. Solve (G+lambda I)b=c by a factorization such as Cholesky; positive lambda makes the matrix positive definite even with duplicate/zero columns. Validation loss excludes the coefficient penalty. Accumulate error sums, then divide by total validation appearances so unequal folds receive the specified weights. Keep candidates in supplied order and apply the explicit tie tolerance. An independent oracle solves in raw centered coordinates with exact rational arithmetic and penalty lambda times training variance on each raw coefficient. Selecting on these folds still needs separate outer evaluation for the selected learning procedure."
+  },
+  {
     "id": "c_l28_easy",
     "title": "Keep both losses on the same resampled record",
     "difficulty": "Easy",

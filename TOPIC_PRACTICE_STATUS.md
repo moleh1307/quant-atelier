@@ -48,6 +48,7 @@ Students choose questions within the lists; no forced Q1 → Q2 → code chain.
 | l25 likelihood | 8 interviews; 3 coding | Verified | Automated + live grading/narrow mixture proof |
 | l10 covariance | 7 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
 | l11 regression | 8 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
+| l29 regularization/statistical learning | 6 interviews; 3 coding | Exact active-face/risk oracles, high-precision logistic gradients and raw-coordinate rational fold solves | Automated + live lesson/partial-Hard/exact-set checks, lists, hard Submit and desktop/mobile figures |
 | l12 inference | 8 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
 | l13 time series | 8 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
 | l28 resampling/bootstrap | 6 interviews; 3 coding | Exact rational/enumeration laws, interval invariance and circular covariance oracles verified | Automated + live check, partial/exact-set Hard grading, both lists, hard-code Submit and desktop/mobile figures |
@@ -93,3 +94,8 @@ Current totals are 27 lessons, 176 automatically checked interviews and 81 libra
 ## 2026-10-13 resampling and bootstrap addition
 
 Current totals: 28 lessons, 182 automatically checked interviews and 84 library codes. Researcher: 22 modules / 142 distinct interviews / 65 current codes; trader unchanged at 14/90/42. The original 27 lesson, 176 interview and 81 code records are identical to the pre-addition build. All 279 Python tests and 26 frontend suites pass. Detailed source, independent mathematical calculations, browser observations and limits: [resampling audit](evidence/RESAMPLING_BOOTSTRAP.md). Earlier counts above describe dated prior audits.
+
+
+## 2026-10-13 regularization and statistical learning addition
+
+Current totals29 lessons/188 automatic interviews/87 library codes; researcher23/148/68, trader14/90/42 unchanged. Previous28 lesson/182 interview/84 code records preserved exactly. All289 Python tests and27 frontend suites passed; [current audit](evidence/STATISTICAL_LEARNING.md) records exact calculations, live checks and remaining limits. Earlier counts above remain historical.

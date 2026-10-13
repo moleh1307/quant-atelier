@@ -18,9 +18,9 @@ Visit <http://127.0.0.1:8768/>. This is a local website; opening `static/index.h
 
 ## Included
 
-- 182 original interview problems: automatically checked numerical answers and multi-part reasoning checks, graduated hints, worked solutions, harder follow-ups, scratchpads, and revision scheduling.
-- 28 lessons: 8 foundation, 14 researcher, 6 trader. Modules have topic-specific illustrated explanations, learning goals, explicit assumptions and worked examples. Understanding checks determine completion. Exercises are linked to each lesson.
-- 84 Python exercises with actual local execution, editable debugging cases, full test submissions, persistent drafts, and optional editorials.
+- 188 original interview problems: automatically checked numerical answers and multi-part reasoning checks, graduated hints, worked solutions, harder follow-ups, scratchpads, and revision scheduling.
+- 29 lessons: 8 foundation, 15 researcher, 6 trader. Modules have topic-specific illustrated explanations, learning goals, explicit assumptions and worked examples. Understanding checks determine completion. Exercises are linked to each lesson.
+- 87 Python exercises with actual local execution, editable debugging cases, full test submissions, persistent drafts, and optional editorials.
 - 5 generated trainers: mental arithmetic, fraction conversions, probability, sequence patterns, and conditional dice pricing. Difficulty levels, timed rounds, accuracy, pace, latency, and mistake review.
 - Honest progress: unaided automatic interview passes, assisted reviews, full coding-suite passes and lesson checks are distinguished. Earlier self-assessments are kept as historical records, without counting as current passes.
 
@@ -119,6 +119,7 @@ node tests/test_course_textbook.cjs
 node tests/test_likelihood.cjs
 node tests/test_calculus_optimization.cjs
 node tests/test_resampling.cjs
+node tests/test_statistical_learning.cjs
 node tests/test_recovery.cjs
 node tests/test_sync.cjs
 node tests/test_trainers.cjs
@@ -135,9 +136,9 @@ As of 2026-10-03, all 24 modules contain learning goals, seven teaching sections
 
 ## Interview answer checks
 
-All 182 interview questions are automatically checked. The 94 original numeric answers are unchanged; calculus, optimization and resampling add 12 more. The 70 former written questions keep their original prompts, hints, worked derivations and follow-ups, and add 156 checkpoints: 81 numerical checks and 75 multiple-selection checks. Every checkpoint must match; for choices, select all valid statements with no incorrect extras. Fractions, percentages and arithmetic expressions are accepted in numerical fields.
+All 188 interview questions are automatically checked. The 94 original numeric answers are unchanged; calculus, optimization, resampling and statistical learning add 16 more. The 70 former written questions keep their original prompts, hints, worked derivations and follow-ups, and add 156 checkpoints: 81 numerical checks and 75 multiple-selection checks. Every checkpoint must match; for choices, select all valid statements with no incorrect extras. Fractions, percentages and arithmetic expressions are accepted in numerical fields.
 
-The calculus and optimization modules add four multi-part Hard assessments (7 numerical and 4 selection checkpoints), preserving the original 70 assessments unchanged. Resampling adds two more multi-part Hard assessments (4 numerical and 2 selection checkpoints). The complete bank has 106 numeric and 76 structured problems, with 173 structured checkpoints (92 numerical and 81 selection).
+The calculus and optimization modules add four multi-part Hard assessments (7 numerical and 4 selection checkpoints), preserving the original 70 assessments unchanged. Resampling adds two more multi-part Hard assessments (4 numerical and 2 selection checkpoints). Statistical learning adds two more Hard assessments (5 numerical and 2 selection checkpoints). The complete bank has 110 numeric and 78 structured problems, with 180 structured checkpoints (97 numerical and 83 selection).
 
 Use the scratchpad to derive the answer before checking. This checks specified numerical results and mathematical claims; it does not grade arbitrary written proofs. Wrong or partial answers earn no pass. Viewing hints, solutions, follow-up reasoning or earlier work marks the attempt as assisted; an assisted correct answer is a review. Start a fresh attempt for a closed-book revision.
 
@@ -145,7 +146,7 @@ Answers and choices save with stable checkpoint IDs. Earlier written drafts and 
 
 ## Follow your roadmap
 
-Open **Learning roadmap**. The eight shared modules lead into fourteen researcher modules or six trader modules. Researcher is the default; choosing a branch is remembered and also drives Overview's next activity. All modules remain accessible.
+Open **Learning roadmap**. The eight shared modules lead into fifteen researcher modules or six trader modules. Researcher is the default; choosing a branch is remembered and also drives Overview's next activity. All modules remain accessible.
 
 The module containing the first unfinished core activity expands automatically. Overview and the roadmap resume its lesson check, interview practice or Python exercise; passing a check leaves outstanding practice visible. Optional fluency rounds remain available without blocking core completion. Open any module to see its learning goals and activities. Each lesson ends with a direct continuation into its remaining practice, a return to its exact roadmap module and an optional jump to the next module.
 
@@ -163,9 +164,9 @@ Inside a lesson, **Sections** stays beside Steps. Jump to any teaching section, 
 
 Activity URLs include the originating module and branch. Reload and browser Back retain the context, including an exercise shared by several modules. Directly opening a lesson from Courses starts its own journey; standalone questions and coding pages keep their library behaviour. The lesson handoff always offers the question list, including completed items for revision. Overview resumes the first incomplete core stage, opening the relevant list rather than selecting a problem. The coding list offers the next module, while outstanding evidence remains visible. No new completion records or changes to grading are introduced.
 
-The approved bank target is at least two interview questions per difficulty and exactly one coding exercise per difficulty for **each lesson**. All 28 existing banks meet this contract; [TOPIC_PRACTICE_STATUS.md](TOPIC_PRACTICE_STATUS.md) records their verification and final audit. Sources live in `topic_practice/`, alongside the original banks. The build rejects unregistered new lessons and invalid registered-topic coverage. Preserve permanent IDs and existing grading semantics when adding practice. Increasing the amount of practice increases denominators; it does not erase or fabricate existing solves.
+The approved bank target is at least two interview questions per difficulty and exactly one coding exercise per difficulty for **each lesson**. All 29 existing banks meet this contract; [TOPIC_PRACTICE_STATUS.md](TOPIC_PRACTICE_STATUS.md) records their verification and final audit. Sources live in `topic_practice/`, alongside the original banks. The build rejects unregistered new lessons and invalid registered-topic coverage. Preserve permanent IDs and existing grading semantics when adding practice. Increasing the amount of practice increases denominators; it does not erase or fabricate existing solves.
 
-As of 2026-10-13, all 28 topics have their expanded practice banks: 182 interview questions and 84 coding exercises. Strategic inference and calibration now includes proper-score comparisons, coarse-bin counterexamples, winning-value inference, action-dependent bidding and information refinement. Existing calibration work remains available in its current trader module and its older additional-practice context. The [final whole-curriculum audit](evidence/FINAL_TOPIC_PRACTICE_AUDIT.md) verifies coverage, navigation, mathematical clarity and preservation of permanent IDs, drafts and prior results.
+As of 2026-10-13, all 29 topics have their expanded practice banks: 188 interview questions and 87 coding exercises. Strategic inference and calibration now includes proper-score comparisons, coarse-bin counterexamples, winning-value inference, action-dependent bidding and information refinement. Existing calibration work remains available in its current trader module and its older additional-practice context. The [final whole-curriculum audit](evidence/FINAL_TOPIC_PRACTICE_AUDIT.md) verifies coverage, navigation, mathematical clarity and preservation of permanent IDs, drafts and prior results.
 
 An exercise removed from a topic’s three current coding slots remains available through its permanent standalone or journey bookmark. The page labels it Additional practice, preserves its existing draft/result, and returns to the current list. Its completion is outside that topic’s three-exercise evidence. For example, l08 retains the old c05 rolling-mean bookmark while its current Medium slot is c06. This does not erase c05’s inclusion in another topic or its library progress.
 
@@ -177,3 +178,8 @@ Two connected researcher chapters now precede estimation: [Calculus is a local m
 ## Resampling researcher chapter (2026-10-13)
 
 [Resample the experiment, not the rows](http://127.0.0.1:8768/#courses/l28/journey/researcher/l28) follows time-series dependence and precedes validation. It explains empirical and parametric bootstrap laws, simulation precision, bias, interval inversion, studentization, BCa, jackknife sensitivity, pairs, unequal-size clusters, circular blocks, endpoint failure and permutation nulls. Two interactive figures and one CDF comparison serve these arguments; no embedded Python is forced into the chapter. Six automatic interview problems and three Python exercises satisfy the difficulty contract. Authored sources: `resampling_content.py`, `static/lesson-resampling.js`, `static/lesson-resampling.css` and `topic_practice/resampling*.py`. [Verification and mathematical scope](evidence/RESAMPLING_BOOTSTRAP.md).
+
+
+## Regularization and statistical learning (2026-10-13)
+
+[Learn the signal, restrain the fit](http://127.0.0.1:8768/#courses/l29/journey/researcher/l29) follows regression and precedes inference. It connects population/empirical risk, conditional-mean prediction, finite-class guarantees and their assumptions, ridge spectral shrinkage, prediction bias–variance, units/normalization, lasso subgradients, correlated and duplicate features, elastic net, logistic probability learning, stable arithmetic, separation and complete-procedure tuning. Two purposeful interactive figures accompany the original textbook argument. Six automatically checked interviews and three coding exercises follow the agreed difficulty contract. See [verification and scope](evidence/STATISTICAL_LEARNING.md).

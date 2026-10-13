@@ -2297,6 +2297,291 @@
       ]
     },
     {
+      "id": "q_l29_e1",
+      "title": "Averaging changes the penalty convention",
+      "topic": "Statistical learning",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 7,
+      "prompt": "Two observations have features x=\\([-1,1]\\) and responses y=[−2,2]. Fit intercept a and slope b by minimizing \\(\\frac1{2n}\\sum_i(y_i-a-bx_i)^2+\\frac\\lambda2 b^2\\), with n=2 and lambda=1. The intercept is NOT penalized. What is the minimizing slope?",
+      "answer": 1,
+      "hints": [
+        "Both sample means are zero. Differentiate with respect to the unpenalized intercept.",
+        "The average feature square is one and average feature-response product is two."
+      ],
+      "solution": "The intercept equation gives a=0. The objective becomes (2−b)²/2+b²/2. Its derivative is b−2+b=2b−2 and its curvature is two, so the unique slope is one. The averaging factor is part of the objective. Using summed half-loss with the same lambda instead gives slope \\(\\frac{4}{3}\\), a different fit.",
+      "followup": "What lambda would the summed-half-loss version need to reproduce slope one?",
+      "followSolution": "Multiply lambda by n: use two. Multiplying the entire original objective by two changes neither its minimizer nor its unpenalized intercept rule.",
+      "lesson": "l29",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Treat the intercept separately.",
+        "Keep the average-loss normalization.",
+        "Verify the minimum from positive curvature."
+      ]
+    },
+    {
+      "id": "q_l29_e2",
+      "title": "A new response adds noise you cannot fit away",
+      "topic": "Statistical learning",
+      "difficulty": "Easy",
+      "path": "researcher",
+      "minutes": 7,
+      "prompt": "At a fixed feature value x, a fresh response has conditional mean 2 and conditional variance 3. A predictor fitted on a RANDOM training dataset is independent of this fresh response conditional on x; over training datasets its predicted value has mean 1 and variance \\(\\frac{1}{2}\\). What is its expected squared prediction error on the fresh response?",
+      "answer": 4.5,
+      "hints": [
+        "Insert the conditional mean between the new response and the random fitted value.",
+        "Training-dataset variability and fresh-response noise are separate."
+      ],
+      "solution": "Conditional independence makes the cross covariance vanish. The error is noise variance 3 plus squared prediction bias (1−2)²=1 plus prediction variance \\(\\frac{1}{2}\\), for \\(\\frac{9}{2}\\). The fresh response was not used to fit or select this predictor. Without that independence, the simple decomposition is not justified.",
+      "followup": "A second predictor always returns one. Is it better here despite having the same bias?",
+      "followSolution": "Its error is 3+1=4, lower than \\(\\frac{9}{2}\\) because its training variation is zero. A predictor that always returned the true conditional mean two would attain noise risk three. Fixed predictions can reduce variance without making bias disappear.",
+      "lesson": "l29",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Define the expectation over both training and fresh response.",
+        "Use conditional independence at the fixed feature value.",
+        "Include irreducible noise rather than reporting only excess risk."
+      ]
+    },
+    {
+      "id": "q_l29_m1",
+      "title": "Changing feature units changes shrinkage",
+      "topic": "Statistical learning",
+      "difficulty": "Medium",
+      "path": "researcher",
+      "minutes": 14,
+      "prompt": "For a centered single feature x and centered responses y, let \\(x^Tx/n=1\\) and \\(x^Ty/n=2\\). Ridge minimizes average half-squared loss plus lambda times b²/2, with lambda=1. Replace x by x′=2x. What numerical penalty lambda′ on the NEW coefficient b′ makes fitted predictions x′b′ equal the original ridge predictions xb? The original intercept convention is unchanged.",
+      "answer": 4,
+      "hints": [
+        "The same prediction requires b′=b/2.",
+        "Express the old coefficient penalty using b=2b′."
+      ],
+      "solution": "The old penalty is b²/2=4b′²/2, so lambda′=4. The new Gram and cross-product are four and four, giving b′=4/(4+4)=\\(\\frac{1}{2}\\); multiplying by x′ recovers xb with b=1. Keeping lambda′=1 instead gives b′=\\(\\frac{4}{5}\\) and an original-x effective slope \\(\\frac{8}{5}\\). Reparameterizing a penalized model without changing its penalty changes the learning procedure.",
+      "followup": "How does an L1 penalty parameter change for a positive rescaling x′=c x?",
+      "followSolution": "Since b=c b′, lambda|b|=c lambda|b′|, so use lambda′=c lambda. With a negative nonzero scaling, use |c| for L1 and c² for L2. Train-only standardization supplies a documented convention, not invariance to every feature transformation.",
+      "lesson": "l29",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Separate coefficient size from predicted contribution.",
+        "Transform the penalty as well as the feature.",
+        "Check the resulting normal equation explicitly."
+      ]
+    },
+    {
+      "id": "q_l29_m2",
+      "title": "One Newton step for a probability model",
+      "topic": "Statistical learning",
+      "difficulty": "Medium",
+      "path": "researcher",
+      "minutes": 14,
+      "prompt": "Binary observations (x,y) are (−1,0) and (1,1). Let z=a+bx. Minimize average logistic loss \\(\\frac1n\\sum_i[\\log(1+e^{z_i})-y_i z_i]+\\frac\\lambda2 b^2\\), with n=2, lambda=\\(\\frac{1}{2}\\) and unpenalized intercept a. Starting at a=b=0, take one undamped JOINT Newton step using its exact gradient and Hessian. What is the new slope b? This is one iteration, not the optimum.",
+      "answer": 0.6666666666666666,
+      "hints": [
+        "At zero, both predicted probabilities are \\(\\frac{1}{2}\\).",
+        "Differentiate loss with respect to the logit first; then multiply by x for the slope.",
+        "Symmetry makes the cross Hessian and intercept gradient vanish."
+      ],
+      "solution": "At zero the residual probabilities are \\(\\frac{1}{2}\\) and −\\(\\frac{1}{2}\\). The intercept gradient averages to zero; the slope gradient is −\\(\\frac{1}{2}\\). Logistic curvature p(1−p)=\\(\\frac{1}{4}\\) gives Hessian diag(\\(\\frac{1}{4}\\),\\(\\frac{1}{4}\\)+\\(\\frac{1}{2}\\))=diag(\\(\\frac{1}{4}\\),\\(\\frac{3}{4}\\)); the off-diagonal is zero because mean x=0. Newton subtracts H inverse times the gradient, giving a=0 and b=\\(\\frac{1/2}{3/4}=\\frac23\\). This step is not a claim of exact convergence or universal full-step descent.",
+      "followup": "Why can an unpenalized intercept still diverge if every training label is one?",
+      "followSolution": "Set every slope to zero and let the intercept tend to positive infinity. Each logistic loss tends to zero with no intercept penalty, but no finite intercept achieves that infimum. Penalizing slopes alone is not a universal existence guarantee. The mixed-label symmetric example avoids that particular failure.",
+      "lesson": "l29",
+      "tolerance": 1e-06,
+      "type": "numeric",
+      "rubric": [
+        "Use average loss and an unpenalized intercept.",
+        "Derive probability residuals and curvature.",
+        "Distinguish a Newton update from a stationary solution."
+      ]
+    },
+    {
+      "id": "q_l29_h1",
+      "title": "Future feature geometry belongs in the risk",
+      "topic": "Statistical learning",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 30,
+      "prompt": "Use the UNNORMALIZED objective \\(\\frac12\\|y-Xb\\|^2+\\frac\\lambda2\\|b\\|^2\\), with a fixed full-rank design satisfying \\(X^{\\mathsf T}X\\)=diag(4,\\(\\frac{1}{4}\\)). Data obey y=Xβ+ε with β=(1,0), E[ε]=0 and Cov(ε)=I. A new feature vector is independent of training noise, has mean zero and covariance H=diag(1,4); the same linear coefficient β governs its response. At lambda=1 derive coefficient bias/covariance and the expected squared prediction error AGAINST THE NOISE-FREE CONDITIONAL MEAN (excess risk). Also compute the trace of the ridge fitted-value smoother and compare excess risk with OLS. State why test feature geometry and loss normalization matter.",
+      "answer": null,
+      "hints": [
+        "Diagonalize the fixed design: each coefficient has its own shrinkage and noise amplification.",
+        "Prediction error weights coefficient mistakes by H, not automatically by the identity.",
+        "Effective degrees of freedom is trace of the smoother, not the number of nonzero coefficients."
+      ],
+      "solution": "For A=\\(X^{\\mathsf T}X\\), coefficient bias is −lambda(A+lambda I) inverse β and covariance is (A+lambda I) inverse A(A+lambda I) inverse. At lambda=1, bias is (−\\(\\frac{1}{5}\\),0), covariance diag(\\(\\frac{4}{25}\\),\\(\\frac{4}{25}\\)). Excess risk is biasᵀH bias+tr(H Cov)=\\(\\frac{1}{25}\\)+\\(\\frac{4}{25}\\)+\\(\\frac{16}{25}\\)=\\(\\frac{21}{25}\\). OLS is unbiased with covariance diag(\\(\\frac{1}{4}\\),4), giving risk \\(\\frac{1}{4}\\)+16=\\(\\frac{65}{4}\\). The smoother S=X(A+lambda I) inverse Xᵀ has trace \\(\\frac{4}{5}\\)+\\(\\frac{1}{5}\\)=1. There are two coefficients but only one effective fitted degree of freedom. This example favors ridge for this specified β/noise/H; it is not a universal dominance result. Fresh response noise would add its variance to both risks.",
+      "followup": "Derive the risk for a general positive-semidefinite future second-moment matrix H and explain why rotating the training design is not enough to remove every test cross term.",
+      "followSolution": "For error mean \\(\\mu\\) and covariance V, E[(x_newᵀ error)²]=\\(\\mu\\)ᵀH\\(\\mu\\)+tr(HV). In a training eigenbasis V is diagonal under the stated isotropic noise, but \\(\\mu\\) may have several nonzero entries and rotated H need not be diagonal. Off-diagonal entries of H can contribute to the squared-bias quadratic. General train-to-test distribution changes can also invalidate the fixed-coefficient model itself.",
+      "lesson": "l29",
+      "tolerance": 1e-06,
+      "type": "structured",
+      "rubric": [
+        "Derive the linear estimator and its training-noise moments.",
+        "Compute prediction risk using the specified future second moment.",
+        "Distinguish trace degrees of freedom from support size.",
+        "Separate this conditional fixed-design calculation from tuning or a future-noise guarantee."
+      ],
+      "assessmentVersion": "objective-v1",
+      "checks": [
+        {
+          "type": "numeric",
+          "prompt": "What is the excess prediction risk at lambda=1?",
+          "answer": 0.84,
+          "tolerance": 1e-06,
+          "explanation": "Weight coefficient variance and squared bias by the future matrix H.",
+          "id": "part1"
+        },
+        {
+          "type": "numeric",
+          "prompt": "What is the trace of the fitted-value smoother at lambda=1?",
+          "answer": 1,
+          "tolerance": 1e-06,
+          "explanation": "Add four fifths and one fifth.",
+          "id": "part2"
+        },
+        {
+          "type": "select",
+          "prompt": "Select every valid interpretation.",
+          "options": [
+            {
+              "correct": true,
+              "text": "Replacing summed loss by averaged loss while keeping lambda fixed changes the procedure.",
+              "explanation": "The relative penalty strength changes with the normalization.",
+              "id": "choice5",
+              "label": "Replacing summed loss by averaged loss while keeping lambda fixed changes the procedure."
+            },
+            {
+              "correct": false,
+              "text": "Increasing lambda must decrease prediction risk for every possible true coefficient.",
+              "explanation": "A growing shrinkage bias can outweigh variance reduction.",
+              "id": "choice3",
+              "label": "Increasing lambda must decrease prediction risk for every possible true coefficient."
+            },
+            {
+              "correct": false,
+              "text": "The smoother trace equals the count of nonzero estimated coefficients.",
+              "explanation": "Trace measures sensitivity of fitted responses, not coefficient support.",
+              "id": "choice4",
+              "label": "The smoother trace equals the count of nonzero estimated coefficients."
+            },
+            {
+              "correct": true,
+              "text": "A fresh response with independent unit noise would add one to both prediction risks.",
+              "explanation": "Excess risk here excludes fresh response noise.",
+              "id": "choice2",
+              "label": "A fresh response with independent unit noise would add one to both prediction risks."
+            },
+            {
+              "correct": true,
+              "text": "This future feature law weights the weak training direction four times as strongly as the first direction.",
+              "explanation": "H has diagonal entries one and four.",
+              "id": "choice1",
+              "label": "This future feature law weights the weak training direction four times as strongly as the first direction."
+            }
+          ],
+          "id": "part3"
+        }
+      ]
+    },
+    {
+      "id": "q_l29_h2",
+      "title": "A sparse fit needs a joint certificate",
+      "topic": "Statistical learning",
+      "difficulty": "Hard",
+      "path": "researcher",
+      "minutes": 30,
+      "prompt": "Consider the lasso quadratic \\(\\frac12 b^T G b-z^Tb+\\lambda\\|b\\|_1\\), where G=[[1,\\(\\frac{4}{5}\\)],[\\(\\frac{4}{5}\\),1]], z=(1,\\(\\frac{9}{10}\\)), lambda≥0. Derive and verify the optimizer at lambda=\\(\\frac{3}{10}\\), and find the smallest lambda at which its second coefficient is zero. Then change the design to EXACTLY DUPLICATED columns, G=[[1,1],[1,1]], z=(1,1), lambda=\\(\\frac{3}{10}\\). Characterize all lasso coefficient minimizers and whether fitted predictions are unique. Finally add rho times ||b||²/2 with rho=\\(\\frac{1}{5}\\) and compute either coefficient. Independent coordinate thresholding is not a valid joint solve for correlated columns.",
+      "answer": null,
+      "hints": [
+        "For an active positive coefficient, (Gb−z)j+lambda=0. For a zero coefficient use |(Gb−z)j|≤lambda.",
+        "When only the first coordinate is active, b1=1−lambda; verify the zero-coordinate inequality.",
+        "With duplicates the squared loss depends on the coefficient sum. Among nonnegative splits the L1 norm is the same."
+      ],
+      "solution": "G is positive definite with eigenvalues \\(\\frac{9}{5}\\) and \\(\\frac{1}{5}\\). At lambda=\\(\\frac{3}{10}\\) solve Gb=z−lambda(1,1): b=(\\(\\frac{11}{18}\\),\\(\\frac{1}{9}\\)), both positive, certifying the unique optimizer. The second coefficient can be zero with b1=1−lambda when |\\(\\frac{9}{10}\\)−(\\(\\frac{4}{5}\\))(1−lambda)|≤lambda. On 0≤lambda≤1 this becomes \\(\\frac{1}{10}\\)+(\\(\\frac{4}{5}\\))lambda≤lambda, so its first zero occurs at lambda=\\(\\frac{1}{2}\\); both vanish by lambda=1. For duplicates, let s=b1+b2. Triangle inequality gives |b1|+|b2|≥|s|; minimizing s²/2−s+(\\(\\frac{3}{10}\\))|s| gives s=\\(\\frac{7}{10}\\). Every nonnegative split of that sum is optimal. Individual coefficients are nonunique, but duplicated-column predictions depend only on s and are unique. Adding rho=\\(\\frac{1}{5}\\) makes the objective strictly convex; symmetry gives b1=b2=(\\(\\frac{7}{10}\\))/(2+\\(\\frac{1}{5}\\))=\\(\\frac{7}{22}\\). Small L2 regularization selects a definite split rather than identifying two separate causal effects.",
+      "followup": "Can the number or identity of active lasso coefficients be assumed to change monotonically along every correlated-design penalty path?",
+      "followSolution": "No. The simple monotone soft-threshold path is an orthogonal special case. Correlated active sets can enter, leave or change sign as the coupled optimum moves. Verify the joint subgradient certificate rather than extrapolating the two-coordinate example into a universal rule.",
+      "lesson": "l29",
+      "tolerance": 1e-06,
+      "type": "structured",
+      "rubric": [
+        "Verify active signs and inactive subgradient inequalities.",
+        "Derive the entry/exit boundary instead of independently thresholding z.",
+        "Characterize nonuniqueness and distinguish coefficients from fitted predictions.",
+        "Explain how a positive L2 term changes uniqueness without supplying causal identification."
+      ],
+      "assessmentVersion": "objective-v1",
+      "checks": [
+        {
+          "type": "numeric",
+          "prompt": "At lambda=\\(\\frac{3}{10}\\), what is the second coefficient in the positive-definite example?",
+          "answer": 0.1111111111111111,
+          "tolerance": 1e-06,
+          "explanation": "Solve the two active stationarity equations jointly.",
+          "id": "part1"
+        },
+        {
+          "type": "numeric",
+          "prompt": "What is the smallest lambda where its second coefficient becomes zero?",
+          "answer": 0.5,
+          "tolerance": 1e-06,
+          "explanation": "The inactive inequality first holds at one half.",
+          "id": "part2"
+        },
+        {
+          "type": "numeric",
+          "prompt": "With duplicated columns, lambda=\\(\\frac{3}{10}\\) and rho=\\(\\frac{1}{5}\\), what is either elastic-net coefficient?",
+          "answer": 0.3181818181818182,
+          "tolerance": 1e-06,
+          "explanation": "Symmetry and the positive quadratic penalty yield identical coefficients.",
+          "id": "part3"
+        },
+        {
+          "type": "select",
+          "prompt": "Select every valid conclusion.",
+          "options": [
+            {
+              "correct": true,
+              "text": "A positive L2 term makes this entire coefficient objective strictly convex.",
+              "explanation": "Its Hessian gains rho times the identity.",
+              "id": "choice4",
+              "label": "A positive L2 term makes this entire coefficient objective strictly convex."
+            },
+            {
+              "correct": true,
+              "text": "Duplicate-column fitted predictions are unique even when coefficient splits are not.",
+              "explanation": "The prediction uses the common column times the unique sum.",
+              "id": "choice2",
+              "label": "Duplicate-column fitted predictions are unique even when coefficient splits are not."
+            },
+            {
+              "correct": true,
+              "text": "In the duplicate-column lasso example, every nonnegative split of a coefficient sum \\(\\frac{7}{10}\\) is optimal.",
+              "explanation": "The fitted sum and L1 penalty are identical across these splits.",
+              "id": "choice1",
+              "label": "In the duplicate-column lasso example, every nonnegative split of a coefficient sum 7/10 is optimal."
+            },
+            {
+              "correct": false,
+              "text": "A unique penalized coefficient vector establishes that its entries are separate causal effects.",
+              "explanation": "Optimization uniqueness does not supply an intervention design.",
+              "id": "choice5",
+              "label": "A unique penalized coefficient vector establishes that its entries are separate causal effects."
+            },
+            {
+              "correct": false,
+              "text": "Applying soft thresholding to each cross-product separately solves every correlated lasso.",
+              "explanation": "The Gram cross terms couple the stationarity conditions.",
+              "id": "choice3",
+              "label": "Applying soft thresholding to each cross-product separately solves every correlated lasso."
+            }
+          ],
+          "id": "part4"
+        }
+      ]
+    },
+    {
       "id": "q_l28_e1",
       "title": "Which variance does the bootstrap estimate?",
       "topic": "Resampling",
@@ -9770,6 +10055,72 @@
         "Residuals sum to zero in sample",
         "The slope is causal",
         "The model cannot overfit"
+      ]
+    },
+    {
+      "id": "l29",
+      "title": "Learn the signal, restrain the fit",
+      "topic": "Statistical learning",
+      "path": "researcher",
+      "minutes": 60,
+      "intro": "Define prediction risk, derive how shrinkage changes bias and variance, and build a learning procedure whose penalty, preprocessing and evaluation answer the same question.",
+      "sections": [
+        {
+          "title": "Risk belongs to a new observation",
+          "text": "Population risk is an expectation over a specified deployment law. Empirical risk averages observed losses. Under squared error the conditional mean is optimal; training error is not a future-risk certificate."
+        },
+        {
+          "title": "Ridge changes the estimating equation",
+          "text": "Use average squared loss plus a stated quadratic penalty. Center with an unpenalized intercept, then solve \\((X^TX/n+\\lambda I)\\hat\\beta=X^Ty/n\\). Scaling and normalization change the meaning of lambda."
+        },
+        {
+          "title": "Shrinkage and sparsity are different",
+          "text": "Lasso stationarity uses a subgradient at zero. For a diagonal quadratic, coefficients are \\(S(z_j,\\lambda_1)/(d_j+\\lambda_2)\\). Correlated columns require joint optimality checks."
+        },
+        {
+          "title": "Logistic learning needs a probability loss",
+          "text": "Binary log loss is \\(\\log(1+e^z)-yz\\). Its derivatives use sigmoid probabilities; stable evaluation avoids exponential overflow. Penalize slopes deliberately and inspect separation."
+        },
+        {
+          "title": "Tune the procedure, then evaluate it",
+          "text": "Fit transformations inside training folds, choose hyperparameters using validation, and assess the selected procedure on separate outer evaluation. Chronology and label availability still matter."
+        }
+      ],
+      "example": "With unnormalized fixed-design eigenvalues 4 and \\(\\frac{1}{4}\\), true coefficients (1,0), and unit noise variance, ridge at lambda=1 has coefficient bias (−\\(\\frac{1}{5}\\),0) and diagonal variances (\\(\\frac{4}{25}\\),\\(\\frac{4}{25}\\)). If future feature covariance is diag(1,4), excess prediction risk is \\(\\frac{21}{25}\\). This requires a stated future feature law; low training loss alone cannot supply it.",
+      "check": "You change a ridge objective from average squared loss to the sum of squared losses, keeping the same observations and the same half factors. To retain exactly the same minimizer, what should happen to its penalty parameter?",
+      "options": [
+        "Multiply the penalty parameter by the number of training observations.",
+        "Keep the numerical penalty parameter unchanged.",
+        "Divide the penalty parameter by the number of training observations.",
+        "Choose it using the final test labels."
+      ],
+      "correct": 0,
+      "explanation": "Multiplying the entire averaged objective by n leaves its minimizer unchanged. Its loss becomes a sum and its penalty coefficient becomes n times as large.",
+      "questions": [
+        "q_l29_e1",
+        "q_l29_e2",
+        "q_l29_m1",
+        "q_l29_m2",
+        "q_l29_h1",
+        "q_l29_h2"
+      ],
+      "coding": [
+        "c_l29_easy",
+        "c_l29_medium",
+        "c_l29_hard"
+      ],
+      "objectives": [
+        "Separate empirical fit, Bayes risk and prediction bias–variance under a stated data law.",
+        "Derive ridge and lasso optimality, scaling and logistic loss without hiding conventions.",
+        "Tune a complete fold-local learning procedure and diagnose its statistical limits."
+      ],
+      "trainers": [],
+      "practiceExpanded": true,
+      "optionLabels": [
+        "Multiply the penalty parameter by the number of training observations.",
+        "Keep the numerical penalty parameter unchanged.",
+        "Divide the penalty parameter by the number of training observations.",
+        "Choose it using the final test labels."
       ]
     },
     {

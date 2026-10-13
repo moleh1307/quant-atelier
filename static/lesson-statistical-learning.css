@@ -1,0 +1,21 @@
+/* Local learning figures retain the shared warm textbook presentation. */
+.learn-figure{max-width:720px;margin:24px 0}
+.learn-figure svg{display:block;width:100%;max-width:680px;height:auto;overflow:visible}
+.learn-figure svg text{font:20px Geist,Arial,sans-serif;fill:#4e5946}
+.learn-total{stroke:#566746;fill:none;stroke-width:2.8}
+.learn-variance,.learn-ridge{stroke:#496c72;fill:none;stroke-width:2.4}
+.learn-bias,.learn-lasso{stroke:#b84c30;fill:none;stroke-width:2.4}
+.learn-figure circle.learn-total{fill:#566746}
+.learn-figure circle.learn-variance,.learn-figure circle.learn-ridge{fill:#496c72}
+.learn-figure circle.learn-bias,.learn-figure circle.learn-lasso{fill:#b84c30}
+.learn-weak{stroke-dasharray:6 5}
+.learn-legend{display:flex;flex-wrap:wrap;gap:8px 24px;font:13px/1.65 Geist,Arial,sans-serif!important}
+.learn-legend span:before{content:'';display:inline-block;width:18px;border-top:2px solid currentColor;vertical-align:middle;margin-right:7px}
+.learn-legend span:last-child:not([class]):before{display:none}
+.learn-total-text{color:#566746}.learn-variance-text,.learn-ridge-text{color:#496c72}.learn-bias-text,.learn-lasso-text{color:#b84c30}
+.learn-controls{margin-top:20px;font:13px/1.7 Geist,Arial,sans-serif}
+.learn-controls label{display:block}.learn-controls output{display:block;font-family:'Geist Mono',monospace;margin:6px 0}
+.learn-controls input[type=range]{width:100%;display:block;accent-color:#758762;cursor:pointer}
+.learn-result{font:13px/1.8 Geist,Arial,sans-serif;border-top:1px solid #deddd3;margin-top:18px;padding-top:12px;min-height:48px;color:#424c3a}
+@media(max-width:600px){.learn-legend{gap:8px 16px}.learn-figure svg text{font-size:23px}.learn-controls{font-size:13px}.learn-result{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.learn-figure *{transition:none!important}}
