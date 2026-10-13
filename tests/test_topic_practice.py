@@ -48,7 +48,7 @@ class TopicPracticeTests(unittest.TestCase):
             self.assertTrue(all(qs[level] >= 2 for level in DIFFICULTIES), l['id'])
             self.assertEqual(cs, Counter(DIFFICULTIES), l['id'])
         # A future lesson cannot be silently published without registration.
-        future = copy.deepcopy(BANK['lessons']) + [{'id': 'l26'}]
+        future = copy.deepcopy(BANK['lessons']) + [{'id': 'l28'}]
         with self.assertRaisesRegex(ValueError, 'Register every new lesson'):
             attach_and_validate(future, BANK['questions'], TASKS)
         missing_hard = [q for q in BANK['questions'] if q['id'] != 'q_l01_h1']

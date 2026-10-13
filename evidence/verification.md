@@ -477,3 +477,7 @@ See [Python debugging verification](python-debug-20261012.md) for Cmd+apostrophe
 
 
 2026-10-13: all 70 formerly written interview questions converted to versioned automatic multi-part checks. Current total 164 automatically checked questions; original numeric keys and question prose retained. 261 Python tests, 24 frontend suites, all 70 live narrow pages and preview grading/reload/assistance verified. Exact scope and limitations: [automatic assessment review](AUTOMATIC_ASSESSMENT_REVIEW.md). Personal work continued concurrently and was not reset; test submissions stayed in preview.
+
+## Calculus and optimization addition — 2026-10-13
+
+Added researcher l26/l27 before estimation: detailed authored chapters, four purposeful interactive figures, twelve automatic interview problems and six Python tasks with independent mathematical expectations. 269 Python tests and all 25 frontend suites passed; 3,463 bank math spans and 1,111 authored-renderer spans parse strictly. Live desktop/390px checks, both preview quizzes, partial/full recurrence grading and actual Hard box submission (7/7) passed. Refreshed the existing Python server to load the new bank. All previous public records and personal progress bytes remain unchanged; final browser personal, viewport reset. Current inventory 27/176/81; researcher 21/136/62. See [complete audit and screenshots](CALCULUS_OPTIMIZATION.md) for evidence and limits.

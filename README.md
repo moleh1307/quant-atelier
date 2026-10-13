@@ -18,9 +18,9 @@ Visit <http://127.0.0.1:8768/>. This is a local website; opening `static/index.h
 
 ## Included
 
-- 164 original interview problems: automatically checked numerical answers and multi-part reasoning checks, graduated hints, worked solutions, harder follow-ups, scratchpads, and revision scheduling.
-- 25 lessons: 8 foundation, 11 researcher, 6 trader. Modules have topic-specific illustrated explanations, learning goals, explicit assumptions and worked examples. Understanding checks determine completion. Exercises are linked to each lesson.
-- 75 Python exercises with actual local execution, editable debugging cases, full test submissions, persistent drafts, and optional editorials.
+- 176 original interview problems: automatically checked numerical answers and multi-part reasoning checks, graduated hints, worked solutions, harder follow-ups, scratchpads, and revision scheduling.
+- 27 lessons: 8 foundation, 13 researcher, 6 trader. Modules have topic-specific illustrated explanations, learning goals, explicit assumptions and worked examples. Understanding checks determine completion. Exercises are linked to each lesson.
+- 81 Python exercises with actual local execution, editable debugging cases, full test submissions, persistent drafts, and optional editorials.
 - 5 generated trainers: mental arithmetic, fraction conversions, probability, sequence patterns, and conditional dice pricing. Difficulty levels, timed rounds, accuracy, pace, latency, and mistake review.
 - Honest progress: unaided automatic interview passes, assisted reviews, full coding-suite passes and lesson checks are distinguished. Earlier self-assessments are kept as historical records, without counting as current passes.
 
@@ -65,7 +65,7 @@ The revision queue separates **Due now** from **Coming up**, ordered by schedule
 
 Choose **Fresh revision** or **Fresh attempt** to hide hints/solutions and clear the active answer and scratchpad. The latest nonempty text is kept under **Show previous attempt**, including after reload. **Restore previous text** swaps it back while preserving the text it replaces. Viewing or restoring prior work marks the current attempt as assisted; existing historical results remain recorded. Only one previous answer and scratchpad are retained per problem, rather than an unlimited attempt archive.
 
-A revision date appears below the scheduling controls. Scheduling alone earns no result. Written reasoning requires a substantial draft and comparison with the worked solution before **My reasoning matched** records an explicit self-assessment. Such records remain separate from automatically checked numeric solves.
+A revision date appears below the scheduling controls. Scheduling alone earns no result. Interview grading uses numeric answers or multi-part numerical/exact-choice checks. Every required checkpoint must pass; reviewed or assisted work remains separate from unaided passes. Historical self-assessments stay recoverable as earlier work.
 
 ## Trainer rounds
 
@@ -115,6 +115,7 @@ node tests/test_reading.cjs
 node tests/test_sample_space.cjs
 node tests/test_course_textbook.cjs
 node tests/test_likelihood.cjs
+node tests/test_calculus_optimization.cjs
 node tests/test_recovery.cjs
 node tests/test_sync.cjs
 node tests/test_trainers.cjs
@@ -131,7 +132,9 @@ As of 2026-10-03, all 24 modules contain learning goals, seven teaching sections
 
 ## Interview answer checks
 
-All 164 interview questions are automatically checked. The 94 existing numeric answers are unchanged. The 70 former written questions keep their original prompts, hints, worked derivations and follow-ups, and add 156 checkpoints: 81 numerical checks and 75 multiple-selection checks. Every checkpoint must match; for choices, select all valid statements with no incorrect extras. Fractions, percentages and arithmetic expressions are accepted in numerical fields.
+All 176 interview questions are automatically checked. The 94 original numeric answers are unchanged; the new calculus and optimization modules add 8 more. The 70 former written questions keep their original prompts, hints, worked derivations and follow-ups, and add 156 checkpoints: 81 numerical checks and 75 multiple-selection checks. Every checkpoint must match; for choices, select all valid statements with no incorrect extras. Fractions, percentages and arithmetic expressions are accepted in numerical fields.
+
+The calculus and optimization modules add four multi-part Hard assessments (7 numerical and 4 selection checkpoints), preserving the original 70 assessments unchanged. The complete bank has 102 numeric and 74 structured problems.
 
 Use the scratchpad to derive the answer before checking. This checks specified numerical results and mathematical claims; it does not grade arbitrary written proofs. Wrong or partial answers earn no pass. Viewing hints, solutions, follow-up reasoning or earlier work marks the attempt as assisted; an assisted correct answer is a review. Start a fresh attempt for a closed-book revision.
 
@@ -157,8 +160,12 @@ Inside a lesson, **Sections** stays beside Steps. Jump to any teaching section, 
 
 Activity URLs include the originating module and branch. Reload and browser Back retain the context, including an exercise shared by several modules. Directly opening a lesson from Courses starts its own journey; standalone questions and coding pages keep their library behaviour. The lesson handoff always offers the question list, including completed items for revision. Overview resumes the first incomplete core stage, opening the relevant list rather than selecting a problem. The coding list offers the next module, while outstanding evidence remains visible. No new completion records or changes to grading are introduced.
 
-The approved bank target is at least two interview questions per difficulty and exactly one coding exercise per difficulty for **each lesson**. All 25 existing banks meet this contract; [TOPIC_PRACTICE_STATUS.md](TOPIC_PRACTICE_STATUS.md) records their verification and final audit. Sources live in `topic_practice/`, alongside the original banks. The build rejects unregistered new lessons and invalid registered-topic coverage. Preserve permanent IDs and existing grading semantics when adding practice. Increasing the amount of practice increases denominators; it does not erase or fabricate existing solves.
+The approved bank target is at least two interview questions per difficulty and exactly one coding exercise per difficulty for **each lesson**. All 27 existing banks meet this contract; [TOPIC_PRACTICE_STATUS.md](TOPIC_PRACTICE_STATUS.md) records their verification and final audit. Sources live in `topic_practice/`, alongside the original banks. The build rejects unregistered new lessons and invalid registered-topic coverage. Preserve permanent IDs and existing grading semantics when adding practice. Increasing the amount of practice increases denominators; it does not erase or fabricate existing solves.
 
-As of 2026-10-13, all 25 topics have their expanded practice banks: 164 interview questions and 75 coding exercises. Strategic inference and calibration now includes proper-score comparisons, coarse-bin counterexamples, winning-value inference, action-dependent bidding and information refinement. Existing calibration work remains available in its current trader module and its older additional-practice context. The [final whole-curriculum audit](evidence/FINAL_TOPIC_PRACTICE_AUDIT.md) verifies coverage, navigation, mathematical clarity and preservation of permanent IDs, drafts and prior results.
+As of 2026-10-13, all 27 topics have their expanded practice banks: 176 interview questions and 81 coding exercises. Strategic inference and calibration now includes proper-score comparisons, coarse-bin counterexamples, winning-value inference, action-dependent bidding and information refinement. Existing calibration work remains available in its current trader module and its older additional-practice context. The [final whole-curriculum audit](evidence/FINAL_TOPIC_PRACTICE_AUDIT.md) verifies coverage, navigation, mathematical clarity and preservation of permanent IDs, drafts and prior results.
 
 An exercise removed from a topic’s three current coding slots remains available through its permanent standalone or journey bookmark. The page labels it Additional practice, preserves its existing draft/result, and returns to the current list. Its completion is outside that topic’s three-exercise evidence. For example, l08 retains the old c05 rolling-mean bookmark while its current Medium slot is c06. This does not erase c05’s inclusion in another topic or its library progress.
+
+## Calculus and optimization foundations
+
+Two connected researcher chapters now precede estimation: [Calculus is a local model](http://127.0.0.1:8768/#courses/l26/journey/researcher/l26) and [Optimize the loss you actually defined](http://127.0.0.1:8768/#courses/l27/journey/researcher/l27). They cover differentiation, composition, directional curvature, reverse derivatives, numerical stability, convexity, descent, conditioning, line search, Newton safeguards, feasible optimality, KKT and stopping evidence. Each chapter owns two Easy, two Medium and two Hard interview problems, plus one coding exercise per difficulty. See [the implementation audit](evidence/CALCULUS_OPTIMIZATION.md). No old exercise or assessment was rewritten.

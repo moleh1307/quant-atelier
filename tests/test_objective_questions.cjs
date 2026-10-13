@@ -12,7 +12,7 @@ const context={console,Math,Date,URLSearchParams,location:{search:'?qa=1',hash:'
 vm.createContext(require('./workspace-fixture.cjs')(context));vm.runInContext(source,context);
 const run=s=>vm.runInContext(s,context);context.messages=messages;
 run('content=bank;coding=codes;state=fresh();route=["questions"];render=()=>{};announce=m=>messages.push(m);notify=m=>messages.push(m);');
-const structured=bank.questions.filter(q=>q.type==='structured');assert.equal(structured.length,70);
+const structured=bank.questions.filter(q=>q.type==='structured');assert.equal(structured.length,74);
 const before=run('JSON.stringify(state)');
 let masks=0;
 for(const q of structured){
@@ -78,8 +78,8 @@ assert.match(run('questionDetail(q)'),/Earlier self-assessment kept/);assert.equ
  run('freshQuestionAttempt(q)');assert.equal(run('objectiveDraft(q).part1'),undefined);run('restoreQuestionAttempt(q)');assert.equal(run('objectiveDraft(q).part1'),'1/100');assert.equal(run('state.questions[q.id].assisted'),true);
  // All current-format passes aggregate correctly across both routes, including
  // restores/exports. Old self assessments never bypass the new checks.
- run("state=fresh();content.questions.forEach(q=>state.questions[q.id]={solved:true,assessmentVersion:q.assessmentVersion});");assert.equal(run('counts().solved'),164);assert.equal(run('backupTotals(state).problems'),164);
+ run("state=fresh();content.questions.forEach(q=>state.questions[q.id]={solved:true,assessmentVersion:q.assessmentVersion});");assert.equal(run('counts().solved'),bank.questions.length);assert.equal(run('backupTotals(state).problems'),bank.questions.length);
  for(const path of ['researcher','trader']){context.path=path;assert.equal(run('routeEvidence(journeyLessons(path)).solved'),run('routeEvidence(journeyLessons(path)).questionTotal'));}
  assert.ok(saved.every(([key])=>key.startsWith('quant-atelier-qa')),'All simulated writes belong to isolated preview');
- console.log(`All 70 question keys, ${masks} choice subsets, invalid/blank input, real submit/save handlers, versioned progress, assistance, legacy work, fresh/restore and both routes passed.`);
+ console.log(`All ${structured.length} question keys, ${masks} choice subsets, invalid/blank input, real submit/save handlers, versioned progress, assistance, legacy work, fresh/restore and both routes passed.`);
 })().catch(e=>{console.error(e);process.exitCode=1;});

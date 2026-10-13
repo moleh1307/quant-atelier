@@ -7,9 +7,11 @@ an unregistered new lesson fails the build instead of inheriting generic tasks.
 from collections import Counter
 
 DIFFICULTIES = ('Easy', 'Medium', 'Hard')
-COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05', 'l06', 'l07', 'l08', 'l09', 'l25', 'l10', 'l11', 'l12', 'l13', 'l14', 'l15', 'l16', 'l17', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24')
+COMPLETE_TOPICS = ('l01', 'l02', 'l03', 'l04', 'l05', 'l06', 'l07', 'l08', 'l26', 'l27', 'l09', 'l25', 'l10', 'l11', 'l12', 'l13', 'l14', 'l15', 'l16', 'l17', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24')
 
 CODING_LINKS = {
+    'l26': ['c_l26_easy', 'c_l26_medium', 'c_l26_hard'],
+    'l27': ['c_l27_easy', 'c_l27_medium', 'c_l27_hard'],
     'l01': ['c01', 'c_l01_medium', 'c_l01_hard'],
     'l02': ['c_l02_easy', 'c_l02_medium', 'c_l02_hard'],
     'l03': ['c_l03_easy', 'c02', 'c_l03_hard'],
@@ -41,6 +43,8 @@ LEGACY_CODING_LINKS = {'l08': ['c05'], 'l14': ['c10'], 'l18': ['c14']}
 
 
 def add_questions(add, questions):
+    from .calculus_optimization import add_questions as differential_questions
+    differential_questions(add, questions)
     from .foundation_questions import add_foundation_questions
     add_foundation_questions(add, questions)
     from .distributions import add_questions as distributions_questions
@@ -92,6 +96,8 @@ def add_questions(add, questions):
 
 
 def add_coding(add, tasks):
+    from .calculus_optimization_coding import add_coding as differential_coding
+    differential_coding(add, tasks)
     from .foundation_coding import add_foundation_coding
     add_foundation_coding(add, tasks)
     from .distributions import add_coding as distributions_coding
