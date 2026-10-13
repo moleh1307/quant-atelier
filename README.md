@@ -36,6 +36,8 @@ Use the small panel handle at the left menu's edge to collapse navigation. In a 
 
 A module stays visible while you read, solve its interview problems and work in Python. **Understand → Apply → Implement** shows separate evidence; **Next step** continues the sequence, and **Steps** opens every activity in the same module. **Roadmap** returns to that exact expanded stop. These links retain the originating module and researcher/trader branch through reload and Back. Visiting an activity never earns completion.
 
+Topic interview lists show unaided solves with a green row, prominent completion marker and explicit badge. Reviewed, in-progress and not-started rows keep their own labels. Historical self-assessments and older structured-check passes remain visible with a retake prompt; they do not earn current automatic completion. Badges move below the title on narrow screens.
+
 **Sections** jumps through the lesson, example and understanding check. In either Sections or Steps, Up/Down enter and move through items; Home/End reach the first/last; Escape closes and returns focus to the control. Short browser windows use a bounded, scrollable menu within the viewport. The first keyboard link, **Skip to practice**, bypasses navigation and focuses the activity heading without changing its bookmark. Supporting text, syntax comments, line numbers and form boundaries use stronger contrast within the existing palette.
 
 ## Python editor

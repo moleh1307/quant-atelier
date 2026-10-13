@@ -17,6 +17,9 @@
 .course-mass-strip .always { background:#b8755d; }
 .course-mass-legend { display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin:12px 0;font:12px var(--font-body); }
 .course-bayes-lab .atlas-range-label { margin-top:25px; }
+.course-bayes-lab .atlas-lab-controls label { flex-wrap:wrap; }
+/* Leave the native arrow its own space; do not pad for a second custom arrow. */
+.course-bayes-lab .atlas-lab-controls .select { width:5.5rem;min-width:5.5rem;flex:0 0 auto;padding:8px 12px; }
 .course-record-line { display:flex;flex-wrap:wrap;gap:12px;margin:24px 0; }
 .course-record { font:14px var(--font-mono);padding:12px 15px;border-bottom:1px solid #b9bead; }
 .course-record.selected { color:#526b35;background:#e4eada;border-color:#71865b; }
