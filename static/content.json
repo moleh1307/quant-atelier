@@ -5675,10 +5675,10 @@
             },
             {
               "correct": true,
-              "text": "\\(E[Z^2]=E[\\pi(X)Y^2/e(X)]\\), and independent mean variance is \\((E[Z^2]-v^2)/n\\).",
+              "text": "\\(E[Z^2]=E[\\pi(X)Y^2/e(X)]\\), defining the integrand as zero where the policy stays flat; independent mean variance is \\((E[Z^2]-v^2)/n\\).",
               "explanation": "Use A²=A and π²=π.",
               "id": "choice3",
-              "label": "Expected Z squared equals expected policy pi of X times Y squared divided by e of X; independent mean variance is expected Z squared minus v squared, divided by n."
+              "label": "Expected Z squared equals expected policy pi of X times Y squared divided by e of X, with the integrand zero where the policy stays flat; independent mean variance is expected Z squared minus v squared, divided by n."
             },
             {
               "correct": false,
