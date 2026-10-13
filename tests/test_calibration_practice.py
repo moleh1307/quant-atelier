@@ -57,7 +57,7 @@ class CalibrationPracticeTests(unittest.TestCase):
         self.assertEqual(Counter(QUESTIONS[id]['difficulty'] for id in lesson['questions']),
                          {'Easy':2,'Medium':2,'Hard':3})
         self.assertEqual(lesson['coding'],['c14','c_l24_medium','c_l24_hard'])
-        self.assertEqual(QUESTIONS['q41']['type'],'written')
+        self.assertEqual(QUESTIONS['q41']['type'],'structured')
         self.assertIsNone(QUESTIONS['q41']['answer'])
         self.assertEqual(CODES['c14']['difficulty'],'Easy')
         legacy = next(l for l in BANK['lessons'] if l['id']=='l18')['legacyCoding']

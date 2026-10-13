@@ -59,7 +59,7 @@ async function boot(url,session={},blocked=false){
   const authorized=await boot(url,session);
   assert.equal(authorized.qa,true);
   assert.equal(session[key],undefined,'Entry is consumed before loading study state');
-  assert.match(authorized.app.innerHTML,new RegExp('Test problems: 2 / '+routeQuestions));
+  assert.match(authorized.app.innerHTML,new RegExp('Test problems: 1 / '+routeQuestions));
   assert.ok(!authorized.requests.some(r=>r.url==='/api/progress'),'Explicit preview never reads or writes personal disk');
   let stopped=false;
   authorized.events.pageshow[0]({persisted:true,stopImmediatePropagation(){stopped=true;}});

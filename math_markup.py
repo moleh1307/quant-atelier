@@ -238,7 +238,7 @@ PROSE_FIELDS = {'prompt', 'hints', 'solution', 'followup', 'followSolution',
 def annotate(value, field=None):
     if isinstance(value, dict):
         annotated = {k: annotate(v, k) for k, v in value.items()}
-        if 'options' in value:
+        if 'options' in value and all(isinstance(option, str) for option in value['options']):
             annotated['optionLabels'] = value['options']
         return annotated
     if isinstance(value, list):

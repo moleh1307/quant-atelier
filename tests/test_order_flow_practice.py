@@ -117,7 +117,7 @@ class OrderFlowPracticeTests(unittest.TestCase):
         self.assertEqual(topic['coding'],['c_l20_easy','c_l20_medium','c_l20_hard'])
         self.assertEqual(QUESTIONS['q36']['answer'],float(F(200,3)))
         self.assertEqual((QUESTIONS['q36']['type'],QUESTIONS['q36']['difficulty']),('numeric','Hard'))
-        self.assertEqual((QUESTIONS['q42']['type'],QUESTIONS['q42']['answer']),('written',None))
+        self.assertEqual((QUESTIONS['q42']['type'],QUESTIONS['q42']['answer']),('structured',None))
         self.assertEqual(QUESTIONS['q_l20_e1']['answer'],float(F(-6,5)))
         self.assertEqual(QUESTIONS['q_l20_e2']['answer'],1)
         self.assertEqual(3*(1**2-2**2),-9);self.assertEqual(3*(3**2-2**2),15)

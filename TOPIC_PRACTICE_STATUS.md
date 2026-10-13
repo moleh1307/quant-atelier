@@ -9,11 +9,14 @@ Students choose questions within the lists; no forced Q1 → Q2 → code chain.
 
 - Original questions with explicit experiments, assumptions, hints, worked reasoning
   and substantive follow-ups. Difficulty comes from reasoning, not larger numbers.
-- Written tasks have specific self-assessment criteria. Numeric tasks explain the
-  derivation and common failure, not just the final number.
+- Every interview task has automatic numerical or multi-part exact-set checks.
+  Retain specific reasoning obligations and full derivations; no self-assessment action.
+  Check specified results/claims rather than pretending to grade arbitrary proofs.
 - Coding defines inputs, outputs, edge cases and realistic complexity; deterministic
   cases and independently checked references are required.
-- Preserve q01–q51 and c01–c15 semantics and all current assessments/drafts. Extra
+- Preserve stable question/exercise IDs, original prompts/derivations, numeric keys and drafts.
+  The user approved converting written grading on 2026-10-13; legacy self-assessments
+  remain records but cannot count as passes of the new version. Extra
   practice increases denominators, never awards completion. Existing standalone
   and journey bookmarks remain usable.
 - If an old linked exercise is removed to keep one coding slot per difficulty,
