@@ -566,6 +566,9 @@ SPOKEN = {
  'q_l24_h2:2:3':'Expected squared loss of R minus expected squared loss of T equals expected square of T minus R; improvement is strict exactly when T differs from R with positive probability.',
 }
 
+from topic_practice.calculus_optimization import objective_checks
+CHECKS.update(objective_checks())
+
 def attach_objective_assessments(questions):
     written = {q['id'] for q in questions if q['type'] == 'written'}
     if written != set(CHECKS):

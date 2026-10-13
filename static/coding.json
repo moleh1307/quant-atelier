@@ -479,6 +479,239 @@
     "explanation": "Logarithms turn the independent product into a sum. math.log1p(-p) computes log(1-p) without first rounding 1-p to 1 for tiny p. Zero successes and all-success records need no special case because both logarithms are finite on the specified open parameter domain. O(1) time and space. A log-likelihood is not a posterior probability."
   },
   {
+    "id": "c_l26_easy",
+    "title": "Differentiate a weighted squared loss",
+    "difficulty": "Easy",
+    "topic": "Calculus",
+    "path": "researcher",
+    "prompt": "Given rows [x,y,weight], fit the affine prediction slope*x+intercept. Define \\(\\ell=\\sum_i w_i(mx_i+b-y_i)^2/(2W)\\), W=sum weights. Return [derivative_slope, derivative_intercept]. Inputs are finite; 1\u2264n\u22642000, |x|,|y|,|slope|,|intercept|\u22641000, 0\u2264weight\u22641000 and W>0. Zero-weight rows have no influence. Use \\(O(n)\\) time and O(1) extra space; do not modify inputs.",
+    "starter": "def solve(rows, slope, intercept):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              2,
+              3,
+              1
+            ]
+          ],
+          1,
+          0
+        ],
+        "expected": [
+          -1,
+          -1
+        ]
+      }
+    ],
+    "solution": "def solve(rows, slope, intercept):\n    w = gm = gb = 0.0\n    for x, y, weight in rows:\n        r = slope*x + intercept - y\n        w += weight\n        gm += weight*r*x\n        gb += weight*r\n    return [gm/w, gb/w]",
+    "explanation": "One half cancels the outer square derivative. Each slope contribution contains x, while the intercept contribution does not. Normalize by total weight, not row count. A zero-weight row is irrelevant even if its residual is large. The loop takes \\(O(n)\\) time and O(1) auxiliary space. This differentiates the defined objective; it does not fit its optimum."
+  },
+  {
+    "id": "c_l26_medium",
+    "title": "A logistic derivative that survives large scores",
+    "difficulty": "Medium",
+    "topic": "Calculus",
+    "path": "researcher",
+    "prompt": "Rows [x,y] have binary y\u2208{0,1}. With z=slope*x+intercept, define the MEAN loss \\(\\ell=n^{-1}\\sum[\\log(1+e^z)-yz]\\). Return [loss, derivative_slope, derivative_intercept]. Do not overflow or subtract two large nearly equal terms. 1\u2264n\u22642000, finite inputs |x|\u22641000, |slope|,|intercept|\u22641000 and |z|\u22641000. \\(O(n)\\) time, O(1) auxiliary space; no simulation or external libraries. A predicted probability is sigmoid(z)=1/(1+exp(\u2212z)); the target is held fixed.",
+    "starter": "def solve(rows, slope, intercept):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              1,
+              0
+            ]
+          ],
+          0,
+          0
+        ],
+        "expected": [
+          0.6931471805599453,
+          0.5,
+          0.5
+        ]
+      }
+    ],
+    "solution": "import math\ndef solve(rows, slope, intercept):\n    loss = gm = gb = 0.0\n    for x, y in rows:\n        z = slope*x + intercept\n        loss += max(z, 0.0) - y*z + math.log1p(math.exp(-abs(z)))\n        if z >= 0:\n            p = 1/(1+math.exp(-z))\n        else:\n            ez = math.exp(z)\n            p = ez/(1+ez)\n        r = p-y\n        gm += r*x\n        gb += r\n    n = len(rows)\n    return [loss/n, gm/n, gb/n]",
+    "explanation": "Differentiate softplus to obtain sigmoid, so the score derivative is p\u2212y. The affine chain rule multiplies it by x for the slope. Rewrite softplus as max(z,0)+log1p(exp(\u2212|z|)); its exponent is never positive. For a correct confident label, cancellation occurs between exactly matching z terms before adding the small remainder. Branching sigmoid avoids exp(1000). This is algebraic stability, not a change in the objective. The outputs need not be a minimum."
+  },
+  {
+    "id": "c_l26_hard",
+    "title": "Reverse derivatives through a shared recurrence",
+    "difficulty": "Hard",
+    "topic": "Calculus",
+    "path": "researcher",
+    "prompt": "Let x\u2080=x0 and \\(x_t=a x_{t-1}+inputs[t-1]\\), t=1,\u2026,T. Define \\(\\ell=(2T)^{-1}\\sum_t(x_t-targets[t-1])^2\\). Return [loss, derivative_a, derivative_x0, derivative_inputs], with the final item a list in input order. a is SHARED at every time. 1\u2264T\u22642000, lengths match, |a|\u22640.99, |x0|,|inputs|,|targets|\u226410; all finite. Use O(T) time, O(T) space and do not mutate inputs. Finite differences are too slow and inaccurate for this task.",
+    "starter": "def solve(a, x0, inputs, targets):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          0.5,
+          2,
+          [
+            1,
+            0,
+            -1
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "expected": [
+          0.875,
+          1.9166666666666667,
+          0.3958333333333333,
+          [
+            0.7916666666666666,
+            0.25,
+            -0.16666666666666666
+          ]
+        ]
+      }
+    ],
+    "solution": "def solve(a, x0, inputs, targets):\n    states = [x0]\n    for u in inputs:\n        states.append(a*states[-1]+u)\n    n = len(inputs)\n    loss = sum((states[t+1]-targets[t])**2 for t in range(n))/(2*n)\n    adjoint = ga = 0.0\n    gu = [0.0]*n\n    for t in range(n-1, -1, -1):\n        adjoint = (states[t+1]-targets[t])/n + a*adjoint\n        gu[t] = adjoint\n        ga += adjoint*states[t]\n    return [loss, ga, a*adjoint, gu]",
+    "explanation": "Forward states retain every local parameter input. Reverse adjoints add the direct residual/T and propagate the future adjoint through a. Every a occurrence contributes adjoint*previous_state, so sum across time. An input has local derivative one; x0 has local derivative a into the first state. O(T) time and space includes the returned sensitivity list. The tests use independent forward sensitivities, including negative a, zero a, a one-step computation and a long sequence."
+  },
+  {
+    "id": "c_l27_easy",
+    "title": "Follow the exact quadratic updates",
+    "difficulty": "Easy",
+    "topic": "Optimization",
+    "path": "researcher",
+    "prompt": "Define \\(f(\\theta)=\\tfrac12\\sum_i curvatures_i\\theta_i^2+\\sum_i linear_i\\theta_i\\). Starting at start, take exactly iterations updates \\(\\theta\\)\u2190\\(\\theta\\)\u2212step*\u2207f(\\(\\theta\\)). Return [final_point, final_loss]. Positive curvatures, matching nonempty dimensions d\u2264100, 0\u2264iterations\u226420, 0\u2264step\u22642.5/max(curvatures); finite coefficients/start magnitudes\u226420 and curvatures in [0.1,20]. The step need NOT converge. Do not stop early or change inputs. Aim for O(d*iterations) time or better, O(d) space.",
+    "starter": "def solve(curvatures, linear, start, step, iterations):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            2,
+            10
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          0.25,
+          1
+        ],
+        "expected": [
+          [
+            0.5,
+            -1.5
+          ],
+          11.5
+        ]
+      }
+    ],
+    "solution": "def solve(curvatures, linear, start, step, iterations):\n    point = list(start)\n    for _ in range(iterations):\n        point = [x-step*(a*x+b) for a,b,x in zip(curvatures,linear,point)]\n    loss = sum(.5*a*x*x+b*x for a,b,x in zip(curvatures,linear,point))\n    return [point,loss]",
+    "explanation": "The gradient coordinate is a\u1d62\\(\\theta\\)\u1d62+b\u1d62. Compute the requested finite trajectory, even when it oscillates or diverges. A closed-form check uses \\(\\theta\\)*\u1d62=\u2212b\u1d62/a\u1d62 and error multiplier (1\u2212step*a\u1d62)^iterations. A zero step or zero iterations leaves the input point unchanged. Distinguish simulation of a prescribed update rule from solving its optimization problem."
+  },
+  {
+    "id": "c_l27_medium",
+    "title": "Implement one Armijo backtracking step",
+    "difficulty": "Medium",
+    "topic": "Optimization",
+    "path": "researcher",
+    "prompt": "For a symmetric positive-definite 2\u00d72 hessian H, linear vector b and point x, let f(x)=x\u1d40Hx/2+b\u1d40x and g=Hx+b. Starting at positive initial_step, halve \u03b1 until f(x\u2212\u03b1g)\u2264f(x)\u2212armijo*\u03b1*||g||\u00b2, with equality accepted. Return [new_point, accepted_step, halvings]. If g is exactly zero, return [a copy of point,0.0,0]. H entries are integers of magnitude\u2264100, point and linear entries are multiples of \\(\\frac{1}{4}\\) with magnitude\u226420, initial_step is a positive power of two between \\(\\frac{1}{16}\\) and 16, and armijo is \\(\\frac{1}{4}\\) or \\(\\frac{1}{2}\\). Do not mutate inputs. You may use the exact quadratic equivalence \u03b1*g\u1d40Hg\u22642(1\u2212armijo)||g||\u00b2 to avoid subtracting similar losses.",
+    "starter": "def solve(hessian, linear, point, initial_step, armijo):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              4,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          1,
+          0.25
+        ],
+        "expected": [
+          [
+            -0.25,
+            0.25
+          ],
+          0.25,
+          2
+        ]
+      }
+    ],
+    "solution": "def solve(hessian, linear, point, initial_step, armijo):\n    g = [sum(hessian[i][j]*point[j] for j in range(2))+linear[i] for i in range(2)]\n    norm = sum(v*v for v in g)\n    if norm == 0:\n        return [list(point),0.0,0]\n    curvature = sum(g[i]*hessian[i][j]*g[j] for i in range(2) for j in range(2))\n    step = initial_step\n    halves = 0\n    while step*curvature > 2*(1-armijo)*norm:\n        step *= .5\n        halves += 1\n    return [[point[i]-step*g[i] for i in range(2)],step,halves]",
+    "explanation": "Expand f(x\u2212\u03b1g)=f(x)\u2212\u03b1||g||\u00b2+\u03b1\u00b2g\u1d40Hg/2. For \u03b1>0 this gives the stated equivalent comparison. Positive definiteness ensures positive directional curvature for nonzero g and a positive acceptance threshold, so halving terminates. Inputs were chosen to keep dyadic comparisons exact at equality in double precision. This returns one accepted step, not a globally optimal point. Runtime is proportional to the halving count in fixed dimension."
+  },
+  {
+    "id": "c_l27_hard",
+    "title": "Solve a coupled quadratic on a box",
+    "difficulty": "Hard",
+    "topic": "Optimization",
+    "path": "researcher",
+    "prompt": "Given symmetric positive-definite H=[[a,c],[c,d]], linear vector b, and bounds [[lo_x,hi_x],[lo_y,hi_y]], minimize f=x\u1d40Hx/2+b\u1d40x on the CLOSED box. Return [optimal_x,optimal_y,minimum_value]. Integer H entries have magnitude\u22641000, a,d>0 and ad\u2212c\u00b2>0. Finite b and bounds have magnitude\u226420; lo\u2264hi, including zero-width intervals. Do not modify inputs. Use an exact finite-candidate algorithm in dimension two, not iterative gradient descent, grids, or coordinate clipping of the unconstrained solution. No external libraries. Numerical output tolerance is 1e\u22127.",
+    "starter": "def solve(hessian, linear, bounds):\n    # Write your implementation here.\n    pass\n",
+    "samples": [
+      {
+        "args": [
+          [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            -2,
+            -3
+          ],
+          [
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              0.5
+            ]
+          ]
+        ],
+        "expected": [
+          1.5,
+          0.5,
+          -2.375
+        ]
+      }
+    ],
+    "solution": "def solve(hessian, linear, bounds):\n    a,c = hessian[0]\n    d = hessian[1][1]\n    b,e = linear\n    lx,hx = bounds[0]\n    ly,hy = bounds[1]\n    det = a*d-c*c\n    x,y = (c*e-d*b)/det,(c*b-a*e)/det\n    candidates = []\n    if lx <= x <= hx and ly <= y <= hy:\n        candidates.append((x,y))\n    for x in (lx,hx):\n        candidates.append((x,max(ly,min(hy,-(c*x+e)/d))))\n    for y in (ly,hy):\n        candidates.append((max(lx,min(hx,-(c*y+b)/a)),y))\n    def loss(z):\n        x,y = z\n        return .5*(a*x*x+2*c*x*y+d*y*y)+b*x+e*y\n    x,y = min(candidates,key=loss)\n    return [x,y,loss((x,y))]",
+    "explanation": "Positive definiteness makes the objective strictly convex, while a nonempty closed bounded box guarantees existence. An interior minimum solves Hx=\u2212b. On each boundary face, the remaining one-dimensional positive-curvature quadratic has its stationary point clamped to the allowed interval; its endpoint cases include corners. Compare these candidates. Any minimum is either interior or on a face, so the enumeration is complete and remains valid for line or point boxes. Constant time and space applies to this two-dimensional special case. Hidden expected outputs come from independent exact-rational active-set/KKT enumeration."
+  },
+  {
     "id": "c_l01_medium",
     "title": "Keep the mass when order disappears",
     "difficulty": "Medium",

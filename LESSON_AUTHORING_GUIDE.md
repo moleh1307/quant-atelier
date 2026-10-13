@@ -516,3 +516,20 @@ Future tasks need explicit automatic assessment authoring, complete keys, tight 
 Keep older written drafts in their original storage key. Objective answers use a separate versioned draft key. Legacy self-assessment flags remain recoverable historical data, never current completion. A structured pass requires both `solved` and the matching assessment version. Apply this rule to every aggregate, route/resume decision, filter and backup comparison. Hints, solutions, follow-ups and viewing/restoring earlier work mark assistance; assisted correct submissions earn review rather than a new unaided pass. A fresh attempt preserves a recoverable previous answer and scratchpad. Retire every self-solved action.
 
 Verify source isolation with `tests/fixtures/objective-conversion-contract.json`, independent numerical oracles in `tests/test_automatic_assessments.py`, exact-set and real form/storage/progress handlers in `tests/test_objective_questions.cjs`, existing per-topic derivations, strict math rendering and live narrow/desktop checks. Development submissions remain preview-only. Current verification: `evidence/AUTOMATIC_ASSESSMENT_REVIEW.md`.
+
+
+## 23. Calculus and optimization continuity (2026-10-13)
+
+The connected researcher foundation now includes l26 (calculus) and l27 (optimization), before l09/l25. Stable question IDs are q_l26_e1/e2/m1/m2/h1/h2 and q_l27_e1/e2/m1/m2/h1/h2. Codes use c_l26_easy/medium/hard and c_l27_easy/medium/hard. Preserve them, their assessment keys, versioned drafts and earned evidence when expanding later material.
+
+These are topic-driven examples of the agreed textbook direction, not a new universal chapter template. l26 builds a local-change argument and uses a tangent/secant experiment and directional contours; one short Python example is justified by exponential overflow. l27 follows optimality evidence into finite steps and feasible boundaries, with a discrete quadratic trajectory and a coupled-box comparison, and no embedded Python. Later ML pages should reuse the prerequisite mathematics when relevant rather than repeat every derivation or require these same figures.
+
+Sources: calculus_optimization_content.py (catalog/check), static/lesson-calculus.js and static/lesson-optimization.js (authored bodies/pure models/bindings), static/lesson-differential.css (scoped presentation), topic_practice/calculus_optimization.py (questions/objective check definitions), topic_practice/calculus_optimization_coding.py (coding and independent oracles). QuantDifferentialFigures shares a small presentation helper, not a prescribed pedagogy.
+
+New original assessments are automatic; proof prompts retain their derivations and use specified numerical/claim checkpoints. Claim grading cannot assess arbitrary written proofs, and selecting correct claims is not evidence of a fluent spoken derivation. Do not label these original difficulty tiers as verified replicas of named employers. The implementation closes a foundation gap, not the entire researcher curriculum.
+
+Motion retargets from the current visible mathematical parameters, recalculates geometry and preserves stable SVG nodes. Coordinate markers stay on their defined loss curves. Iteration selection is discrete; connecting lines are not additional algorithm steps. Keep results consistent with requested inputs immediately, honor reduced motion/no-RAF hosts, and stop when the lesson root disconnects.
+
+When adding Python bank entries, browser reload updates static assets but does not update the running server's imported TASKS. Verify a new exercise through the actual Submit endpoint. If the existing server reports Unknown exercise for an authored registered entry, identify the exact loopback process and restart that server with the same interpreter/port; preserve personal data. Document the verified runtime, rather than treating an on-disk build as a live backend update.
+
+The exact independent checks and browser observations live in evidence/CALCULUS_OPTIMIZATION.md; subsequent audits should update current totals while retaining older dated evidence as history.

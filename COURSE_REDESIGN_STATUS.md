@@ -1,5 +1,8 @@
 # Course redesign: completed curriculum pass
 
+**Current researcher expansion, 2026-10-13:** l26 calculus and l27 optimization precede estimation and likelihood. Each has an authored textbook chapter, two purposeful interactive figures, six automatic interview problems (two per difficulty), and three Python exercises (one per difficulty). Current inventory: 27 lessons / 176 interviews / 81 codes. All previous 25 lesson records, interview records and coding records are unchanged. Verification and remaining limits: [calculus/optimization audit](evidence/CALCULUS_OPTIMIZATION.md). Earlier dated counts below describe their original implementation episodes.
+
+
 **2026-10-12 researcher expansion:** l25, “Let the data compare the models”, adds likelihood and maximum likelihood immediately after l09, retaining all existing IDs and assessment meanings. The module develops probability/density versus likelihood/posterior, Bernoulli optimization and endpoints, parameter-dependent uniform support, normal fitting and variance denominators, dependence/selection, and exponential exposure with right censoring. It has a relative-likelihood explorer, a support figure and predictive reasoning pauses; its form follows the topic. Linked original practice: q49–q51 and numerical-stability exercise c15. Inventory is now 25 lessons / 51 problems / 15 Python exercises. This closes the first missing topic identified in [the interview research](research/QUANT_INTERVIEW_RESEARCH_2026-10-12.md), not the entire coverage gap. Verification: [latest record](evidence/likelihood-20261012.md).
 
 

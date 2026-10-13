@@ -33,7 +33,7 @@ assert.equal(run('followingActivity(moduleContext()).kind'),'question-list','Rev
 run("content.lessons[0].questions.forEach(id=>state.questions[id]={solved:true});content.lessons[0].coding.forEach(id=>state.coding[id]={accepted:true});");
 assert.equal(run('followingActivity(moduleContext()).kind'),'question-list','The lesson handoff remains an explicit list even after completion');
 // Return from a detail to its originating list, then advance explicitly.
-for(const [path,next] of [['researcher','l09'],['trader','l19']]){
+for(const [path,next] of [['researcher','l26'],['trader','l19']]){
  run(`route=['coding-list','l08','journey','${path}','l08']`);
  assert.equal(run('followingActivity(moduleContext()).href'),`#courses/${next}/journey/${path}/${next}`);
 }
@@ -102,5 +102,5 @@ run("route=['coding-list','l09','journey','researcher','l09'];");
 assert.equal(run('followingActivity(moduleContext()).href'),'#courses/l25/journey/researcher/l25');
 run("route=['coding-list','l25','journey','researcher','l25'];");
 assert.equal(run('followingActivity(moduleContext()).href'),'#courses/l10/journey/researcher/l10');
-assert.equal(run("moduleNumber(content.lessons.find(l=>l.id==='l25'))"),'10');
+assert.equal(run("moduleNumber(content.lessons.find(l=>l.id==='l25'))"),'12');
 console.log('Lesson -> grouped question list -> coding list, free exercise choice, return links, both branches, all old/new bookmarks and no navigation credit passed.');

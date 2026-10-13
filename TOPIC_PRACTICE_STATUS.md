@@ -42,6 +42,8 @@ Students choose questions within the lists; no forced Q1 → Q2 → code chain.
 | l06 arithmetic | 6 interviews; 3 coding | Verified | Automated + desktop list/narrow numeric proof |
 | l07 variance/dependence | 6 interviews; 3 coding | Verified | Automated + live code grading/narrow written rubric |
 | l08 data timing | 6 interviews; 3 coding | Verified | Automated + live grading/legacy bookmark/narrow proof |
+| l26 calculus | 6 interviews; 3 coding | Independent forward/finite-difference references verified | Automated + live checks, lists and desktop/narrow figures |
+| l27 optimization | 6 interviews; 3 coding | Rational active-set/KKT and exact update references verified | Automated + live checks, lists, hard-code submission and desktop/narrow layouts |
 | l09 estimation | 6 interviews; 3 coding | Verified | Automated + live grading/narrow minimax proof |
 | l25 likelihood | 8 interviews; 3 coding | Verified | Automated + live grading/narrow mixture proof |
 | l10 covariance | 7 interviews; 3 coding | Verified | Automated + live exact grading/debug copy/narrow proof |
@@ -81,3 +83,7 @@ mathematical answers and coding references; all sixty expanded reference solutio
 also pass the actual judge. Existing grading meaning and IDs are preserved; q44, q24, q49–q51, q20/q29 and q19/q21/q30 and q22/q26/q47 and q18/q31 and q27/q28 and q04/q25/q32 and q33/q34 and q43/q48 and q35 and q36/q42 and q13/q37 and q38 and q39/q40 and q41 now have topic-specific
 assessment criteria in place of their generic rubrics. q27 also clarifies overlap wording without changing its assessment meaning. q25 now states its intended exact rejection probability; q32 distinguishes identical copies from a genuine search. q48 explicitly includes finite second moments and handles a constant target without undefined correlation, preserving its assessment meaning. Existing saved study records are retained. Batch-specific preservation evidence and baseline availability limits are documented in verification.
 See [verification](evidence/topic-practice-20261012.md) for scope and limitations.
+
+## 2026-10-13 calculus and optimization addition
+
+Current totals are 27 lessons, 176 automatically checked interviews and 81 library codes. The researcher route contains 21 modules, 136 distinct interview problems and 62 current codes. Original 25 topic records and assessment contracts are unchanged. [Implementation and verification](evidence/CALCULUS_OPTIMIZATION.md) documents this addition; older dated reports remain historical.
