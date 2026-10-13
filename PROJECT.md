@@ -6,6 +6,9 @@ Course authoring direction, approved 2026-10-04: [LESSON_AUTHORING_GUIDE.md](LES
 
 Final UX review, 2026-10-04: ready for local personal practice within the documented verification scope. Completed researcher/trader routes, all eight narrow main sections and representative lesson/answer/editor/trainer/recovery screens reviewed in Safari. Menu height follows available viewport space, arrow-key focus stays visible, and editor Esc→Tab/Shift+Tab lands directly on adjacent controls. Immediate per-tab save copies protect work while Web Locks are queued, with direct recovery for a reopened tab. Preview fixtures reversed; personal progress and original draft unchanged. See UX_REVIEW.md and evidence/verification.md for practical browser/storage/accessibility limits.
 
+
+Latest UX corrections, verified 2026-10-13: Lesson02 understanding check defines its fixed equal-prior/one-head experiment; question details offer optional Next question in grouped topic order without grading or final wraparound. Existing keys, work and list/coding handoffs retained. [Issues10/11 evidence](evidence/github-issues-10-11-20261013.md).
+
 ## Earlier implementation notes
 
 Keyboard/readability pass (2026-10-04): practice skip link preserves the bookmarked module and focuses its heading; supporting labels, editor comments/line numbers and input borders have stronger contrast. Sections/Steps support arrows, Home/End and Escape. A native short-window failure was fixed with bounded, scrollable activity menus. Sixteen Node suites passed, including 36 defined text contrast pairs; Safari normal and 644×420 windows verified the module sequence, reload/exact return and section-menu reachability. Personal progress hash unchanged. Remaining acceptance is in UX_REVIEW.md.

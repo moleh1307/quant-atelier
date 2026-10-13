@@ -505,3 +505,7 @@ Topic coding rows now have clear passed/unfinished treatment and submission-time
 ### Nonlinear machine learning — 2026-10-13
 
 l30 added after l29/before l12, with six automatic interviews and three codes. Full299 Python tests/29 frontend suites passed. Exact independent oracles, unchanged old banks, personal/preview isolation and native desktop/narrow/short-height review verified. The live Hard Submit passed6/6 with editorial provenance. [Detailed evidence and limits](NONLINEAR_ML.md).
+
+### GitHub issues 10/11 — 2026-10-13
+
+Lesson02 check now defines its own coin experiment; keys/records retained. Optional Next question follows the originating grouped list, preserves both journey branches/drafts and omits final wraparound.30 frontend suites,18 relevant Python tests and native desktop/narrow preview checks passed. [Exact scope and evidence](github-issues-10-11-20261013.md).

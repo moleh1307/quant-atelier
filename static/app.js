@@ -641,11 +641,22 @@ function topicCodingPresentation(c){
   if(status==='practising')return {state:'practising',label:'Draft in progress',note:''};
   return {state:'new',label:'Not started',note:''};
 }
+// Match the visible topic list: difficulty groups first, author order within each.
+function topicQuestionSequence(l){
+  const items=l.questions.map(id=>content.questions.find(q=>q.id===id)).filter(Boolean);
+  return ['Easy','Medium','Hard'].flatMap(level=>items.filter(q=>q.difficulty===level));
+}
+function nextModuleQuestion(context){
+  if((context.kind||route[0])!=='questions')return null;
+  const items=topicQuestionSequence(context.lesson),index=items.findIndex(q=>q.id===(context.id||route[1]));
+  const next=index>=0?items[index+1]:null;
+  return next?{id:next.id,href:moduleHref('questions',next.id,context.lesson,context.path)}:null;
+}
 function topicPracticePage(kind){
   const l=content.lessons.find(l=>l.id===route[1]);
   if(!l)return header('','Topic not found','')+'<a class="btn link" href="#courses">Browse courses →</a>';
   const context=moduleContext(),path=context?.path||(l.path==='shared'?preferredPath():l.path),e=lessonEvidence(l);
-  const isQuestions=kind==='questions',items=(isQuestions?l.questions:l.coding).map(id=>(isQuestions?content.questions:coding).find(item=>item.id===id));
+  const isQuestions=kind==='questions',items=isQuestions?topicQuestionSequence(l):l.coding.map(id=>coding.find(item=>item.id===id));
   const difficulty=['Easy','Medium','Hard'];
   const complete=item=>isQuestions?!!(questionState(item.id).solved||questionState(item.id).selfSolved):!!state.coding[item.id]?.accepted;
   const presentation=item=>isQuestions?topicQuestionPresentation(item):topicCodingPresentation(item);
@@ -699,11 +710,11 @@ function moduleTrail(context){
   return `<section class="module-trail" aria-label="Current learning module"><div class="module-heading"><a class="module-location" href="#paths/${context.path}/step-${l.id}">← Roadmap <span>· ${moduleNumber(l,context.path)} / ${pathName(context.path)}</span></a><strong title="${esc(l.title)}">${esc(l.title)}</strong></div><nav class="module-stages" aria-label="Module stages">${stages.map(stage=>{const group=activities.filter(a=>a.stage===stage),target=current?.stage===stage?current:group.find(a=>!a.done)||group[0],done=group.filter(a=>a.done).length;return `<a href="${target.href}" class="module-stage ${current?.stage===stage?'current':''} ${done===group.length?'done':''}" ${current?.stage===stage?'aria-current="step"':''}><span>${stage}</span><span class="stage-evidence">${stage==='Understand'?(done?'✓':'○'):moduleStageEvidence(l,stage)??done+'/'+group.length}</span></a>`;}).join('')}</nav><div class="module-tools">${route[0]==='courses'?lessonOutline(l):''}${next?`<a class="module-forward" href="${next.href}" aria-label="${next.returnToList?'Back to list':next.nextModule?'Next module':'Next step'}: ${esc(next.title)}" title="${esc(next.title)}">${next.returnToList?'Back to list':next.nextModule?'Next module':'Next step'} <span aria-hidden="true">→</span></a>`:''}<details class="module-outline" id="module-outline"><summary aria-label="Show all module activities" title="All module activities">${icon('paths')}<span class="module-outline-label" aria-hidden="true">Steps</span></summary><nav class="module-menu" aria-label="All module activities"><div class="eyebrow">This module</div>${activities.map(a=>`<a href="${a.href}" class="${a===current?'current':''}" ${a===current?'aria-current="page"':''}><span class="activity-marker">${a.done?'✓':'○'}</span><span><span class="activity-title">${esc(a.title)}</span><span class="activity-meta">${a.stage} · ${a.status}</span></span></a>`).join('')}</nav></details></div></section>`;
 }
 function moduleContinuation(context){
-  const l=context.lesson,next=followingActivity(context),e=lessonEvidence(l);
+  const l=context.lesson,next=followingActivity(context),questionNext=nextModuleQuestion(context),e=lessonEvidence(l);
   const href=next?.href||'#paths/'+context.path+'/step-'+l.id;
   const label=next?.returnToList?(next.kind==='question-list'?'Back to question list':'Back to coding list'):next?.kind==='question-list'?'Choose an interview question':next?.kind==='coding-list'?'Choose a coding exercise':next?.kind==='trainers'?'Open drill':next?.kind==='courses'?'Next lesson':'View roadmap';
   const extra=next?.returnToList&&next.kind==='question-list'&&l.coding.length?`<a class="module-return" href="${moduleHref('coding-list',l.id,l,context.path)}">Continue to coding list →</a>`:'';
-  return `<nav class="module-continuation" aria-label="Continue learning module"><div><div class="eyebrow">${next?(next.returnToList?'Choose your next practice':next.nextModule?'Next module · available anytime':'Continue this module'):'End of this route'}</div><h3>${next?esc(next.title):'Return to your roadmap'}</h3><p>${e.checked?'Check passed':'Check to do'}${e.questionTotal?' · '+(e.numeric+e.self)+'/'+e.questionTotal+' problems passed':''}${e.codingTotal?' · '+e.accepted+'/'+e.codingTotal+' code passed':''}</p></div><div class="continuation-actions"><a class="btn dark" href="${href}">${label} →</a>${extra}<a class="module-return" href="#paths/${context.path}/step-${l.id}">Back to this roadmap module</a></div></nav>`;
+  return `<nav class="module-continuation" aria-label="Continue learning module"><div><div class="eyebrow">${next?(next.returnToList?'Choose your next practice':next.nextModule?'Next module · available anytime':'Continue this module'):'End of this route'}</div><h3>${next?esc(next.title):'Return to your roadmap'}</h3><p>${e.checked?'Check passed':'Check to do'}${e.questionTotal?' · '+(e.numeric+e.self)+'/'+e.questionTotal+' problems passed':''}${e.codingTotal?' · '+e.accepted+'/'+e.codingTotal+' code passed':''}</p></div><div class="continuation-actions">${questionNext?`<a class="btn primary compact" data-next-question href="${questionNext.href}">Next question →</a>`:''}<a class="btn ${questionNext?'compact':'dark'}" href="${href}">${label} →</a>${extra}<a class="module-return" href="#paths/${context.path}/step-${l.id}">Back to this roadmap module</a></div></nav>`;
 }
 function bindOutlineKeys(outline,selector){
   outline.addEventListener('keydown',event=>{

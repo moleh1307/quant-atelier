@@ -9436,7 +9436,7 @@
         }
       ],
       "example": "Compare the two dice and coin examples. For dice, the observation removes ordered pairs; for coins, both hypotheses survive but with different weights. In the coin experiment, the joint mass of “always-heads and a head” is one half; the total head probability is three quarters. Dividing yields two thirds. Predict the next flip without picking the most likely coin as if it were certain: \\(P(\\text{next H}\\mid\\text{first H})=(2/3)\\times1+(1/3)\\times(1/2)=5/6\\). The posterior still retains uncertainty about the coin.",
-      "check": "After seeing H from this mixture, what is \\(P(\\text{always-heads})\\)?",
+      "check": "Choose one coin: a fair coin with probability \\(\\frac{1}{2}\\), or an always-heads coin with probability \\(\\frac{1}{2}\\). Flip the chosen coin once and observe heads. Conditional on that observation, what is the probability that you chose the always-heads coin? This fixed setup is independent of the exploration controls.",
       "options": [
         "\\(\\frac{1}{2}\\)",
         "\\(\\frac{2}{3}\\)",
