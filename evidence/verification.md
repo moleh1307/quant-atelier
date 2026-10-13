@@ -500,3 +500,8 @@ Added l29 after regression/before inference: detailed original textbook, exact r
 ## 2026-10-13 GitHub issues7–9: coding completion, stable test selection and result states
 
 Topic coding rows now have clear passed/unfinished treatment and submission-time editorial provenance. Test selection and inclusion update in place, keeping the editor/result nodes and values. Execution receipts distinguish passed debugging from official completion, failures, errors and output-only cases; inspectable output is neutral. All28 frontend suites passed; native explicit-preview mouse/keyboard/rapid switching kept editor scroll1961, cursorLn94/Col15 and selection, with viewport rounding within1px. Case arguments/settings/results were retained. Debug/failed/error/output-only and real official passes verified; mobile390px and source-rendered doubled-text fixture fit. Fixture removed, viewport reset, final personal coding list. Concurrent personal medium-code work was preserved and differed from developer solution/comments; preview debug-case edits did not enter personal storage. Source banks/judge/grading/curriculum unchanged. Detailed scope/screenshots: [issues7–9 audit](github-issues-7-9-20261013.md).
+
+
+### Nonlinear machine learning — 2026-10-13
+
+l30 added after l29/before l12, with six automatic interviews and three codes. Full299 Python tests/29 frontend suites passed. Exact independent oracles, unchanged old banks, personal/preview isolation and native desktop/narrow/short-height review verified. The live Hard Submit passed6/6 with editorial provenance. [Detailed evidence and limits](NONLINEAR_ML.md).

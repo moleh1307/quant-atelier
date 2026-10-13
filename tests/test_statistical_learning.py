@@ -27,7 +27,7 @@ def active_oracle(G,z,lam):
 
 class StatisticalLearningTests(unittest.TestCase):
     def test_order_and_automatic_difficulty_contract(self):
-        ids=[l['id'] for l in B['lessons']];i=ids.index('l11');self.assertEqual(ids[i:i+3],['l11','l29','l12']);l=next(l for l in B['lessons'] if l['id']=='l29')
+        ids=[l['id'] for l in B['lessons']];i=ids.index('l11');self.assertEqual(ids[i:i+4],['l11','l29','l30','l12']);l=next(l for l in B['lessons'] if l['id']=='l29')
         self.assertEqual(l['path'],'researcher');self.assertEqual(Counter(QS[x]['difficulty'] for x in l['questions']),Counter(Easy=2,Medium=2,Hard=2));self.assertEqual(Counter(CS[x]['difficulty'] for x in l['coding']),Counter(Easy=1,Medium=1,Hard=1));self.assertTrue(all(QS[x]['type']!='written' for x in l['questions']))
     def test_risk_decomposition_by_finite_independent_samples(self):
         # Fresh Y=2±sqrt(3), fitted prediction=1±sqrt(.5), independent.
