@@ -46,7 +46,7 @@ ctx.matchMedia=()=>({matches:true});els['[data-lk-k]'].value='40';els['[data-lk-
 const bank=JSON.parse(fs.readFileSync('static/content.json')),codes=JSON.parse(fs.readFileSync('static/coding.json'));
 const ids=bank.lessons.filter(l=>l.path==='shared'||l.path==='researcher').map(l=>l.id);
 assert.deepEqual(ids.slice(ids.indexOf('l09'),ids.indexOf('l09')+3),['l09','l25','l10']);
-assert.equal(ids.length,22);
+assert.equal(ids.length,23);
 const meta=bank.lessons.find(l=>l.id==='l25');assert.deepEqual(meta.questions.slice(0,3),['q49','q50','q51']);assert.equal(meta.questions.length,8);assert.deepEqual(meta.coding,['c_l25_easy','c15','c_l25_hard']);
 assert.equal(codes.find(c=>c.id==='c15').path,'researcher');
 console.log('Likelihood grid, endpoints, stability, ungraded controls, interrupted/reduced motion, new route and practice links passed.');

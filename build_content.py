@@ -154,6 +154,11 @@ lesson(**RESAMPLING_LESSON)
 new_lesson = L.pop()
 L.insert(next(i for i, old in enumerate(L) if old['id'] == 'l13')+1, new_lesson)
 
+from statistical_learning_content import LESSON as LEARNING_LESSON
+lesson(**LEARNING_LESSON)
+new_lesson = L.pop()
+L.insert(next(i for i, old in enumerate(L) if old['id'] == 'l11')+1, new_lesson)
+
 from topic_practice import add_questions as add_topic_questions, attach_and_validate
 from coding_bank import TASKS
 add_topic_questions(q, Q)

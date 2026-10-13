@@ -12,7 +12,7 @@ const context={console,Math,Date,URLSearchParams,location:{search:'?qa=1',hash:'
 vm.createContext(require('./workspace-fixture.cjs')(context));vm.runInContext(source,context);
 const run=s=>vm.runInContext(s,context);context.messages=messages;
 run('content=bank;coding=codes;state=fresh();route=["questions"];render=()=>{};announce=m=>messages.push(m);notify=m=>messages.push(m);');
-const structured=bank.questions.filter(q=>q.type==='structured');assert.equal(structured.length,76);
+const structured=bank.questions.filter(q=>q.type==='structured');assert.equal(structured.length,78);
 const before=run('JSON.stringify(state)');
 let masks=0;
 for(const q of structured){
