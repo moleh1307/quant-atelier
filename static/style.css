@@ -542,6 +542,20 @@ input::placeholder,textarea::placeholder { color:#65715a;opacity:1; }
 .topic-practice-row .row-arrow{font-size:17px;color:#7d8f69}
 .topic-practice-row:focus-visible{outline:2px solid #7d8f69;outline-offset:3px}
 .topic-list-empty{margin:0;padding:18px 8px}
+/* Question completion is visible across the row, not only in a small glyph. */
+.topic-practice-row[data-question-state]{grid-template-columns:2rem minmax(0,1fr) auto 18px;gap:12px 16px;padding:18px 14px;border-left:3px solid transparent}
+.topic-practice-row[data-question-state]>div{min-width:0}
+.topic-row-marker{display:grid;place-items:center;width:1.8rem;height:1.8rem;border:1px solid #b7beac;border-radius:50%;font:18px var(--font-body);color:#405536}
+.topic-row-state{display:grid;justify-items:end;gap:5px;max-width:14rem;min-width:0;font:13px/1.5 var(--font-body)}
+.topic-status-badge{display:block;max-width:100%;padding:5px 10px;border:1px solid #c4c9ba;border-radius:5px;background:#f8f7f1;color:#55604d;font-weight:500;overflow-wrap:anywhere}
+.topic-status-note{font-size:12px;color:#5f6b54}
+.topic-practice-row[data-question-state="solved"]{background:#e9eedf;border-left-color:#6f8354}
+.topic-practice-row[data-question-state="solved"]:hover{background:#e1e8d3}
+.topic-practice-row[data-question-state="solved"] .topic-row-marker{background:#60764c;border-color:#60764c;color:#fff}
+.topic-practice-row[data-question-state="solved"] .topic-status-badge{background:#dce6cd;border-color:#a8b994;color:#354b29}
+.topic-practice-row[data-question-state="solved"] .row-title{font-weight:500;color:#303d29}
+.topic-practice-row[data-question-state="reviewed"] .topic-status-badge,.topic-practice-row[data-question-state="historical"] .topic-status-badge{background:#f2e9d8;border-color:#d2bc96;color:#725426}
+.topic-practice-row[data-question-state]:focus-visible{outline-color:#c84220}
 @media(max-width:600px){
   .topic-list-summary>a{margin-left:0}
   .topic-practice-row{grid-template-columns:minmax(0,1fr) 18px;gap:8px 12px;padding:16px 6px}
@@ -549,6 +563,11 @@ input::placeholder,textarea::placeholder { color:#65715a;opacity:1; }
   .topic-practice-row .status{grid-column:1;grid-row:2;text-align:left;max-width:none}
   .topic-practice-row .row-arrow{grid-column:2;grid-row:1}
   .topic-practice-row .row-title{font-size:16px}
+  .topic-practice-row[data-question-state]{grid-template-columns:2rem minmax(0,1fr) 18px;gap:8px 12px;padding:16px 10px}
+  .topic-practice-row[data-question-state]>div{grid-column:2;grid-row:1}
+  .topic-practice-row[data-question-state] .topic-row-marker{grid-column:1;grid-row:1;align-self:start}
+  .topic-practice-row[data-question-state] .topic-row-state{grid-column:2;grid-row:2;justify-items:start;max-width:100%}
+  .topic-practice-row[data-question-state] .row-arrow{grid-column:3;grid-row:1}
 }
 @media(prefers-reduced-motion:reduce){.topic-practice-row{transition:none}}
 

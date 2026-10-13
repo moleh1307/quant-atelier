@@ -481,3 +481,7 @@ See [Python debugging verification](python-debug-20261012.md) for Cmd+apostrophe
 ## Calculus and optimization addition — 2026-10-13
 
 Added researcher l26/l27 before estimation: detailed authored chapters, four purposeful interactive figures, twelve automatic interview problems and six Python tasks with independent mathematical expectations. 269 Python tests and all 25 frontend suites passed; 3,463 bank math spans and 1,111 authored-renderer spans parse strictly. Live desktop/390px checks, both preview quizzes, partial/full recurrence grading and actual Hard box submission (7/7) passed. Refreshed the existing Python server to load the new bank. All previous public records and personal progress bytes remain unchanged; final browser personal, viewport reset. Current inventory 27/176/81; researcher 21/136/62. See [complete audit and screenshots](CALCULUS_OPTIMIZATION.md) for evidence and limits.
+
+## GitHub issues #5 / #6 — 2026-10-13
+
+Fixed lesson 02 native-select spacing and made topic interview completion visible through row treatment, a larger marker and explicit status badges. Reviewed, historical self-assessed and stale-version work remain distinct and receive no new credit. All 25 frontend suites passed; desktop/390px browser checks and doubled-text stress checks passed. Preview-only live grading confirmed unaided versus assisted rows and unchanged counts. Personal progress bytes unchanged, temporary fixture removed, viewport reset, final browser personal. See [issue verification and screenshots](github-issues-5-6-20261013.md).

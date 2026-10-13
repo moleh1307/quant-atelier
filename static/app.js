@@ -625,6 +625,15 @@ function practiceBreadcrumb(kind,topic){
   const label=context?(kind==='questions'?'Question list':'Coding list'):(kind==='questions'?'Interview questions':'Python workspace');
   return `<div class="breadcrumbs"><a href="${href}">← ${label}</a><span>/</span><span>${esc(topic)}</span></div>`;
 }
+function topicQuestionPresentation(q){
+  const record=state.questions[q.id]||{},s=questionState(q.id);
+  if(s.solved)return {state:'solved',label:'Unaided solve',note:''};
+  if(record.selfSolved===true)return {state:'historical',label:'Previously self-assessed',note:'Retake the automatic check'};
+  if(record.solved===true&&q.type==='structured')return {state:'historical',label:'Previous check passed',note:'Retake the current check'};
+  if(s.reviewed)return {state:'reviewed',label:'Reviewed',note:'Try again unaided'};
+  if(s.attempts)return {state:'practising',label:'In progress',note:''};
+  return {state:'new',label:'Not started',note:''};
+}
 function topicPracticePage(kind){
   const l=content.lessons.find(l=>l.id===route[1]);
   if(!l)return header('','Topic not found','')+'<a class="btn link" href="#courses">Browse courses →</a>';
@@ -632,11 +641,11 @@ function topicPracticePage(kind){
   const isQuestions=kind==='questions',items=(isQuestions?l.questions:l.coding).map(id=>(isQuestions?content.questions:coding).find(item=>item.id===id));
   const difficulty=['Easy','Medium','Hard'];
   const complete=item=>isQuestions?!!(questionState(item.id).solved||questionState(item.id).selfSolved):!!state.coding[item.id]?.accepted;
-  const status=item=>isQuestions?statusHTML(item.id):`<span class="status ${complete(item)?'solved':''}">${complete(item)?`✓ Passed${acceptedWithEditorial(state.coding[item.id])?' · with editorial':''}`:codingStatus(item)==='reviewed'?'↗ Editorial read':codingStatus(item)==='practising'?'Draft in progress':'—'}</span>`;
+  const status=item=>{if(isQuestions){const view=topicQuestionPresentation(item);return `<span class="topic-row-state"><span class="topic-status-badge">${esc(view.label)}</span>${view.note?`<span class="topic-status-note">${esc(view.note)}</span>`:''}</span>`;}return `<span class="status ${complete(item)?'solved':''}">${complete(item)?`✓ Passed${acceptedWithEditorial(state.coding[item.id])?' · with editorial':''}`:codingStatus(item)==='reviewed'?'↗ Editorial read':codingStatus(item)==='practising'?'Draft in progress':'—'}</span>`;};
   const totalDone=items.filter(complete).length;
   return header('',isQuestions?'Interview questions':'Coding exercises',esc(l.title))+`<div class="topic-list-summary"><span>${totalDone} / ${items.length} passed</span>${isQuestions&&e.self?`<span class="muted">${e.self} self-assessed</span>`:''}<a href="${moduleHref('courses',l.id,l,path)}">Revisit lesson ↗</a></div><div class="topic-practice-list">${difficulty.map(level=>{
     const group=items.filter(item=>item.difficulty===level),done=group.filter(complete).length;
-    return `<section class="topic-level" aria-labelledby="topic-${level.toLowerCase()}"><div class="topic-level-heading"><h2 id="topic-${level.toLowerCase()}">${level}</h2><span class="small muted">${done} / ${group.length} ${isQuestions?'complete':'passed'}</span></div><div class="topic-level-rows">${group.map(item=>`<a class="topic-practice-row" href="${moduleHref(kind,item.id,l,path)}"><div><span class="row-title">${esc(item.title)}</span>${isQuestions?`<span class="row-meta">${item.minutes} min · ${item.type==='structured'?'Multi-part automatic check':'Numeric answer & reasoning'}</span>`:''}</div>${status(item)}<span class="row-arrow" aria-hidden="true">↗</span></a>`).join('')||'<p class="small muted topic-list-empty">Practice for this difficulty is being prepared.</p>'}</div></section>`;
+    return `<section class="topic-level" aria-labelledby="topic-${level.toLowerCase()}"><div class="topic-level-heading"><h2 id="topic-${level.toLowerCase()}">${level}</h2><span class="small muted">${done} / ${group.length} ${isQuestions?'complete':'passed'}</span></div><div class="topic-level-rows">${group.map(item=>`<a class="topic-practice-row"${isQuestions?` data-question-state="${topicQuestionPresentation(item).state}"`:''} href="${moduleHref(kind,item.id,l,path)}">${isQuestions?`<span class="topic-row-marker" aria-hidden="true">${topicQuestionPresentation(item).state==='solved'?'✓':''}</span>`:''}<div><span class="row-title">${esc(item.title)}</span>${isQuestions?`<span class="row-meta">${item.minutes} min · ${item.type==='structured'?'Multi-part automatic check':'Numeric answer & reasoning'}</span>`:''}</div>${status(item)}<span class="row-arrow" aria-hidden="true">↗</span></a>`).join('')||'<p class="small muted topic-list-empty">Practice for this difficulty is being prepared.</p>'}</div></section>`;
   }).join('')}</div>`;
 }
 function lessonPractice(l){
