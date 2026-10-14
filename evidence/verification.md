@@ -514,3 +514,8 @@ Lesson02 check now defines its own coin experiment; keys/records retained. Optio
 ### Algorithms and data structures — 2026-10-13
 
 l31/l32 extend the researcher route after preserved l18. Detailed topic-specific textbooks, 12 automatic interviews and six Python exercises. Full313 Python tests/31 frontend suites passed; final affected figure/textbook suites rerun after prose/label refinements. Independent boundary/rank, sort, Floyd–Warshall and subset oracles; strict math and maximum-size submissions verified. Live explicit-preview lesson and Hard claim checks, median9/9 and scheduling8/8 Submit; personal new-topic records absent. Inventory32/206/96, researcher26/166/77, trader14/90/42. Previous30 lessons/194 questions/90 codes identical. [Detailed scope, sources and screenshots](ALGORITHMS_DATA_STRUCTURES.md).
+
+
+### In-place Python execution —2026-10-14
+
+Run/Submit no longer invoke full render at start/end. Editor/history/selection and debug fields stay mounted; previous receipts remain while pending, completion updates in place. All32 frontend suites passed; live preview debug1/1 and official7/7, undo/selection/repeat mouse checks, error and390px layout verified. Personal learner sections unchanged. [Scope and evidence](PYTHON_CHECKS_IN_PLACE.md).
