@@ -638,3 +638,9 @@ input::placeholder,textarea::placeholder { color:#65715a;opacity:1; }
  .topic-practice-row[data-code-state] .row-arrow{grid-column:3;grid-row:1}
  .result-summary{padding:13px;gap:10px}.result-row[data-result-state]{padding:12px}.result-case-heading{gap:8px}
 }
+
+/* A check never collapses the previous receipt or remounts the editor. */
+.runner-status { padding:0 20px;min-height:2.8em;margin:0 0 12px;font-size:12px;color:#5f6b54; }
+.runner-result { overflow-anchor:none; }
+.editor-actions [data-action="run-code"], .editor-actions [data-action="submit-code"] { min-width:calc(12ch + 44px); }
+.editor-actions .check-label { min-width:9ch; }

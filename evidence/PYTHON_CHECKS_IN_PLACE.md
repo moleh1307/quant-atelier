@@ -1,0 +1,19 @@
+# Python checks update in place
+
+Verified2026-10-14. Run tests and Submit previously called the full render at both request start and completion. render destroyed CodeMirror and rebuilt the page, so restoring cursor/scroll afterward could still feel like a refresh and lost the original editor history.
+
+The lifecycle now patches only the running labels/status, result receipt and completion text. CodeMirror, its host, debug fields, module links, page and buttons stay mounted. Previous results remain visible during execution, including their checked-code snapshot and expanded details. On return during a pending background check, the old receipt is reconstructed with its own mode/version rather than relabelled as the new check. Copying a previous result uses that receipt's arguments/mode. Controls reserve label width and the status band reserves height; results opt out of scroll anchoring.
+
+The checked code and cases still freeze at request time, editing remains available, changed drafts are identified, duplicate checks are ignored, and only a successful official Submit earns a pass. Accepted editorial provenance remains the submission-time value. Timeouts, interrupted checks, generation cancellation, late responses, background notices and restored results keep their prior semantics. No backend/judge/curriculum/assessment records changed.
+
+## Verification
+
+All32 frontend suites passed. New tests exercise the real asynchronous execution lifecycle with page-render/editor-destroy failure guards, retain editor identity/history/selection/scroll, retain old receipts during pending requests, allow edits, prevent duplicate execution, refresh module/header evidence without rebuilding, and verify errors/background completion. A real delegated copy-result handler checks that a previous pending receipt remains usable. Existing timeout/late-response/recovery, debug-case editing, shortcuts, error escaping, grading and journey suites pass.
+
+Native in-app review used a new agent-owned tab because the preferred browser backend was unavailable. The user's Chrome study tab was untouched. Explicit launcher entry and visible Test preview preceded every developer grading/reveal. A109-line reference/comment fixture tested editor scrolling, cursor and selection. Live Run passed1/1 without granting completion; live official Submit passed7/7 and refreshed Implement1/3 and continuation evidence in place. Undo after Submit removed a single typed character rather than losing history. The previous debug receipt remained visible while Submit was checking. ValueError produced an inspectable Test error receipt in the same area.
+
+Desktop repeat mouse runs/submissions retained pageY790, editorScroll2339 and Ln109/Col26. Shortcut checks retained pageY176, selection of the final comment and its cursor through pending/completed states. CodeMirror's virtual layout can settle after moving the cursor; compare settled measurements rather than immediate keypress geometry. Native narrow pointer checking retained pageY2183, editorScroll1696 and Ln109/Col26; the390px viewport had375px client/scroll width, no horizontal overflow, and usable wrapped action controls. Locator clicks can auto-scroll a target into view independently of the application's execution update. Final viewport override reset and agent tab returned to personal mode.
+
+Fresh personal questions, coding, lessons, drafts and trainer sections remained identical to the pre-review baseline; no developer comment/error fixtures entered personal drafts. No reset/import/restore. [Screenshot](python-checks-in-place-20261014.png) is isolated test-preview evidence, not the learner's progress. Actual native touch/VoiceOver were not exercised.
+
+Assets use stable-checks-20261014-1. Existing study tabs need one normal reload to load the fix. Running checks themselves do not reload or remount the editor.
