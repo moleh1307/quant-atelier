@@ -519,3 +519,8 @@ l31/l32 extend the researcher route after preserved l18. Detailed topic-specific
 ### In-place Python execution —2026-10-14
 
 Run/Submit no longer invoke full render at start/end. Editor/history/selection and debug fields stay mounted; previous receipts remain while pending, completion updates in place. All32 frontend suites passed; live preview debug1/1 and official7/7, undo/selection/repeat mouse checks, error and390px layout verified. Personal learner sections unchanged. [Scope and evidence](PYTHON_CHECKS_IN_PLACE.md).
+
+
+### GitHub issue12 —2026-10-15
+
+Coding details now offer optional compact Next coding exercise in the originating grouped list order, preserving list/roadmap returns and both journey branches. No pass required, no final wrap, no global-bank fallback. All33 frontend suites passed;80 next links/120 coding details, invalid/legacy boundaries, drafts/tests/inclusion and deferred in-flight source ownership verified. Native preview keyboard/draft round trips and390px layout passed without grading actions. [Exact scope and screenshot](github-issue-12-20261015.md).
