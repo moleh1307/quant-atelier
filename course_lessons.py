@@ -288,9 +288,9 @@ def add(id,minutes,intro,objectives,sections,example,explain=None,trainers=None)
     LESSONS.append(dict(id=id,minutes=minutes,intro=intro,objectives=objectives,
                         sections=sections,example=example,trainers=trainers or [],**meta))
 
-add('l02',22,
+add('l02',50,
     'Conditioning changes the information you are allowed to use. Rebuild the relevant population before calculating, then use Bayes to compare explanations of what you observed.',
-    ['Build a conditional sample space and normalise its probabilities.','Distinguish likelihood, prior and posterior.','Explain why conditioning can create dependence.'],[
+    ['Build a conditional sample space and normalise its probabilities.','Distinguish likelihood, prior and posterior.','Explain why conditioning can create dependence.','Model reporting protocols, unknown test dependence and changing hidden states.'],[
 ('What does “given” mean?',r'''Let A and B be events in an experiment. The statement “given B” means that you know B happened, so outcomes outside B are no longer possible. You are computing a probability in that restricted population, not in the original one.
 
 Provided \(P(B)>0\), define
@@ -331,9 +331,9 @@ Rehearse the argument aloud: state the observation, identify surviving possibili
 r'''Compare the two dice and coin examples. For dice, the observation removes ordered pairs; for coins, both hypotheses survive but with different weights. In the coin experiment, the joint mass of “always-heads and a head” is one half; the total head probability is three quarters. Dividing yields two thirds. Predict the next flip without picking the most likely coin as if it were certain: \(P(\text{next H}\mid\text{first H})=(2/3)\times1+(1/3)\times(1/2)=5/6\). The posterior still retains uncertainty about the coin.''',
     explain='The always-heads branch contributes probability 1/2; the fair branch contributes 1/4. Normalise the first weight by their sum 3/4 to obtain 2/3.')
 
-add('l03',22,
+add('l03',50,
     'Expectation is a probability-weighted average. Its linearity lets you break complicated counts into simple indicators, even when their events overlap.',
-    ['Define expectation and turn a count into indicators.','Use linearity without inventing independence.','Derive discrete and continuous tail-sum identities.'],[
+    ['Define expectation and turn a count into indicators.','Use linearity without inventing independence.','Derive discrete and continuous tail-sum identities.','Count occupied labels, permutation cycles and matching crossings using indicators.','Derive expected-rank weights without replacement.'],[
 ('A random variable and its mean',r'''A random variable assigns a number to each outcome. For a discrete variable X with possible values x, its expectation is \(E[X]=\sum_x xP(X=x)\), whenever the expectation is well defined. A fair die has expectation (1+2+3+4+5+6)/6=3.5. The mean need not itself be a possible realised value.
 
 For ordinary signed variables, absolute integrability, \(E[|X|]<\infty\), is a convenient condition that makes sums and rearrangements safe. Nonnegative variables can have an infinite expectation; the formula then describes an extended value rather than a finite average. State the assumption before manipulating an infinite series.'''),

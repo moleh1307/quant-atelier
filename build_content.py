@@ -57,7 +57,7 @@ L=[]
 def lesson(id,title,topic,path,minutes,intro,sections,example,check,options,correct,explain,qs,codes=None,objectives=None,trainers=None):
     L.append(dict(id=id,title=title,topic=topic,path=path,minutes=minutes,intro=intro,sections=[dict(title=a,text=b) for a,b in sections],example=example,check=check,options=options,correct=correct,explanation=explain,questions=qs,coding=codes or [],objectives=objectives or [],trainers=trainers or []))
 lesson(
-    'l01', 'Count the right sample space', 'Probability', 'shared', 15,
+    'l01', 'Count the right sample space', 'Probability', 'shared', 45,
     'Before calculating a probability, describe the experiment, what counts as one outcome, and why the outcomes have the probabilities you assign to them.',
     [
         ('Start with the experiment, outcomes and event', r'''An experiment is the random procedure you carry out: for example, rolling one die or drawing two balls from a bag. An outcome records one possible result of that procedure. You must decide exactly what information the record contains.
@@ -132,6 +132,7 @@ L[0]['objectives'] = [
     'Define an experiment, sample space and event before calculating.',
     'Distinguish ordered and unordered sampling with and without replacement.',
     'Justify equal likelihood and separate independence from disjointness.',
+    'Derive multiplicity weights, collision probabilities and constrained assignment counts.',
 ]
 from course_lessons import LESSONS
 for item in LESSONS:

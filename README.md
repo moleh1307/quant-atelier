@@ -97,6 +97,8 @@ Before course edits, read [LESSON_AUTHORING_GUIDE.md](LESSON_AUTHORING_GUIDE.md)
 
 As observed 2026-10-09, custom l02–l24 bodies are registered through `static/course-textbook.js` from the conditioning, expectation, distributions, stopping, arithmetic, variance, data-time, estimation, covariance, regression, inference, time-series, validation, search, research-defence, monte-carlo, algorithms, fair-value, order-flow, continuation-growth, joint-risk, finance-core and strategic-calibration lesson modules. These modules own their visible prose and section outline; the content bank retains quiz/catalog metadata. l08's small Python examples explain timing and do not introduce a lesson runner. Review status belongs in the status and evidence records. Edit the source that actually renders the target, not generated JSON. `coding_bank.py` separately holds private test cases and regenerates public `static/coding.json`.
 
+Modules 01–03 now develop one continuous lesson through Easy → Medium → Hard parts. Use the compact part navigation or grouped sticky Sections menu to move between them. Each part adds topic-specific reasoning, worked calculations and changed-assumption cases; existing question/coding lists and earned checks remain intact. Full reading-time estimates are 45/50/50 minutes. The other courses retain their current structure. [Scope and verification](evidence/COURSE_DIFFICULTY_LEVELS.md).
+
 Typography uses locally bundled Geist for body text, Geist Mono for navigation and controls, and Instrument Serif for headings. The Geist fonts match Tradermath’s current interface; Instrument Serif is an open-source alternative to its commercial Teodor heading font. Font licenses and provenance are in `static/vendor/fonts/`. Sidebar icons use Lucide 1.49.0, bundled locally in `static/vendor/lucide/` with upstream licenses.
 
 Mathematical prose uses locally bundled KaTeX 0.19.0, including fonts and its MIT license. `math_markup.py` converts the existing reviewed formulas at build time; new content can use `\(...\)` for inline notation and `\[...\]` for separate equations. Python code and user drafts remain literal. Longer equations scroll within their line on narrow screens.
@@ -118,6 +120,7 @@ node tests/test_panels.cjs
 node tests/test_reading.cjs
 node tests/test_sample_space.cjs
 node tests/test_course_textbook.cjs
+node tests/test_course_levels.cjs
 node tests/test_likelihood.cjs
 node tests/test_calculus_optimization.cjs
 node tests/test_resampling.cjs

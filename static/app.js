@@ -772,13 +772,23 @@ function lessonSections(l){
   const authored=authoredLesson(l),sections=authored?.sections?authored.sections.map(([title])=>({title})):l.sections;
   return [...sections.map((s,i)=>({id:'lesson-section-'+i,title:s.title})),{id:'lesson-example',title:'A concrete example'},{id:'lesson-check',title:'Understanding check'}];
 }
+// Reading levels describe a continuous argument, never completion or a gate.
+function lessonLevelHeader(levels,index){
+  const level=levels?.find(level=>level.start===index);
+  return level?`<header class="lesson-level-start"><span class="lesson-level-label">${esc(level.name)}</span><h2>${esc(level.title)}</h2><p>${esc(level.goal)}</p></header>`:'';
+}
+function lessonLevelNav(levels){
+  return levels?`<nav class="lesson-level-nav" aria-label="Lesson difficulty sections">${levels.map(level=>`<button type="button" data-lesson-level="lesson-section-${level.start}"><span>${esc(level.name)}</span><small>${esc(level.title)}</small></button>`).join('')}</nav>`:'';
+}
 function lessonOutline(l){
-  return `<details class="module-outline lesson-outline" id="lesson-outline"><summary aria-label="Show lesson sections" title="Lesson sections">${icon('courses')}<span class="lesson-outline-label" aria-hidden="true">Sections</span></summary><nav class="module-menu lesson-menu" aria-label="Lesson sections"><div class="eyebrow">In this lesson</div>${lessonSections(l).map((s,i)=>`<button type="button" data-section="${s.id}"><span class="section-number" aria-hidden="true">${String(i+1).padStart(2,'0')}</span><span>${esc(s.title)}</span></button>`).join('')}</nav></details>`;
+  const levels=authoredLesson(l)?.levels;
+  return `<details class="module-outline lesson-outline" id="lesson-outline"><summary aria-label="Show lesson sections" title="Lesson sections">${icon('courses')}<span class="lesson-outline-label" aria-hidden="true">Sections</span></summary><nav class="module-menu lesson-menu" aria-label="Lesson sections"><div class="eyebrow">In this lesson</div>${lessonSections(l).map((s,i)=>`${levels?.find(level=>level.start===i)?`<div class="lesson-menu-level">${esc(levels.find(level=>level.start===i).name)}</div>`:''}<button type="button" data-section="${s.id}"><span class="section-number" aria-hidden="true">${String(i+1).padStart(2,'0')}</span><span>${esc(s.title)}</span></button>`).join('')}</nav></details>`;
 }
 function readingOffset(){
   const trail=$('.module-trail')||$('.revision-context');
   return trail?(parseFloat(window.getComputedStyle?.(trail).top)||0)+trail.getBoundingClientRect().height+18:($('.topbar')?.getBoundingClientRect?.().height??0)+18;
 }
+function readingSectionStart(target){return target?.closest?.('.lesson-section')?.querySelector('.lesson-level-start')||target;}
 function bindReadingOutline(){
   const outline=$('#lesson-outline');if(!outline)return;
   bindOutlineKeys(outline,'[data-section]');
@@ -787,19 +797,27 @@ function bindReadingOutline(){
   const update=()=>{
     queued=false;if(disposed)return;
     const offset=readingOffset();let current=buttons[0];
-    for(const button of buttons){const section=document.getElementById(button.dataset.section);if(section?.getBoundingClientRect().top<=offset+35)current=button;}
+    for(const button of buttons){const section=readingSectionStart(document.getElementById(button.dataset.section));if(section?.getBoundingClientRect().top<=offset+35)current=button;}
     for(const button of buttons){if(button===current)button.setAttribute('aria-current','location');else button.removeAttribute('aria-current');}
     const label=outline.querySelector('.lesson-outline-label'),title=current?.querySelector('span:last-child')?.textContent||'Lesson sections';
     label.textContent='Sections';outline.querySelector('summary').title='Current section: '+title;
+    const levels=Array.from(document.querySelectorAll?.('[data-lesson-level]')||[]);
+    let active=levels[0];
+    for(const level of levels){const start=readingSectionStart(document.getElementById(level.dataset.lessonLevel));if(start?.getBoundingClientRect().top<=offset+35)active=level;}
+    for(const level of levels){if(level===active)level.setAttribute('aria-current','location');else level.removeAttribute('aria-current');}
     fitOutlineMenu(outline);
   };
   const schedule=()=>{if(!queued){queued=true;frame(update);}};
-  const page=$('#page'),outside=event=>{if(outline.open&&!outline.contains(event.target))outline.open=false;};
+  const jump=target=>{const destination=readingSectionStart(target);target.focus({preventScroll:true});window.scrollTo({top:Math.max(0,window.scrollY+destination.getBoundingClientRect().top-readingOffset()),behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});};
+  const page=$('#page'),outside=event=>{
+    if(outline.open&&!outline.contains(event.target))outline.open=false;
+    const button=event.target.closest?.('[data-lesson-level]');
+    if(button&&page.contains(button)){const target=document.getElementById(button.dataset.lessonLevel);if(target)jump(target);}
+  };
   outline.addEventListener('click',event=>{
     const button=event.target.closest('[data-section]');if(!button||!outline.contains(button))return;
     const target=document.getElementById(button.dataset.section);if(!target)return;
-    outline.open=false;target.focus({preventScroll:true});
-    window.scrollTo({top:Math.max(0,window.scrollY+target.getBoundingClientRect().top-readingOffset()),behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+    outline.open=false;jump(target);
   });
   outline.addEventListener('keydown',event=>{if(event.key==='Escape'){outline.open=false;outline.querySelector('summary').focus();event.stopPropagation();}});
   outline.addEventListener('toggle',()=>{if(outline.open){update();alignOutlineMenu(outline);}});

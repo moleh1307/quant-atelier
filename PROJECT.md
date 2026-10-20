@@ -1,5 +1,7 @@
 # Quant Atelier
 
+**Course update, 2026-10-20:** l01–l03 now contain progressive Easy/Medium/Hard textbook parts, expanded topic-specific reasoning and compact in-lesson navigation. Other 29 renderings, assessment contracts and personal progress retained. [Scope and evidence](evidence/COURSE_DIFFICULTY_LEVELS.md).
+
 **Current addition, 2026-10-13:** Two connected algorithms/data-structures chapters l31/l32 follow the preserved l18. Original detailed textbooks cover boundary and feasibility proofs, hash counts, stable heaps, Fenwick rank selection, BFS/Dijkstra, topological dependencies and canonical interval DP. Twelve automatic interviews and six Python exercises meet the difficulty contract. Inventory 32 lessons / 206 interviews / 96 library codes; researcher 26 modules / 166 distinct interviews / 77 current codes; trader unchanged at 14/90/42. All previous 30/194/90 public records are identical. Full 313 Python tests and 31 frontend suites passed; live preview checks, both Hard submissions and responsive figures verified. [Evidence and limits](evidence/ALGORITHMS_DATA_STRUCTURES.md).
 
 

@@ -20,7 +20,7 @@ for(const l of context.bank.lessons){context.lesson=l;const html=run('lessonDeta
  for(const label of l.optionLabels)assert.ok(html.includes('aria-label="'+label+'"'));
  if(l.id==='l08')assert.equal((html.match(/class="course-code"/g)||[]).length,2,'Purposeful Python in the timing argument');else if(l.id==='l17')assert.equal((html.match(/class="course-code"/g)||[]).length,1,'Independent simulation units justify this Python example');else if(l.id==='l18')assert.equal((html.match(/class="course-code"/g)||[]).length,2,'State invariants justify streaming and deque code');else if(l.id==='l26')assert.equal((html.match(/class="course-code"/g)||[]).length,1,'Stable loss evaluation justifies the numerical example');else if(l.id==='l31'||l.id==='l32')assert.equal((html.match(/class="course-code"/g)||[]).length,1,'Invariant-critical algorithm code');else assert.ok(!/<pre[ >]/.test(html),'No forced code block in other topics');inspect(html);
 }
-assert.equal(run("lessonSections(content.lessons.find(l=>l.id==='l03')).length"),8,'Six authored sections plus example/check, rather than copied seven-section template');
+assert.equal(run("lessonSections(content.lessons.find(l=>l.id==='l03')).length"),13,'Eleven authored sections plus example/check, with a topic-specific progression');
 const registry=context.QuantCourseLessons;
 const alg=registry.get('l18').models;
 const algorithmCheck=spawnAlgorithmCheck();

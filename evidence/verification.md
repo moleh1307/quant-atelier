@@ -524,3 +524,8 @@ Run/Submit no longer invoke full render at start/end. Editor/history/selection a
 ### GitHub issue12 —2026-10-15
 
 Coding details now offer optional compact Next coding exercise in the originating grouped list order, preserving list/roadmap returns and both journey branches. No pass required, no final wrap, no global-bank fallback. All33 frontend suites passed;80 next links/120 coding details, invalid/legacy boundaries, drafts/tests/inclusion and deferred in-flight source ownership verified. Native preview keyboard/draft round trips and390px layout passed without grading actions. [Exact scope and screenshot](github-issue-12-20261015.md).
+
+
+### Progressive course parts — 2026-10-20
+
+l01–l03 now teach Easy → Medium → Hard as successive parts, with 11/12/11 topic-specific subsections and grouped in-page/sticky navigation. All34 frontend suites and13 focused Python checks passed; strict math, independent finite enumerations, native desktop/narrow/short-height review verified. Other29 renderings and all assessment contracts unchanged; fresh personal progress identical. [Detailed evidence and limits](COURSE_DIFFICULTY_LEVELS.md).

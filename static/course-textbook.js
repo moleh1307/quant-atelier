@@ -25,7 +25,10 @@ globalThis.QuantCourseLessons=(()=>{
  }
  function register(id,lesson){
   if(lessons.has(id))throw Error('Duplicate authored lesson '+id);
-  lesson.body=()=>lesson.opening+lesson.sections.map(([title,html],i)=>`<section class="lesson-section atlas-section" aria-labelledby="lesson-section-${i}"><div class="atlas-section-number" aria-hidden="true">${String(i+1).padStart(2,'0')}</div><h2 id="lesson-section-${i}" tabindex="-1">${escape(title)}</h2>${html}</section>`).join('')+`<section class="example atlas-worked" id="lesson-example" tabindex="-1" aria-label="A concrete example"><h2>${escape(lesson.exampleTitle)}</h2>${lesson.example}<p class="atlas-bridge">Take the check below, then continue with the linked practice in this module.</p></section>`;
+  lesson.body=()=> (lesson.levels?lessonLevelNav(lesson.levels):'')+lesson.opening+lesson.sections.map(([title,html],i)=>{
+   const heading=lesson.levels?'h3':'h2';
+   return `<section class="lesson-section atlas-section${lesson.levels?' lesson-leveled-section':''}" aria-labelledby="lesson-section-${i}">${lesson.levels?lessonLevelHeader(lesson.levels,i):''}<div class="atlas-section-number" aria-hidden="true">${String(i+1).padStart(2,'0')}</div><${heading} id="lesson-section-${i}" tabindex="-1">${escape(title)}</${heading}>${html}</section>`;
+  }).join('')+`<section class="example atlas-worked" id="lesson-example" tabindex="-1" aria-label="A concrete example"><${lesson.levels?'h3':'h2'}>${escape(lesson.exampleTitle)}</${lesson.levels?'h3':'h2'}>${lesson.example}<p class="atlas-bridge">Take the check below, then continue with the linked practice in this module.</p></section>`;
   lessons.set(id,lesson);
  }
  return {register,get:id=>lessons.get(id),ids:()=>[...lessons.keys()],math,equation,paragraph,opening,pause,figure,escape,python};

@@ -202,3 +202,34 @@
 .course-finance-gap{fill:none;stroke:#9e3d27;stroke-width:3}
 .course-score-guide{fill:none;stroke:#526b35;stroke-width:1;stroke-dasharray:4 4}
 @media(max-width:600px){.course-risk-plot,.course-finance-plot,.course-score-plot{font-size:20px}}
+/* Progressive reading parts, scoped to lessons that opt in. No earned status. */
+.lesson-level-nav { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:30px 0 36px;border-bottom:1px solid #c7cabc; }
+.sample-space-reading .lesson-level-nav button { appearance:none;background:none;border:0;border-radius:0;text-align:left;padding:12px 12px 16px;min-width:0;color:#5f6b54;cursor:pointer;position:relative; }
+.lesson-level-nav button::after { content:'';position:absolute;bottom:-1px;left:12px;right:12px;height:2px;background:#9e3d27;transform:scaleX(0);transform-origin:left;transition:transform 180ms ease; }
+.lesson-level-nav button[aria-current]::after,.lesson-level-nav button:hover::after { transform:scaleX(1); }
+.lesson-level-nav button span { display:block;font:12px var(--font-mono);color:#9e3d27; }
+.lesson-level-nav button small { display:block;font:12px/1.6 var(--font-body);margin-top:7px; }
+.lesson-level-nav button:focus-visible { outline:2px solid #9e3d27;outline-offset:3px; }
+.lesson-level-start { border-top:1px solid #c7cabc;padding-top:28px;margin:64px 0 36px; }
+.lesson-level-label { font:11px var(--font-mono);letter-spacing:.09em;text-transform:uppercase;color:#9e3d27; }
+.sample-space-reading .lesson-level-start h2 { margin:12px 0 15px;font-size:42px; }
+.sample-space-reading .lesson-level-start p { color:#5f6b54;font:15px/1.75 var(--font-body); }
+.sample-space-reading .lesson-leveled-section > h3,.sample-space-reading .lesson-level-nav ~ .atlas-worked > h3 { font:31px/1.22 var(--font-heading);margin:9px 0 23px;color:#30372f; }
+.lesson-menu-level { padding:18px 12px 7px;font:10px var(--font-mono);text-transform:uppercase;letter-spacing:.09em;color:#9e3d27; }
+.course-screening-grid { font:13px/1.6 var(--font-body); }
+.course-screening-grid > div { display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:12px;padding:13px 0;border-bottom:1px solid #d7d9ce; }
+.course-screening-grid strong { font-weight:500; }
+.course-belief-flow { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px; }
+.course-belief-flow > div { border-top:2px solid #6f9195;padding-top:14px;min-width:0; }
+.course-belief-flow span,.course-belief-flow small { display:block;font:12px/1.6 var(--font-body);color:#5f6b54; }
+.course-belief-flow strong { display:block;font:25px var(--font-mono);color:#35616b;margin:14px 0 8px; }
+.course-crossing-figure { display:block;width:100%;max-width:320px;margin:0 auto; }
+@media(max-width:640px) {
+ .lesson-level-nav button { padding:10px 6px 14px; }
+ .lesson-level-nav button small { font-size:11px; }
+ .sample-space-reading .lesson-level-start h2 { font-size:35px; }
+ .sample-space-reading .lesson-leveled-section > h3,.sample-space-reading .lesson-level-nav ~ .atlas-worked > h3 { font-size:28px; }
+ .course-belief-flow { gap:12px; }
+ .course-belief-flow strong { font-size:19px; }
+}
+@media(prefers-reduced-motion:reduce) { .lesson-level-nav button::after { transition:none; } }

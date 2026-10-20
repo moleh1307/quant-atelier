@@ -9897,7 +9897,7 @@
       "title": "Count the right sample space",
       "topic": "Probability",
       "path": "shared",
-      "minutes": 15,
+      "minutes": 45,
       "intro": "Before calculating a probability, describe the experiment, what counts as one outcome, and why the outcomes have the probabilities you assign to them.",
       "sections": [
         {
@@ -9955,7 +9955,8 @@
       "objectives": [
         "Define an experiment, sample space and event before calculating.",
         "Distinguish ordered and unordered sampling with and without replacement.",
-        "Justify equal likelihood and separate independence from disjointness."
+        "Justify equal likelihood and separate independence from disjointness.",
+        "Derive multiplicity weights, collision probabilities and constrained assignment counts."
       ],
       "trainers": [],
       "practiceExpanded": true,
@@ -9971,7 +9972,7 @@
       "title": "Condition, then normalise",
       "topic": "Conditioning",
       "path": "shared",
-      "minutes": 22,
+      "minutes": 50,
       "intro": "Conditioning changes the information you are allowed to use. Rebuild the relevant population before calculating, then use Bayes to compare explanations of what you observed.",
       "sections": [
         {
@@ -10029,7 +10030,8 @@
       "objectives": [
         "Build a conditional sample space and normalise its probabilities.",
         "Distinguish likelihood, prior and posterior.",
-        "Explain why conditioning can create dependence."
+        "Explain why conditioning can create dependence.",
+        "Model reporting protocols, unknown test dependence and changing hidden states."
       ],
       "trainers": [],
       "practiceExpanded": true,
@@ -10045,7 +10047,7 @@
       "title": "Expectation without independence",
       "topic": "Expectation",
       "path": "shared",
-      "minutes": 22,
+      "minutes": 50,
       "intro": "Expectation is a probability-weighted average. Its linearity lets you break complicated counts into simple indicators, even when their events overlap.",
       "sections": [
         {
@@ -10103,7 +10105,9 @@
       "objectives": [
         "Define expectation and turn a count into indicators.",
         "Use linearity without inventing independence.",
-        "Derive discrete and continuous tail-sum identities."
+        "Derive discrete and continuous tail-sum identities.",
+        "Count occupied labels, permutation cycles and matching crossings using indicators.",
+        "Derive expected-rank weights without replacement."
       ],
       "trainers": [],
       "practiceExpanded": true,
