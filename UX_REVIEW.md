@@ -2,6 +2,8 @@
 
 As of 2026-10-04. The local personal-use UX review is complete within the scope below; this is not a claim of universal perfection. Personal progress and drafts must remain unchanged by verification. Scored tests run only in `?qa=1`.
 
+Privacy note: Some referenced screenshots are kept only in the local workspace and are not part of the public repository.
+
 The experience should feel like a calm practice atelier. Keep the established warm paper, olive text, vermilion accents, serif headings and precise monospaced controls. Navigation should explain where you are and what follows, using the existing module strip rather than another dashboard. Small motion should clarify a state change; reduced motion must work. Use local assets and runtime only; no AI coaching.
 
 Directions considered: (1) refine the existing reading atelier, (2) replace lessons with an IDE-like permanent multi-pane layout, (3) float the entire roadmap over activity pages. Choose (1): preserves readable courses, reclaims space when panels close, and carries module context with minimal interruption. Existing user screenshots, module-journey-personal.png and panel evidence are the reference set for this focused refinement.

@@ -2,6 +2,8 @@
 
 Status: first working version verified locally. Private loopback deployment, not a public service.
 
+Privacy note: Some screenshots named in this record are kept only in the local workspace and are not part of the public repository.
+
 ## Automated checks
 
 - `python3 -m unittest discover -s tests -v`: **11 tests passed**. All 14 reference solutions passed all **71 coding cases**. Incorrect boundary implementations were rejected. Syntax/import/builtin restrictions, stdout capture, and infinite-loop limits were checked. Local HTTP progress roundtrips, schema rejection, cross-site/Host rejection, static/data separation, and downloadable backup snapshots passed using a temporary directory.
