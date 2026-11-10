@@ -38,7 +38,7 @@ Progress audit (2026-10-03): sample runs cannot be miscredited by overlapping Su
 
 Module continuity (2026-10-03): sticky module title/stage strip, Steps activity menu and next-step handoffs preserve the originating lesson and branch through problems, coding and drills. Context is bookmarkable and survives reload/Back, including shared exercises. Lesson-end continuation prioritises practice; roadmap returns locate the exact expanded module. Standalone library practice stays available. No navigation credit or grading change. Native Safari flow and compact layout verified; regression coverage in tests/test_journey.cjs.
 
-Private browser-based quant practice for the user. User-authorised 2026-10-02.
+Private browser-based quant practice. User-authorised 2026-10-02.
 
 ## Product contract
 

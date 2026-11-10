@@ -1,6 +1,6 @@
 # Quant Atelier
 
-the user's private browser practice website. Shared foundation → quantitative researcher first → a separate quantitative trader path. No AI services, accounts, external assets, firm attribution, or articles.
+A private browser practice website. Shared foundation → quantitative researcher first → a separate quantitative trader path. No AI services, accounts, external assets, firm attribution, or articles.
 
 Source repository: [moleh1307/quant-atelier](https://github.com/moleh1307/quant-atelier). The source is public; the application runs locally and each user's study records stay local. Personal progress (`data/`), runtime logs, local verification JSON exports and installed dependencies are excluded from Git. A fresh clone starts without anyone else's progress or drafts. This repository is not a hosted multi-user service.
 

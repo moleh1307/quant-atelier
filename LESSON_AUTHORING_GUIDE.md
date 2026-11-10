@@ -214,7 +214,7 @@ Some whitespace is useful for reading. Reclaim unused side columns through the e
 
 A short action label should fit comfortably. Check text wrapping, padding and arrow placement at narrow widths. Earlier “Read lesson & take check” text overflowed an oversized button; making an action prominent does not justify poor containment.
 
-Keep the removed routine “PRIVATE · LOCAL / Saved locally” and “PRIVATE / PRACTICE ATELIER” banners removed. Meaningful save/recovery failure feedback remains useful; routine technical status should not dominate the study flow.
+Keep the removed routine “PRIVATE · LOCAL / Saved locally” and personalized practice banners removed. Meaningful save/recovery failure feedback remains useful; routine technical status should not dominate the study flow.
 
 ## 9. Use proper mathematical typesetting
 
